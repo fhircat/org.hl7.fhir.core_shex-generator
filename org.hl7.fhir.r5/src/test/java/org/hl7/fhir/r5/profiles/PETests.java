@@ -16,6 +16,7 @@ import org.hl7.fhir.r5.profilemodel.PEType;
 import org.hl7.fhir.r5.profilemodel.gen.ProfileExample;
 import org.hl7.fhir.r5.profilemodel.gen.ProfileExample.LOINCCodesForCholesterolInSerumPlasma;
 import org.hl7.fhir.r5.profilemodel.gen.ProfileExample.ProfileExampleComplex;
+import org.hl7.fhir.r5.profilemodel.gen.ProfileExample.ProfileExampleComplexSlice3;
 import org.hl7.fhir.r5.profilemodel.PEBuilder;
 import org.hl7.fhir.r5.profilemodel.PEBuilder.PEElementPropertiesPolicy;
 import org.hl7.fhir.r5.profilemodel.PEInstance.PEInstanceDataKind;
@@ -39,10 +40,10 @@ public class PETests {
       NpmPackage npm = pc.loadPackage("hl7.fhir.us.core", "5.0.0");
       ctxt.loadFromPackage(npm, new TestPackageLoader(new String[] { "StructureDefinition" }));
       
-      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("R5", "profiles", "pe-extension-simple.json")));
-      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("R5", "profiles", "pe-extension-complex.json")));
-      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("R5", "profiles", "pe-profile2.json")));
-      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("R5", "profiles", "pe-profile1.json")));
+      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("r5", "profiles", "pe-extension-simple.json")));
+      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("r5", "profiles", "pe-extension-complex.json")));
+      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("r5", "profiles", "pe-profile2.json")));
+      ctxt.cacheResource(new JsonParser().parse(TestingUtilities.loadTestResource("r5", "profiles", "pe-profile1.json")));
     }
   }
 
@@ -105,7 +106,7 @@ public class PETests {
     checkElement(gchildren.get(0), "extension", "extension", 0, Integer.MAX_VALUE, false, "http://hl7.org/fhir/StructureDefinition/Extension", 3, "extension");
     checkElement(gchildren.get(1), "extension", "slice1", 0, 2, false, "http://hl7.org/fhir/StructureDefinition/Coding", 6, "extension('slice1').value");
     checkElement(gchildren.get(2), "extension", "slice2", 0, Integer.MAX_VALUE, false, "http://hl7.org/fhir/StructureDefinition/string", 2, "extension('slice2').value");
-    checkElement(gchildren.get(3), "extension", "slice3", 1, 1, false, "http://hl7.org/fhir/StructureDefinition/Extension", 3, "extension('slice3').extension");
+    checkElement(gchildren.get(3), "extension", "slice3", 1, 1, false, "http://hl7.org/fhir/StructureDefinition/Extension", 3, "extension('slice3')");
 
     ggchildren = gchildren.get(3).children("http://hl7.org/fhir/StructureDefinition/Extension");
     checkElement(ggchildren.get(0), "extension", "extension", 0, Integer.MAX_VALUE, false, "http://hl7.org/fhir/StructureDefinition/Extension", 3, "extension");
@@ -312,7 +313,7 @@ public class PETests {
   public void testLoad() throws IOException {
     load();
     
-    Resource res = new JsonParser().parse(TestingUtilities.loadTestResource("R5", "pe-observation-1.json"));
+    Resource res = new JsonParser().parse(TestingUtilities.loadTestResource("r5", "pe-observation-1.json"));
     PEInstance obs = new PEBuilder(ctxt, PEElementPropertiesPolicy.EXTENSION, true).buildPEInstance("http://hl7.org/fhir/test/StructureDefinition/pe-profile1", res);
     
     PEInstance status = obs.child("status");
@@ -351,14 +352,21 @@ public class PETests {
     Assertions.assertEquals(PEInstanceDataKind.Primitive, slice2.getDataKind());
     Assertions.assertEquals("A string value", slice2.getPrimitiveAsString());
     
+    PEInstance slice3 = complex.child("slice3");
+    Assertions.assertNotNull(slice3);
+    Assertions.assertEquals("TestProfile.complex.slice3", slice3.getPath());
+    
     ProfileExample ex = new ProfileExample(obs);
     Assertions.assertEquals(ObservationStatus.FINAL, ex.getStatus());
     Assertions.assertEquals("76690-7", ex.getCode().getCodingFirstRep().getCode());
     Assertions.assertEquals(LOINCCodesForCholesterolInSerumPlasma.L14647_2, ex.getSimple());
     ProfileExampleComplex cplx = ex.getComplex();
     Assertions.assertNotNull(cplx);
-    Assertions.assertEquals("18767-4", cplx.getSlice1().getCode());
-    Assertions.assertEquals("A string value", cplx.getSlice2().primitiveValue());
+    Assertions.assertEquals("18767-4", cplx.getSlice1().get(0).getCode());
+    Assertions.assertEquals("A string value", cplx.getSlice2().get(0).primitiveValue());
+    ProfileExampleComplexSlice3 sl3 = cplx.getSlice3();
+    Assertions.assertEquals("56874-1", sl3.getSlice3a().get(0).getCode());
+    Assertions.assertEquals("Another string value", sl3.getSlice3b().get(0).primitiveValue());
   }
 
   

@@ -10,8 +10,9 @@ import java.util.Set;
 
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.conformance.profile.BindingResolution;
+import org.hl7.fhir.r5.conformance.profile.ProfileKnowledgeProvider;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
-import org.hl7.fhir.r5.conformance.profile.ProfileUtilities.ProfileKnowledgeProvider;
 import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.CodeSystem;
 import org.hl7.fhir.r5.model.ElementDefinition;
@@ -270,6 +271,7 @@ public class ContextUtilities implements ProfileKnowledgeProvider {
         throw new FHIRException(context.formatMessage(I18nConstants.PROFILE___ERROR_GENERATING_SNAPSHOT, p.getName(), p.getUrl()));
       pu = null;
     }
+    p.setGeneratedSnapshot(true);
   }
   
 

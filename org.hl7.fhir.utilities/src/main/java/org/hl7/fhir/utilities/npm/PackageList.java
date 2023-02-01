@@ -104,7 +104,9 @@ public class PackageList {
       json.set("path", path);
       json.set("status", status);
       json.set("sequence", sequence);
-      json.set("fhirversion", fhirVersion.toCode());    
+      if (fhirVersion != null) {
+        json.set("fhirversion", fhirVersion.toCode());
+      }
     }
     
     public void describe(String desc, String descMD, String changes) {
@@ -125,6 +127,33 @@ public class PackageList {
 
     public Instant instant() throws ParseException {
       return json.asInstant("date");
+    }
+
+    /**
+     * only used for a technical correction. tcPath is the name of archive file (web reference) containing the content before correction
+     * 
+     * @param asString
+     * @param webpath
+     * @param asString2
+     * @param asString3
+     * @param fhirVersion
+     * @param tcName
+     */
+    public void update(String version, String path, String status, String sequence, FhirPublication fhirVersion, String tcPath, String date) {
+      JsonObject tc = new JsonObject();
+      json.forceArray("corrections").add(tc);
+      tc.set("version", json.asString("version"));
+      tc.set("path", tcPath);
+      tc.set("date", date);
+
+      json.set("version", version);      
+      json.set("path", path);
+      json.set("status", status);
+      json.set("sequence", sequence);
+      if (fhirVersion != null) {
+        json.set("fhirversion", fhirVersion.toCode());
+      }
+      setDate(date);
     }
   }
   
@@ -239,6 +268,7 @@ public class PackageList {
       json.getJsonArray("list").remove(cibuild.json);
     }
     cibuild = new PackageListEntry(new JsonObject());
+    cibuild.init(version, path, status, status, null);
     json.getJsonArray("list").add(0, cibuild.json);    
   }
 

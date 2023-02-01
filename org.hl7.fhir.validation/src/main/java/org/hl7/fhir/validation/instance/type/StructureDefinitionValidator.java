@@ -147,6 +147,10 @@ public class StructureDefinitionValidator extends BaseValidator {
     boolean typeMustSupport = false;
     String path = element.getNamedChildValue("path");
     rule(errors, "2022-11-02", IssueType.NOTFOUND, stack.getLiteralPath(), typeName == null || path == null || path.equals(typeName) || path.startsWith(typeName+"."), I18nConstants.SD_PATH_TYPE_MISMATCH, typeName, path);
+    if (!snapshot) {
+      rule(errors, "2023-01-17", IssueType.INVALID, stack.getLiteralPath(), path.contains(".") || !element.hasChild("slicing"), I18nConstants.SD_NO_SLICING_ON_ROOT, path);
+      
+    }
     List<Element> types = element.getChildrenByName("type");
     Set<String> typeCodes = new HashSet<>();
     Set<String> characteristics = new HashSet<>();
@@ -160,29 +164,30 @@ public class StructureDefinitionValidator extends BaseValidator {
         tc = type.getExtensionValue(ToolingExtensions.EXT_FHIR_TYPE).primitiveValue();
       }
       if (Utilities.noString(tc) && type.hasChild("code")) {
-        throw new Error("WTF?");
-//        if (type.getNamedChild("code").hasExtension(" http://hl7.org/fhir/StructureDefinition/structuredefinition-json-type")) {
-//          tc = "*";
-//        }
-      }
-      typeCodes.add(tc);
-      Set<String> tcharacteristics = new HashSet<>();
-      StructureDefinition tsd = context.fetchTypeDefinition(tc);
-      if (tsd != null && tsd.hasExtension(ToolingExtensions.EXT_TYPE_CHARACTERISTICS)) {
-        for (Extension ext : tsd.getExtensionsByUrl(ToolingExtensions.EXT_TYPE_CHARACTERISTICS)) {
-          tcharacteristics.add(ext.getValue().primitiveValue());
+        if (VersionUtilities.isR4Plus(context.getVersion())) {
+          throw new Error("Snapshot for " + sd.getId() +" element " + path + " has type.code without a value ");          
         }
-      } else {
-        // nothing specified, so infer from known types
-        addCharacteristics(tcharacteristics, tc);
       }
-      characteristics.addAll(tcharacteristics);
-      if (type.hasChildren("targetProfile")) {
-        ok = rule(errors, NO_RULE_DATE, IssueType.BUSINESSRULE, stack.getLiteralPath(), tcharacteristics.contains("has-target") , I18nConstants.SD_ILLEGAL_CHARACTERISTICS, "targetProfile", tc) && ok;
-      }
-      // check the stated profile - must be a constraint on the type 
-      if (snapshot || sd != null) {
-        ok = validateElementType(errors, type, stack.push(type, -1, null, null), sd, path) && ok;
+      if (!Utilities.noString(tc)) {
+        typeCodes.add(tc);
+        Set<String> tcharacteristics = new HashSet<>();
+        StructureDefinition tsd = context.fetchTypeDefinition(tc);
+        if (tsd != null && tsd.hasExtension(ToolingExtensions.EXT_TYPE_CHARACTERISTICS)) {
+          for (Extension ext : tsd.getExtensionsByUrl(ToolingExtensions.EXT_TYPE_CHARACTERISTICS)) {
+            tcharacteristics.add(ext.getValue().primitiveValue());
+          }
+        } else {
+          // nothing specified, so infer from known types
+          addCharacteristics(tcharacteristics, tc);
+        }
+        characteristics.addAll(tcharacteristics);
+        if (type.hasChildren("targetProfile")) {
+          ok = rule(errors, NO_RULE_DATE, IssueType.BUSINESSRULE, stack.getLiteralPath(), tcharacteristics.contains("has-target") , I18nConstants.SD_ILLEGAL_CHARACTERISTICS, "targetProfile", tc) && ok;
+        }
+        // check the stated profile - must be a constraint on the type 
+        if (snapshot || sd != null) {
+          ok = validateElementType(errors, type, stack.push(type, -1, null, null), sd, path) && ok;
+        }
       }
     }
     if (typeMustSupport) {

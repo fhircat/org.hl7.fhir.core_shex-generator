@@ -306,3 +306,5 @@ local.properties
 /org.hl7.fhir.r4b.new
 
 org.hl7.fhir.r5/var/lib/.fhir/packages/
+
+*.cache

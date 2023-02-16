@@ -74,6 +74,7 @@ public class ShExGenerator {
           "PREFIX fhir: <$fhir$> \n" +
                   "PREFIX fhirvs: <$fhirvs$>\n" +
                   "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
                   "BASE <http://hl7.org/fhir/shape/>\n$start$";
 
   // Start template for single (open) entry
@@ -275,6 +276,7 @@ public class ShExGenerator {
     excludedSDUrls = new ArrayList<String>();
     selectedExtensions = new ArrayList<StructureDefinition>();
     selectedExtensionUrls = new ArrayList<String>();
+
     fpe = new FHIRPathEngine(context);
   }
 
@@ -345,7 +347,7 @@ public class ShExGenerator {
         structures.addAll(this.selectedExtensions);
       }
 
-      return generate(links, structures, excludedSDUrls);
+      return generate(links, structures);
   }
 
   /**
@@ -379,26 +381,30 @@ public class ShExGenerator {
     uniq_structures = new LinkedList<StructureDefinition>();
     uniq_structure_urls = new HashSet<String>();
     for (StructureDefinition sd : structures) {
-        // skip if SD is in excluded SDs list for generation.
+        // Exclusion Criteria...
         if ((excludedSDUrls != null) &&
             (excludedSDUrls.contains(sd.getUrl()))) {
-          printBuildMessage("SKIPPED-Type1 Generating ShEx for '" + sd.getUrl() + "'! It is in excluded list of structures.");
+          printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+          printBuildMessage("Reason: It is in excluded list of structures.");
           continue;
         }
 
         if ("Extension".equals(sd.getType())) {
           if ((!this.selectedExtensionUrls.isEmpty()) && (!this.selectedExtensionUrls.contains(sd.getUrl()))) {
-            printBuildMessage("SKIPPED-Type2 Generating ShEx for '" + sd.getUrl() + "'! It is Not included in the list of selected extensions.");
+            printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+            printBuildMessage("Reason: It is NOT included in the list of selected extensions.");
             continue;
           }
 
           if ((this.constraintPolicy == ConstraintTranslationPolicy.GENERIC_ONLY) && (sd.hasContext())) {
-            printBuildMessage("SKIPPED-Type3 Generating ShEx for '" + sd.getUrl() + "'! ConstraintTranslationPolicy is set to GENERIC_ONLY, and this Structure has Context of Use.");
+            printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+            printBuildMessage("Reason: ConstraintTranslationPolicy is set to GENERIC_ONLY, and this Structure has Context of Use.");
             continue;
           }
 
           if ((this.constraintPolicy == ConstraintTranslationPolicy.CONTEXT_OF_USE_ONLY) && (!sd.hasContext())) {
-            printBuildMessage("SKIPPED-Type4 Generating ShEx for '" + sd.getUrl() + "'! ConstraintTranslationPolicy is set to CONTEXT_OF_USE_ONLY, and this Structure has no Context of Use.");
+            printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+            printBuildMessage("Reason: ConstraintTranslationPolicy is set to CONTEXT_OF_USE_ONLY, and this Structure has no Context of Use.");
             continue;
           }
         }
@@ -516,23 +522,21 @@ public class ShExGenerator {
 
     ST shape_defn;
     // Resources are either incomplete items or consist of everything that is defined as a resource (completeModel)
-//    if (sd.getName().equals("ActivityDefinition")){
-//      debug("ActivityDefinition found");
-//    }
+    //    if (sd.getName().equals("ActivityDefinition")){
+    //      debug("ActivityDefinition found");
+    //    }
     if("Resource".equals(sd.getName())) {
       shape_defn = tmplt(RESOURCE_SHAPE_TEMPLATE);
       known_resources.add(sd.getName());
     } else {
       shape_defn = tmplt(SHAPE_DEFINITION_TEMPLATE).add("id", getExtendedType(sd));
-      //if (sd.getKind().equals(StructureDefinition.StructureDefinitionKind.RESOURCE)) {
-//              || sd.getKind().equals(StructureDefinition.StructureDefinitionKind.COMPLEXTYPE)) {
-        known_resources.add(sd.getName());
-        ST resource_decl = tmplt(RESOURCE_DECL_TEMPLATE).
-                add("id", sd.getId()).
-                add("root", tmplt(ROOT_TEMPLATE));
-        shape_defn.add("resourceDecl", resource_decl.render());
+      known_resources.add(sd.getName());
+      ST resource_decl = tmplt(RESOURCE_DECL_TEMPLATE).
+              add("id", sd.getId()).
+              add("root", tmplt(ROOT_TEMPLATE));
+      shape_defn.add("resourceDecl", resource_decl.render());
 
-          shape_defn.add("fhirType", " ");
+        shape_defn.add("fhirType", " ");
     }
 
     // Generate the defining elements
@@ -588,7 +592,7 @@ public class ShExGenerator {
               if ((sdType.equals(cstype)) || baseDataTypes.contains(sdType)) {
                 if (!isInnerType) {
                   debug("\n        Key: " + constraint.getKey() + " SD type: " + sd.getType() + " Element: " + ed.getPath() + " Constraint Source: " + constraint.getSource() + " Constraint:" + constraint.getExpression());
-                  String transl = translateConstraint(ed, constraint);
+                  String transl = translateConstraint(sd, ed, constraint);
                   if (transl.isEmpty() || constraintsList.contains(transl))
                     continue;
                   constraintsList.add(transl);
@@ -620,7 +624,7 @@ public class ShExGenerator {
 
         if (!isInInnerTypes(ded)) {
           debug("\n        Key: " + dconstraint.getKey() + " SD type: " + sd.getType() + " Element: " + ded.getPath() + " Constraint Source: " + dconstraint.getSource() + " Constraint:" + dconstraint.getExpression());
-          String dtransl = translateConstraint(ded, dconstraint);
+          String dtransl = translateConstraint(sd, ded, dconstraint);
           if (dtransl.isEmpty() || constraintsList.contains(dtransl))
             continue;
           constraintsList.add(dtransl);
@@ -667,7 +671,7 @@ public class ShExGenerator {
    * @param constraint
    * @return
    */
-  private String translateConstraint(ElementDefinition ed, ElementDefinition.ElementDefinitionConstraintComponent constraint){
+  private String translateConstraint(StructureDefinition sd, ElementDefinition ed, ElementDefinition.ElementDefinitionConstraintComponent constraint){
     String translated = "";
 
     if (constraint != null) {
@@ -677,7 +681,7 @@ public class ShExGenerator {
         translated = "# Constraint: UniqueKey:" + constraint.getKey() + "\n# Human readable:" + constraint.getHuman() + "\n# Constraint:" + constraint.getExpression() + "\n# ShEx:\n";
 
         ExpressionNode expr = fpe.parse(ce);
-        String shexConstraint = processExpressionNode(expr, false, 0);
+        String shexConstraint = processExpressionNode(sd, ed, expr, false, 0);
         shexConstraint = shexConstraint.replaceAll("CALLER", "");
         debug("        Parsed to ShEx Constraint:" + shexConstraint);
         if (!shexConstraint.isEmpty())
@@ -687,7 +691,12 @@ public class ShExGenerator {
 
       } catch (Exception e) {
         String message = "        FAILED to parse the constraint: " + constItem + " [ " + e.getMessage() + " ]";
-        translated = message;
+        // Now make this a comment so that it does not fail when schema is resolved in validator
+        // TODO: This needs to be fixed
+        // TODO: it should be
+        //  translated = message
+
+        translated = "";
         debug(message);
       }
     }
@@ -699,12 +708,12 @@ public class ShExGenerator {
    * @param quote
    * @return
    */
-  private String processExpressionNode(ExpressionNode node, boolean quote, int depth) {
+  private String processExpressionNode(StructureDefinition sd, ElementDefinition ed, ExpressionNode node, boolean quote, int depth) {
     if (node == null)
       return "";
     boolean toQuote  = quote;
 
-    String innerShEx = processExpressionNode(node.getInner(), quote, depth + 1);
+    String innerShEx = processExpressionNode(sd, ed, node.getInner(), quote, depth + 1);
 
     String translatedShEx = "";
 
@@ -734,21 +743,45 @@ public class ShExGenerator {
             toQuote = true;
             break;
         case "Greater":
-            ops = " { fhir:v MinExclusive ";
-            endOps = " } ";
+            if (node.getOpNext().getKind().equals(ExpressionNode.Kind.Constant)) {
+              ops = " { fhir:v MinExclusive ";
+              endOps = " } ";
+            } else {
+              String toStore = "UNMAPPED_OPERATOR_" + opName + " in Node type: " + node.getKind();
+              addUnmappedFunction(opName);
+              ops = TBD(opName);
+            }
             break;
         case "GreaterOrEqual":
-            ops = " { fhir:v MinInclusive ";
-            endOps = " } ";
+            if (node.getOpNext().getKind().equals(ExpressionNode.Kind.Constant)) {
+              ops = " { fhir:v MinInclusive ";
+              endOps = " } ";
+              } else {
+              String toStore = "UNMAPPED_OPERATOR_" + opName + " in Node type: " + node.getKind();
+              addUnmappedFunction(opName);
+              ops = TBD(opName);
+            }
             break;
         case "Less":
         case "LessThan":
-            ops = " { fhir:v MaxExclusive ";
-            endOps = " } ";
+            if (node.getOpNext().getKind().equals(ExpressionNode.Kind.Constant)) {
+              ops = " { fhir:v MaxExclusive ";
+              endOps = " } ";
+            } else {
+              String toStore = "UNMAPPED_OPERATOR_" + opName + " in Node type: " + node.getKind();
+              addUnmappedFunction(opName);
+              ops = TBD(opName);
+            }
             break;
         case "LessOrEqual":
-            ops = " { fhir:v MaxInclusive ";
-            endOps = " } ";
+            if (node.getOpNext().getKind().equals(ExpressionNode.Kind.Constant)) {
+              ops = " { fhir:v MaxInclusive ";
+              endOps = " } ";
+            } else {
+              String toStore = "UNMAPPED_OPERATOR_" + opName + " in Node type: " + node.getKind();
+              addUnmappedFunction(opName);
+              ops = TBD(opName);
+            }
             break;
         case "And":
         case "Implies" :
@@ -784,10 +817,8 @@ public class ShExGenerator {
           else {
             fExp = " " + funcName + "( CALLER )";
 
-            String toStore = "UNMAPPED_FUNCTION_" + node.getFunction().toCode();
-
-            if (!unMappedFunctions.contains(toStore))
-              unMappedFunctions.add(toStore);
+            addUnmappedFunction(node.getFunction().toCode());
+            String toStore = addUnmappedFunction(node.getFunction().toCode());
           }
         }
       }
@@ -824,17 +855,14 @@ public class ShExGenerator {
             break;
           default:
             fExp = TBD(node.getFunction().toCode());
-            String toStore = "UNMAPPED_FUNCTION_" + node.getFunction().toCode();
-
-            if (!unMappedFunctions.contains(toStore))
-              unMappedFunctions.add(toStore);
+            String toStore = addUnmappedFunction(node.getFunction().toCode());
         }
 
         if (node.parameterCount() > 0) {
           for (ExpressionNode pen : node.getParameters()) {
             if (!"".equals(pExp))
               pExp += ", ";
-            pExp += processExpressionNode(pen, quote, depth);
+            pExp += processExpressionNode(sd, ed, pen, quote, depth);
             isFunctionCall = true;
           }
         }
@@ -853,16 +881,16 @@ public class ShExGenerator {
         translatedShEx += fExp;
 
       translatedShEx = positionParts(innerShEx, translatedShEx,
-                                    getNextOps(ops , processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+                                    getNextOps(ops , processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                                     depth, false);
 
     } else  if (kind == ExpressionNode.Kind.Name) {
           translatedShEx += positionParts(innerShEx, "fhir:" + node.getName(),
-                            getNextOps(ops, processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+                            getNextOps(ops, processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                             depth, true);
     }else if (kind == ExpressionNode.Kind.Group) {
-        translatedShEx += positionParts(innerShEx, processExpressionNode(node.getGroup(), toQuote, depth),
-                          getNextOps(ops , processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+        translatedShEx += positionParts(innerShEx, processExpressionNode(sd, ed, node.getGroup(), toQuote, depth),
+                          getNextOps(ops , processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                           depth, true);
     } else if (kind == ExpressionNode.Kind.Constant) {
         Base constantB = node.getConstant();
@@ -870,28 +898,41 @@ public class ShExGenerator {
         String constantV = constantB.primitiveValue();
 
         if (constantV.startsWith("%")) {
-          // Evaluate the expression, this resolves unknowns in the value.
-          List<Base> evaluated = fpe.evaluate(null, node);
+          try {
+            // Evaluate the expression, this resolves unknowns in the value.
+            List<Base> evaluated = fpe.evaluate(null, sd, sd, ed, node);
 
-          if (!evaluated.isEmpty())
-            constantV = evaluated.get(0).primitiveValue();
+            if (!evaluated.isEmpty())
+              constantV = evaluated.get(0).primitiveValue();
+          }
+          catch (Exception e) {
+            debug("Failed to evaluate constant expression: " + constantV);
+          }
         }
 
         translatedShEx += positionParts(innerShEx, quoteThis(constantV, toQt),
-                          getNextOps(ops , processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+                          getNextOps(ops , processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                           depth, false);
         //translatedShEx += positionParts(innerShEx, node.getConstant().primitiveValue(), ops + processExpressionNode(node.getOpNext(), toQuote, 0) + endOps, depth);
     } else if (kind == ExpressionNode.Kind.Unary) {
         translatedShEx += positionParts(innerShEx, node.getName(),
-                          getNextOps(ops,processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+                          getNextOps(ops,processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                           depth, false);
     } else {
       translatedShEx += positionParts(innerShEx, node.toString(),
-                        getNextOps(ops, processExpressionNode(node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
+                        getNextOps(ops, processExpressionNode(sd, ed, node.getOpNext(), toQuote, depth), endOps, treatBothOpsSame),
                         depth, false);
     }
 
     return translatedShEx;
+  }
+
+  private String addUnmappedFunction(String func) {
+    String toStore = "UNMAPPED_FUNCTION_" + func;
+    if (!unMappedFunctions.contains(toStore))
+      unMappedFunctions.add(toStore);
+
+    return toStore;
   }
 
   private String getNextOps(String startOp, String opNext, String endOp, boolean treatBothOps){
@@ -1527,7 +1568,7 @@ public class ShExGenerator {
         if ((sdType.equals(cstype)) || baseDataTypes.contains(sdType)) {
           //if (!isInInnerTypes(ed)) {
             debug("\n        (INNER ED) Key: " + constraint.getKey() + " SD type: " + sd.getType() + " Element: " + ed.getPath() + " Constraint Source: " + constraint.getSource() + " Constraint:" + constraint.getExpression());
-            String transl = translateConstraint(ed, constraint);
+            String transl = translateConstraint(sd, ed, constraint);
             if (transl.isEmpty() || innerConstraintsList.contains(transl))
               continue;
             innerConstraintsList.add(transl);

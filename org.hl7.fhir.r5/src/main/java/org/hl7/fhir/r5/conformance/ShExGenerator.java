@@ -82,7 +82,7 @@ public class ShExGenerator {
       "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n";
       //"BASE <http://hl7.org/fhir/shape/>\n";
 
-  private static String IMPORT_TEMPLATE = "IMPORT <$import$$fileExt$>\n";
+  private static String IMPORT_TEMPLATE = "\n#imported_begin \nIMPORT <$import$$fileExt$>\n#imported_end";
 
   // Start template for single (open) entry
   private static String START_TEMPLATE = "\n\nstart=@<$id$> AND {fhir:nodeRole [fhir:treeRoot]}\n";
@@ -94,6 +94,8 @@ public class ShExGenerator {
 
   private static String ALL_ENTRY_TEMPLATE = "(NOT { fhir:nodeRole [fhir:treeRoot] ; a [fhir:$id$] } OR @<$id$>)";
 
+  // imports to avoid (this is a bug is FHIR R5
+  public static List<String> importsToAvoid = Arrays.asList("http:", "HealthCareService", "rendering-xhtml");
 
   // Shape Definition
   //      the shape name
@@ -250,8 +252,11 @@ public class ShExGenerator {
    * doDataTypes -- whether or not to emit the data types.
    */
   private HashSet<Pair<StructureDefinition, ElementDefinition>> innerTypes, emittedInnerTypes;
+  private List<String> innerTypeNames;
 
   private List<String> oneOrMoreTypes;
+
+
 
   private List<String> constraintsList;
 
@@ -280,6 +285,7 @@ public class ShExGenerator {
     this.context = context;
     profileUtilities = new ProfileUtilities(context, null, null);
     innerTypes = new HashSet<Pair<StructureDefinition, ElementDefinition>>();
+    innerTypeNames = new ArrayList<String>();
     oneOrMoreTypes = new ArrayList<String>();
     constraintsList = new ArrayList<String>();
     unMappedFunctions = new ArrayList<String>();
@@ -301,6 +307,7 @@ public class ShExGenerator {
     List<StructureDefinition> list = new ArrayList<StructureDefinition>();
     list.add(structure);
     innerTypes.clear();
+    innerTypeNames.clear();
     oneOrMoreTypes.clear();
     constraintsList.clear();
     unMappedFunctions.clear();
@@ -319,7 +326,10 @@ public class ShExGenerator {
   }
 
   public void setExcludedStructureDefinitionUrls(List<String> excludedSDs){
-    this.excludedSDUrls = excludedSDs;
+    if (excludedSDs == null)
+      this.excludedSDUrls.clear();
+    else
+      this.excludedSDUrls = excludedSDs;
   }
 
   public List<StructureDefinition> getSelectedExtensions(){
@@ -399,13 +409,13 @@ public class ShExGenerator {
     uniq_structure_urls = new HashSet<String>();
     StringBuffer allStructures = new StringBuffer("");
     for (StructureDefinition sd : structures) {
-      // Exclusion Criteria...
-      if ((excludedSDUrls != null) &&
-        (excludedSDUrls.contains(sd.getUrl()))) {
-        printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
-        printBuildMessage("Reason: It is in excluded list of structures.");
-        continue;
-      }
+//      // Exclusion Criteria for constraints
+//      if ((excludedSDUrls != null) &&
+//        (excludedSDUrls.contains(sd.getUrl()))) {
+//        printBuildMessage("SKIPPED Generating ShEx for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+//        printBuildMessage("Reason: It is in excluded list of structures.");
+//        continue;
+//      }
 
       if ("Extension".equals(sd.getType())) {
         if ((!this.selectedExtensionUrls.isEmpty()) && (!this.selectedExtensionUrls.contains(sd.getUrl()))) {
@@ -435,6 +445,10 @@ public class ShExGenerator {
 
     for (StructureDefinition sd : uniq_structures) {
       printBuildMessage(" ---- Generating ShEx for : " + sd.getName() + "  [ " + sd.getUrl() + " ] ...");
+//      if (sd.getUrl().contains("rendering-xhtml"))
+//      {
+//        printBuildMessage("found it");
+//      }
       String shapeDefinitionStr = genShapeDefinition(sd, true);
 
       if (!shapeDefinitionStr.isEmpty()) {
@@ -493,9 +507,17 @@ public class ShExGenerator {
         Collections.sort(sortedVS, new Comparator<String>() {
           @Override
           public int compare(String o1, String o2) {
+            if ((o1 == null)||(o2 == null))
+              return 0;
+
             try {
-              return StringUtils.substringBetween(o1, "fhirvs:", " ")
-                .compareTo(StringUtils.substringBetween(o2, "fhirvs:", " "));
+              String s1 = (o1.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o1, "fhirvs:", " ") : o1;
+              String s2 = (o2.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o2, "fhirvs:", " ") : o2;
+              //debug("Comparing " + s1 + " and  " + s2);
+              if ((s1 == null)||(s2 == null))
+                return 0;
+
+              return s1.compareTo(s2);
             }
             catch(Exception e){
               debug("SORT COMPARISON FAILED BETWEEN \n\t\t" + o1 + "\n\t\t and \n\t\t" + o2);
@@ -505,8 +527,9 @@ public class ShExGenerator {
           }
       });
 
-        for (String svs : sortedVS)
-          shapeDefinitions.append("\n").append(svs);
+        for (String svs : sortedVS) {
+          shapeDefinitions.append("\n").append("#value_set_begins\n" + svs + "#value_set_ends");
+        }
       }
 
       if ((unMappedFunctions != null) && (!unMappedFunctions.isEmpty())) {
@@ -520,6 +543,10 @@ public class ShExGenerator {
 
     StringBuffer allImports = new StringBuffer("");
     if (!imports.isEmpty()) {
+
+      if (oneOrMoreTypes.size() > 0)
+        imports.add("aux");
+
       uniq_structures.forEach((StructureDefinition sdstruct) -> {
           imports.removeIf(s -> s.contains(sdstruct.getName()));
       });
@@ -595,10 +622,6 @@ public class ShExGenerator {
       return "";
 
     ST shape_defn;
-    // Resources are either incomplete items or consist of everything that is defined as a resource (completeModel)
-    //    if (sd.getName().equals("ActivityDefinition")){
-    //      debug("ActivityDefinition found");
-    //    }
       if("Resource".equals(sd.getName())) {
         shape_defn = tmplt(RESOURCE_SHAPE_TEMPLATE);
         known_resources.add(sd.getName());
@@ -627,6 +650,7 @@ public class ShExGenerator {
         }
       }
       shape_defn.add("fhirType", " ");
+
 
     // Generate the defining elements
     List<String> elements = new ArrayList<String>();
@@ -664,7 +688,7 @@ public class ShExGenerator {
           isInnerType = true;
         }
 
-        if (processConstraints) {
+        if (toProcessConstraints(sd)) {
           // Process constraints
           for (ElementDefinition.ElementDefinitionConstraintComponent constraint : ed.getConstraint()) {
             String sdType = sd.getType();
@@ -689,6 +713,8 @@ public class ShExGenerator {
             }
           }
         }
+
+
         elements.add(elementDefinition);
       }
       else {
@@ -696,13 +722,13 @@ public class ShExGenerator {
         if (children.size() > 0) {
           for (ElementDefinition child : children) {
             if (child.getPath().startsWith(ed.getPath()))
-              innerTypes.add(new ImmutablePair<StructureDefinition, ElementDefinition>(sd, ed));
+              addInnerType(sd, ed);
           }
         }
       }
     }
 
-    if (processConstraints) {
+    if (toProcessConstraints(sd)) {
       // Constraints for differential to cover constraints on SD itself without any elements of its own
       for (ElementDefinition ded : sd.getDifferential().getElement()) {
         // Process constraints
@@ -724,7 +750,7 @@ public class ShExGenerator {
     }
 
     shape_defn.add("elements", StringUtils.join(elements, "\n"));
-    shape_defn.add("comment", root_comment == null? " " : "# " + root_comment);
+    shape_defn.add("comment", root_comment == null? " " : "# " + root_comment.replaceAll("\n", "\n#"));
 
     String constraintStr = "";
 
@@ -750,6 +776,7 @@ public class ShExGenerator {
           for (int i = 1; i < backRefs.length; i++)
             toStore = "^fhir:" + backRefs[i] + " {" + toStore + "}";
 
+          toStore = removeMultipleX(toStore);
           if (!contextOfUse.contains(toStore)) {
             contextOfUse.add(toStore);
           }
@@ -852,8 +879,8 @@ public class ShExGenerator {
           break;
         case "NotEquals":
           if (!node.getOpNext().getKind().equals(ExpressionNode.Kind.Name)) {
-            ops = " [fhir:v  . -";
-            endOps = "] ";
+            ops = " {fhir:v  [. -";
+            endOps = "]} ";
             toQuote = true;
           } else {
             String toStore = "UNMAPPED_OPERATOR_" + opName + " in Node type: " + node.getKind();
@@ -1333,9 +1360,9 @@ public class ShExGenerator {
 
     element_def = tmplt(ELEMENT_TEMPLATE);
     if (id.endsWith("[x]")) {
-      element_def.add("id", "fhir:" + shortId.replace("[x]", ""));
+      element_def.add("id", "fhir:" + removeMultipleX(shortId));
     } else {
-      element_def.add("id", "fhir:" + shortId + " ");
+      element_def.add("id", "fhir:" + removeMultipleX(shortId) + " ");
     }
 
     List<ElementDefinition> children = profileUtilities.getChildList(sd, ed);
@@ -1344,7 +1371,7 @@ public class ShExGenerator {
       if ((ed.hasContentReference() && (!ed.hasType())) || (!id.equals(parentPath + "." + shortId))) {
         //debug("Not Adding innerType:" + id + " to " + sd.getName());
       } else
-        innerTypes.add(new ImmutablePair<StructureDefinition, ElementDefinition>(sd, ed));
+        addInnerType(sd, ed);
     }
 
     if ("BackboneElement".equals(typ))
@@ -1353,10 +1380,10 @@ public class ShExGenerator {
     defn = simpleElement(sd, ed, typ);
 
     String refChoices = "";
-
+    List<String> refValues = new ArrayList<String>();
     if (id.endsWith("[x]")) {
       //defn = " (" + genChoiceTypes(sd, ed, shortId) + ")";
-      defn = " " + genChoiceTypes(sd, ed, shortId) + " ";
+      defn = " " + genChoiceTypes(sd, ed, removeMultipleX(shortId)) + " ";
       //defn += " AND { rdf:type IRI } ";
     } else {
       if (ed.getType().size() == 1) {
@@ -1381,8 +1408,6 @@ public class ShExGenerator {
         defn = simpleElement(sd, ed, refPath);
       }
 
-
-      List<String> refValues = new ArrayList<String>();
       if (ed.hasType() && (ed.getType().get(0).getWorkingCode().equals("Reference"))) {
         if (ed.getType().get(0).hasTargetProfile()) {
 
@@ -1394,6 +1419,10 @@ public class ShExGenerator {
       }
 
       if (!refValues.isEmpty()) {
+        // First store the original type, if not already there
+//        if (!oneOrMoreTypes.contains(defn))
+//          oneOrMoreTypes.add(defn);
+
         Collections.sort(refValues);
         refChoices = StringUtils.join(refValues, "_OR_");
       }
@@ -1404,6 +1433,22 @@ public class ShExGenerator {
       card = card.replace("+", "");
       card = card.replace("*", "?");
       defn = defn.replace("<", "<" + ONE_OR_MORE_PREFIX);
+
+      String[] alltags = defn.split("<");
+      for (String st : alltags) {
+        if (!st.startsWith(ONE_OR_MORE_PREFIX))
+          continue;
+        String stbr = "<" + st;
+        String origTypeDef = StringUtils.substringBetween(stbr, "<", ">");
+        if (!oneOrMoreTypes.contains(origTypeDef))
+          oneOrMoreTypes.add(origTypeDef);
+      }
+
+      for (String refType : refValues) {
+        String toStoreRT = ONE_OR_MORE_PREFIX + refType;
+        if (!oneOrMoreTypes.contains(toStoreRT))
+          oneOrMoreTypes.add(toStoreRT);
+      }
 
       String defnToStore = defn;
       if (!refChoices.isEmpty()) {
@@ -1435,16 +1480,14 @@ public class ShExGenerator {
 
   private void addImport(String typeDefn) {
       if ((typeDefn != null) && (!typeDefn.isEmpty())) {
-  //        String importType = StringUtils.substringBetween(typeDefn, "<", ">");
-  //        if ((importType.indexOf(ONE_OR_MORE_PREFIX) == -1) &&
-  //          (!imports.contains(importType)))
-  //            imports.add(importType);
-  //    }
-        Pattern p = Pattern.compile("<([^\\s>/]+)");
+         Pattern p = Pattern.compile("<([^\\s>/]+)");
         Matcher m = p.matcher(typeDefn);
         while (m.find()) {
           String tag = m.group(1);
-          //System.out.println("FOUND IMPORT: " + tag);
+
+          if (importsToAvoid.contains(tag))
+            continue;
+
           if (tag.indexOf(ONE_OR_MORE_PREFIX) != -1) {
             tag = tag.substring(ONE_OR_MORE_PREFIX.length());
           }
@@ -1501,10 +1544,25 @@ public class ShExGenerator {
     return tmplt(SIMPLE_ELEMENT_DEFN_TEMPLATE).add("typ", typ).add("vsdef", addldef).render();
   }
 
+  private String removeMultipleX(String str) {
+     if ((str != null) && (!"".equals(str))) {
+       str = str.replaceAll("\\[x\\]", "");
+     }
+
+     return str;
+  }
+
   private String vsprefix(String uri) {
     if(uri.startsWith(FHIR_VS))
       return "fhirvs:" + uri.replace(FHIR_VS, "");
     return "<" + uri + ">";
+  }
+
+  private void addInnerType(StructureDefinition sd, ElementDefinition ed){
+    if ((!innerTypeNames.contains(ed.getPath())) && (ed.getPath().startsWith(sd.getName()))) {
+      innerTypes.add(new ImmutablePair<StructureDefinition, ElementDefinition>(sd, ed));
+      innerTypeNames.add(ed.getPath());
+    }
   }
 
   /**
@@ -1522,7 +1580,7 @@ public class ShExGenerator {
         return genReference("", typ);
       else if(profileUtilities.getChildList(sd, ed).size() > 0) {
         // inline anonymous type - give it a name and factor it out
-        innerTypes.add(new ImmutablePair<StructureDefinition, ElementDefinition>(sd, ed));
+        addInnerType(sd, ed);
         return simpleElement(sd, ed, id);
       }
       else {
@@ -1667,7 +1725,7 @@ public class ShExGenerator {
                                 String id) {
     List<String> choiceEntries = new ArrayList<String>();
     List<String> refValues = new ArrayList<String>();
-    String base = id.replace("[x]", "");
+    String base = removeMultipleX(id);
 
     for (ElementDefinition.TypeRefComponent typ : ed.getType()) {
       String entry = genChoiceEntry(sd, ed, base, typ);
@@ -1739,6 +1797,10 @@ public class ShExGenerator {
     addImport(origType);
     addImport(restriction);
     one_or_more_type.add("comment", "");
+
+    if (origType.indexOf(".") == -1)
+      return "\n#oneOrMore_begin\n" + one_or_more_type.render() + "\n#oneOrMore_end\n";
+
     return one_or_more_type.render();
   }
 
@@ -1752,7 +1814,7 @@ public class ShExGenerator {
     String path = ed.hasBase() ? ed.getBase().getPath() : ed.getPath();
     ST element_reference = tmplt(SHAPE_DEFINITION_TEMPLATE);
     element_reference.add("resourceDecl", "");  // Not a resource
-    element_reference.add("id", path + getExtendedType(ed));
+    element_reference.add("id", removeMultipleX(path) + getExtendedType(ed));
     element_reference.add("fhirType", " ");
     String comment = ed.getShort();
     element_reference.add("comment", comment == null? " " : "# " + comment);
@@ -1768,7 +1830,7 @@ public class ShExGenerator {
 
     List<String> innerConstraintsList = new ArrayList<String>();
 
-    if (processConstraints) {
+    if (toProcessConstraints(sd)) {
       // Process constraints
       for (ElementDefinition.ElementDefinitionConstraintComponent constraint : ed.getConstraint()) {
         String sdType = sd.getType();
@@ -1806,6 +1868,23 @@ public class ShExGenerator {
     element_reference.add("contextOfUse", "");
 
     return element_reference.render();
+  }
+
+  private boolean toProcessConstraints(StructureDefinition sd){
+    if (sd == null)
+      return false;
+
+    if (!processConstraints)
+      return false;
+
+    // Exclusion Criteria for constraints
+    if ((excludedSDUrls != null) &&
+      (excludedSDUrls.contains(sd.getUrl()))) {
+      printBuildMessage("SKIPPED Translating Constraints for " + sd.getName() + "  [ " + sd.getUrl() + " ] !");
+      printBuildMessage("Reason: It is in excluded list of structures to process constraints.");
+      return false;
+    }
+    return true;
   }
 
   /**

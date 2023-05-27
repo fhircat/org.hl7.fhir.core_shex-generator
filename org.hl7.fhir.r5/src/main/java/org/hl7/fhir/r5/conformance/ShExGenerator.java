@@ -1462,7 +1462,7 @@ public class ShExGenerator {
     } else {
       if (!refChoices.isEmpty()) {
         defn += " AND {fhir:link \n\t\t\t@<" +
-          refChoices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ? }";
+          refChoices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ?}";
       }
     }
 
@@ -1738,7 +1738,7 @@ public class ShExGenerator {
       }
 
       if (!refValues.isEmpty())
-        choiceEntries.add("(" + entry + " AND {fhir:link " + StringUtils.join(refValues, " OR \n\t\t\t ") + " }) ");
+        choiceEntries.add("(" + entry + " AND {fhir:link " + StringUtils.join(refValues, " OR \n\t\t\t ") + " ?}) ");
       else
         choiceEntries.add(entry);
     }
@@ -1786,7 +1786,7 @@ public class ShExGenerator {
       restriction = "AND {fhir:link \n\t\t\t@<";
 
       String choices = oneOrMoreType.split(ONE_OR_MORE_CHOICES)[1];
-      restriction += choices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> }";
+      restriction += choices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ?}";
     }
 
     origType = origType.replaceAll(ONE_OR_MORE_PREFIX, "");

@@ -493,6 +493,7 @@ public class ValueSetValidator {
             res.getIssues().addAll(makeIssue(IssueSeverity.WARNING, IssueType.NOTFOUND, path, m));
             res.setUnknownSystems(unknownSystems);
             res.setSeverity(IssueSeverity.ERROR); // back patching for display logic issue
+            res.setErrorClass(TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED);
           } else if (!inExpansion && !inInclude) {
 //            if (!info.getIssues().isEmpty()) {
 //              res.setMessage("Not in value set "+valueset.getUrl()+": "+info.summary()).setSeverity(IssueSeverity.ERROR);              
@@ -664,16 +665,16 @@ public class ValueSetValidator {
     if (code.getDisplay() == null) {
       return new ValidationResult(code.getSystem(), cs.getVersion(), cc, vc.getDisplay());
     }
-    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(", ", " or ");
     if (cc.hasDisplay() && isOkLanguage(cs.getLanguage())) {
-      b.append(cc.getDisplay());
+      b.append("'"+cc.getDisplay()+"'");
       if (code.getDisplay().equalsIgnoreCase(cc.getDisplay())) {
         return new ValidationResult(code.getSystem(), cs.getVersion(), cc, getPreferredDisplay(cc, cs));
       }
     }
     for (ConceptDefinitionDesignationComponent ds : cc.getDesignation()) {
       if (isOkLanguage(ds.getLanguage())) {
-        b.append(ds.getValue());
+        b.append("'"+ds.getValue()+"'");
         if (code.getDisplay().equalsIgnoreCase(ds.getValue())) {
           return new ValidationResult(code.getSystem(),cs.getVersion(),  cc, getPreferredDisplay(cc, cs));
         }
@@ -684,14 +685,14 @@ public class ValueSetValidator {
       ConceptReferencePair vs = findValueSetRef(code.getSystem(), code.getCode());
       if (vs != null && (vs.getCc().hasDisplay() ||vs.getCc().hasDesignation())) {
         if (vs.getCc().hasDisplay() && isOkLanguage(vs.getValueset().getLanguage())) {
-          b.append(vs.getCc().getDisplay());
+          b.append("'"+vs.getCc().getDisplay()+"'");
           if (code.getDisplay().equalsIgnoreCase(vs.getCc().getDisplay())) {
             return new ValidationResult(code.getSystem(), cs.getVersion(), cc, getPreferredDisplay(cc, cs));
           }
         }
         for (ConceptReferenceDesignationComponent ds : vs.getCc().getDesignation()) {
           if (isOkLanguage(ds.getLanguage())) {
-            b.append(ds.getValue());
+            b.append("'"+ds.getValue()+"'");
             if (code.getDisplay().equalsIgnoreCase(ds.getValue())) {
               return new ValidationResult(code.getSystem(), cs.getVersion(), cc, getPreferredDisplay(cc, cs));
             }
@@ -978,9 +979,9 @@ public class ValueSetValidator {
       for (ConceptSetComponent vsi : valueset.getCompose().getInclude()) {
         Boolean ok = inComponent(path, vsi, i, system, version, code, valueset.getCompose().getInclude().size() == 1, info);
         i++;
-        if (ok == null && result == false) {
+        if (ok == null && result != null && result == false) {
           result = null;
-        } else if (ok) {
+        } else if (ok != null && ok) {
           result = true;
           break;
         }
@@ -989,7 +990,7 @@ public class ValueSetValidator {
       for (ConceptSetComponent vsi : valueset.getCompose().getExclude()) {
         Boolean nok = inComponent(path, vsi, i, system, version, code, valueset.getCompose().getInclude().size() == 1, info);
         i++;
-        if (nok == null && result == false) {
+        if (nok == null && result != null && result == false) {
           result = null;
         } else if (nok != null && nok) {
           result = false;
@@ -1199,6 +1200,7 @@ public class ValueSetValidator {
     }
     ValueSet vs = context.fetchResource(ValueSet.class, url, valueset);
     ValueSetValidator vsc = new ValueSetValidator(options, vs, context, localContext, expansionProfile, txCaps);
+    vsc.setThrowToServer(throwToServer);
     inner.put(url, vsc);
     return vsc;
   }

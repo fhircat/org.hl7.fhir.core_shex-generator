@@ -88,6 +88,8 @@ import org.hl7.fhir.utilities.settings.FhirSettings;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 import org.hl7.fhir.validation.BaseValidator.ValidationControl;
+import org.hl7.fhir.validation.ValidationEngine.IValidationEngineLoader;
+import org.hl7.fhir.validation.ValidatorUtils.SourceFile;
 import org.hl7.fhir.validation.cli.model.HtmlInMarkdownCheck;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.utils.ProfileLoader;
@@ -176,6 +178,13 @@ POSSIBILITY OF SUCH DAMAGE.
 @Accessors(chain = true)
 public class ValidationEngine implements IValidatorResourceFetcher, IValidationPolicyAdvisor, IPackageInstaller, IWorkerContextManager.IPackageLoadingTracker {
 
+
+  public interface IValidationEngineLoader {
+
+    void load(Content cnt) throws FHIRException, IOException;
+
+  }
+
   @Getter @Setter private SimpleWorkerContext context;
   @Getter @Setter private Map<String, byte[]> binaries = new HashMap<>();
   @Getter @Setter private boolean doNative;
@@ -202,6 +211,7 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
   @Getter @Setter private boolean showMessagesFromReferences;
   @Getter @Setter private boolean doImplicitFHIRPathStringConversion;
   @Getter @Setter private HtmlInMarkdownCheck htmlInMarkdownCheck;
+  @Getter @Setter private boolean allowDoubleQuotesInFHIRPath;
   @Getter @Setter private Locale locale;
   @Getter @Setter private List<ImplementationGuide> igs = new ArrayList<>();
   @Getter @Setter private List<String> extensionDomains = new ArrayList<>();
@@ -253,6 +263,7 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
     showMessagesFromReferences = other.showMessagesFromReferences;
     doImplicitFHIRPathStringConversion = other.doImplicitFHIRPathStringConversion;
     htmlInMarkdownCheck = other.htmlInMarkdownCheck;
+    allowDoubleQuotesInFHIRPath = other.allowDoubleQuotesInFHIRPath;
     locale = other.locale;
     igs.addAll(other.igs);
     extensionDomains.addAll(other.extensionDomains);
@@ -423,7 +434,7 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
       if (userAgent != null) {
         contextBuilder.withUserAgent(userAgent);
       }
-      context = contextBuilder.fromPackage(npm, ValidatorUtils.loaderForVersion(version));
+      context = contextBuilder.fromPackage(npm, ValidatorUtils.loaderForVersion(version), false);
     } else {
       Map<String, byte[]> source = igLoader.loadIgSource(src, recursive, true);
       if (version == null) {
@@ -462,6 +473,7 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
     context.loadFromPackage(npmX, null);
 
     this.fhirPathEngine = new FHIRPathEngine(context);
+    this.fhirPathEngine.setAllowDoubleQuotes(false);
   }
 
   private String getVersionFromPack(Map<String, byte[]> source) {
@@ -543,35 +555,63 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
     return list;
   }
 
-  public OperationOutcome validate(String source, List<String> profiles) throws FHIRException, IOException {
+  public OperationOutcome validate(String source, List<String> profiles, IValidationEngineLoader loader, boolean all) throws FHIRException, IOException {
     List<String> l = new ArrayList<String>();
+    List<SourceFile> refs = new ArrayList<>();
     l.add(source);
-    return (OperationOutcome) validate(l, profiles, null);
+    return (OperationOutcome) validate(l, profiles, refs, null, loader, all);
   }
 
-  public Resource validate(List<String> sources, List<String> profiles, List<ValidationRecord> record) throws FHIRException, IOException {
-    if (profiles.size() > 0) {
-      System.out.println("  Profiles: " + profiles);
-    }
-    List<String> refs = new ArrayList<String>();
+  public Resource validate(List<String> sources, List<String> profiles, List<SourceFile> refs, List<ValidationRecord> record, IValidationEngineLoader loader, boolean all) throws FHIRException, IOException {
     boolean asBundle = ValidatorUtils.parseSources(sources, refs, context);
     Bundle results = new Bundle();
     results.setType(Bundle.BundleType.COLLECTION);
-    for (String ref : refs) {
-      TimeTracker.Session tts = context.clock().start("validation");
-      context.clock().milestone();
-      System.out.println("  Validate " + ref);
-      Content cnt = igLoader.loadContent(ref, "validate", false);
-      try {
-        OperationOutcome outcome = validate(ref, cnt.getFocus(), cnt.getCntType(), profiles, record);
-        ToolingExtensions.addStringExtension(outcome, ToolingExtensions.EXT_OO_FILE, ref);
-        System.out.println(" " + context.clock().milestone());
-        results.addEntry().setResource(outcome);
-        tts.end();
-      } catch (Exception e) {
-        System.out.println("Validation Infrastructure fail validating " + ref + ": " + e.getMessage());
-        tts.end();
-        throw new FHIRException(e);
+    boolean found = false;
+    
+    for (SourceFile ref : refs) {
+      if (ref.isProcess()) {
+        found = true;
+      }
+    }
+    if (!found) {
+      return null;
+    }
+    
+    // round one: try to read them all natively
+    // Ignore if it fails.The purpose of this is to make dependencies 
+    // available for other resources to depend on. if it fails to load, there'll be an error if there's
+    // something that should've been loaded
+    for (SourceFile ref : refs) {
+      if (ref.isProcess() || all) {
+        ref.setCnt(igLoader.loadContent(ref.getRef(), "validate", false));
+        if (loader != null) {
+          try {
+            loader.load(ref.getCnt());
+          } catch (Throwable t) {
+            System.out.println(t.getMessage());
+          }
+        }
+      }
+    }
+    
+    for (SourceFile ref : refs) {
+      if (ref.isProcess() || all) {
+        TimeTracker.Session tts = context.clock().start("validation");
+        context.clock().milestone();
+        System.out.println("  Validate " + ref);
+        
+        try {
+          OperationOutcome outcome = validate(ref.getRef(), ref.getCnt().getFocus(), ref.getCnt().getCntType(), profiles, record);
+          ToolingExtensions.addStringExtension(outcome, ToolingExtensions.EXT_OO_FILE, ref.getRef());
+          System.out.println(" " + context.clock().milestone());
+          results.addEntry().setResource(outcome);
+          tts.end();
+        } catch (Exception e) {
+          System.out.println("Validation Infrastructure fail validating " + ref + ": " + e.getMessage());
+          tts.end();
+          throw new FHIRException(e);
+        }
+        ref.setProcess(false);
       }
     }
     if (asBundle)
@@ -598,7 +638,16 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
       System.out.println(location + ": " + validator.reportTimes());
     }
     if (record != null) {
-      record.add(new ValidationRecord(location, messages));
+      boolean found = false;
+      for (ValidationRecord t : record) {
+        if (t.getLocation().equals(location)) {
+          found = true;
+          t.setMessages(messages);
+        }
+      }
+      if (!found) {
+        record.add(new ValidationRecord(location, messages));
+      }
     }
     return ValidatorUtils.messagesToOutcome(messages, context, fhirPathEngine);
   }
@@ -793,6 +842,7 @@ public class ValidationEngine implements IValidatorResourceFetcher, IValidationP
     validator.setQuestionnaireMode(questionnaireMode);
     validator.setLevel(level);
     validator.setHtmlInMarkdownCheck(htmlInMarkdownCheck);
+    validator.setAllowDoubleQuotesInFHIRPath(allowDoubleQuotesInFHIRPath);
     validator.setNoUnicodeBiDiControlChars(noUnicodeBiDiControlChars);
     validator.setDoImplicitFHIRPathStringConversion(doImplicitFHIRPathStringConversion);
     if (format == FhirFormat.SHC) {

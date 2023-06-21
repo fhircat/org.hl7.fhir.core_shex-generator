@@ -210,27 +210,28 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   protected String version; // although the internal resources are all R5, the version of FHIR they describe may not be 
 
   protected TerminologyClientContext tcc = new TerminologyClientContext();
+  private boolean minimalMemory = false;
 
   private Map<String, Map<String, ResourceProxy>> allResourcesById = new HashMap<String, Map<String, ResourceProxy>>();
   // all maps are to the full URI
-  private CanonicalResourceManager<CodeSystem> codeSystems = new CanonicalResourceManager<CodeSystem>(false);
+  private CanonicalResourceManager<CodeSystem> codeSystems = new CanonicalResourceManager<CodeSystem>(false, minimalMemory);
   private final Set<String> supportedCodeSystems = new HashSet<String>();
   private final Set<String> unsupportedCodeSystems = new HashSet<String>(); // know that the terminology server doesn't support them
-  private CanonicalResourceManager<ValueSet> valueSets = new CanonicalResourceManager<ValueSet>(false);
-  private CanonicalResourceManager<ConceptMap> maps = new CanonicalResourceManager<ConceptMap>(false);
-  protected CanonicalResourceManager<StructureMap> transforms = new CanonicalResourceManager<StructureMap>(false);
-  private CanonicalResourceManager<StructureDefinition> structures = new CanonicalResourceManager<StructureDefinition>(false);
-  private final CanonicalResourceManager<Measure> measures = new CanonicalResourceManager<Measure>(false);
-  private final CanonicalResourceManager<Library> libraries = new CanonicalResourceManager<Library>(false);
-  private CanonicalResourceManager<ImplementationGuide> guides = new CanonicalResourceManager<ImplementationGuide>(false);
-  private final CanonicalResourceManager<CapabilityStatement> capstmts = new CanonicalResourceManager<CapabilityStatement>(false);
-  private final CanonicalResourceManager<SearchParameter> searchParameters = new CanonicalResourceManager<SearchParameter>(false);
-  private final CanonicalResourceManager<Questionnaire> questionnaires = new CanonicalResourceManager<Questionnaire>(false);
-  private final CanonicalResourceManager<OperationDefinition> operations = new CanonicalResourceManager<OperationDefinition>(false);
-  private final CanonicalResourceManager<PlanDefinition> plans = new CanonicalResourceManager<PlanDefinition>(false);
-  private final CanonicalResourceManager<ActorDefinition> actors = new CanonicalResourceManager<ActorDefinition>(false);
-  private final CanonicalResourceManager<Requirements> requirements = new CanonicalResourceManager<Requirements>(false);
-  private final CanonicalResourceManager<NamingSystem> systems = new CanonicalResourceManager<NamingSystem>(false);
+  private CanonicalResourceManager<ValueSet> valueSets = new CanonicalResourceManager<ValueSet>(false, minimalMemory);
+  private CanonicalResourceManager<ConceptMap> maps = new CanonicalResourceManager<ConceptMap>(false, minimalMemory);
+  protected CanonicalResourceManager<StructureMap> transforms = new CanonicalResourceManager<StructureMap>(false, minimalMemory);
+  private CanonicalResourceManager<StructureDefinition> structures = new CanonicalResourceManager<StructureDefinition>(false, minimalMemory);
+  private final CanonicalResourceManager<Measure> measures = new CanonicalResourceManager<Measure>(false, minimalMemory);
+  private final CanonicalResourceManager<Library> libraries = new CanonicalResourceManager<Library>(false, minimalMemory);
+  private CanonicalResourceManager<ImplementationGuide> guides = new CanonicalResourceManager<ImplementationGuide>(false, minimalMemory);
+  private final CanonicalResourceManager<CapabilityStatement> capstmts = new CanonicalResourceManager<CapabilityStatement>(false, minimalMemory);
+  private final CanonicalResourceManager<SearchParameter> searchParameters = new CanonicalResourceManager<SearchParameter>(false, minimalMemory);
+  private final CanonicalResourceManager<Questionnaire> questionnaires = new CanonicalResourceManager<Questionnaire>(false, minimalMemory);
+  private final CanonicalResourceManager<OperationDefinition> operations = new CanonicalResourceManager<OperationDefinition>(false, minimalMemory);
+  private final CanonicalResourceManager<PlanDefinition> plans = new CanonicalResourceManager<PlanDefinition>(false, minimalMemory);
+  private final CanonicalResourceManager<ActorDefinition> actors = new CanonicalResourceManager<ActorDefinition>(false, minimalMemory);
+  private final CanonicalResourceManager<Requirements> requirements = new CanonicalResourceManager<Requirements>(false, minimalMemory);
+  private final CanonicalResourceManager<NamingSystem> systems = new CanonicalResourceManager<NamingSystem>(false, minimalMemory);
   private Map<String, NamingSystem> systemUrlMap;
 
   
@@ -322,6 +323,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       locator = other.locator;
       userAgent = other.userAgent;
       tcc.copy(other.tcc);
+      cachingAllowed = other.cachingAllowed;
     }
   }
   
@@ -1050,9 +1052,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       codeSystemsUsed.add(code.getSystem());
     }
 
-    final CacheToken cacheToken = txCache != null ? txCache.generateValidationToken(options, code, vs, expParameters) : null;
+    final CacheToken cacheToken = cachingAllowed && txCache != null ? txCache.generateValidationToken(options, code, vs, expParameters) : null;
     ValidationResult res = null;
-    if (txCache != null) {
+    if (cachingAllowed && txCache != null) {
       res = txCache.getValidation(cacheToken);
     }
     if (res != null) {
@@ -1072,7 +1074,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         vsc.setThrowToServer(options.isUseServer() && tcc.getClient() != null);
         if (!ValueSetUtilities.isServerSide(code.getSystem())) {
           res = vsc.validateCode(path, code);
-          if (txCache != null) {
+          if (txCache != null && cachingAllowed) {
             txCache.cacheValidation(cacheToken, res, TerminologyCache.TRANSIENT);
           }
           return res;
@@ -1107,8 +1109,8 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (noTerminologyServer) {
       return new ValidationResult(IssueSeverity.ERROR,formatMessage(I18nConstants.ERROR_VALIDATING_CODE_RUNNING_WITHOUT_TERMINOLOGY_SERVICES), TerminologyServiceErrorClass.NOSERVICE, issues);
     }
-    String csumm =  txCache != null ? txCache.summary(code) : null;
-    if (txCache != null) {
+    String csumm =cachingAllowed && txCache != null ? txCache.summary(code) : null;
+    if (cachingAllowed && txCache != null) {
       txLog("$validate "+csumm+" for "+ txCache.summary(vs));
     } else {
       txLog("$validate "+csumm+" before cache exists");
@@ -1123,7 +1125,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       res.setDiagnostics("Local Error: "+localError.trim()+". Server Error: "+res.getMessage());
     }
     updateUnsupportedCodeSystems(res, code, codeKey);
-    if (txCache != null) { // we never cache unsupported code systems - we always keep trying (but only once per run)
+    if (cachingAllowed && txCache != null) { // we never cache unsupported code systems - we always keep trying (but only once per run)
       txCache.cacheValidation(cacheToken, res, TerminologyCache.PERMANENT);
     }
     return res;
@@ -1204,9 +1206,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   @Override
   public ValidationResult validateCode(ValidationOptions options, CodeableConcept code, ValueSet vs) {
     CacheToken cacheToken = txCache.generateValidationToken(options, code, vs, expParameters);
-    ValidationResult res = txCache.getValidation(cacheToken);
-    if (res != null) {
-      return res;
+    ValidationResult res = null;
+    if (cachingAllowed) {
+      res = txCache.getValidation(cacheToken);
+      if (res != null) {
+        return res;
+      }
     }
     for (Coding c : code.getCoding()) {
       if (c.hasSystem()) {
@@ -1222,7 +1227,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         vsc.setUnknownSystems(unknownSystems);
         vsc.setThrowToServer(options.isUseServer() && tcc.getClient() != null);
         res = vsc.validateCode("CodeableConcept", code);
-        txCache.cacheValidation(cacheToken, res, TerminologyCache.TRANSIENT);
+        if (cachingAllowed) {
+          txCache.cacheValidation(cacheToken, res, TerminologyCache.TRANSIENT);
+        }
         return res;
       } catch (Exception e) {
         e.printStackTrace();
@@ -1247,12 +1254,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     } catch (Exception e) {
       res = new ValidationResult(IssueSeverity.ERROR, e.getMessage() == null ? e.getClass().getName() : e.getMessage(), null).setTxLink(txLog == null ? null : txLog.getLastId());
     }
-    txCache.cacheValidation(cacheToken, res, TerminologyCache.PERMANENT);
+    if (cachingAllowed) {
+      txCache.cacheValidation(cacheToken, res, TerminologyCache.PERMANENT);
+    }
     return res;
   }
 
   protected ValidationResult validateOnServer(ValueSet vs, Parameters pin, ValidationOptions options) throws FHIRException {
-    boolean cache = false;
+
     if (vs != null) {
       for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
         codeSystemsUsed.add(inc.getSystem());
@@ -1261,33 +1270,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         codeSystemsUsed.add(inc.getSystem());
       }
     }
-    
-    if (vs != null) {
-      if (tcc.isTxCaching() && tcc.getCacheId() != null && vs.getUrl() != null && tcc.getCached().contains(vs.getUrl()+"|"+vs.getVersion())) {
-        pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()+(vs.hasVersion() ? "|"+vs.getVersion() : "")));        
-      } else if (options.getVsAsUrl()){
-        pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()));
-      } else {
-        pin.addParameter().setName("valueSet").setResource(vs);
-        if (vs.getUrl() != null) {
-          tcc.getCached().add(vs.getUrl()+"|"+vs.getVersion());
-        }
-      }
-      cache = true;
-      addDependentResources(pin, vs);
-    }
-    if (cache) {
-      pin.addParameter().setName("cache-id").setValue(new IdType(tcc.getCacheId()));              
-    }
-    for (ParametersParameterComponent pp : pin.getParameter()) {
-      if (pp.getName().equals("profile")) {
-        throw new Error(formatMessage(I18nConstants.CAN_ONLY_SPECIFY_PROFILE_IN_THE_CONTEXT));
-      }
-    }
-    if (expParameters == null) {
-      throw new Error(formatMessage(I18nConstants.NO_EXPANSIONPROFILE_PROVIDED));
-    }
-    pin.addParameter().setName("profile").setResource(expParameters);
+
+    addServerValidationParameters(vs, pin, options);
+
     if (txLog != null) {
       txLog.clearLastId();
     }
@@ -1301,6 +1286,40 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       pOut = tcc.getClient().validateVS(pin);
     }
     return processValidationResult(pOut);
+  }
+
+  protected void addServerValidationParameters(ValueSet vs, Parameters pin, ValidationOptions options) {
+    boolean cache = false;
+    if (vs != null) {
+      if (tcc.isTxCaching() && tcc.getCacheId() != null && vs.getUrl() != null && tcc.getCached().contains(vs.getUrl()+"|"+ vs.getVersion())) {
+        pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()+(vs.hasVersion() ? "|"+ vs.getVersion() : "")));
+      } else if (options.getVsAsUrl()){
+        pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()));
+      } else {
+        pin.addParameter().setName("valueSet").setResource(vs);
+        if (vs.getUrl() != null) {
+          tcc.getCached().add(vs.getUrl()+"|"+ vs.getVersion());
+        }
+      }
+      cache = true;
+      addDependentResources(pin, vs);
+    }
+    if (cache) {
+      pin.addParameter().setName("cache-id").setValue(new IdType(tcc.getCacheId()));
+    }
+    for (ParametersParameterComponent pp : pin.getParameter()) {
+      if (pp.getName().equals("profile")) {
+        throw new Error(formatMessage(I18nConstants.CAN_ONLY_SPECIFY_PROFILE_IN_THE_CONTEXT));
+      }
+    }
+    if (expParameters == null) {
+      throw new Error(formatMessage(I18nConstants.NO_EXPANSIONPROFILE_PROVIDED));
+    }
+    pin.addParameter().setName("profile").setResource(expParameters);
+
+    if (options.isDisplayWarningMode()) {
+      pin.addParameter("mode","lenient-display-validation");
+    }
   }
 
   private boolean addDependentResources(Parameters pin, ValueSet vs) {
@@ -1919,6 +1938,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
   protected IWorkerContextManager.IPackageLoadingTracker packageTracker;
   private boolean forPublication;
+  private boolean cachingAllowed = true;
 
   @Override
   public Resource fetchResourceById(String type, String uri) {
@@ -2334,23 +2354,25 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     return binaries.get(binaryKey);
   }
 
-  public void finishLoading() {
+  public void finishLoading(boolean genSnapshots) {
     if (!hasResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/Base")) {
       cacheResource(ProfileUtilities.makeBaseDefinition(version));
     }
-    for (StructureDefinition sd : listStructures()) {
-      try {
-        if (sd.getSnapshot().isEmpty()) { 
-          new ContextUtilities(this).generateSnapshot(sd);
-//          new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path("[tmp]", "snapshot", tail(sd.getUrl())+".xml")), sd);
+    if(genSnapshots) {
+      for (StructureDefinition sd : listStructures()) {
+        try {
+          if (sd.getSnapshot().isEmpty()) { 
+            new ContextUtilities(this).generateSnapshot(sd);
+            //          new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path("[tmp]", "snapshot", tail(sd.getUrl())+".xml")), sd);
+          }
+        } catch (Exception e) {
+          System.out.println("Unable to generate snapshot @1 for "+tail(sd.getUrl()) +" from "+tail(sd.getBaseDefinition())+" because "+e.getMessage());
+          if (logger.isDebugLogging()) {
+            e.printStackTrace();          
+          }
         }
-      } catch (Exception e) {
-        System.out.println("Unable to generate snapshot for "+tail(sd.getUrl()) +" from "+tail(sd.getBaseDefinition())+" because "+e.getMessage());
-        if (logger.isDebugLogging()) {
-          e.printStackTrace();          
-        }
-      }
-    }  
+      }  
+    }
     codeSystems.setVersion(version);
     valueSets.setVersion(version);
     maps.setVersion(version);
@@ -2476,6 +2498,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   
   public void setForPublication(boolean value) {
     forPublication = value;
+  }
+
+  public boolean isCachingAllowed() {
+    return cachingAllowed;
+  }
+
+  public void setCachingAllowed(boolean cachingAllowed) {
+    this.cachingAllowed = cachingAllowed;
   }
 
 }

@@ -1994,4 +1994,16 @@ public class Utilities {
     return txt.split("\\r?\\n|\\r");
   }
 
+  public static boolean isIgnorableFile(File file) {
+    return Utilities.existsInList(file.getName(), ".DS_Store");
+  }
+
+  public static String rightTrim(String s) {
+    int i = s.length()-1;
+    while (i > 0 && Character.isWhitespace(s.charAt(i))) {
+      i--;
+    }
+    return i == 0 ? "" : s.substring(0, i+1);
+  }
+
 }

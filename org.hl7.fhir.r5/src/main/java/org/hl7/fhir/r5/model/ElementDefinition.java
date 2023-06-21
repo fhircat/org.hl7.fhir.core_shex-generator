@@ -4919,6 +4919,17 @@ public boolean hasTarget() {
 
   }
 
+  public boolean hasAdditional(ElementDefinitionBindingAdditionalComponent ab) {
+    if (hasAdditional()) {
+      for (ElementDefinitionBindingAdditionalComponent t : getAdditional()) {
+        if (Base.compareDeep(t, ab, false)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   }
 
     @Block()
@@ -12841,6 +12852,14 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
   public boolean isRequired() { 
     return getMin() == 1; 
   }
+
+  public CanonicalType addValueAlternative(CanonicalType t) { 
+    if (this.valueAlternatives == null)
+      this.valueAlternatives = new ArrayList<CanonicalType>();
+    this.valueAlternatives.add(t);
+    return t;
+  }
+
 
 // end addition
 

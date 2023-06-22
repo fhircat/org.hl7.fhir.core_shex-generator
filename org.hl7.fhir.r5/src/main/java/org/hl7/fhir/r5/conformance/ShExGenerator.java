@@ -119,7 +119,7 @@ public class ShExGenerator {
   private List<String> shortIdException = Arrays.asList(
     "base64Binary", "boolean",
     "date", "dateTime", "decimal", "instant", "integer64",
-    "integer", "string", "time", "uri"
+    "integer", "string", "time", "uri", "xhtml"
   );
 
   private List<String> mappedFunctions = Arrays.asList(
@@ -618,7 +618,8 @@ public class ShExGenerator {
    */
   private String genShapeDefinition(StructureDefinition sd, boolean top_level) {
     // xhtml is treated as an atom
-    if("xhtml".equals(sd.getName()) || (completeModel && "Resource".equals(sd.getName())))
+    //if("xhtml".equals(sd.getName()) || (completeModel && "Resource".equals(sd.getName())))
+    if(completeModel && "Resource".equals(sd.getName()))
       return "";
 
     ST shape_defn;
@@ -1123,7 +1124,7 @@ public class ShExGenerator {
   private String positionParts(String funCall, String mainTxt, String nextText, int depth, boolean complete){
     if (funCall.indexOf("CALLER") != -1) {
       if (depth == 0) {
-        String toReturn = funCall.replaceFirst("CALLER", mainTxt);
+        String toReturn = funCall.replaceFirst("CALLER", mainTxt + "");
         if (complete)
           toReturn =  toReturn ;
 
@@ -1133,7 +1134,12 @@ public class ShExGenerator {
       else{
         String mT = (mainTxt != null) ? mainTxt.trim() : "";
         String dR = (mT.startsWith(".") || mT.startsWith("{") || mT.startsWith("[")) ? "" : ".";
-        return  postProcessing(funCall.replaceFirst("CALLER", Matcher.quoteReplacement("CALLER" + dR + mT )), nextText) ;
+
+        String replacement = "CALLER" + dR + mT;
+        if (".".equals(mT))
+          replacement = "CALLER " + dR + mT;
+
+        return  postProcessing(funCall.replaceFirst("CALLER", Matcher.quoteReplacement(replacement)), nextText) ;
       }
     }
 
@@ -1388,7 +1394,7 @@ public class ShExGenerator {
     } else {
       if (ed.getType().size() == 1) {
         // Single entry
-        if ((defn.isEmpty())||(typ.equals(sd.getName())))
+        if ((defn.isEmpty())||(typ.equals(sd.getName()))||("xhtml".equals(sd.getName())))
           defn = genTypeRef(sd, ed, id, ed.getType().get(0));
       } else if (ed.getContentReference() != null) {
         // Reference to another element
@@ -1462,7 +1468,7 @@ public class ShExGenerator {
     } else {
       if (!refChoices.isEmpty()) {
         defn += " AND {fhir:link \n\t\t\t@<" +
-          refChoices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ? }";
+          refChoices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ?}";
       }
     }
 
@@ -1591,6 +1597,9 @@ public class ShExGenerator {
 
     } else if (typ.getCode().startsWith(Constants.NS_SYSTEM_TYPE)) {
       String xt = getShexCode(typ.getWorkingCode());
+
+      if ("xhtml.value".equals(id))
+        xt = "rdf:XMLLiteral";
 
       // TODO: Remove the next line when the type of token gets switched to string
       // TODO: Add a rdf-type entry for valueInteger to xsd:integer (instead of int)
@@ -1738,7 +1747,7 @@ public class ShExGenerator {
       }
 
       if (!refValues.isEmpty())
-        choiceEntries.add("(" + entry + " AND {fhir:link " + StringUtils.join(refValues, " OR \n\t\t\t ") + " }) ");
+        choiceEntries.add("(" + entry + " AND {fhir:link " + StringUtils.join(refValues, " OR \n\t\t\t ") + " ?}) ");
       else
         choiceEntries.add(entry);
     }
@@ -1786,7 +1795,7 @@ public class ShExGenerator {
       restriction = "AND {fhir:link \n\t\t\t@<";
 
       String choices = oneOrMoreType.split(ONE_OR_MORE_CHOICES)[1];
-      restriction += choices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> }";
+      restriction += choices.replaceAll("_OR_", "> OR \n\t\t\t@<") + "> ?}";
     }
 
     origType = origType.replaceAll(ONE_OR_MORE_PREFIX, "");

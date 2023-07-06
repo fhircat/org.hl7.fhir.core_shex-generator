@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -108,7 +109,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   public static final String PACKAGE_VERSION_REGEX_OPT = "^[A-Za-z][A-Za-z0-9\\_\\-]*(\\.[A-Za-z0-9\\_\\-]+)+(\\#[A-Za-z0-9\\-\\_]+(\\.[A-Za-z0-9\\-\\_]+)*)?$";
   private static final Logger ourLog = LoggerFactory.getLogger(FilesystemPackageCacheManager.class);
   private static final String CACHE_VERSION = "3"; // second version - see wiki page
-  private String cacheFolder;
+  private File cacheFolder;
   private boolean progress = true;
   private List<NpmPackage> temporaryPackages = new ArrayList<>();
   private boolean buildLoaded = false;
@@ -133,7 +134,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    * @throws IOException
    */
   public FilesystemPackageCacheManager(String customFolder) throws IOException {
-    this.cacheFolder = customFolder;
+    this.cacheFolder = new File(customFolder);
     init(FilesystemPackageCacheMode.CUSTOM);  
   }
   
@@ -143,27 +144,33 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
     switch (mode) {
     case SYSTEM:
-      cacheFolder = Utilities.path("var", "lib", ".fhir", "packages");
+      cacheFolder = new File(Utilities.path("var", "lib", ".fhir", "packages"));
       break;
     case USER:
-      cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
+      cacheFolder = new File(Utilities.path(System.getProperty("user.home"), ".fhir", "packages"));
       break;
     case TESTING:
-      cacheFolder = Utilities.path("[tmp]", ".fhir", "packages");
+      cacheFolder = new File(Utilities.path("[tmp]", ".fhir", "packages"));
       break;
     case CUSTOM:
-      if (!new File(cacheFolder).exists()) {
+      if (!cacheFolder.exists()) {
         throw new FHIRException("The folder ''"+cacheFolder+"' could not be found");
       }
     default:
       break;    
     }
 
-    if (!(new File(cacheFolder).exists()))
-      Utilities.createDirectory(cacheFolder);
+    if (!(cacheFolder.exists()))
+      Utilities.createDirectory(cacheFolder.getAbsolutePath());
     if (!(new File(Utilities.path(cacheFolder, "packages.ini")).exists()))
       TextFile.stringToFile("[cache]\r\nversion=" + CACHE_VERSION + "\r\n\r\n[urls]\r\n\r\n[local]\r\n\r\n", Utilities.path(cacheFolder, "packages.ini"), false);
     createIniFile();
+    for (File f : cacheFolder.listFiles()) {
+      if (f.isDirectory() && Utilities.isValidUUID(f.getName())) {
+        Utilities.clearDirectory(f.getAbsolutePath());
+        f.delete();
+      }
+    }
   }
 
   public boolean isMinimalMemory() {
@@ -186,14 +193,19 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     if (files != null) {
       for (File f : files) {
         if (f.getName().endsWith(".tgz")) {
-          temporaryPackages.add(NpmPackage.fromPackage(new FileInputStream(f)));
+          FileInputStream fs = new FileInputStream(f);
+          try {
+            temporaryPackages.add(NpmPackage.fromPackage(fs));
+          } finally {
+            fs.close();
+          }
         }
       }
     }
   }
 
   public String getFolder() {
-    return cacheFolder;
+    return cacheFolder.getAbsolutePath();
   }
 
   private NpmPackage loadPackageInfo(String path) throws IOException {
@@ -202,7 +214,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   private void clearCache() throws IOException {
-    for (File f : new File(cacheFolder).listFiles()) {
+    for (File f : cacheFolder.listFiles()) {
       if (f.isDirectory()) {
         new CacheLock(f.getName()).doWithLock(() -> {
           Utilities.clearDirectory(f.getAbsolutePath());
@@ -302,7 +314,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public String getLatestVersionFromCache(String id) throws IOException {
-    for (String f : Utilities.reverseSorted(new File(cacheFolder).list())) {
+    for (String f : Utilities.reverseSorted(cacheFolder.list())) {
       File cf = new File(Utilities.path(cacheFolder, f));
       if (cf.isDirectory()) {
         if (f.startsWith(id + "#")) {
@@ -390,7 +402,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     }
     String foundPackage = null;
     String foundVersion = null;
-    for (String f : Utilities.reverseSorted(new File(cacheFolder).list())) {
+    for (String f : Utilities.reverseSorted(cacheFolder.list())) {
       File cf = new File(Utilities.path(cacheFolder, f));
       if (cf.isDirectory()) {
         if (f.equals(id + "#" + version) || (Utilities.noString(version) && f.startsWith(id + "#"))) {
@@ -421,7 +433,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   public NpmPackage addPackageToCache(String id, String version, InputStream packageTgzInputStream, String sourceDesc) throws IOException {
     checkValidVersionString(version, id);
     
-    NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
+    String uuid = UUID.randomUUID().toString().toLowerCase();
+    String tempDir = Utilities.path(cacheFolder, uuid);
+    NpmPackage npm =  NpmPackage.extractFromTgz(packageTgzInputStream, sourceDesc, tempDir, minimalMemory);
 
     if (progress) {
       log("");
@@ -450,40 +464,18 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
           } catch (Throwable t) {
             log("Unable to clear directory: "+packRoot+": "+t.getMessage()+" - this may cause problems later");
           }
-
-          int i = 0;
-          int c = 0;
-          int size = 0;
-          for (Entry<String, NpmPackageFolder> e : npm.getFolders().entrySet()) {
-            String dir = e.getKey().equals("package") ? Utilities.path(packRoot, "package") : Utilities.path(packRoot, "package", e.getKey());
-            if (!(new File(dir).exists()))
-              Utilities.createDirectory(dir);
-            for (Entry<String, byte[]> fe : e.getValue().getContent().entrySet()) {
-              String fn = Utilities.path(dir, Utilities.cleanFileName(fe.getKey()));
-              byte[] cnt = fe.getValue();
-              TextFile.bytesToFile(cnt, fn);
-              size = size + cnt.length;
-              i++;
-              if (progress && i % 50 == 0) {
-                c++;
-                logn(".");
-                if (c == 120) {
-                  log("");
-                  logn("  ");
-                  c = 2;
-                }
-              }
-            }
-          }
-
+          Utilities.renameDirectory(tempDir, packRoot);          
 
           IniFile ini = new IniFile(Utilities.path(cacheFolder, "packages.ini"));
           ini.setTimeStampFormat("yyyyMMddhhmmss");
           ini.setTimestampProperty("packages", id + "#" + v, Timestamp.from(Instant.now()), null);
-          ini.setIntegerProperty("package-sizes", id + "#" + v, size, null);
+          ini.setIntegerProperty("package-sizes", id + "#" + v, npm.getSize(), null);
           ini.save();
           if (progress)
             log(" done.");
+        } else {
+          Utilities.clearDirectory(tempDir);
+          new File(tempDir).delete();
         }
         if (!id.equals(npm.getNpm().asString("name")) || !v.equals(npm.getNpm().asString("version"))) {
           if (!id.equals(npm.getNpm().asString("name"))) {
@@ -879,7 +871,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   public List<String> listPackages() {
     List<String> res = new ArrayList<>();
-    for (File f : new File(cacheFolder).listFiles()) {
+    for (File f : cacheFolder.listFiles()) {
       if (f.isDirectory() && f.getName().contains("#")) {
         res.add(f.getName());
       }
@@ -1035,7 +1027,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       }
     }
 
-    for (String f : Utilities.sorted(new File(cacheFolder).list())) {
+    for (String f : Utilities.sorted(cacheFolder.list())) {
       if (f.equals(id + "#" + version) || (Utilities.noString(version) && f.startsWith(id + "#"))) {
         return true;
       }

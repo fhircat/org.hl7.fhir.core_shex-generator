@@ -343,6 +343,11 @@ public class ShexGeneratorTests {
     System.out.println("************************************************************************");
   }
 
+  /**
+  This is one of the main method to control generation of ShEx Schema
+  - processConstraints - toggle flag to include or exclude constaints
+  - excludeMetaSDs - toggle including/excluding MetaSDs
+  **/
   private void doTestSingleSD(String shortName, ShexGeneratorTestUtils.RESOURCE_CATEGORY cat,
                               String name, boolean useSelectedExtensions,
                               ShExGenerator.ConstraintTranslationPolicy policy,
@@ -432,6 +437,8 @@ public class ShexGeneratorTests {
     }
   }
 
+  // at one point FHIR core ShEx generation generated a different name for HealthCareService
+  // some sort of capitalization of one letter in this resource
   private String addItems(List<String> list1, List<String> list2, boolean avoidImports)
   {
       String returnString = "";
@@ -476,6 +483,8 @@ public class ShexGeneratorTests {
     return toReturn;
   }
 
+  // Monolothic file ShEx.shex is generated for all resources
+  // 
   private void doTestBatchSD(List<StructureDefinition> sds, boolean useSelectedExtensions,
                              ShExGenerator.ConstraintTranslationPolicy policy, boolean debugMode,
                              boolean validateShEx, boolean excludeMetaSDs, boolean processConstraints) {

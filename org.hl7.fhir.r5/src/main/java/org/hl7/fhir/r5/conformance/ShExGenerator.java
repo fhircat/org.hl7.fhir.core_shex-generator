@@ -664,6 +664,8 @@ public class ShExGenerator {
       elements.add(tmplt(CONCEPT_REFERENCES_TEMPLATE).render());
     else if (sdn.equals("Reference"))
       elements.add(tmplt(RESOURCE_LINK_TEMPLATE).render());
+    else if (sdn.equals("canonical"))
+      elements.add(tmplt(RESOURCE_LINK_TEMPLATE).render());
 
     String root_comment = null;
 

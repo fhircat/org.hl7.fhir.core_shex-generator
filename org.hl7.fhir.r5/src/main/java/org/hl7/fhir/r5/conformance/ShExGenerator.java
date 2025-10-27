@@ -108,7 +108,7 @@ public class ShExGenerator {
     "$comment$\n<$id$> CLOSED { $fhirType$ " +
       "\n    $resourceDecl$" +
       "\n    $elements$" +
-      "\n    $contextOfUse$" +
+//      "\n    $contextOfUse$" +
       "\n} $constraints$ \n";
 
   // Base DataTypes
@@ -148,7 +148,7 @@ public class ShExGenerator {
   private static String RESOURCE_SHAPE_TEMPLATE =
     "$comment$\n<Resource> {" +
       "\n    $elements$" +
-      "\n    $contextOfUse$" +
+//      "\n    $contextOfUse$" +
       "\n} $constraints$ \n";
 
   // If we have knowledge of all of the possible resources available to us (completeModel = true), we can build
@@ -225,8 +225,8 @@ public class ShExGenerator {
     "\n    fhir:Element.id @<id>?;" +
     "\n    fhir:Element.extension @<Extension>*;" +
     "\n    " + FHIR_LINK_PREDICATE + " @<$refType$> OR CLOSED {a [fhir:$refType$]}?;" +
-    "\n    fhir:Reference.reference @<string>?;" +
-    "\n    fhir:Reference.display @<string>?;" +
+    "\n    fhir:Reference.reference @<String>?;" +
+    "\n    fhir:Reference.display @<String>?;" +
     // "\n    fhir:index xsd:integer?" +
     "\n}";
 
@@ -580,7 +580,7 @@ public class ShExGenerator {
       bd = els[els.length - 1];
     }
 
-    return bd;
+    return capitalizeIfPrimitive(bd);
   }
 
   private String getBaseTypeName(ElementDefinition ed){
@@ -592,7 +592,7 @@ public class ShExGenerator {
 
   private String getExtendedType(StructureDefinition sd){
     String bd = getBaseTypeName(sd);
-    String sId = sd.getId();
+    String sId = capitalizeIfPrimitive(sd.getId());
 
     if (bd!=null) {
       addImport("<" + bd + ">");
@@ -625,34 +625,36 @@ public class ShExGenerator {
       return "";
 
     ST shape_defn;
-      if("Resource".equals(sd.getName())) {
-        shape_defn = tmplt(RESOURCE_SHAPE_TEMPLATE);
-        known_resources.add(sd.getName());
-        } else {
-        shape_defn = tmplt(SHAPE_DEFINITION_TEMPLATE).add("id", getExtendedType(sd));
-        known_resources.add(sd.getName());
+    if ("Resource".equals(sd.getName())) {
+      shape_defn = tmplt(RESOURCE_SHAPE_TEMPLATE);
+      known_resources.add(sd.getName());
+    } else {
+      shape_defn = tmplt(SHAPE_DEFINITION_TEMPLATE).add("id", getExtendedType(sd));
+      known_resources.add(sd.getName());
 
-        if (baseDataTypes.contains(sd.getType())) {
-          shape_defn.add("resourceDecl", "\n");
-        } else {
-          if ("Element".equals(sd.getName()))
-            shape_defn.add("resourceDecl", tmplt(ROOT_TEMPLATE).render());
-          else {
-            String rootTmpl = tmplt(ROOT_TEMPLATE).render();
-            String btn = getBaseTypeName(sd);
-            if ((baseDataTypes.contains(btn))||
-              (shortIdException.contains(btn)))
-              rootTmpl = "\n";
+      if (baseDataTypes.contains(sd.getType())) {
+        shape_defn.add("resourceDecl", "\n");
+      } else {
+        if ("Element".equals(sd.getName()))
+          shape_defn.add("resourceDecl", tmplt(ROOT_TEMPLATE).render());
+        else {
+          String rootTmpl = tmplt(ROOT_TEMPLATE).render();
+          String btn = getBaseTypeName(sd);
+          if ((baseDataTypes.contains(btn)) ||
+            (shortIdException.contains(btn)))
+            rootTmpl = "\n";
 
-            ST resource_decl = tmplt(RESOURCE_DECL_TEMPLATE).
-              add("id", sd.getId()).
-              add("root", rootTmpl);
+          String id = capitalizeIfPrimitive(sd.getId());
 
-            shape_defn.add("resourceDecl", resource_decl.render());
-          }
+          ST resource_decl = tmplt(RESOURCE_DECL_TEMPLATE).
+            add("id", id).
+            add("root", rootTmpl);
+
+          shape_defn.add("resourceDecl", resource_decl.render());
         }
       }
-      shape_defn.add("fhirType", " ");
+    }
+    shape_defn.add("fhirType", " ");
 
 
     // Generate the defining elements
@@ -733,6 +735,10 @@ public class ShExGenerator {
       }
     }
 
+    if (sd.getName().equals("uri")) {
+      elements.add("fhir:l IRI?;");
+    }
+
     if (toProcessConstraints(sd)) {
       // Constraints for differential to cover constraints on SD itself without any elements of its own
       for (ElementDefinition ded : sd.getDifferential().getElement()) {
@@ -765,40 +771,73 @@ public class ShExGenerator {
 
     shape_defn.add("constraints", constraintStr);
 
-    String contextOfUseStr = "";
-    ArrayList<String> contextOfUse = new ArrayList<String>();
-    if (!sd.getContext().isEmpty()) {
-      for (StructureDefinition.StructureDefinitionContextComponent uc : sd.getContext()) {
-        if (!uc.getExpression().isEmpty()) {
-          String toStore = uc.getExpression();
-          debug("CONTEXT-OF-USE FOUND: " + toStore);
-          if (toStore.indexOf("http") != -1) {
-            debug("\t\tWARNING: CONTEXT-OF-USE SKIPPED as it has 'http' in it, might be a URL, instead of '.' delimited string");
-            continue;  // some erroneous context of use may use a URL; ignore them
-          }
-          String[] backRefs = toStore.split("\\.");
-          toStore = "a [fhir:" + backRefs[0] + "]";
-          for (int i = 1; i < backRefs.length; i++)
-            toStore = "^fhir:" + backRefs[i] + " {" + toStore + "}";
-
-          toStore = removeMultipleX(toStore);
-          if (!contextOfUse.contains(toStore)) {
-            contextOfUse.add(toStore);
-          }
-        }
-      }
-
-      if (!contextOfUse.isEmpty()) {
-        if (contextOfUse.size() > 1)
-          contextOfUseStr = "^fhir:extension { " + StringUtils.join(contextOfUse, "} OR \n      {") + "}\n";
-        else
-          contextOfUseStr = "^fhir:extension { " + contextOfUse.get(0) + "}\n";
-      }
-    }
-
-    shape_defn.add("contextOfUse", contextOfUseStr);
+//    String contextOfUseStr = "";
+//    ArrayList<String> contextOfUse = new ArrayList<String>();
+//    if (!sd.getContext().isEmpty()) {
+//      for (StructureDefinition.StructureDefinitionContextComponent uc : sd.getContext()) {
+//        if (!uc.getExpression().isEmpty()) {
+//          String toStore = uc.getExpression();
+//          debug("CONTEXT-OF-USE FOUND: " + toStore);
+//          if (toStore.indexOf("http") != -1) {
+//            debug("\t\tWARNING: CONTEXT-OF-USE SKIPPED as it has 'http' in it, might be a URL, instead of '.' delimited string");
+//            continue;  // some erroneous context of use may use a URL; ignore them
+//          }
+//          String[] backRefs = toStore.split("\\.");
+//          toStore = "a [fhir:" + capitalizeIfPrimitive(backRefs[0]) + "]";
+//          for (int i = 1; i < backRefs.length; i++)
+//              toStore = "^fhir:" + backRefs[i] + " {" + toStore + "}";
+//
+//          toStore = removeMultipleX(toStore);
+//          if (!contextOfUse.contains(toStore)) {
+//            contextOfUse.add(toStore);
+//          }
+//        }
+//      }
+//
+//      if (!contextOfUse.isEmpty()) {
+//        if (contextOfUse.size() > 1)
+//          contextOfUseStr = "^fhir:extension { " + StringUtils.join(contextOfUse, "} OR \n      {") + "}\n";
+//        else
+//          contextOfUseStr = "^fhir:extension { " + contextOfUse.get(0) + "}\n";
+//      }
+//    }
+//
+//    shape_defn.add("contextOfUse", contextOfUseStr);
 
     return shape_defn.render();
+  }
+
+  /**
+   * Capitalize the first character of the string if it is a listed primitive type
+   * @param name
+   * @return
+   */
+  private String capitalizeIfPrimitive(String name) {
+    if (name == null || name.isEmpty()) return name;
+    if ("base64Binary".equals(name) ||
+      "boolean".equals(name) ||
+      "canonical".equals(name) ||
+      "code".equals(name) ||
+      "date".equals(name) ||
+      "dateTime".equals(name) ||
+      "decimal".equals(name) ||
+      "id".equals(name) ||
+      "instant".equals(name) ||
+      "integer".equals(name) ||
+      "integer64".equals(name) ||
+      "markdown".equals(name) ||
+      "oid".equals(name) ||
+      "positiveInt".equals(name) ||
+      "string".equals(name) ||
+      "time".equals(name) ||
+      "unsignedInt".equals(name) ||
+      "uri".equals(name) ||
+      "url".equals(name) ||
+      "uuid".equals(name) ||
+      "xhtml".equals(name)) {
+      return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+    return name;
   }
 
   /**
@@ -1370,7 +1409,7 @@ public class ShExGenerator {
 
     element_def = tmplt(ELEMENT_TEMPLATE);
     if (id.endsWith("[x]")) {
-      element_def.add("id", "fhir:" + removeMultipleX(shortId));
+      element_def.add("id", "fhir:" + removeMultipleX(shortId) + " {rdf:type IRI} AND ");
     } else {
       element_def.add("id", "fhir:" + removeMultipleX(shortId) + " ");
     }
@@ -1392,9 +1431,7 @@ public class ShExGenerator {
     String refChoices = "";
     List<String> refValues = new ArrayList<String>();
     if (id.endsWith("[x]")) {
-      //defn = " (" + genChoiceTypes(sd, ed, shortId) + ")";
-      defn = " " + genChoiceTypes(sd, ed, removeMultipleX(shortId)) + " ";
-      //defn += " AND { rdf:type IRI } ";
+      defn = " " + genChoiceTypes(sd, ed, removeMultipleX(shortId));
     } else {
       if (ed.getType().size() == 1) {
         // Single entry
@@ -1551,7 +1588,7 @@ public class ShExGenerator {
     if(ed.hasFixed()) {
       addldef = tmplt(FIXED_VALUE_TEMPLATE).add("val", ed.getFixed().primitiveValue()).render();
     }
-    return tmplt(SIMPLE_ELEMENT_DEFN_TEMPLATE).add("typ", typ).add("vsdef", addldef).render();
+    return tmplt(SIMPLE_ELEMENT_DEFN_TEMPLATE).add("typ", capitalizeIfPrimitive(typ)).add("vsdef", addldef).render();
   }
 
   private String removeMultipleX(String str) {
@@ -1755,7 +1792,7 @@ public class ShExGenerator {
       else
         choiceEntries.add(entry);
     }
-    return StringUtils.join(choiceEntries, " OR \n\t\t\t");
+    return "(" + StringUtils.join(choiceEntries, " OR \n\t\t\t") + ")";
   }
 
   /**

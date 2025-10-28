@@ -7,15 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
 
-
+@SuppressWarnings("checkstyle:systemout")
 public class PackageScanner {
 
-  
   public static void main(String[] args) throws IOException {
     List<String> output = new ArrayList<>();
     Set<String> packages = new HashSet<>();
@@ -29,13 +28,13 @@ public class PackageScanner {
       b.append("\r\n");
       System.out.println(s);
     }
-    TextFile.stringToFile(b.toString(), Utilities.path("[tmp]", "packages.csv"));
+    FileUtilities.stringToFile(b.toString(), Utilities.path("[tmp]", "packages.csv"));
   }
 
   public static void processServer(PackageServer server, List<String> output, Set<String> packages) throws IOException {
     System.out.println("Server: "+server);
     PackageClient client = new PackageClient(server);
-    List<PackageInfo> list = client.search(null, null, null, false);
+    List<PackageInfo> list = client.search(null, null, null, false, null);
     output.add("id\tversion\tcanonica\tfhir version\tfhir-versions\tkind\ttype\tsource");
     for (PackageInfo pi : list) {
       System.out.print("  fetch: "+pi.getId());
@@ -68,7 +67,6 @@ public class PackageScanner {
           }
         }
       }
-      System.out.println("!");
     }
   }
 

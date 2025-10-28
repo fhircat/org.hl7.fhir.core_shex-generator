@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_10_30;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_10_40;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_10_50;
@@ -13,15 +14,17 @@ import org.hl7.fhir.convertors.factory.VersionConvertorFactory_14_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_40;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.json.model.JsonArray;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
 
-
+@Slf4j
 public class CorePackageVersionConvertor {
 
   public interface IContentConvertor {
@@ -477,9 +480,9 @@ public class CorePackageVersionConvertor {
     // open the existing package 
     // chose the version converter 
     // build a new package
-    System.out.println("Convert "+packageSource+" to "+versionTarget);
+    log.info("Convert "+packageSource+" to "+versionTarget);
     
-    NpmPackage src = NpmPackage.fromPackage(new FileInputStream(packageSource));
+    NpmPackage src = NpmPackage.fromPackage(ManagedFileAccess.inStream(packageSource));
     IContentConvertor conv = contentConvertorFactory(src.fhirVersion(), versionTarget);
     
     NpmPackage dst = NpmPackage.empty();
@@ -496,21 +499,21 @@ public class CorePackageVersionConvertor {
               try {
                 cnt = conv.convert(cnt);
               } catch (Exception e) {
-                throw new Exception("Error processing "+folder.getName()+"/"+s+": "+e.getMessage(), e);
+                throw new Exception("Error processing "+folder.getFolderName()+"/"+s+": "+e.getMessage(), e);
               }
             } else {
               // nothing
             }
           }        
           if (cnt != null) {
-            dst.addFile(folder.getName(), s, cnt, null);
+            dst.addFile(folder.getFolderName(), s, cnt, null);
           }
         } else {
-          dst.addFile(folder.getName(), s, cnt, null);
+          dst.addFile(folder.getFolderName(), s, cnt, null);
         }
       }
     }
-    dst.save(new FileOutputStream(Utilities.changeFileExt(packageSource, ".as."+VersionUtilities.getNameForVersion(versionTarget).toLowerCase()+".tgz")));
+    dst.save(ManagedFileAccess.outStream(FileUtilities.changeFileExt(packageSource, ".as."+VersionUtilities.getNameForVersion(versionTarget).toLowerCase()+".tgz")));
   }
 
   private IContentConvertor contentConvertorFactory(String fhirVersion, String versionTarget) throws Exception {

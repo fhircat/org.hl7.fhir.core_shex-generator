@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -30,6 +31,8 @@ import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+@Deprecated
+@Slf4j
 public class ElementWrappers {
 
   public static class BaseWrapperMetaElement extends WrapperBaseImpl implements BaseWrapper {
@@ -40,7 +43,8 @@ public class ElementWrappers {
     private List<ElementDefinition> children;
     private List<PropertyWrapper> list;
 
-    public BaseWrapperMetaElement(RenderingContext context, Element element, String type, StructureDefinition structure, ElementDefinition definition) {
+    public BaseWrapperMetaElement(RenderingContext context, Element element, String type, StructureDefinition structure,
+        ElementDefinition definition) {
       super(context);
       this.element = element;
       this.type = type;
@@ -63,15 +67,15 @@ public class ElementWrappers {
         throw new FHIRException(e.getMessage(), e);
       }
       if (context.getParser() == null) {
-        System.out.println("No version specific parser provided");
-      } 
+        log.error("No version specific parser provided");
+      }
       if (context.getParser() == null) {
         throw new Error("No type parser provided to renderer context");
       } else {
         try {
           return context.getParser().parseType(xml.toString(StandardCharsets.UTF_8), type);
         } catch (Exception e) {
-          return new StringType("Illegal syntax: "+e.getMessage()); 
+          return new StringType("Illegal syntax: " + e.getMessage());
         }
       }
     }
@@ -118,6 +122,7 @@ public class ElementWrappers {
     private List<ResourceWrapper> list;
     private List<PropertyWrapper> list2;
     private StructureDefinition definition;
+
     public ResourceWrapperMetaElement(RenderingContext context, Element wrapped) {
       super(context);
       this.wrapped = wrapped;
@@ -164,7 +169,7 @@ public class ElementWrappers {
       if (name != null && name.hasValues()) {
         Base b = name.getValues().get(0);
         if (b.isPrimitive()) {
-          return b.primitiveValue();          
+          return b.primitiveValue();
         } else if (b.fhirType().equals("HumanName")) {
           Property family = b.getChildByName("family");
           Property given = wrapped.getChildByName("given");
@@ -173,16 +178,17 @@ public class ElementWrappers {
             s = s + " " + family.getValues().get(0).primitiveValue().toUpperCase();
           return s;
         } else {
-          throw new Error("Now what? ("+b.fhirType()+")");
+          throw new Error("Now what? (" + b.fhirType() + ")");
         }
       }
       return null;
     }
-    
+
     @Override
     public List<PropertyWrapper> children() {
       if (list2 == null) {
-        List<ElementDefinition> children = context.getProfileUtilities().getChildList(definition, definition.getSnapshot().getElement().get(0));
+        List<ElementDefinition> children = context.getProfileUtilities().getChildList(definition,
+            definition.getSnapshot().getElement().get(0));
         list2 = new ArrayList<PropertyWrapper>();
         for (ElementDefinition child : children) {
           List<Element> elements = new ArrayList<Element>();
@@ -201,7 +207,7 @@ public class ElementWrappers {
       if (wrapped.hasChild("title") && wrapped.getChildValue("title") != null) {
         x.tx(wrapped.getChildValue("title"));
       } else if (wrapped.hasChild("name") && wrapped.getChildValue("name") != null) {
-        x.tx(wrapped.getChildValue("name"));       
+        x.tx(wrapped.getChildValue("name"));
       } else {
         x.tx("?ngen-1?");
       }
@@ -221,7 +227,10 @@ public class ElementWrappers {
       if (txt == null) {
         txt = new org.hl7.fhir.r4b.elementmodel.Element("text", wrapped.getProperty().getChild(null, "text"));
         int i = 0;
-        while (i < wrapped.getChildren().size() && (wrapped.getChildren().get(i).getName().equals("id") || wrapped.getChildren().get(i).getName().equals("meta") || wrapped.getChildren().get(i).getName().equals("implicitRules") || wrapped.getChildren().get(i).getName().equals("language")))
+        while (i < wrapped.getChildren().size() && (wrapped.getChildren().get(i).getName().equals("id")
+            || wrapped.getChildren().get(i).getName().equals("meta")
+            || wrapped.getChildren().get(i).getName().equals("implicitRules")
+            || wrapped.getChildren().get(i).getName().equals("language")))
           i++;
         if (i >= wrapped.getChildren().size())
           wrapped.getChildren().add(txt);
@@ -247,7 +256,8 @@ public class ElementWrappers {
 
     @Override
     public BaseWrapper root() {
-      return new BaseWrapperMetaElement(context, wrapped, getName(), definition, definition.getSnapshot().getElementFirstRep());
+      return new BaseWrapperMetaElement(context, wrapped, getName(), definition,
+          definition.getSnapshot().getElementFirstRep());
     }
 
     @Override
@@ -285,7 +295,7 @@ public class ElementWrappers {
       return null;
     }
 
-}
+  }
 
   public static class PropertyWrapperMetaElement extends RendererWrapperImpl implements PropertyWrapper {
 
@@ -294,7 +304,8 @@ public class ElementWrappers {
     private List<Element> values;
     private List<BaseWrapper> list;
 
-    public PropertyWrapperMetaElement(RenderingContext context, StructureDefinition structure, ElementDefinition definition, List<Element> values) {
+    public PropertyWrapperMetaElement(RenderingContext context, StructureDefinition structure,
+        ElementDefinition definition, List<Element> values) {
       super(context);
       this.structure = structure;
       this.definition = definition;
@@ -316,7 +327,7 @@ public class ElementWrappers {
       if (list == null) {
         list = new ArrayList<BaseWrapper>();
         for (Element e : values) {
-           list.add(new BaseWrapperMetaElement(context, e, e.fhirType(), structure, definition));
+          list.add(new BaseWrapperMetaElement(context, e, e.fhirType(), structure, definition));
         }
       }
       return list;
@@ -350,7 +361,7 @@ public class ElementWrappers {
     @Override
     public BaseWrapper value() {
       if (getValues().size() != 1)
-        throw new Error("Access single value, but value count is "+getValues().size());
+        throw new Error("Access single value, but value count is " + getValues().size());
       return getValues().get(0);
     }
 

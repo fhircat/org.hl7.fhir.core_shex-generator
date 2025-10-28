@@ -364,6 +364,22 @@ public class Availability extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("daysOfWeek")) {
+          value = new DaysOfWeekEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getDaysOfWeek().remove((Enumeration) value);
+        } else if (name.equals("allDay")) {
+          this.allDay = null;
+        } else if (name.equals("availableStartTime")) {
+          this.availableStartTime = null;
+        } else if (name.equals("availableEndTime")) {
+          this.availableEndTime = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -391,16 +407,16 @@ public class Availability extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("daysOfWeek")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Availability.availableTime.daysOfWeek");
+          throw new FHIRException("Cannot call addChild on a singleton property Availability.availableTime.daysOfWeek");
         }
         else if (name.equals("allDay")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Availability.availableTime.allDay");
+          throw new FHIRException("Cannot call addChild on a singleton property Availability.availableTime.allDay");
         }
         else if (name.equals("availableStartTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Availability.availableTime.availableStartTime");
+          throw new FHIRException("Cannot call addChild on a singleton property Availability.availableTime.availableStartTime");
         }
         else if (name.equals("availableEndTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Availability.availableTime.availableEndTime");
+          throw new FHIRException("Cannot call addChild on a singleton property Availability.availableTime.availableEndTime");
         }
         else
           return super.addChild(name);
@@ -607,6 +623,17 @@ public class Availability extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("during")) {
+          this.during = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -630,7 +657,7 @@ public class Availability extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Availability.notAvailableTime.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Availability.notAvailableTime.description");
         }
         else if (name.equals("during")) {
           this.during = new Period();
@@ -861,6 +888,17 @@ public class Availability extends DataType implements ICompositeType {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("availableTime")) {
+          this.getAvailableTime().remove((AvailabilityAvailableTimeComponent) value);
+        } else if (name.equals("notAvailableTime")) {
+          this.getNotAvailableTime().remove((AvailabilityNotAvailableTimeComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override

@@ -152,14 +152,16 @@ public class MessageHeader extends DomainResource {
         throw new FHIRException("Unknown ResponseType code '"+codeString+"'");
         }
     public String toCode(ResponseType code) {
-      if (code == ResponseType.OK)
+       if (code == ResponseType.NULL)
+           return null;
+       if (code == ResponseType.OK)
         return "ok";
       if (code == ResponseType.TRANSIENTERROR)
         return "transient-error";
       if (code == ResponseType.FATALERROR)
         return "fatal-error";
       return "?";
-      }
+   }
     public String toSystem(ResponseType code) {
       return code.getSystem();
       }
@@ -222,8 +224,8 @@ public class MessageHeader extends DomainResource {
           return (UrlType) this.endpoint;
         }
 
-        public boolean hasEndpointUrlType() { 
-          return this != null && this.endpoint instanceof UrlType;
+        public boolean hasEndpointUrlType() {
+            return this.endpoint instanceof UrlType;
         }
 
         /**
@@ -237,8 +239,8 @@ public class MessageHeader extends DomainResource {
           return (Reference) this.endpoint;
         }
 
-        public boolean hasEndpointReference() { 
-          return this != null && this.endpoint instanceof Reference;
+        public boolean hasEndpointReference() {
+            return this.endpoint instanceof Reference;
         }
 
         public boolean hasEndpoint() { 
@@ -422,6 +424,21 @@ public class MessageHeader extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("endpoint[x]")) {
+          this.endpoint = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("target")) {
+          this.target = null;
+        } else if (name.equals("receiver")) {
+          this.receiver = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -458,7 +475,7 @@ public class MessageHeader extends DomainResource {
           return this.endpoint;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.destination.name");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.destination.name");
         }
         else if (name.equals("target")) {
           this.target = new Reference();
@@ -583,8 +600,8 @@ public class MessageHeader extends DomainResource {
           return (UrlType) this.endpoint;
         }
 
-        public boolean hasEndpointUrlType() { 
-          return this != null && this.endpoint instanceof UrlType;
+        public boolean hasEndpointUrlType() {
+            return this.endpoint instanceof UrlType;
         }
 
         /**
@@ -598,8 +615,8 @@ public class MessageHeader extends DomainResource {
           return (Reference) this.endpoint;
         }
 
-        public boolean hasEndpointReference() { 
-          return this != null && this.endpoint instanceof Reference;
+        public boolean hasEndpointReference() {
+            return this.endpoint instanceof Reference;
         }
 
         public boolean hasEndpoint() { 
@@ -865,6 +882,23 @@ public class MessageHeader extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("endpoint[x]")) {
+          this.endpoint = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("software")) {
+          this.software = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("contact")) {
+          this.contact = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -903,13 +937,13 @@ public class MessageHeader extends DomainResource {
           return this.endpoint;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.source.name");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.source.name");
         }
         else if (name.equals("software")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.source.software");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.source.software");
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.source.version");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.source.version");
         }
         else if (name.equals("contact")) {
           this.contact = new ContactPoint();
@@ -1164,6 +1198,20 @@ public class MessageHeader extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("code")) {
+          value = new ResponseTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<ResponseType>
+        } else if (name.equals("details")) {
+          this.details = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1193,7 +1241,7 @@ public class MessageHeader extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.response.code");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.response.code");
         }
         else if (name.equals("details")) {
           this.details = new Reference();
@@ -1356,8 +1404,8 @@ public class MessageHeader extends DomainResource {
       return (Coding) this.event;
     }
 
-    public boolean hasEventCoding() { 
-      return this != null && this.event instanceof Coding;
+    public boolean hasEventCoding() {
+        return this.event instanceof Coding;
     }
 
     /**
@@ -1371,8 +1419,8 @@ public class MessageHeader extends DomainResource {
       return (CanonicalType) this.event;
     }
 
-    public boolean hasEventCanonicalType() { 
-      return this != null && this.event instanceof CanonicalType;
+    public boolean hasEventCanonicalType() {
+        return this.event instanceof CanonicalType;
     }
 
     public boolean hasEvent() { 
@@ -1806,6 +1854,33 @@ public class MessageHeader extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("event[x]")) {
+          this.event = null;
+        } else if (name.equals("destination")) {
+          this.getDestination().remove((MessageDestinationComponent) value);
+        } else if (name.equals("sender")) {
+          this.sender = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("source")) {
+          this.source = (MessageSourceComponent) value; // MessageSourceComponent
+        } else if (name.equals("responsible")) {
+          this.responsible = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else if (name.equals("response")) {
+          this.response = (MessageHeaderResponseComponent) value; // MessageHeaderResponseComponent
+        } else if (name.equals("focus")) {
+          this.getFocus().remove(value);
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1884,7 +1959,7 @@ public class MessageHeader extends DomainResource {
           return addFocus();
         }
         else if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageHeader.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageHeader.definition");
         }
         else
           return super.addChild(name);

@@ -194,7 +194,9 @@ public class Permission extends DomainResource {
         throw new FHIRException("Unknown PermissionRuleCombining code '"+codeString+"'");
         }
     public String toCode(PermissionRuleCombining code) {
-      if (code == PermissionRuleCombining.DENYOVERRIDES)
+       if (code == PermissionRuleCombining.NULL)
+           return null;
+       if (code == PermissionRuleCombining.DENYOVERRIDES)
         return "deny-overrides";
       if (code == PermissionRuleCombining.PERMITOVERRIDES)
         return "permit-overrides";
@@ -207,7 +209,7 @@ public class Permission extends DomainResource {
       if (code == PermissionRuleCombining.PERMITUNLESSDENY)
         return "permit-unless-deny";
       return "?";
-      }
+   }
     public String toSystem(PermissionRuleCombining code) {
       return code.getSystem();
       }
@@ -326,7 +328,9 @@ public class Permission extends DomainResource {
         throw new FHIRException("Unknown PermissionStatus code '"+codeString+"'");
         }
     public String toCode(PermissionStatus code) {
-      if (code == PermissionStatus.ACTIVE)
+       if (code == PermissionStatus.NULL)
+           return null;
+       if (code == PermissionStatus.ACTIVE)
         return "active";
       if (code == PermissionStatus.ENTEREDINERROR)
         return "entered-in-error";
@@ -335,7 +339,7 @@ public class Permission extends DomainResource {
       if (code == PermissionStatus.REJECTED)
         return "rejected";
       return "?";
-      }
+   }
     public String toSystem(PermissionStatus code) {
       return code.getSystem();
       }
@@ -522,6 +526,17 @@ public class Permission extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("basis")) {
+          this.getBasis().remove(value);
+        } else if (name.equals("evidence")) {
+          this.getEvidence().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -925,6 +940,22 @@ public class Permission extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new ConsentProvisionTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ConsentProvisionType>
+        } else if (name.equals("data")) {
+          this.getData().remove((RuleDataComponent) value);
+        } else if (name.equals("activity")) {
+          this.getActivity().remove((RuleActivityComponent) value);
+        } else if (name.equals("limit")) {
+          this.getLimit().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -952,7 +983,7 @@ public class Permission extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Permission.rule.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Permission.rule.type");
         }
         else if (name.equals("data")) {
           return addData();
@@ -1315,6 +1346,21 @@ public class Permission extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("resource")) {
+          this.getResource().remove((RuleDataResourceComponent) value);
+        } else if (name.equals("security")) {
+          this.getSecurity().remove(value);
+        } else if (name.equals("period")) {
+          this.getPeriod().remove(value);
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1574,6 +1620,18 @@ public class Permission extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("meaning")) {
+          value = new ConsentDataMeaningEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.meaning = (Enumeration) value; // Enumeration<ConsentDataMeaning>
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1597,7 +1655,7 @@ public class Permission extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("meaning")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Permission.rule.data.resource.meaning");
+          throw new FHIRException("Cannot call addChild on a singleton property Permission.rule.data.resource.meaning");
         }
         else if (name.equals("reference")) {
           this.reference = new Reference();
@@ -1900,6 +1958,19 @@ public class Permission extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("actor")) {
+          this.getActor().remove(value);
+        } else if (name.equals("action")) {
+          this.getAction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.getPurpose().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2436,6 +2507,29 @@ public class Permission extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("status")) {
+          value = new PermissionStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PermissionStatus>
+        } else if (name.equals("asserter")) {
+          this.asserter = null;
+        } else if (name.equals("date")) {
+          this.getDate().remove(value);
+        } else if (name.equals("validity")) {
+          this.validity = null;
+        } else if (name.equals("justification")) {
+          this.justification = (PermissionJustificationComponent) value; // PermissionJustificationComponent
+        } else if (name.equals("combining")) {
+          value = new PermissionRuleCombiningEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.combining = (Enumeration) value; // Enumeration<PermissionRuleCombining>
+        } else if (name.equals("rule")) {
+          this.getRule().remove((RuleComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2469,14 +2563,14 @@ public class Permission extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Permission.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Permission.status");
         }
         else if (name.equals("asserter")) {
           this.asserter = new Reference();
           return this.asserter;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Permission.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Permission.date");
         }
         else if (name.equals("validity")) {
           this.validity = new Period();
@@ -2487,7 +2581,7 @@ public class Permission extends DomainResource {
           return this.justification;
         }
         else if (name.equals("combining")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Permission.combining");
+          throw new FHIRException("Cannot call addChild on a singleton property Permission.combining");
         }
         else if (name.equals("rule")) {
           return addRule();

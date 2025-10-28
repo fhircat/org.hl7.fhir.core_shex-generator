@@ -1,45 +1,36 @@
 package org.hl7.fhir.r5.test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
-import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.r5.formats.JsonParser;
-import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.ResourceParser;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
-import org.hl7.fhir.r5.model.DomainResource;
-import org.hl7.fhir.r5.model.Observation;
+import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.renderers.utils.RenderingContext;
-import org.hl7.fhir.r5.renderers.utils.RenderingContext.ResourceRendererMode;
 import org.hl7.fhir.r5.test.utils.CompareUtilities;
 import org.hl7.fhir.r5.test.utils.TestingUtilities;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class ResourceToElementTest {
 
 
   private void runTest(String filename) throws IOException, FileNotFoundException, Exception {
-    String src = Utilities.path("[tmp]", Utilities.changeFileExt(filename, ".out.xml"));
-    String dst = Utilities.path("[tmp]", Utilities.changeFileExt(filename, ".in.xml"));
+    String src = Utilities.path("[tmp]", FileUtilities.changeFileExt(filename, ".out.xml"));
+    String dst = Utilities.path("[tmp]", FileUtilities.changeFileExt(filename, ".in.xml"));
     
     IWorkerContext ctxt = TestingUtilities.getSharedWorkerContext();
     ResourceParser p = new ResourceParser(ctxt);
     Resource res = (Resource) new XmlParser().parse(TestingUtilities.loadTestResourceStream("r5", filename));
     Element e = p.parse(res);
-    new org.hl7.fhir.r5.elementmodel.XmlParser(ctxt).compose(e, new FileOutputStream(src), OutputStyle.PRETTY, null);
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(dst), res);
-    String msg = CompareUtilities.checkXMLIsSame(src, dst);
+    new org.hl7.fhir.r5.elementmodel.XmlParser(ctxt).compose(e, ManagedFileAccess.outStream(src), OutputStyle.PRETTY, null);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(dst), res);
+    String msg = new CompareUtilities().checkXMLIsSame(filename, src, dst);
     Assertions.assertNull(msg);
   }
 

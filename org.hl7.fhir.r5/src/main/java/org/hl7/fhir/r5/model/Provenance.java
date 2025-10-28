@@ -180,7 +180,9 @@ public class Provenance extends DomainResource {
         throw new FHIRException("Unknown ProvenanceEntityRole code '"+codeString+"'");
         }
     public String toCode(ProvenanceEntityRole code) {
-      if (code == ProvenanceEntityRole.REVISION)
+       if (code == ProvenanceEntityRole.NULL)
+           return null;
+       if (code == ProvenanceEntityRole.REVISION)
         return "revision";
       if (code == ProvenanceEntityRole.QUOTATION)
         return "quotation";
@@ -191,7 +193,7 @@ public class Provenance extends DomainResource {
       if (code == ProvenanceEntityRole.REMOVAL)
         return "removal";
       return "?";
-      }
+   }
     public String toSystem(ProvenanceEntityRole code) {
       return code.getSystem();
       }
@@ -436,6 +438,21 @@ public class Provenance extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("role")) {
+          this.getRole().remove(value);
+        } else if (name.equals("who")) {
+          this.who = null;
+        } else if (name.equals("onBehalfOf")) {
+          this.onBehalfOf = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -759,6 +776,20 @@ public class Provenance extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          value = new ProvenanceEntityRoleEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.role = (Enumeration) value; // Enumeration<ProvenanceEntityRole>
+        } else if (name.equals("what")) {
+          this.what = null;
+        } else if (name.equals("agent")) {
+          this.getAgent().remove((ProvenanceAgentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -784,7 +815,7 @@ public class Provenance extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("role")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Provenance.entity.role");
+          throw new FHIRException("Cannot call addChild on a singleton property Provenance.entity.role");
         }
         else if (name.equals("what")) {
           this.what = new Reference();
@@ -1028,8 +1059,8 @@ public class Provenance extends DomainResource {
       return (Period) this.occurred;
     }
 
-    public boolean hasOccurredPeriod() { 
-      return this != null && this.occurred instanceof Period;
+    public boolean hasOccurredPeriod() {
+        return this.occurred instanceof Period;
     }
 
     /**
@@ -1043,8 +1074,8 @@ public class Provenance extends DomainResource {
       return (DateTimeType) this.occurred;
     }
 
-    public boolean hasOccurredDateTimeType() { 
-      return this != null && this.occurred instanceof DateTimeType;
+    public boolean hasOccurredDateTimeType() {
+        return this.occurred instanceof DateTimeType;
     }
 
     public boolean hasOccurred() { 
@@ -1674,6 +1705,39 @@ public class Provenance extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("target")) {
+          this.getTarget().remove(value);
+        } else if (name.equals("occurred[x]")) {
+          this.occurred = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("policy")) {
+          this.getPolicy().remove(value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("authorization")) {
+          this.getAuthorization().remove(value);
+        } else if (name.equals("activity")) {
+          this.activity = null;
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("agent")) {
+          this.getAgent().remove((ProvenanceAgentComponent) value);
+        } else if (name.equals("entity")) {
+          this.getEntity().remove((ProvenanceEntityComponent) value);
+        } else if (name.equals("signature")) {
+          this.getSignature().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1731,10 +1795,10 @@ public class Provenance extends DomainResource {
           return this.occurred;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Provenance.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property Provenance.recorded");
         }
         else if (name.equals("policy")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Provenance.policy");
+          throw new FHIRException("Cannot call addChild on a singleton property Provenance.policy");
         }
         else if (name.equals("location")) {
           this.location = new Reference();

@@ -1,11 +1,8 @@
 package org.hl7.fhir.convertors.misc;
 
 import java.io.IOException;
-import java.io.FileOutputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-import org.hl7.fhir.convertors.conv40_50.VersionConvertor_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_10_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -15,29 +12,31 @@ import org.hl7.fhir.convertors.loaders.loaderR5.R3ToR5Loader;
 import org.hl7.fhir.convertors.loaders.loaderR5.R4ToR5Loader;
 import org.hl7.fhir.convertors.loaders.loaderR5.R5ToR5Loader;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.r5.context.IWorkerContext.IContextResourceLoader;
+import org.hl7.fhir.r5.context.IContextResourceLoader;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.test.utils.TestPackageLoader;
 import org.hl7.fhir.r5.utils.ResourceDependencyWalker;
 import org.hl7.fhir.r5.utils.ResourceDependencyWalker.IResourceDependencyNotifier;
 import org.hl7.fhir.r5.utils.ResourceMinifier;
+import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.json.JsonException;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 
+@SuppressWarnings("checkstyle:systemout")
 public class ResourceDependencyPackageBuilder {
 
-  private static final List<String> LOADED_TYPES =
-      Arrays.asList("StructureDefinition", "CodeSystem", "ValueSet", "CapabilityStatement", "ConceptMap", "NamingSystem", "OperationDefinition", "SearchParameter", "Questionnaire");
+  private static final Set<String> LOADED_TYPES =
+      Utilities.stringSet("StructureDefinition", "CodeSystem", "ValueSet", "CapabilityStatement", "ConceptMap", "NamingSystem", "OperationDefinition", "SearchParameter", "Questionnaire");
   
   public static void main(String[] args) throws IOException {
 
-    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager(true);
+    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager.Builder().build();
     System.out.println("Load Core");
     NpmPackage src = pcm.loadPackage(VersionUtilities.packageForVersion(args[0]));
     SimpleWorkerContext ctxt = new SimpleWorkerContextBuilder().withAllowLoadingDuplicates(true).fromPackage(src);
@@ -49,7 +48,7 @@ public class ResourceDependencyPackageBuilder {
     
     new ResourceDependencyWalker(ctxt, pckBuilder).walk(ctxt.fetchResource(CapabilityStatement.class, args[2]));
     
-    pckBuilder.npm.save(new FileOutputStream(args[4]));
+    pckBuilder.npm.save(ManagedFileAccess.outStream(args[4]));
   }
 
   private static NpmPackage makeNpm(String vid, String version) throws JsonException, IOException {

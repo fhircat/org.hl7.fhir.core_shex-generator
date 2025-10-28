@@ -17,65 +17,68 @@ import org.hl7.fhir.r4b.model.CodeSystem.CodeSystemContentMode;
 import org.hl7.fhir.r4b.model.CodeSystem.CodeSystemHierarchyMeaning;
 import org.hl7.fhir.r4b.model.CodeSystem.ConceptDefinitionComponent;
 import org.hl7.fhir.r4b.model.Resource;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 
+@MarkedToMoveToAdjunctPackage
+@SuppressWarnings("checkstyle:systemout")
 public class ResourceFixer {
 
-
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     new ResourceFixer().vistAllResources(args[0]);
 
   }
 
   private Set<String> refs = new HashSet<>();
-  
-  private void vistAllResources(String folder) {
-    
-    for (File f : new File(folder).listFiles()) {
+
+  private void vistAllResources(String folder) throws IOException {
+
+    for (File f : ManagedFileAccess.file(folder).listFiles()) {
       if (f.isDirectory()) {
         vistAllResources(f.getAbsolutePath());
       } else if (f.getName().endsWith(".json")) {
         Resource r = null;
         try {
-          r = new JsonParser().parse(new FileInputStream(f));
+          r = new JsonParser().parse(ManagedFileAccess.inStream(f));
         } catch (Throwable e) {
           // nothing at all
         }
         if (r != null) {
           try {
             if (visitResource(r)) {
-              new JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(f), r);
+              new JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(f), r);
             }
           } catch (Exception e) {
-            System.out.println("Error processing "+f.getAbsolutePath()+": "+e.getMessage());
+            System.out.println("Error processing " + f.getAbsolutePath() + ": " + e.getMessage());
 //            e.printStackTrace();
           }
         }
       } else if (f.getName().endsWith(".xml")) {
         Resource r = null;
         try {
-          r = new XmlParser().parse(new FileInputStream(f));
+          r = new XmlParser().parse(ManagedFileAccess.inStream(f));
         } catch (Throwable e) {
           // nothing at all
         }
         if (r != null) {
           try {
             if (visitResource(r)) {
-              new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(f), r);
+              new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(f), r);
             }
           } catch (Exception e) {
-            System.out.println("Error processing "+f.getAbsolutePath()+": "+e.getMessage());
+            System.out.println("Error processing " + f.getAbsolutePath() + ": " + e.getMessage());
 //            e.printStackTrace();
           }
         }
       }
-    } 
+    }
   }
 
   private boolean visitResource(Resource r) {
     if (r.hasId()) {
-      String ref = r.fhirType()+"/"+r.getId();
+      String ref = r.fhirType() + "/" + r.getId();
       if (refs.contains(ref)) {
-        throw new FHIRException("Duplicate resource "+ref);
+        throw new FHIRException("Duplicate resource " + ref);
       }
       refs.add(ref);
     }
@@ -87,14 +90,14 @@ public class ResourceFixer {
 
   private boolean visitCodeSystem(CodeSystem cs) {
     if (!cs.hasContent()) {
-      System.out.println("Setting content = complete for CodeSystem/"+cs.getId());      
+      System.out.println("Setting content = complete for CodeSystem/" + cs.getId());
       cs.setContent(CodeSystemContentMode.COMPLETE);
       return true;
-    } else if (!cs.hasHierarchyMeaning() && hasHierarchy(cs)) {      
-      System.out.println("Setting hierarchyMeaning = is-a for CodeSystem/"+cs.getId());      
+    } else if (!cs.hasHierarchyMeaning() && hasHierarchy(cs)) {
+      System.out.println("Setting hierarchyMeaning = is-a for CodeSystem/" + cs.getId());
       cs.setHierarchyMeaning(CodeSystemHierarchyMeaning.ISA);
       return true;
-    } else {      
+    } else {
       return false;
     }
   }

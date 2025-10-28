@@ -29,10 +29,10 @@ package org.hl7.fhir.r4b.utils;
   
  */
 
-
-
 import org.hl7.fhir.r4b.model.OperationOutcome;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
+@MarkedToMoveToAdjunctPackage
 public class EOperationOutcome extends Exception {
 
   private static final long serialVersionUID = 8887222532359256131L;
@@ -47,6 +47,5 @@ public class EOperationOutcome extends Exception {
   public OperationOutcome getOutcome() {
     return outcome;
   }
-  
-  
+
 }

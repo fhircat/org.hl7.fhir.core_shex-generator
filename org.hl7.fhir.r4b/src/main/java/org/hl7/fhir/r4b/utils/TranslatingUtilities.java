@@ -29,16 +29,16 @@ package org.hl7.fhir.r4b.utils;
   
  */
 
-
-
-
 import org.hl7.fhir.r4b.model.Enumeration;
 import org.hl7.fhir.r4b.model.PrimitiveType;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
+@MarkedToMoveToAdjunctPackage
 public class TranslatingUtilities extends org.hl7.fhir.utilities.TranslatingUtilities {
 
   public interface TranslationServices extends org.hl7.fhir.utilities.TranslationServices {
     String gt(@SuppressWarnings("rawtypes") PrimitiveType value);
+
     String egt(@SuppressWarnings("rawtypes") Enumeration<? extends Enum> value);
   }
 
@@ -54,9 +54,9 @@ public class TranslatingUtilities extends org.hl7.fhir.utilities.TranslatingUtil
     if (value == null || !value.hasPrimitiveValue()) {
       return null;
     } else {
-      return (value == null || !value.hasPrimitiveValue()) ? null : hasTranslator() ? ((TranslationServices) getTranslator()).egt(value) : value.asStringValue();
+      return (value == null || !value.hasPrimitiveValue()) ? null
+          : hasTranslator() ? ((TranslationServices) getTranslator()).egt(value) : value.asStringValue();
     }
   }
-
 
 }

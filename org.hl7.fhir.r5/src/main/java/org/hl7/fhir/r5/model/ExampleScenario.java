@@ -356,6 +356,22 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("key")) {
+          this.key = null;
+        } else if (name.equals("type")) {
+          value = new ExampleScenarioActorTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ExampleScenarioActorType>
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -383,16 +399,16 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("key")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.actor.key");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.actor.key");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.actor.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.actor.type");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.actor.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.actor.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.actor.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.actor.description");
         }
         else
           return super.addChild(name);
@@ -667,8 +683,8 @@ public class ExampleScenario extends CanonicalResource {
           return (CanonicalType) this.structureProfile;
         }
 
-        public boolean hasStructureProfileCanonicalType() { 
-          return this != null && this.structureProfile instanceof CanonicalType;
+        public boolean hasStructureProfileCanonicalType() {
+            return this.structureProfile instanceof CanonicalType;
         }
 
         /**
@@ -682,8 +698,8 @@ public class ExampleScenario extends CanonicalResource {
           return (UriType) this.structureProfile;
         }
 
-        public boolean hasStructureProfileUriType() { 
-          return this != null && this.structureProfile instanceof UriType;
+        public boolean hasStructureProfileUriType() {
+            return this.structureProfile instanceof UriType;
         }
 
         public boolean hasStructureProfile() { 
@@ -1034,6 +1050,31 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("key")) {
+          this.key = null;
+        } else if (name.equals("structureType")) {
+          this.structureType = null;
+        } else if (name.equals("structureVersion")) {
+          this.structureVersion = null;
+        } else if (name.equals("structureProfile[x]")) {
+          this.structureProfile = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("content")) {
+          this.content = null;
+        } else if (name.equals("version")) {
+          this.getVersion().remove((ExampleScenarioInstanceVersionComponent) value);
+        } else if (name.equals("containedInstance")) {
+          this.getContainedInstance().remove((ExampleScenarioInstanceContainedInstanceComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1072,14 +1113,14 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("key")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.key");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.key");
         }
         else if (name.equals("structureType")) {
           this.structureType = new Coding();
           return this.structureType;
         }
         else if (name.equals("structureVersion")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.structureVersion");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.structureVersion");
         }
         else if (name.equals("structureProfileCanonical")) {
           this.structureProfile = new CanonicalType();
@@ -1090,10 +1131,10 @@ public class ExampleScenario extends CanonicalResource {
           return this.structureProfile;
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.description");
         }
         else if (name.equals("content")) {
           this.content = new Reference();
@@ -1450,6 +1491,21 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("key")) {
+          this.key = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("content")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1477,13 +1533,13 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("key")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.version.key");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.version.key");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.version.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.version.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.version.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.version.description");
         }
         else if (name.equals("content")) {
           this.content = new Reference();
@@ -1719,6 +1775,17 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("instanceReference")) {
+          this.instanceReference = null;
+        } else if (name.equals("versionReference")) {
+          this.versionReference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1742,10 +1809,10 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("instanceReference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.containedInstance.instanceReference");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.containedInstance.instanceReference");
         }
         else if (name.equals("versionReference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.instance.containedInstance.versionReference");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.instance.containedInstance.versionReference");
         }
         else
           return super.addChild(name);
@@ -2171,6 +2238,23 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("preConditions")) {
+          this.preConditions = null;
+        } else if (name.equals("postConditions")) {
+          this.postConditions = null;
+        } else if (name.equals("step")) {
+          this.getStep().remove((ExampleScenarioProcessStepComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2200,16 +2284,16 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.description");
         }
         else if (name.equals("preConditions")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.preConditions");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.preConditions");
         }
         else if (name.equals("postConditions")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.postConditions");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.postConditions");
         }
         else if (name.equals("step")) {
           return addStep();
@@ -2651,6 +2735,25 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("number")) {
+          this.number = null;
+        } else if (name.equals("process")) {
+          this.process = (ExampleScenarioProcessComponent) value; // ExampleScenarioProcessComponent
+        } else if (name.equals("workflow")) {
+          this.workflow = null;
+        } else if (name.equals("operation")) {
+          this.operation = (ExampleScenarioProcessStepOperationComponent) value; // ExampleScenarioProcessStepOperationComponent
+        } else if (name.equals("alternative")) {
+          this.getAlternative().remove((ExampleScenarioProcessStepAlternativeComponent) value);
+        } else if (name.equals("pause")) {
+          this.pause = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2682,14 +2785,14 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.number");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.number");
         }
         else if (name.equals("process")) {
           this.process = new ExampleScenarioProcessComponent();
           return this.process;
         }
         else if (name.equals("workflow")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.workflow");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.workflow");
         }
         else if (name.equals("operation")) {
           this.operation = new ExampleScenarioProcessStepOperationComponent();
@@ -2699,7 +2802,7 @@ public class ExampleScenario extends CanonicalResource {
           return addAlternative();
         }
         else if (name.equals("pause")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.pause");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.pause");
         }
         else
           return super.addChild(name);
@@ -3304,6 +3407,31 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("initiator")) {
+          this.initiator = null;
+        } else if (name.equals("receiver")) {
+          this.receiver = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("initiatorActive")) {
+          this.initiatorActive = null;
+        } else if (name.equals("receiverActive")) {
+          this.receiverActive = null;
+        } else if (name.equals("request")) {
+          this.request = (ExampleScenarioInstanceContainedInstanceComponent) value; // ExampleScenarioInstanceContainedInstanceComponent
+        } else if (name.equals("response")) {
+          this.response = (ExampleScenarioInstanceContainedInstanceComponent) value; // ExampleScenarioInstanceContainedInstanceComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3345,22 +3473,22 @@ public class ExampleScenario extends CanonicalResource {
           return this.type;
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.title");
         }
         else if (name.equals("initiator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.initiator");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.initiator");
         }
         else if (name.equals("receiver")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.receiver");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.receiver");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.description");
         }
         else if (name.equals("initiatorActive")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.initiatorActive");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.initiatorActive");
         }
         else if (name.equals("receiverActive")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.operation.receiverActive");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.operation.receiverActive");
         }
         else if (name.equals("request")) {
           this.request = new ExampleScenarioInstanceContainedInstanceComponent();
@@ -3676,6 +3804,19 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("step")) {
+          this.getStep().remove((ExampleScenarioProcessStepComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3701,10 +3842,10 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.alternative.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.alternative.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.process.step.alternative.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.process.step.alternative.description");
         }
         else if (name.equals("step")) {
           return addStep();
@@ -4092,8 +4233,8 @@ public class ExampleScenario extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -4107,8 +4248,8 @@ public class ExampleScenario extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -5125,6 +5266,54 @@ public class ExampleScenario extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("actor")) {
+          this.getActor().remove((ExampleScenarioActorComponent) value);
+        } else if (name.equals("instance")) {
+          this.getInstance().remove((ExampleScenarioInstanceComponent) value);
+        } else if (name.equals("process")) {
+          this.getProcess().remove((ExampleScenarioProcessComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5185,13 +5374,13 @@ public class ExampleScenario extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.url");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.version");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -5202,28 +5391,28 @@ public class ExampleScenario extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -5232,13 +5421,13 @@ public class ExampleScenario extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExampleScenario.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property ExampleScenario.copyrightLabel");
         }
         else if (name.equals("actor")) {
           return addActor();

@@ -161,7 +161,9 @@ public class Contributor extends Type implements ICompositeType {
         throw new FHIRException("Unknown ContributorType code '"+codeString+"'");
         }
     public String toCode(ContributorType code) {
-      if (code == ContributorType.AUTHOR)
+       if (code == ContributorType.NULL)
+           return null;
+       if (code == ContributorType.AUTHOR)
         return "author";
       if (code == ContributorType.EDITOR)
         return "editor";
@@ -170,7 +172,7 @@ public class Contributor extends Type implements ICompositeType {
       if (code == ContributorType.ENDORSER)
         return "endorser";
       return "?";
-      }
+   }
     public String toSystem(ContributorType code) {
       return code.getSystem();
       }
@@ -445,10 +447,10 @@ public class Contributor extends Type implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contributor.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Contributor.type");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contributor.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Contributor.name");
         }
         else if (name.equals("contact")) {
           return addContact();

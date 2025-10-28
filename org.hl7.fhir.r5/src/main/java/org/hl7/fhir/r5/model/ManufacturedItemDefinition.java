@@ -129,8 +129,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -144,8 +144,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -159,8 +159,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -174,8 +174,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -189,8 +189,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -204,8 +204,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -219,8 +219,8 @@ public class ManufacturedItemDefinition extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -294,6 +294,17 @@ public class ManufacturedItemDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -831,6 +842,25 @@ public class ManufacturedItemDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("function")) {
+          this.getFunction().remove(value);
+        } else if (name.equals("amount")) {
+          this.getAmount().remove(value);
+        } else if (name.equals("constituent")) {
+          this.getConstituent().remove((ManufacturedItemDefinitionComponentConstituentComponent) value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((ManufacturedItemDefinitionPropertyComponent) value);
+        } else if (name.equals("component")) {
+          this.getComponent().remove((ManufacturedItemDefinitionComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1270,6 +1300,21 @@ public class ManufacturedItemDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("amount")) {
+          this.getAmount().remove(value);
+        } else if (name.equals("location")) {
+          this.getLocation().remove(value);
+        } else if (name.equals("function")) {
+          this.getFunction().remove(value);
+        } else if (name.equals("hasIngredient")) {
+          this.getHasIngredient().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2046,6 +2091,34 @@ public class ManufacturedItemDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("manufacturedDoseForm")) {
+          this.manufacturedDoseForm = null;
+        } else if (name.equals("unitOfPresentation")) {
+          this.unitOfPresentation = null;
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove(value);
+        } else if (name.equals("marketingStatus")) {
+          this.getMarketingStatus().remove(value);
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove(value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((ManufacturedItemDefinitionPropertyComponent) value);
+        } else if (name.equals("component")) {
+          this.getComponent().remove((ManufacturedItemDefinitionComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2088,10 +2161,10 @@ public class ManufacturedItemDefinition extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ManufacturedItemDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ManufacturedItemDefinition.status");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ManufacturedItemDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ManufacturedItemDefinition.name");
         }
         else if (name.equals("manufacturedDoseForm")) {
           this.manufacturedDoseForm = new CodeableConcept();

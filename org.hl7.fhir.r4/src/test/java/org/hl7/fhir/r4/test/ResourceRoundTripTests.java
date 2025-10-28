@@ -1,5 +1,13 @@
 package org.hl7.fhir.r4.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.fhir.ucum.UcumException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.formats.IParser;
@@ -12,11 +20,10 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.test.utils.TestingUtilities;
 import org.hl7.fhir.r4.utils.EOperationOutcome;
 import org.hl7.fhir.r4.utils.NarrativeGenerator;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.io.*;
 
 public class ResourceRoundTripTests {
 
@@ -27,11 +34,11 @@ public class ResourceRoundTripTests {
   @Test
   @Disabled
   public void test() throws FileNotFoundException, IOException, FHIRException, EOperationOutcome, UcumException {
-    Resource res = new XmlParser().parse(new FileInputStream(TestingUtilities.resourceNameToFile("unicode.xml")));
+    Resource res = new XmlParser().parse(ManagedFileAccess.inStream(TestingUtilities.resourceNameToFile("unicode.xml")));
     new NarrativeGenerator("", "", TestingUtilities.context()).generate((DomainResource) res, null);
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(TestingUtilities.resourceNameToFile("gen", "unicode.out.xml")), res);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY)
+        .compose(ManagedFileAccess.outStream(TestingUtilities.resourceNameToFile("gen", "unicode.out.xml")), res);
   }
-
 
   @Test
   public void testBundle() throws FHIRException, IOException {

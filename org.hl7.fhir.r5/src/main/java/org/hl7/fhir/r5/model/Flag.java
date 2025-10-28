@@ -152,14 +152,16 @@ public class Flag extends DomainResource {
         throw new FHIRException("Unknown FlagStatus code '"+codeString+"'");
         }
     public String toCode(FlagStatus code) {
-      if (code == FlagStatus.ACTIVE)
+       if (code == FlagStatus.NULL)
+           return null;
+       if (code == FlagStatus.ACTIVE)
         return "active";
       if (code == FlagStatus.INACTIVE)
         return "inactive";
       if (code == FlagStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(FlagStatus code) {
       return code.getSystem();
       }
@@ -615,6 +617,30 @@ public class Flag extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new FlagStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FlagStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -653,7 +679,7 @@ public class Flag extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Flag.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Flag.status");
         }
         else if (name.equals("category")) {
           return addCategory();

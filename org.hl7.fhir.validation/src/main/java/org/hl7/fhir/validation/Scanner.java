@@ -3,46 +3,42 @@ package org.hl7.fhir.validation;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.renderers.RendererFactory;
 import org.hl7.fhir.r5.renderers.utils.RenderingContext;
 import org.hl7.fhir.r5.renderers.utils.RenderingContext.GenerationRules;
+import org.hl7.fhir.r5.renderers.utils.ResourceWrapper;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
-import org.hl7.fhir.utilities.SimpleHTTPClient;
-import org.hl7.fhir.utilities.SimpleHTTPClient.HTTPResult;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+import org.hl7.fhir.utilities.http.HTTPResult;
+import org.hl7.fhir.utilities.http.ManagedWebAccess;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 import org.hl7.fhir.validation.ValidatorUtils.SourceFile;
-import org.hl7.fhir.validation.cli.model.ScanOutputItem;
+import org.hl7.fhir.validation.service.model.ScanOutputItem;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
 import lombok.Getter;
 
+@Slf4j
 public class Scanner {
 
   private static final int BUFFER_SIZE = 4096;
@@ -62,9 +58,9 @@ public class Scanner {
   public void validateScan(String output, List<String> sources) throws Exception {
     if (Utilities.noString(output))
       throw new Exception("Output parameter required when scanning");
-    if (!(new File(output).isDirectory()))
+    if (!(ManagedFileAccess.file(output).isDirectory()))
       throw new Exception("Output '" + output + "' must be a directory when scanning");
-    System.out.println("  .. scan " + sources + " against loaded IGs");
+    log.info("  .. scan " + sources + " against loaded IGs");
     Set<String> urls = new HashSet<>();
     for (ImplementationGuide ig : getContext().allImplementationGuides()) {
       if (ig.getUrl().contains("/ImplementationGuide") && !ig.getUrl().equals("http://hl7.org/fhir/ImplementationGuide/fhir"))
@@ -72,7 +68,7 @@ public class Scanner {
     }
     List<ScanOutputItem> res = validateScan(sources, urls);
     genScanOutput(output, res);
-    System.out.println("Done. output in " + Utilities.path(output, "scan.html"));
+    log.info("Done. output in " + Utilities.path(output, "scan.html"));
   }
 
   protected List<ScanOutputItem> validateScan(List<String> sources, Set<String> guides) throws FHIRException, IOException, EOperationOutcome {
@@ -82,13 +78,13 @@ public class Scanner {
     List<ScanOutputItem> res = new ArrayList<>();
 
     for (SourceFile ref : refs) {
-      Content cnt = getIgLoader().loadContent(ref.getRef(), "validate", false);
+      Content cnt = getIgLoader().loadContent(ref.getRef(), "validate", false, true);
       List<ValidationMessage> messages = new ArrayList<>();
       Element e = null;
       try {
-        System.out.println("Validate " + ref);
+        log.info("Validate " + ref);
         messages.clear();
-        e = getValidator().validate(null, messages, new ByteArrayInputStream(cnt.getFocus()), cnt.getCntType());
+        e = getValidator().validate(null, messages, new ByteArrayInputStream(cnt.getFocus().getBytes()), cnt.getCntType());
         res.add(new ScanOutputItem(ref.getRef(), null, null, ValidatorUtils.messagesToOutcome(messages, getContext(), getFhirPathEngine())));
       } catch (Exception ex) {
         res.add(new ScanOutputItem(ref.getRef(), null, null, exceptionToOutcome(ex)));
@@ -97,14 +93,14 @@ public class Scanner {
         String rt = e.fhirType();
         for (String u : guides) {
           ImplementationGuide ig = getContext().fetchResource(ImplementationGuide.class, u);
-          System.out.println("Check Guide " + ig.getUrl());
+          log.info("Check Guide " + ig.getUrl());
           String canonical = ig.getUrl().contains("/Impl") ? ig.getUrl().substring(0, ig.getUrl().indexOf("/Impl")) : ig.getUrl();
           String url = getGlobal(ig, rt);
           if (url != null) {
             try {
-              System.out.println("Validate " + ref + " against " + ig.getUrl());
+              log.info("Validate " + ref + " against " + ig.getUrl());
               messages.clear();
-              getValidator().validate(null, messages, new ByteArrayInputStream(cnt.getFocus()), cnt.getCntType(), url);
+              getValidator().validate(null, messages, new ByteArrayInputStream(cnt.getFocus().getBytes()), cnt.getCntType(), url);
               res.add(new ScanOutputItem(ref.getRef(), ig, null, ValidatorUtils.messagesToOutcome(messages, getContext(), getFhirPathEngine())));
             } catch (Exception ex) {
               res.add(new ScanOutputItem(ref.getRef(), ig, null, exceptionToOutcome(ex)));
@@ -116,9 +112,9 @@ public class Scanner {
               done.add(sd.getUrl());
               if (sd.getUrl().startsWith(canonical) && rt.equals(sd.getType())) {
                 try {
-                  System.out.println("Validate " + ref + " against " + sd.getUrl());
+                  log.info("Validate " + ref + " against " + sd.getUrl());
                   messages.clear();
-                  validator.validate(null, messages, new ByteArrayInputStream(cnt.getFocus()), cnt.getCntType(), Collections.singletonList(sd));
+                  validator.validate(null, messages, new ByteArrayInputStream(cnt.getFocus().getBytes()), cnt.getCntType(), Collections.singletonList(sd));
                   res.add(new ScanOutputItem(ref.getRef(), ig, sd, ValidatorUtils.messagesToOutcome(messages, getContext(), getFhirPathEngine())));
                 } catch (Exception ex) {
                   res.add(new ScanOutputItem(ref.getRef(), ig, sd, exceptionToOutcome(ex)));
@@ -253,13 +249,13 @@ public class Scanner {
 
     b.append("</body>");
     b.append("</html>");
-    TextFile.stringToFile(b.toString(), Utilities.path(folder, "scan.html"));
+    FileUtilities.stringToFile(b.toString(), Utilities.path(folder, "scan.html"));
   }
 
   protected void genScanOutputItem(ScanOutputItem item, String filename) throws IOException, FHIRException, EOperationOutcome {
     RenderingContext rc = new RenderingContext(getContext(), null, null, "http://hl7.org/fhir", "", null, RenderingContext.ResourceRendererMode.END_USER, GenerationRules.VALID_RESOURCE);
     rc.setNoSlowLookup(true);
-    RendererFactory.factory(item.getOutcome(), rc).render(item.getOutcome());
+    RendererFactory.factory(item.getOutcome(), rc).renderResource(ResourceWrapper.forResource(rc.getContextUtilities(), item.getOutcome()));
     String s = new XhtmlComposer(XhtmlComposer.HTML).compose(item.getOutcome().getText().getDiv());
 
     String title = item.getTitle();
@@ -275,7 +271,7 @@ public class Scanner {
     b.append(s);
     b.append("</body>");
     b.append("</html>");
-    TextFile.stringToFile(b.toString(), filename);
+    FileUtilities.stringToFile(b.toString(), filename);
   }
 
   protected String genOutcome(List<ScanOutputItem> items, String src, String ig, String profile) {
@@ -312,15 +308,14 @@ public class Scanner {
     OperationOutcome op = new OperationOutcome();
     op.addIssue().setCode(OperationOutcome.IssueType.EXCEPTION).setSeverity(OperationOutcome.IssueSeverity.FATAL).getDetails().setText(ex.getMessage());
     RenderingContext rc = new RenderingContext(getContext(), null, null, "http://hl7.org/fhir", "", null, RenderingContext.ResourceRendererMode.END_USER, GenerationRules.VALID_RESOURCE);
-    RendererFactory.factory(op, rc).render(op);
+    RendererFactory.factory(op, rc).renderResource(ResourceWrapper.forResource(rc.getContextUtilities(), op));
     return op;
   }
 
   protected void download(String address, String filename) throws IOException {
-    SimpleHTTPClient http = new SimpleHTTPClient();
-    HTTPResult res = http.get(address);
+    HTTPResult res = ManagedWebAccess.get(Arrays.asList("web"), address);
     res.checkThrowException();
-    TextFile.bytesToFile(res.getContent(), filename);
+    FileUtilities.bytesToFile(res.getContent(), filename);
   }
 
   protected void transfer(InputStream in, OutputStream out, int buffer) throws IOException {
@@ -334,17 +329,17 @@ public class Scanner {
   }
 
   protected void unzip(String zipFilePath, String destDirectory) throws IOException {
-    File destDir = new File(destDirectory);
+    File destDir = ManagedFileAccess.file(destDirectory);
     if (!destDir.exists()) {
       destDir.mkdir();
     }
-    ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
+    ZipInputStream zipIn = new ZipInputStream(ManagedFileAccess.inStream(zipFilePath));
     ZipEntry entry = zipIn.getNextEntry();
     // iterates over entries in the zip file
     while (entry != null) {
       String filePath = destDirectory + File.separator + entry.getName();
 
-      final File zipEntryFile = new File(destDirectory, entry.getName());
+      final File zipEntryFile = ManagedFileAccess.file(destDirectory, entry.getName());
       if (!zipEntryFile.toPath().normalize().startsWith(destDirectory)) {
         throw new RuntimeException("Entry with an illegal path: " + entry.getName());
       }
@@ -363,7 +358,7 @@ public class Scanner {
   }
 
   protected void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+    BufferedOutputStream bos = new BufferedOutputStream(ManagedFileAccess.outStream(filePath));
     byte[] bytesIn = new byte[BUFFER_SIZE];
     int read;
     while ((read = zipIn.read(bytesIn)) != -1) {

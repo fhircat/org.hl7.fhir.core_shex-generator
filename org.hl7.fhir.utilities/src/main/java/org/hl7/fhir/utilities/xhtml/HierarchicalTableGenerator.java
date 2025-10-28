@@ -76,6 +76,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,16 +85,21 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.utilities.TextFile;
-import org.hl7.fhir.utilities.TranslatingUtilities;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.FileUtilities;
+import org.hl7.fhir.utilities.UUIDUtilities;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+import org.hl7.fhir.utilities.http.ManagedWebAccess;
+import org.hl7.fhir.utilities.i18n.RenderingI18nContext;
 
 
-public class HierarchicalTableGenerator extends TranslatingUtilities {
+public class HierarchicalTableGenerator {
   public enum TableGenerationMode {
     XML, XHTML
   }
 
+  // used in older versions, where translation is not set up
   public static final String TEXT_ICON_REFERENCE = "Reference to another Resource";
   public static final String TEXT_ICON_PRIMITIVE = "Primitive Data Type";
   public static final String TEXT_ICON_KEY = "JSON Key Value";
@@ -118,7 +125,9 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
   public static final int CONTINUE_SLICE = 5;
   private static final String BACKGROUND_ALT_COLOR = "#F7F7F7";
   public static boolean ACTIVE_TABLES = false;
-    
+  public static String uuid = UUIDUtilities.makeUuidLC();
+  private static Set<String> KNOWN_ROLES = Set.of("binding", "constraint", "obligation");;
+
   public enum TextAlignment {
     LEFT, CENTER, RIGHT;  
   }
@@ -140,8 +149,10 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     private String text;
     private String hint;
     private String style;
+    private String tagImg;
     private Map<String, String> attributes;
     private XhtmlNodeList children;
+    @Getter @Setter private boolean underived;
     
     public Piece(String tag) {
       super();
@@ -153,6 +164,19 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       this.reference = reference;
       this.text = text;
       this.hint = hint;
+    }
+    public Piece(String role, String tag) {
+      super();
+      this.tag = tag;
+      this.setRole(role);
+    }
+    
+    public Piece(String role, String reference, String text, String hint) {
+      super();
+      this.reference = reference;
+      this.text = text;
+      this.hint = hint;
+      this.setRole(role);
     }
     public String getReference() {
       return reference;
@@ -175,8 +199,22 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       return style;
     }
 
-    public void setTag(String tag) {
+    public String getRole() {
+      if (attributes == null) {
+        return null;
+      } else {
+        for (String s : attributes.get("class").split("\\ ")) {
+          if (KNOWN_ROLES.contains(s)) {
+            return s;
+          }
+        }
+        return null;
+      }
+    }
+
+    public Piece setTag(String tag) {
       this.tag = tag;
+      return this;
     }
 
     public Piece setText(String text) {
@@ -186,6 +224,25 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
 
     public void setHint(String hint) {
       this.hint = hint;
+    }
+
+    public void setRole(String role) {
+      if (!KNOWN_ROLES.contains(role)) {
+        throw new Error("Unknown role "+role);
+      }
+      setClass(role);
+    }
+
+    public Piece setClass(String role) {
+      if (attributes == null) {
+        attributes = new HashMap<String, String>();
+      }
+      if (attributes.containsKey("class")) {
+        attributes.put("class", attributes.get("class") + " "+ role);
+      } else {
+        attributes.put("class", role);
+      }
+      return this;
     }
 
     public Piece setStyle(String style) {
@@ -230,12 +287,27 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       attributes.put(name, value);
       return this;
     }
+
+    public String getTagImg() {
+      return tagImg;
+    }
+
+    public Piece setTagImg(String tagImg) {
+      this.tagImg = tagImg;
+      return this;
+    }
+
+    public boolean hasAttributes() {
+      return attributes != null && attributes.size() > 0;
+    }
+    
   }
   
   public class Cell {
     private List<Piece> pieces = new ArrayList<HierarchicalTableGenerator.Piece>();
     private String cellStyle;
     protected int span = 1;
+    private boolean innerTable; // if you want a multiline left cell, you have to set this to true
     private TextAlignment alignment = TextAlignment.LEFT;
     private String id;
  
@@ -257,17 +329,19 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       pieces.add(piece);
       return this;
     }
-
-
     
     public Cell addMarkdown(String md) {
+      return addMarkdown(md, null);
+    }
+    
+    public Cell addMarkdown(String md, String style) {
       if (!Utilities.noString(md)) {
         try {
           Parser parser = Parser.builder().build();
           Node document = parser.parse(md);
           HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).build();
           String html = renderer.render(document);  
-          pieces.addAll(htmlToParagraphPieces(html, null));
+          pieces.addAll(htmlToParagraphPieces(html, style));
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -278,7 +352,7 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     public Cell addMarkdownNoPara(String md) {
       return addMarkdownNoPara(md, null);
     }
-    
+
     public Cell addMarkdownNoPara(String md, String style) {
       try {
         Parser parser = Parser.builder().build();
@@ -286,6 +360,26 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
         HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).build();
         String html = renderer.render(document);  
         pieces.addAll(htmlToParagraphPieces(html, style));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return this;
+    }
+
+    public Cell addMarkdownNoPara(String role, String md, String style) {
+      try {
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(md);
+        HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).build();
+        String html = renderer.render(document);  
+        List<Piece> hp = htmlToParagraphPieces(html, style);
+        // Trim unwanted trailing line-breaks
+        while (!hp.isEmpty() && hp.get(hp.size()-1).getTag() != null && hp.get(hp.size()-1).getTag().equals("br"))
+          hp.remove(hp.size()-1);
+        for (Piece p : hp) {
+          p.setRole(role);
+        }
+        pieces.addAll(hp);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -391,12 +485,22 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       }
       return piece;
     }
-    
+
     public Cell addStyle(String style) {
       for (Piece p : pieces)
         p.addStyle(style);
       return this;
     }
+    
+    public Cell addCellStyle(String style) {
+      if (cellStyle == null) {
+        cellStyle = style;
+      } else {
+        cellStyle = cellStyle+"; "+style;
+      }
+      return this;
+    }
+    
     public void addToHint(String text) {
       for (Piece p : pieces)
         p.addToHint(text);            
@@ -458,11 +562,32 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     public void setId(String id) {
       this.id = id;
     }
+    public Piece addImg(String icon, String hint, String link) {
+      Piece p = new Piece("img");
+      p.attr("src", icon);
+      p.hint = hint;
+      p.reference = link;
+      pieces.add(p);
+      return p;
+    }
+    public void addXhtml(XhtmlNode div) {
+      Piece p = new Piece(null);
+      pieces.add(p);
+      p.children = div.childNodes;
+    }
+    public boolean isInnerTable() {
+      return innerTable;
+    }
+    public void setInnerTable(boolean innerTable) {
+      this.innerTable = innerTable;
+    }
 
   }
 
   public class Title extends Cell {
     private int width;
+    private boolean filter;
+    private Map<String, String> checkboxes = new HashMap<String, String>();
 
     public Title(String prefix, String reference, String text, String hint, String suffix, int width) {
       super(prefix, reference, text, hint, suffix);
@@ -479,6 +604,24 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       super.setStyle(value);
       return this;
     }
+
+    public boolean isFilter() {
+      return filter;
+    }
+
+    public void setFilter(boolean filter) {
+      this.filter = filter;
+    }
+
+    public Map<String, String> getCheckboxes() {
+      return checkboxes;
+    }
+
+    public void setCheckboxes(Map<String, String> checkboxes) {
+      this.checkboxes = checkboxes;
+    }
+    
+    
   }
   
   public class Row {
@@ -491,6 +634,8 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     private int lineColor;
     private String id;
     private String opacity;
+    private String topLine;
+    private boolean partnerRow;
     
     public List<Row> getSubRows() {
       return subRows;
@@ -540,6 +685,19 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     public void setOpacity(String opacity) {
       this.opacity = opacity;
     }
+    public String text() {
+      CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
+      for (Cell c : cells) {
+        b.append(c.text());
+      }
+      return b.toString();
+    }
+    public String getTopLine() {
+      return topLine;
+    }
+    public void setTopLine(String topLine) {
+      this.topLine = topLine;
+    }
     
   }
 
@@ -551,6 +709,8 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     private String docoRef;
     private String docoImg;
     private boolean alternating;
+    private boolean showHeadings = true;
+    private boolean border = false;
         
     public TableModel(String id, boolean active) {
       super();
@@ -591,13 +751,26 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     public void setAlternating(boolean alternating) {
       this.alternating = alternating;
     }
+    public boolean isShowHeadings() {
+      return showHeadings;
+    }
+    public void setShowHeadings(boolean showHeadings) {
+      this.showHeadings = showHeadings;
+    }
+    public boolean isBorder() {
+      return border;
+    }
+    public void setBorder(boolean border) {
+      this.border = border;
+    }
     
   }
 
 
   private String dest;
   private boolean makeTargets;
-  
+  private String defPath = "";
+
   /**
    * There are circumstances where the table has to present in the absence of a stable supporting infrastructure.
    * and the file paths cannot be guaranteed. For these reasons, you can tell the builder to inline all the graphics
@@ -607,16 +780,67 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
   private boolean inLineGraphics;  
   
   private TableGenerationMode mode;
-  
-  public HierarchicalTableGenerator() {
+  private RenderingI18nContext i18n;
+  private String uniqueLocalPrefix;
+  private boolean treelines = true;
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n) {
     super();
+    this.i18n = i18n;
   }
 
-  public HierarchicalTableGenerator(String dest, boolean inlineGraphics) {
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String uniqueLocalPrefix) {
     super();
+    this.i18n = i18n;
+    this.uniqueLocalPrefix = uniqueLocalPrefix;
+  }
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String dest, boolean inlineGraphics) {
+    super();
+    this.i18n = i18n;
     this.dest = dest;
     this.inLineGraphics = inlineGraphics;
     this.makeTargets = true;
+    checkSetup();
+  }
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String dest, boolean inlineGraphics, String uniqueLocalPrefix) {
+    super();
+    this.i18n = i18n;
+    this.dest = dest;
+    this.inLineGraphics = inlineGraphics;
+    this.makeTargets = true;
+    this.uniqueLocalPrefix = uniqueLocalPrefix;
+    checkSetup();
+  }
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String dest, boolean inlineGraphics, boolean makeTargets, String defPath, String uniqueLocalPrefix) {
+    super();
+    this.i18n = i18n;
+    this.dest = dest;
+    this.inLineGraphics = inlineGraphics;
+    this.makeTargets = makeTargets;
+    this.defPath = defPath;
+    this.uniqueLocalPrefix = uniqueLocalPrefix;
+    checkSetup();
+  }
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String dest, boolean inlineGraphics, boolean makeTargets, String uniqueLocalPrefix) {
+    super();
+    this.i18n = i18n;
+    this.dest = dest;
+    this.inLineGraphics = inlineGraphics;
+    this.makeTargets = makeTargets;
+    this.uniqueLocalPrefix = uniqueLocalPrefix;
+    checkSetup();
+  }
+
+  public HierarchicalTableGenerator(RenderingI18nContext i18n, String dest, boolean inlineGraphics, boolean makeTargets) {
+    super();
+    this.i18n = i18n;
+    this.dest = dest;
+    this.inLineGraphics = inlineGraphics;
+    this.makeTargets = makeTargets;
     checkSetup();
   }
 
@@ -624,15 +848,10 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     if (dest == null) {
       throw new Error("what");
     }
-    
   }
 
-  public HierarchicalTableGenerator(String dest, boolean inlineGraphics, boolean makeTargets) {
-    super();
-    this.dest = dest;
-    this.inLineGraphics = inlineGraphics;
-    this.makeTargets = makeTargets;
-    checkSetup();
+  public String getDefPath() {
+    return defPath;
   }
 
   public TableModel initNormalTable(String prefix, boolean isLogical, boolean alternating, String id, boolean isActive, TableGenerationMode mode) throws IOException {
@@ -644,40 +863,46 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     if (mode == TableGenerationMode.XML) {
       model.setDocoImg(help16AsData());     
     } else {
-      model.setDocoImg(Utilities.pathURL(prefix, "help16.png"));
+      model.setDocoImg(Utilities.pathURL(ManagedWebAccess.makeSecureRef(prefix), "help16.png"));
     }
     model.setDocoRef(Utilities.pathURL("https://build.fhir.org/ig/FHIR/ig-guidance", "readingIgs.html#table-views"));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Name"), translate("sd.hint", "The logical name of the element"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Flags"), translate("sd.hint", "Information about the use of the element"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Card."), translate("sd.hint", "Minimum and Maximum # of times the the element can appear in the instance"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Type"), translate("sd.hint", "Reference to the type of the element"), null, 100));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Description & Constraints"), translate("sd.hint", "Additional information about the element"), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_NAME), i18n.formatPhrase(RenderingI18nContext.GENERAL_LOGICAL_NAME), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_FLAGS), i18n.formatPhrase(RenderingI18nContext.SD_HEAD_FLAGS_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_CARD), i18n.formatPhrase(RenderingI18nContext.SD_HEAD_CARD_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_TYPE), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_TYPE_DESC), null, 100));
+    Title t = new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_DESC_CONST), i18n.formatPhrase(RenderingI18nContext.SD_HEAD_DESC_DESC), null, 0);
+    t.setFilter(true);
+    t.checkboxes.put(i18n.formatPhrase(RenderingI18nContext.GENERAL_OBLIGATIONS), "obligation");
+    t.checkboxes.put(i18n.formatPhrase(RenderingI18nContext.GENERAL_CONSTRAINTS), "constraint");
+    t.checkboxes.put(i18n.formatPhrase(RenderingI18nContext.GENERAL_BINDINGS), "binding");
+    model.getTitles().add(t);
     if (isLogical) {
       model.getTitles().add(new Title(null, prefix+"structuredefinition.html#logical", "Implemented As", "How this logical data item is implemented in a concrete resource", null, 0));
     }
     return model;
   }
 
+
   public TableModel initComparisonTable(String prefix, String id) throws IOException {
     TableModel model = new TableModel(id, true);
     
     model.setAlternating(true);
     if (mode == TableGenerationMode.XML) {
-      model.setDocoImg(help16AsData()); // #FIXME      
+      model.setDocoImg(help16AsData());    
     } else {
-      model.setDocoImg(Utilities.pathURL(prefix, "help16.png"));
+      model.setDocoImg(Utilities.pathURL(ManagedWebAccess.makeSecureRef(prefix), "help16.png"));
     }
-    model.setDocoRef(Utilities.pathURL(prefix, "formats.html#table"));    
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Name"), translate("sd.hint", "The logical name of the element"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Flags"), translate("sd.hint", "Information about the use of the element - Left Structure"), null, 0).setStyle("border-left: 1px grey solid"));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Card."), translate("sd.hint", "Minimum and Maximum # of times the the element can appear in the instance - Left Structure"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Type"), translate("sd.hint", "Reference to the type of the element - Left Structure"), null, 100));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Description & Constraints"), translate("sd.hint", "Additional information about the element - Left Structure"), null, 0).setStyle("border-right: 1px grey solid"));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "R Flags"), translate("sd.hint", "Information about the use of the element - Left Structure"), null, 0).setStyle("border-left: 1px grey solid"));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "R Card."), translate("sd.hint", "Minimum and Maximum # of times the the element can appear in the instance - Left Structure"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Type"), translate("sd.hint", "Reference to the type of the element - Left Structure"), null, 100));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "L Description & Constraints"), translate("sd.hint", "Additional information about the element - Left Structure"), null, 0).setStyle("border-right: 1px grey solid"));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Comments"), translate("sd.hint", "Comments about the comparison"), null, 0));
+    model.setDocoRef(Utilities.pathURL(ManagedWebAccess.makeSecureRef(prefix), "formats.html#table"));    
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_NAME), i18n.formatPhrase(RenderingI18nContext.GENERAL_LOGICAL_NAME), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_FLAGS_L), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_FLAGS_L_DESC), null, 0).setStyle("border-left: 1px grey solid"));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_CARD_L), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_CARD_L_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_TYPE_L), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_TYPE_L_DESC), null, 100));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_DESC_L), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_DESC_L_DESC), null, 0).setStyle("border-right: 1px grey solid"));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_FLAGS_R), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_FLAGS_R_DESC), null, 0).setStyle("border-left: 1px grey solid"));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_CARD_R), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_CARD_R_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_TYPE_R), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_TYPE_R_DESC), null, 100));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_DESC_R), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_DESC_R_DESC), null, 0).setStyle("border-right: 1px grey solid"));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_COMMENTS), i18n.formatPhrase(RenderingI18nContext.SD_COMP_HEAD_COMP_DESC), null, 0));
     return model;
   }
 
@@ -685,77 +910,127 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
 
   public TableModel initGridTable(String prefix, String id) {
     TableModel model = new TableModel(id, false);
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_NAME), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_NAME_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_CARD), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_CARD_DESC), null, 0));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.GENERAL_TYPE), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_TYPE_DESC), null, 100));
+    model.getTitles().add(new Title(null, model.getDocoRef(), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_DESC), i18n.formatPhrase(RenderingI18nContext.SD_GRID_HEAD_DESC_DESC), null, 0));
     
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Name"), translate("sd.hint", "The name of the element (Slice name in brackets).  Mouse-over provides definition"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Card."), translate("sd.hint", "Minimum and Maximum # of times the the element can appear in the instance. Super-scripts indicate additional constraints on appearance"), null, 0));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Type"), translate("sd.hint", "Reference to the type of the element"), null, 100));
-    model.getTitles().add(new Title(null, model.getDocoRef(), translate("sd.head", "Constraints and Usage"), translate("sd.hint", "Fixed values, length limits, vocabulary bindings and other usage notes"), null, 0));
     return model;
+  }
+
+
+  public String treeFilterJS(String mid, Map<String, String> checkboxes) {
+    String js= "  // "+uuid+"\n";
+    
+    for (String s : Utilities.sorted(checkboxes.keySet())) {
+      String id = "cb"+mid+"-"+checkboxes.get(s);
+      js += "document.getElementById('"+id+"').checked = 'false' != localStorage.getItem('ht-table-states-"+checkboxes.get(s)+"');\n";
+      js += "filterDesc(document.getElementById('"+mid+"'), '"+checkboxes.get(s)+"', document.getElementById('cb"+mid+"-"+checkboxes.get(s)+"').checked, document.getElementById('pp"+mid+"'));\n";
+    }
+
+    return js;
   }
 
   public XhtmlNode generate(TableModel model, String imagePath, int border, Set<String> outputTracker) throws IOException, FHIRException  {
     checkModel(model);
+    boolean script = false;
+    Map<String, String> checkboxes = null;
+    for (Title t : model.getTitles()) {
+      script = script || t.isFilter() || t.getCheckboxes().size() > 0;
+      if (t.getCheckboxes().size() > 0) {
+        checkboxes  = t.getCheckboxes();
+      }
+    }
     XhtmlNode table = new XhtmlNode(NodeType.Element, "table").setAttribute("border", Integer.toString(border)).setAttribute("cellspacing", "0").setAttribute("cellpadding", "0");
-    
+    if (model.active) {
+      table.setAttribute("fhir", "generated-heirarchy"); // deprecated - will be removed once everyone has dealt with the change
+      table.setAttribute("data-fhir", "generated-heirarchy");
+    }
     if (model.isActive()) {      
       table.setAttribute("id", model.getId());
     }
-    table.setAttribute("style", "border: " + border + "px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;");
-    XhtmlNode tr = table.addTag("tr");
-    tr.setAttribute("style", "border: " + Integer.toString(1 + border) + "px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top");
-    XhtmlNode tc = null;
-    for (Title t : model.getTitles()) {
-      tc = renderCell(tr, t, "th", null, null, null, false, null, "white", 0, imagePath, border, outputTracker, model, null, true);
-      if (t.width != 0)
-        tc.setAttribute("style", "width: "+Integer.toString(t.width)+"px");
+    if (model.isBorder()) {
+      table.style("border: 2px black solid; font-size: 11px; font-family: verdana; vertical-align: top;");
+    } else {
+      table.style("border: " + border + "px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;");
     }
-    if (tc != null && model.getDocoRef() != null) {
-      XhtmlNode a = tc.addTag("span").setAttribute("style", "float: right").addTag("a").setAttribute("title", "Legend for this format").setAttribute("href", model.getDocoRef());
-      if (mode == TableGenerationMode.XHTML) {
-        a.setAttribute("no-external", "true");
+    if (model.isShowHeadings()) {
+      XhtmlNode tr = table.addTag("tr");
+      if (model.active) {
+        tr.setAttribute("fhir", "generated-heirarchy"); // deprecated - will be removed once everyone has dealt with the change
+        tr.setAttribute("data-fhir", "generated-heirarchy");
       }
-      XhtmlNode img = a.addTag("img");
-      img.setAttribute("alt", "doco").setAttribute("style", "background-color: inherit").setAttribute("src", model.getDocoImg());
-      if (model.isActive()) {
-        img.setAttribute("onLoad", "fhirTableInit(this)");
+      tr.style("border: " + Integer.toString(1 + border) + "px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top");
+      XhtmlNode tc = null;
+      for (Title t : model.getTitles()) {
+        tc = renderCell(tr, t, "th", null, null, null, false, null, "white", 0, imagePath, border, outputTracker, model, null, true, model.active && t.isFilter(), model.getId(), t.getCheckboxes());
+        if (t.width != 0)
+          tc.style("width: "+Integer.toString(t.width)+"px");
+      }
+      if (tc != null && model.getDocoRef() != null) {
+        XhtmlNode a = tc.addTag("span").style("float: right").addTag("a").setAttribute("title", "Legend for this format").setAttribute("href", model.getDocoRef());
+        if (mode == TableGenerationMode.XHTML) {
+          a.setAttribute("no-external", "true"); // deprecated - will be removed once everyone has dealt with the change
+          a.setAttribute("data-no-external", "true");
+        }
+        XhtmlNode img = a.addTag("img");
+        img.setAttribute("alt", "doco").style("background-color: inherit").setAttribute("src", model.getDocoImg());
+        if (model.isActive()) {
+          img.setAttribute("onLoad", "fhirTableInit(this)");
+        }
       }
     }
-      
     Counter counter = new Counter();
     for (Row r : model.getRows()) {
       renderRow(table, r, 0, new ArrayList<Integer>(), imagePath, border, outputTracker, counter, model);
     }
     if (model.getDocoRef() != null) {
-      tr = table.addTag("tr");
-      tc = tr.addTag("td");
+      XhtmlNode tr = table.addTag("tr");
+      if (model.active) {
+        tr.setAttribute("fhir", "generated-heirarchy"); // deprecated - will be removed once everyone has dealt with the change
+        tr.setAttribute("data-fhir", "generated-heirarchy");
+      }
+      XhtmlNode tc = tr.addTag("td");
       tc.setAttribute("class", "hierarchy");
       tc.setAttribute("colspan", Integer.toString(model.getTitles().size()));
       tc.addTag("br");
-      XhtmlNode a = tc.addTag("a").setAttribute("title", translate("sd.doco", "Legend for this format")).setAttribute("href", model.getDocoRef());
+      XhtmlNode a = tc.addTag("a").setAttribute("title", i18n.formatPhrase(RenderingI18nContext.SD_LEGEND)).setAttribute("href", model.getDocoRef());
       if (model.getDocoImg() != null)
-        a.addTag("img").setAttribute("alt", "doco").setAttribute("style", "background-color: inherit").setAttribute("src", model.getDocoImg());
-      a.addText(" "+translate("sd.doco", "Documentation for this format"));
+        a.addTag("img").setAttribute("alt", "doco").style("background-color: inherit").setAttribute("src", model.getDocoImg());
+      a.addText(" "+i18n.formatPhrase(RenderingI18nContext.SD_DOCO));
+    }
+    if (model.active && script) {
+      table.addTag("script").setAttribute("type", "text/javascript").tx(treeFilterJS(model.getId(), checkboxes));      
     }
     return table;
   }
 
 
   private void renderRow(XhtmlNode table, Row r, int indent, List<Integer> indents, String imagePath, int border, Set<String> outputTracker, Counter counter, TableModel model) throws IOException  {
-    counter.row();
+    if (!r.partnerRow) {
+      counter.row();
+    }
     XhtmlNode tr = table.addTag("tr");
+    if (model.active) {
+      tr.setAttribute("fhir", "generated-heirarchy"); // deprecated - will be removed once everyone has dealt with the change
+      tr.setAttribute("data-fhir", "generated-heirarchy");
+    }
+    
     String color = "white";
     if (r.getColor() != null)
       color = r.getColor();
     else if (model.isAlternating()  && counter.isOdd())
       color = BACKGROUND_ALT_COLOR;
     
-    tr.setAttribute("style", "border: " + border + "px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: "+color+(r.getOpacity() == null ? "" : "; opacity: "+r.getOpacity()));
+    String lineStyle = r.getTopLine() == null ? "" : "; border-top: 1px solid "+r.getTopLine();
+    
+    tr.style("border: " + border + "px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: "+color+(r.getOpacity() == null ? "" : "; opacity: "+r.getOpacity())+lineStyle);
     if (model.isActive()) {
       tr.setAttribute("id", r.getId());
     }
     boolean first = true;
     for (Cell t : r.getCells()) {
-      renderCell(tr, t, "td", first ? r.getIcon() : null, first ? r.getHint() : null, first ? indents : null, !r.getSubRows().isEmpty(), first ? r.getAnchor() : null, color, r.getLineColor(), imagePath, border, outputTracker, model, r, first);
+      renderCell(tr, t, "td", first ? r.getIcon() : null, first ? r.getHint() : null, first ? indents : null, !r.getSubRows().isEmpty(), first ? r.getAnchor() : null, color, r.getLineColor(), imagePath, border, outputTracker, model, r, first, false, model.getId(), null);
       first = false;
     }
     table.addText("\r\n");
@@ -774,7 +1049,7 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
   }
 
 
-  private XhtmlNode renderCell(XhtmlNode tr, Cell c, String name, String icon, String hint, List<Integer> indents, boolean hasChildren, String anchor, String color, int lineColor, String imagePath, int border, Set<String> outputTracker, TableModel table, Row row, boolean suppressExternals) throws IOException  {
+  private XhtmlNode renderCell(XhtmlNode tr, Cell c, String name, String icon, String hint, List<Integer> indents, boolean hasChildren, String anchor, String color, int lineColor, String imagePath, int border, Set<String> outputTracker, TableModel table, Row row, boolean suppressExternals, boolean filter, String mid, Map<String, String> checkboxes) throws IOException  {
     XhtmlNode tc = tr.addTag(name);
     tc.setAttribute("class", "hierarchy");
     if (c.span > 1) {
@@ -782,26 +1057,34 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     }
     if (c.getId() != null) {
       tc.setAttribute("id", c.getId());
+    }    
+    String lineStyle = row != null && row.getTopLine() == null ? "" : "; padding-top: 3px; padding-bottom: 3px";
+
+    XhtmlNode itc = tc;
+    XhtmlNode itr = null;
+    if (c.innerTable) {
+      itr = tc.table("none", true).tr();
+      itc = itr.td();
     }
 
     if (indents != null) {
-      tc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_spacer.png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
-      tc.setAttribute("style", "vertical-align: top; text-align : left; "+(c.cellStyle != null  && c.cellStyle.contains("background-color") ? "" : "background-color: "+color+"; ")+"border: "+ border +"px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url("+imagePath+checkExists(indents, hasChildren, lineColor, outputTracker)+")"+(c.cellStyle != null ? ";"+c.cellStyle : ""));
+      itc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_spacer.png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+      tc.style("vertical-align: top; text-align : var(--ig-left,left); "+(c.cellStyle != null  && c.cellStyle.contains("background-color") ? "" : "background-color: "+color+"; ")+"border: "+ border +"px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap"+(treelines ? "; background-image: url("+imagePath+checkExists(indents, hasChildren, lineColor, outputTracker)+")" : "")+(c.cellStyle != null ? ";"+c.cellStyle : "")+lineStyle);
       for (int i = 0; i < indents.size()-1; i++) {
         switch (indents.get(i)) {
           case NEW_REGULAR:
           case NEW_SLICER:
           case NEW_SLICE:
-            tc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_blank.png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+            itc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_blank.png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
             break;
           case CONTINUE_REGULAR:
-            tc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline.png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+            itc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline.png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
             break;
           case CONTINUE_SLICER:
-            tc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline_slicer.png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+            itc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline_slicer.png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
             break;
           case CONTINUE_SLICE:
-            tc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline_slice.png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+            itc.addTag("img").setAttribute("src", srcFor(imagePath, "tbl_vline_slice.png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
             break;
           default:
             throw new Error("Unrecognized indent level: " + indents.get(i));
@@ -809,25 +1092,25 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       }
       if (!indents.isEmpty()) {
         String sfx = table.isActive() && hasChildren ? "-open" : "";
-        XhtmlNode img = tc.addTag("img");
+        XhtmlNode img = itc.addTag("img");
         switch (indents.get(indents.size()-1)) {
         case NEW_REGULAR:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         case NEW_SLICER:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end_slicer"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end_slicer"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         case NEW_SLICE:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end_slice"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_end_slice"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         case CONTINUE_REGULAR:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         case CONTINUE_SLICER:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_slicer"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_slicer"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         case CONTINUE_SLICE:
-          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_slice"+sfx+".png")).setAttribute("style", "background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
+          img.setAttribute("src", srcFor(imagePath, "tbl_vjoin_slice"+sfx+".png")).style("background-color: inherit").setAttribute("class", "hierarchy").setAttribute("alt", ".");
           break;
         default:
           throw new Error("Unrecognized indent level: " + indents.get(indents.size()-1));
@@ -837,17 +1120,21 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
         }
       }
     }
-    else
-      tc.setAttribute("style", "vertical-align: top; text-align : left; "+(c.cellStyle != null  && c.cellStyle.contains("background-color") ? "" : "background-color: "+color+"; ")+"border: "+ border +"px #F0F0F0 solid; padding:0px 4px 0px 4px"+(c.cellStyle != null ? ";"+c.cellStyle : ""));
+    else {
+      tc.style("vertical-align: top; text-align : var(--ig-left,left); "+(c.cellStyle != null  && c.cellStyle.contains("background-color") ? "" : "background-color: "+color+"; ")+"border: "+ border +"px #F0F0F0 solid; padding:0px 4px 0px 4px"+(c.cellStyle != null ? ";"+c.cellStyle : "")+lineStyle);
+    }
+    if (c.innerTable) {
+      itc = itr.td();
+    }
     if (!Utilities.noString(icon)) {
-      XhtmlNode img = tc.addTag("img").setAttribute("alt", "icon").setAttribute("src", srcFor(imagePath, icon)).setAttribute("class", "hierarchy").setAttribute("style", "background-color: "+color+"; background-color: inherit").setAttribute("alt", ".");
+      XhtmlNode img = itc.addTag("img").setAttribute("alt", "icon").setAttribute("src", srcFor(imagePath, icon)).setAttribute("class", "hierarchy").style("background-color: "+color+"; background-color: inherit").setAttribute("alt", ".");
       if (hint != null)
         img.setAttribute("title", hint);
-      tc.addText(" ");
+      itc.addText(" ");
     }
     for (Piece p : c.pieces) {
       if (!Utilities.noString(p.getTag())) {
-        XhtmlNode tag = tc.addTag(p.getTag());
+        XhtmlNode tag = itc.addTag(p.getTag());
         if (p.attributes != null)
           for (String n : p.attributes.keySet())
             tag.setAttribute(n, p.attributes.get(n));
@@ -855,13 +1142,17 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
           tag.setAttribute("title", p.getHint());
         addStyle(tag, p);
         if (p.hasChildren()) {
-          tag.getChildNodes().addAll(p.getChildren());
+          tag.addChildNodes(p.getChildren());
         }
       } else if (!Utilities.noString(p.getReference())) {
-        XhtmlNode a = addStyle(tc.addTag("a"), p);
-        a.setAttribute("href", p.getReference());
+        XhtmlNode a = addStyle(itc.addTag("a"), p);
+        if (p.attributes != null)
+          for (String n : p.attributes.keySet())
+            a.setAttribute(n, p.attributes.get(n));
+        a.setAttribute("href", prefixLocalHref(p.getReference()));
         if (mode == TableGenerationMode.XHTML && suppressExternals) {
-          a.setAttribute("no-external", "true");
+          a.setAttribute("no-external", "true"); // deprecated - will be removed once everyone has dealt with the change
+          a.setAttribute("data-no-external", "true");
         }
         if (!Utilities.noString(p.getHint()))
           a.setAttribute("title", p.getHint());
@@ -871,31 +1162,118 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
           a.addChildren(p.getChildren());
         }
         addStyle(a, p);
+        if (p.getTagImg() != null) {
+          a.tx(" ");
+          a.img(p.getTagImg(), null);
+        }
+        
+        if (p.hasChildren()) {
+          itc.addChildNodes(p.getChildren());
+        }
       } else { 
-        if (!Utilities.noString(p.getHint())) {
-          XhtmlNode s = addStyle(tc.addTag("span"), p);
+        if (!Utilities.noString(p.getHint()) || p.hasAttributes()) {
+          XhtmlNode s = addStyle(itc.addTag("span"), p);
+          if (p.attributes != null)
+            for (String n : p.attributes.keySet())
+              s.setAttribute(n, p.attributes.get(n));
           s.setAttribute("title", p.getHint());
           s.addText(p.getText());
         } else if (p.getStyle() != null) {
-          XhtmlNode s = addStyle(tc.addTag("span"), p);
+          XhtmlNode s = addStyle(itc.addTag("span"), p);
+          if (p.attributes != null)
+            for (String n : p.attributes.keySet())
+              s.setAttribute(n, p.attributes.get(n));
           s.addText(p.getText());
         } else {
-          tc.addText(p.getText());
+          itc.addText(p.getText());
         }
         if (p.hasChildren()) {
-          tc.getChildNodes().addAll(p.getChildren());
+          itc.addChildNodes(p.getChildren());
+        }
+        if (p.getTagImg() != null) {
+          itc.tx(" ");
+          itc.img(p.getTagImg(), null);
         }
       }
     }
-    if (makeTargets && !Utilities.noString(anchor))
-      tc.addTag("a").setAttribute("name", nmTokenize(anchor)).addText(" ");
+    if (makeTargets && !Utilities.noString(anchor)) {
+      tc.addTag("a").setAttribute("name", prefixAnchor(nmTokenize(anchor))).addText(" ");
+    }
+    if (filter) {
+      itc.nbsp();itc.nbsp();itc.nbsp();itc.nbsp();
+      XhtmlNode span = itc.span();
+      span.style("font-weight: normal");
+      span.tx("Filter: ");
+      XhtmlNode input = span.input("filter", "text", null, 10);
+      input.style("border: 1px #F0F0F0 solid; background-color: rgb(254, 254, 231);");
+      input.setAttribute("onInput", "filterTree(document.getElementById('"+mid+"'), event.target.value)");
+      if (checkboxes != null) {
+        span.tx(" ");
+        span.img("tree-filter.png", "Filters").setAttribute("onClick", "showPanel(event.target, document.getElementById('"+mid+"'), document.getElementById('pp"+mid+"'))");
+        XhtmlNode popupPanel = span.div();
+        popupPanel.attribute("id", "pp"+mid);
+        popupPanel.style("display: none; position: fixed; opacity : 1.0; background-color: rgb(254, 254, 231); border: 1px solid #ccc; padding: 10px; "+
+            "boxShadow: 0 2px 5px rgba(0,0,0,0.2); zIndex: 1000; borderRadius: 4px");
+        for (String s : Utilities.sorted(checkboxes.keySet())) {
+          String v = checkboxes.get(s);
+          popupPanel.tx(s);
+          popupPanel.tx(" ");
+          input = popupPanel.input(v, "checkbox", null, 1);
+          input.setAttribute("id", "cb"+mid+"-"+checkboxes.get(s));
+          input.setAttribute("checked", "true");
+          input.setAttribute("onClick", "filterDesc(document.getElementById('"+mid+"'), '"+v+"',event.target.checked, document.getElementById('pp"+mid+"'))");
+          popupPanel.br();
+        }
+      }
+    }
     return tc;
   }
 
 
+  /**
+   * this is used to generate a simplified form while reusing all the massive amount of code that goes into the generation of the table
+   *
+   * no heirarchy, no headings, no border
+   */
+  public XhtmlNode generateAttributeTable(TableModel model, String imagePath, int border, Set<String> outputTracker) throws IOException, FHIRException  {
+    checkModel(model);
+    boolean script = false;
+    XhtmlNode table = new XhtmlNode(NodeType.Element, "table").setAttribute("border", Integer.toString(border)).setAttribute("cellspacing", "0").setAttribute("cellpadding", "0");
+    Counter counter = new Counter();
+    for (Row r : model.getRows().get(0).getSubRows()) {
+      renderAttributeRow(table, r, 0, imagePath, border, outputTracker, counter, model);
+    }
+    return table;
+  }
+
+
+  private void renderAttributeRow(XhtmlNode table, Row r, int indent, String imagePath, int border, Set<String> outputTracker, Counter counter, TableModel model) throws IOException  {
+    if (!r.partnerRow) {
+      counter.row();
+    }
+    XhtmlNode tr = table.addTag("tr");
+    String color = "white";
+    if (r.getColor() != null)
+      color = r.getColor();
+    else if (model.isAlternating()  && counter.isOdd())
+      color = BACKGROUND_ALT_COLOR;
+
+    String lineStyle = r.getTopLine() == null ? "" : "; border-top: 1px solid "+r.getTopLine();
+
+    tr.style("border: " + border + "px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: "+color+(r.getOpacity() == null ? "" : "; opacity: "+r.getOpacity())+lineStyle);
+    boolean first = true;
+    for (Cell t : r.getCells()) {
+      renderCell(tr, t, "td", first ? r.getIcon() : null, first ? r.getHint() : null, null, !r.getSubRows().isEmpty(), first ? r.getAnchor() : null, color, r.getLineColor(), imagePath, border, outputTracker, model, r, first, false, model.getId(), null);
+      first = false;
+    }
+    table.addText("\r\n");
+  }
+
+
+
   private XhtmlNode addStyle(XhtmlNode node, Piece p) {
     if (p.getStyle() != null)
-      node.setAttribute("style", p.getStyle());
+      node.style(p.getStyle());
     return node;
   }
 
@@ -904,22 +1282,32 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
   }
   
   private String srcFor(String corePrefix, String filename) throws IOException {
+    if (!treelines && filename.startsWith("tbl")) {
+      if (filename.contains("-open")) {
+        filename = "tbl-open.png";
+      } else if (filename.contains("-closed")) {
+        filename = "tbl-closed.png";
+      } else {
+        filename = "tbl_blank.png";
+      }
+    }
     if (inLineGraphics) {
       if (files.containsKey(filename))
         return files.get(filename);
       StringBuilder b = new StringBuilder();
       b.append("data:image/png;base64,");
       byte[] bytes;
-      File file = new File(Utilities.path(dest, filename));
+      File file = ManagedFileAccess.file(Utilities.path(dest, filename));
       if (!file.exists()) // because sometime this is called real early before the files exist. it will be built again later because of this
-    	bytes = new byte[0]; 
+        bytes = new byte[0]; 
       else
         bytes = FileUtils.readFileToByteArray(file);
       b.append(new String(Base64.encodeBase64(bytes)));
-//      files.put(filename, b.toString());
+      //      files.put(filename, b.toString());
       return b.toString();
-    } else
+    } else {
       return corePrefix+filename;
+    }
   }
 
   public static String help16AsData() throws IOException {
@@ -927,7 +1315,7 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     InputStream help = classLoader.getResourceAsStream("help16.png");
     StringBuilder b = new StringBuilder();
     b.append("data:image/png;base64,");
-    byte[] bytes = TextFile.streamToBytes(help);
+    byte[] bytes = FileUtilities.streamToBytes(help);
     b.append(new String(Base64.encodeBase64(bytes)));
     return b.toString();
   }
@@ -968,7 +1356,9 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
     for (Cell c : r.getCells()) {
       tc = tc + c.span;
     }
-    check(tc == size, "All rows must have the same number of columns as the titles  ("+Integer.toString(size)+") but row "+path+" doesn't - it has "+tc+" ("+(r.getCells().size() > 0 ? "??" : r.getCells().get(0).text())+"): "+r.getCells());
+    if (tc != size) {
+      check(tc == size, "All rows must have the same number of columns as the titles  ("+Integer.toString(size)+") but row "+path+" doesn't - it has "+tc+" ("+(r.getCells().size() > 0 ? "??" : r.text())+"): "+r.getCells());      
+    }
     int i = 0;
     for (Row c : r.getSubRows()) {
       check(c, "rows", size, path, i, r.getSubRows().size());
@@ -991,7 +1381,7 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       b.append(new String(encodeBase64));
       files.put(filename, b.toString());
       return b.toString();
-    } else {
+    } else if (treelines) {
       b.append("tbl_bck");
       for (Integer i : indents)
         b.append(Integer.toString(i));
@@ -999,20 +1389,26 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       b.append(Integer.toString(indent));
       b.append(".png");
       String file = Utilities.path(dest, b.toString());
-      if (!new File(file).exists()) {
-        File newFile = new File(file);
+      if (!ManagedFileAccess.file(file).exists()) {
+        File newFile = ManagedFileAccess.file(file);
         if (newFile.getParentFile() == null) {
           throw new Error("No source directory provided. ("+file+")");
         } else {
           newFile.getParentFile().mkdirs();
         }
         newFile.createNewFile();
-        FileOutputStream stream = new FileOutputStream(file);
-        genImage(indents, hasChildren, lineColor, stream);
-        if (outputTracker!=null)
-          outputTracker.add(file);
+        FileOutputStream stream = ManagedFileAccess.outStream(file);
+        try {
+          genImage(indents, hasChildren, lineColor, stream);
+          if (outputTracker!=null)
+            outputTracker.add(file);
+        } finally {
+          stream.close();
+        }
       }
       return b.toString();
+    } else {
+      return "tbl_bck0.png";
     }
   }
 
@@ -1069,4 +1465,40 @@ public class HierarchicalTableGenerator extends TranslatingUtilities {
       r.getCells().add(new Cell());
     }
   }
+  
+
+  public String getUniqueLocalPrefix() {
+    return uniqueLocalPrefix;
+  }
+
+  public void setUniqueLocalPrefix(String uniqueLocalPrefix) {
+    if (Utilities.noString(uniqueLocalPrefix)) {
+      throw new Error("what?");
+    }
+    this.uniqueLocalPrefix = uniqueLocalPrefix;
+  }
+
+  public String prefixAnchor(String anchor) {
+    return Utilities.noString(uniqueLocalPrefix) ? anchor : uniqueLocalPrefix+"-" + anchor;
+  }
+
+  public String prefixLocalHref(String url) {
+    if (url == null || Utilities.noString(uniqueLocalPrefix) || !url.startsWith("#")) {
+      return url;
+    }
+    return "#"+uniqueLocalPrefix+"-"+url.substring(1);
+  }
+
+  public boolean isTreelines() {
+    return treelines;
+  }
+
+  public void setTreelines(boolean treelines) {
+    this.treelines = treelines;
+  }
+
+  public static void forTesting() {
+    uuid = "d5a880ec-5909-47f0-8053-be62dc5dc2b0";
+  }
+  
 }

@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+
 public class XmlEscaper {
 
   private InputStream source;
@@ -27,7 +29,12 @@ public class XmlEscaper {
   }
   
   public static void convert(String source, String target) throws IOException {
-    convertAndClose(new FileInputStream(source), new FileOutputStream(target));
+    FileOutputStream fs = ManagedFileAccess.outStream(target);
+    try {
+      convertAndClose(ManagedFileAccess.inStream(source), fs);
+    } finally {
+      fs.close();
+    }
   }
   
   public static void convertAndClose(InputStream source, OutputStream target) throws IOException {

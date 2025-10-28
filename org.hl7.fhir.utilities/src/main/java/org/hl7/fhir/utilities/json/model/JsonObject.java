@@ -4,14 +4,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.json.JsonException;
 
@@ -27,8 +28,8 @@ public class JsonObject extends JsonElement {
   }
 
   public JsonObject add(String name, JsonElement value) throws JsonException {
-    check(name != null, "Name is null");
-    check(value != null, "Value is null");
+    check(name != null, "Json Property Name is null");
+    check(value != null, "Json Property Value is null");
     if (get(name) != null) {
       check(false, "Name '"+name+"' already exists (value = "+get(name).toString()+")");
     }
@@ -37,7 +38,33 @@ public class JsonObject extends JsonElement {
     propMap.put(name, p);
     return this;
   }
+  
+  public JsonObject add(int index, String name, JsonElement value) throws JsonException {
+    check(name != null, "Json Property Name is null");
+    check(value != null, "Json Property Value is null");
+    if (get(name) != null) {
+      check(false, "Name '"+name+"' already exists (value = "+get(name).toString()+")");
+    }
+    JsonProperty p = new JsonProperty(name, value);
+    properties.add(index, p);
+    propMap.put(name, p);
+    return this;
+  }
 
+  public JsonObject addIfNotNull(String name, JsonElement value) throws JsonException {
+    if (value != null) {
+      check(name != null, "Name is null");
+      if (get(name) != null) {
+        check(false, "Name '"+name+"' already exists (value = "+get(name).toString()+")");
+      }
+      JsonProperty p = new JsonProperty(name, value);
+      properties.add(p);
+      propMap.put(name, p);
+    }
+    return this;
+  }
+
+  
   // this is used by the parser which can allow duplicates = true (for the validator). You should not otherwise use it
   public JsonObject addForParser(String name, JsonElement value, boolean noComma, boolean nameUnquoted, boolean valueUnquoted) throws JsonException {
     check(name != null, "Name is null");
@@ -54,6 +81,30 @@ public class JsonObject extends JsonElement {
   public JsonObject add(String name, String value) throws JsonException {
     check(name != null, "Name is null");
     return add(name, value == null ? new JsonNull() : new JsonString(value));
+  }
+
+  public JsonObject addNull(String name) throws JsonException {
+    check(name != null, "Name is null");
+    return add(name, new JsonNull());
+  }
+
+  public JsonObject add(String name, List<String> values) throws JsonException {
+    check(name != null, "Name is null");
+    JsonArray arr = new JsonArray();
+    add(name, arr);
+    for (String v : values) {
+      arr.add(v);
+    }
+    return this;
+  }
+
+  public JsonObject addIfNotNull(String name, String value) throws JsonException {
+    check(name != null, "Name is null");
+    if (value == null) { 
+      return this;
+    } else {
+      return add(name, value == null ? new JsonNull() : new JsonString(value));
+    }
   }
 
   public JsonObject add(String name, boolean value) throws JsonException {
@@ -114,6 +165,17 @@ public class JsonObject extends JsonElement {
   }
 
   public JsonObject set(String name, int value) throws JsonException {
+    check(name != null, "Name is null");
+    JsonProperty p = propMap.get(name);
+    if (p != null) {
+      p.setValue(new JsonNumber(value));
+      return this;
+    } else {
+      return add(name, new JsonNumber(value));
+    }
+  }
+
+  public JsonObject set(String name, long value) throws JsonException {
     check(name != null, "Name is null");
     JsonProperty p = propMap.get(name);
     if (p != null) {
@@ -234,6 +296,33 @@ public class JsonObject extends JsonElement {
     return null;
   }
 
+  public Long asLong(String name) {
+    if (hasNumber(name)) {
+      return ((JsonNumber) get(name)).getLong();
+    }
+    if (hasPrimitive(name)) {
+      String s = asString(name);
+      if (Utilities.isLong(s)) {
+        return Long.parseLong(s);
+      }
+    }
+    return null;
+  }
+
+  public Double asDouble(String name) {
+    if (hasNumber(name)) {
+      return ((JsonNumber) get(name)).getDouble();
+    }
+    if (hasPrimitive(name)) {
+      String s = asString(name);
+      if (Utilities.isDecimal(s, false)) {
+        return Double.parseDouble(s);
+      }
+    }
+    return null;
+  }
+
+
   public String asString(String name) {
     return hasPrimitive(name) ? ((JsonPrimitive) get(name)).getValue() : null;
   }
@@ -302,6 +391,16 @@ public class JsonObject extends JsonElement {
     }
     if (!has(name)) {
       add(name, new JsonArray());
+    }
+    return getJsonArray(name);
+  }
+  
+  public JsonArray forceArray(int index, String name) throws JsonException {
+    if (has(name) && !hasArray(name)) {
+      remove(name);
+    }
+    if (!has(name)) {
+      add(index, name, new JsonArray());
     }
     return getJsonArray(name);
   }
@@ -393,5 +492,75 @@ public class JsonObject extends JsonElement {
     properties.clear();
     propMap.clear();
   }
+
+  public boolean isJsonString(String name) {
+    return has(name) && get(name).type() == JsonElementType.STRING;
+  }
   
+  public boolean isJsonBoolean(String name) {
+    return has(name) && get(name).type() == JsonElementType.BOOLEAN;
+  }
+
+  public boolean isJsonNumber(String name) {
+    return has(name) && get(name).type() == JsonElementType.NUMBER;
+  }
+  
+  public String compareTo(JsonObject j2) {
+    String path = "$";
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
+    compare(path, b, this, j2);
+    return b.length() == 0 ? null : b.toString();
+  }
+
+  private void compare(String path, CommaSeparatedStringBuilder b, JsonObject j1, JsonObject j2) {
+    for (JsonProperty p : j1.getProperties()) {
+      String np = path+"."+p.getName();
+      JsonElement p2 = j2.get(p.getName());
+      if (p2 == null) {
+        b.append("Missing at "+np);
+      } else if (p.getValue().type() != p2.type()) {
+        b.append("Wrong type at "+np+": "+p2.type().toName()+" instead of "+p.getValue().type().toName());        
+      } else if (p2.isJsonPrimitive()) {
+        String s2 = p2.asString();
+        String s1 = p.getValue().asString();
+        if (!s2.equals(s1)) {
+          b.append("Value Mismatch at "+np+": '"+s2+"' instead of '"+s1+"'");                  
+        }
+      } else if (p2.isJsonArray()) {
+        compare(np, b, p.getValue().asJsonArray(), p2.asJsonArray());
+      } else {
+        compare(np, b, p.getValue().asJsonObject(), p2.asJsonObject());        
+      }
+    }
+    for (JsonProperty p : j2.getProperties()) {
+      String np = path+"."+p.getName();
+      if (!j1.has(p.getName())) {
+        b.append("Unexpected "+p.getValue().type().toName()+" at "+np);        
+      }
+    }
+  }
+  
+  private void compare(String path, CommaSeparatedStringBuilder b, JsonArray j1, JsonArray j2) {
+    for (int i = 0; i < Integer.min(j1.size(), j2.size()); i++) {
+      String np = path+"["+i+"]";
+      JsonElement i1 = j1.get(i);
+      JsonElement i2 = j2.get(i);
+      if (i1.type() != i2.type()) {
+        b.append("Wrong type at "+np+": "+i2.type().toName()+" instead of "+i1.type().toName());        
+      } else if (i2.isJsonPrimitive()) {
+        if (!i2.toString().equals(i1.asString())) {
+          b.append("Value Mismatch at "+np+": '"+i1.toString()+"' instead of '"+i1.toString()+"'");                  
+        }
+      } else if (i2.isJsonArray()) {
+        compare(np, b, i1.asJsonArray(), i2.asJsonArray());
+      } else {
+        compare(np, b, i1.asJsonObject(), i2.asJsonObject());        
+      }
+    }
+    if (j1.size() > j2.size()) {
+      b.append("Missing Element "+j2.size()+" at "+path);  
+    } else if (j1.size() < j2.size()) {
+      b.append("Unexpected Element "+j1.size()+" at "+path);  
+    }
+  }
 }

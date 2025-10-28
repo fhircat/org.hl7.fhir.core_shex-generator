@@ -5,12 +5,14 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>org.hl7.fhir.core</artifactId>
-        <version>6.0.17-SNAPSHOT</version>
+        <version>6.7.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.hl7.fhir.validation.cli</artifactId>
     <packaging>jar</packaging>
+
+    <name>HL7 Core Artifact - Validation CLI</name>
 
     <properties>
         <checkstyle_config_location>${project.parent.basedir}</checkstyle_config_location>
@@ -75,14 +77,6 @@
             Any modules that are intended to be run via the validator -run-tests
             option need to be included here.
         -->
-
-        <dependency>
-            <groupId>org.hl7.fhir.testcases</groupId>
-            <artifactId>fhir-test-cases</artifactId>
-            <version>${validator_test_case_version}</version>
-            <scope>compile</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -189,12 +183,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
+            <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
+            <groupId>org.commonmark</groupId>
             <artifactId>commonmark-ext-gfm-tables</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -235,12 +229,27 @@
         </dependency>
 
         <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <optional>false</optional>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio-jvm</artifactId>
+            <optional>false</optional>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>ST4</artifactId>
             <version>4.1</version>
             <optional>false</optional>
             <scope>compile</scope>
         </dependency>
+
 
         <!-- /org.hl7.fhir.core test-jar dependencies -->
 
@@ -249,6 +258,7 @@
         org.hl7.fhir.utilities (and others) but are required for the CLI to work,
         so we explicitly bring them in here.
         -->
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -264,23 +274,37 @@
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
-            <version>1.0.3</version>
         </dependency>
         <dependency>
-            <groupId>xpp3</groupId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ogce</groupId>
             <artifactId>xpp3</artifactId>
         </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
       </dependency>
+
         <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
-            <artifactId>commonmark</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.hl7.fhir.testcases</groupId>
+            <artifactId>fhir-test-cases</artifactId>
+            <version>${validator_test_case_version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -300,11 +324,11 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <excludes>**/module-info.class,META-INF/*</excludes>
+                            <excludes>**/module-info.class,META-INF/*,**/logback-test.xml</excludes>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
-                            <excludeScope>test</excludeScope>
+                            <!--<excludeScope>test</excludeScope>-->
                             <includeScope>compile</includeScope>
                         </configuration>
                     </execution>
@@ -319,7 +343,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathLayoutType>repository</classpathLayoutType>
-                            <mainClass>org.hl7.fhir.validation.ValidatorCli</mainClass>
+                            <mainClass>org.hl7.fhir.validation.cli.ValidatorCli</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -404,15 +428,27 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <configuration>
-                        <skipStaging>true</skipStaging>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
                     <configuration>
-                        <skip>true</skip>
+                        <suppressionFiles>
+                            <suppressionFile>cve-suppression.xml</suppressionFile>
+                        </suppressionFiles>
+                        <excludes>
+                            <!-- These are our own modules, and contain test archives for zip-slip, which break owasp
+                            archive extraction -->
+                            <exclude>ca.uhn.hapi.fhir:org.hl7.fhir.convertors</exclude>
+                            <exclude>ca.uhn.hapi.fhir:org.hl7.fhir.r4b</exclude>
+                            <exclude>ca.uhn.hapi.fhir:org.hl7.fhir.r5</exclude>
+                            <exclude>ca.uhn.hapi.fhir:org.hl7.fhir.utilities</exclude>
+                            <exclude>ca.uhn.hapi.fhir:org.hl7.fhir.validation</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
         	</plugins>

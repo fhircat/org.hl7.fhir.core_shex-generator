@@ -4,5 +4,6 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-
+    <suppress id="systemout" files=".*[\\/]src[\\/]test[\\/]java[\\/].*\.java" />
+    <suppress id="systemout" files=".*[\\/]src[\\/]main[\\/]java[\\/]org[\\/]hl7[\\/]fhir[\\/]utilities[\\/]tests[\\/].*\.java" />
 </suppressions>

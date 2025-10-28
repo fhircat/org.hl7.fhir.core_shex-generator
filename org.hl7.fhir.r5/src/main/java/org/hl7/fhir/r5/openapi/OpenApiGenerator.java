@@ -55,9 +55,11 @@ import org.hl7.fhir.r5.model.SearchParameter;
 import org.hl7.fhir.r5.openapi.ParameterWriter.ParameterLocation;
 import org.hl7.fhir.r5.openapi.ParameterWriter.ParameterStyle;
 import org.hl7.fhir.r5.openapi.SchemaWriter.SchemaType;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
 
 
+@MarkedToMoveToAdjunctPackage
 public class OpenApiGenerator {
 
   private IWorkerContext context;
@@ -214,7 +216,7 @@ public class OpenApiGenerator {
         p.in(ParameterLocation.query).description(spc.getDocumentation());
         p.schema().type(getSchemaType(spc.getType()));
         if (spc.hasDefinition()) {
-          SearchParameter sp = context.fetchResource(SearchParameter.class, spc.getDefinition(), cs);
+          SearchParameter sp = context.fetchResource(SearchParameter.class, spc.getDefinition(), null, cs);
           if (sp != null) {
             p.description(sp.getDescription());
           }
@@ -251,7 +253,7 @@ public class OpenApiGenerator {
         p.in(ParameterLocation.query).description(spc.getDocumentation());
         p.schema().type(getSchemaType(spc.getType()));
         if (spc.hasDefinition()) {
-          SearchParameter sp = context.fetchResource(SearchParameter.class, spc.getDefinition(), cs);
+          SearchParameter sp = context.fetchResource(SearchParameter.class, spc.getDefinition(), null, cs);
           if (sp != null) {
             p.description(sp.getDescription());
           }

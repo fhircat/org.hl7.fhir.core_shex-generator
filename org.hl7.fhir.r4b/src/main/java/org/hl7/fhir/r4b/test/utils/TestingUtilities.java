@@ -5,10 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,14 +15,15 @@ import org.fhir.ucum.UcumEssenceService;
 import org.hl7.fhir.r4b.context.IWorkerContext;
 import org.hl7.fhir.r4b.context.SimpleWorkerContext;
 import org.hl7.fhir.r4b.model.Parameters;
-import org.hl7.fhir.utilities.CSFile;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.CSFile;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
-import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode;
-import org.hl7.fhir.utilities.npm.ToolsVersion;
+
 import org.hl7.fhir.utilities.tests.BaseTestingUtilities;
+import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -60,7 +58,6 @@ import org.w3c.dom.Node;
   
  */
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -81,7 +78,7 @@ public class TestingUtilities extends BaseTestingUtilities {
     if ("4.5.0".equals(version)) {
       version = "4.4.0"; // temporary work around
     }
-    
+
     String v = VersionUtilities.getMajMin(version);
     if (fcontexts == null) {
       fcontexts = new HashMap<>();
@@ -89,9 +86,11 @@ public class TestingUtilities extends BaseTestingUtilities {
     if (!fcontexts.containsKey(v)) {
       FilesystemPackageCacheManager pcm;
       try {
-        pcm = new FilesystemPackageCacheManager(org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
-        IWorkerContext fcontext = SimpleWorkerContext.fromPackage(pcm.loadPackage(VersionUtilities.packageForVersion(version), version));
-        fcontext.setUcumService(new UcumEssenceService(TestingUtilities.loadTestResourceStream("ucum", "ucum-essence.xml")));
+        pcm = new FilesystemPackageCacheManager.Builder().build();
+        IWorkerContext fcontext = SimpleWorkerContext
+            .fromPackage(pcm.loadPackage(VersionUtilities.packageForVersion(version), version));
+        fcontext.setUcumService(
+            new UcumEssenceService(TestingUtilities.loadTestResourceStream("ucum", "ucum-essence.xml")));
         fcontext.setExpansionProfile(new Parameters());
 //        ((SimpleWorkerContext) fcontext).connectToTSServer(new TerminologyClientR5("http://tx.fhir.org/r4"), null);
         fcontexts.put(v, fcontext);
@@ -106,39 +105,38 @@ public class TestingUtilities extends BaseTestingUtilities {
   static public String fixedpath;
   static public String contentpath;
 
-  public static String home() {
+  public static String home() throws IOException {
     if (fixedpath != null)
       return fixedpath;
     String s = System.getenv("FHIR_HOME");
     if (!Utilities.noString(s))
       return s;
     s = "C:\\work\\org.hl7.fhir\\build";
-    // FIXME: change this back
+    //  #TODO - what should we do with this?
     s = "/Users/jamesagnew/git/fhir";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     throw new Error("FHIR Home directory not configured");
   }
-
 
   public static String content() throws IOException {
     if (contentpath != null)
       return contentpath;
     String s = "R:\\fhir\\publish";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     return Utilities.path(home(), "publish");
   }
 
   // diretory that contains all the US implementation guides
-  public static String us() {
+  public static String us() throws IOException {
     if (fixedpath != null)
       return fixedpath;
     String s = System.getenv("FHIR_HOME");
     if (!Utilities.noString(s))
       return s;
     s = "C:\\work\\org.hl7.fhir.us";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     throw new Error("FHIR US directory not configured");
   }
@@ -152,12 +150,12 @@ public class TestingUtilities extends BaseTestingUtilities {
     String result = compareXml(f1, f2);
     if (result != null && SHOW_DIFF && System.getenv("ProgramFiles") != null) {
       String diff = Utilities.path(System.getenv("ProgramFiles"), "WinMerge", "WinMergeU.exe");
-      if (new File(diff).exists()) {
+      if (ManagedFileAccess.file(diff).exists()) {
         List<String> command = new ArrayList<String>();
         command.add("\"" + diff + "\" \"" + f1 + "\" \"" + f2 + "\"");
 
         ProcessBuilder builder = new ProcessBuilder(command);
-        builder.directory(new CSFile(Utilities.path("[tmp]")));
+        builder.directory(ManagedFileAccess.csfile(Utilities.path("[tmp]")));
         builder.start();
       }
     }
@@ -191,10 +189,12 @@ public class TestingUtilities extends BaseTestingUtilities {
     c2 = skipBlankText(c2);
     while (c1 != null && c2 != null) {
       if (c1.getNodeType() != c2.getNodeType())
-        return "node type mismatch in children of " + path + ": " + Integer.toString(e1.getNodeType()) + "/" + Integer.toString(e2.getNodeType());
+        return "node type mismatch in children of " + path + ": " + Integer.toString(e1.getNodeType()) + "/"
+            + Integer.toString(e2.getNodeType());
       if (c1.getNodeType() == Node.TEXT_NODE) {
         if (!normalise(c1.getTextContent()).equals(normalise(c2.getTextContent())))
-          return "Text differs at " + path + ": " + normalise(c1.getTextContent()) + "/" + normalise(c2.getTextContent());
+          return "Text differs at " + path + ": " + normalise(c1.getTextContent()) + "/"
+              + normalise(c2.getTextContent());
       } else if (c1.getNodeType() == Node.ELEMENT_NODE) {
         s = compareElements(path, (Element) c1, (Element) c2);
         if (!Utilities.noString(s))
@@ -235,7 +235,8 @@ public class TestingUtilities extends BaseTestingUtilities {
           byte[] b1 = unBase64(sa.getTextContent());
           byte[] b2 = unBase64(ta.getTextContent());
           if (!sameBytes(b1, b2))
-            return "Attributes differ at " + path + ": value " + normalise(sa.getTextContent()) + "/" + normalise(ta.getTextContent());
+            return "Attributes differ at " + path + ": value " + normalise(sa.getTextContent()) + "/"
+                + normalise(ta.getTextContent());
         }
       }
     }
@@ -258,17 +259,18 @@ public class TestingUtilities extends BaseTestingUtilities {
   }
 
   private static Node skipBlankText(Node node) {
-    while (node != null && (((node.getNodeType() == Node.TEXT_NODE) && Utilities.isAllWhitespace(node.getTextContent())) || (node.getNodeType() == Node.COMMENT_NODE)))
+    while (node != null && (((node.getNodeType() == Node.TEXT_NODE) && Utilities.isAllWhitespace(node.getTextContent()))
+        || (node.getNodeType() == Node.COMMENT_NODE)))
       node = node.getNextSibling();
     return node;
   }
 
   private static Document loadXml(String fn) throws Exception {
-    return loadXml(new FileInputStream(fn));
+    return loadXml(ManagedFileAccess.inStream(fn));
   }
 
   private static Document loadXml(InputStream fn) throws Exception {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory factory = XMLUtil.newXXEProtectedDocumentBuilderFactory();
     factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
     factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
@@ -281,20 +283,24 @@ public class TestingUtilities extends BaseTestingUtilities {
     return builder.parse(fn);
   }
 
-  public static String checkJsonSrcIsSame(String s1, String s2) throws JsonSyntaxException, FileNotFoundException, IOException {
+  public static String checkJsonSrcIsSame(String s1, String s2)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     return checkJsonSrcIsSame(s1, s2, true);
   }
 
-  public static String checkJsonSrcIsSame(String s1, String s2, boolean showDiff) throws JsonSyntaxException, FileNotFoundException, IOException {
+  public static String checkJsonSrcIsSame(String s1, String s2, boolean showDiff)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     String result = compareJsonSrc(s1, s2);
     if (result != null && SHOW_DIFF && showDiff) {
       String diff = null;
       if (System.getProperty("os.name").contains("Linux"))
         diff = Utilities.path("/", "usr", "bin", "meld");
       else {
-        if (Utilities.checkFile("WinMerge", Utilities.path(System.getenv("ProgramFiles"), "WinMerge"), "\\WinMergeU.exe", null))
+        if (FileUtilities.checkFileExists("WinMerge", Utilities.path(System.getenv("ProgramFiles"), "WinMerge"),
+            "\\WinMergeU.exe", null))
           diff = Utilities.path(System.getenv("ProgramFiles"), "WinMerge", "WinMergeU.exe");
-        else if (Utilities.checkFile("WinMerge", Utilities.path(System.getenv("ProgramFiles"), "Meld"), "\\Meld.exe", null))
+        else if (FileUtilities.checkFileExists("WinMerge", Utilities.path(System.getenv("ProgramFiles"), "Meld"), "\\Meld.exe",
+            null))
           diff = Utilities.path(System.getenv("ProgramFiles"), "Meld", "Meld.exe");
       }
       if (diff == null || diff.isEmpty())
@@ -303,8 +309,8 @@ public class TestingUtilities extends BaseTestingUtilities {
       List<String> command = new ArrayList<String>();
       String f1 = Utilities.path("[tmp]", "input" + s1.hashCode() + ".json");
       String f2 = Utilities.path("[tmp]", "output" + s2.hashCode() + ".json");
-      TextFile.stringToFile(s1, f1);
-      TextFile.stringToFile(s2, f2);
+      FileUtilities.stringToFile(s1, f1);
+      FileUtilities.stringToFile(s2, f2);
       command.add(diff);
       if (diff.toLowerCase().contains("meld"))
         command.add("--newtab");
@@ -312,14 +318,15 @@ public class TestingUtilities extends BaseTestingUtilities {
       command.add(f2);
 
       ProcessBuilder builder = new ProcessBuilder(command);
-      builder.directory(new CSFile(Utilities.path("[tmp]")));
+      builder.directory(ManagedFileAccess.csfile(Utilities.path("[tmp]")));
       builder.start();
 
     }
     return result;
   }
 
-  public static String checkJsonIsSame(String f1, String f2) throws JsonSyntaxException, FileNotFoundException, IOException {
+  public static String checkJsonIsSame(String f1, String f2)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     String result = compareJson(f1, f2);
     if (result != null && SHOW_DIFF) {
       String diff = Utilities.path(System.getenv("ProgramFiles"), "WinMerge", "WinMergeU.exe");
@@ -327,22 +334,24 @@ public class TestingUtilities extends BaseTestingUtilities {
       command.add("\"" + diff + "\" \"" + f1 + "\" \"" + f2 + "\"");
 
       ProcessBuilder builder = new ProcessBuilder(command);
-      builder.directory(new CSFile(Utilities.path("[tmp]")));
+      builder.directory(ManagedFileAccess.csfile(Utilities.path("[tmp]")));
       builder.start();
 
     }
     return result;
   }
 
-  private static String compareJsonSrc(String f1, String f2) throws JsonSyntaxException, FileNotFoundException, IOException {
+  private static String compareJsonSrc(String f1, String f2)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     JsonObject o1 = (JsonObject) new com.google.gson.JsonParser().parse(f1);
     JsonObject o2 = (JsonObject) new com.google.gson.JsonParser().parse(f2);
     return compareObjects("", o1, o2);
   }
 
-  private static String compareJson(String f1, String f2) throws JsonSyntaxException, FileNotFoundException, IOException {
-    JsonObject o1 = (JsonObject) new com.google.gson.JsonParser().parse(TextFile.fileToString(f1));
-    JsonObject o2 = (JsonObject) new com.google.gson.JsonParser().parse(TextFile.fileToString(f2));
+  private static String compareJson(String f1, String f2)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
+    JsonObject o1 = (JsonObject) new com.google.gson.JsonParser().parse(FileUtilities.fileToString(f1));
+    JsonObject o2 = (JsonObject) new com.google.gson.JsonParser().parse(FileUtilities.fileToString(f2));
     return compareObjects("", o1, o2);
   }
 
@@ -398,7 +407,8 @@ public class TestingUtilities extends BaseTestingUtilities {
       JsonArray a2 = (JsonArray) n2;
 
       if (a1.size() != a2.size())
-        return "array properties differ at " + path + ": count " + Integer.toString(a1.size()) + "/" + Integer.toString(a2.size());
+        return "array properties differ at " + path + ": count " + Integer.toString(a1.size()) + "/"
+            + Integer.toString(a2.size());
       for (int i = 0; i < a1.size(); i++) {
         String s = compareNodes(path + "[" + Integer.toString(i) + "]", a1.get(i), a2.get(i));
         if (!Utilities.noString(s))
@@ -411,20 +421,24 @@ public class TestingUtilities extends BaseTestingUtilities {
     return null;
   }
 
-  public static String checkTextIsSame(String s1, String s2) throws JsonSyntaxException, FileNotFoundException, IOException {
+  public static String checkTextIsSame(String s1, String s2)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     return checkTextIsSame(s1, s2, true);
   }
 
-  public static String checkTextIsSame(String s1, String s2, boolean showDiff) throws JsonSyntaxException, FileNotFoundException, IOException {
+  public static String checkTextIsSame(String s1, String s2, boolean showDiff)
+      throws JsonSyntaxException, FileNotFoundException, IOException {
     String result = compareText(s1, s2);
     if (result != null && SHOW_DIFF && showDiff) {
       String diff = null;
       if (System.getProperty("os.name").contains("Linux"))
         diff = Utilities.path("/", "usr", "bin", "meld");
       else {
-        if (Utilities.checkFile("WinMerge", Utilities.path(System.getenv("ProgramFiles(X86)"), "WinMerge"), "\\WinMergeU.exe", null))
+        if (FileUtilities.checkFileExists("WinMerge", Utilities.path(System.getenv("ProgramFiles(X86)"), "WinMerge"),
+            "\\WinMergeU.exe", null))
           diff = Utilities.path(System.getenv("ProgramFiles(X86)"), "WinMerge", "WinMergeU.exe");
-        else if (Utilities.checkFile("WinMerge", Utilities.path(System.getenv("ProgramFiles(X86)"), "Meld"), "\\Meld.exe", null))
+        else if (FileUtilities.checkFileExists("WinMerge", Utilities.path(System.getenv("ProgramFiles(X86)"), "Meld"),
+            "\\Meld.exe", null))
           diff = Utilities.path(System.getenv("ProgramFiles(X86)"), "Meld", "Meld.exe");
       }
       if (diff == null || diff.isEmpty())
@@ -433,8 +447,8 @@ public class TestingUtilities extends BaseTestingUtilities {
       List<String> command = new ArrayList<String>();
       String f1 = Utilities.path("[tmp]", "input" + s1.hashCode() + ".json");
       String f2 = Utilities.path("[tmp]", "output" + s2.hashCode() + ".json");
-      TextFile.stringToFile(s1, f1);
-      TextFile.stringToFile(s2, f2);
+      FileUtilities.stringToFile(s1, f1);
+      FileUtilities.stringToFile(s2, f2);
       command.add(diff);
       if (diff.toLowerCase().contains("meld"))
         command.add("--newtab");
@@ -442,21 +456,22 @@ public class TestingUtilities extends BaseTestingUtilities {
       command.add(f2);
 
       ProcessBuilder builder = new ProcessBuilder(command);
-      builder.directory(new CSFile(Utilities.path("[tmp]")));
+      builder.directory(ManagedFileAccess.csfile(Utilities.path("[tmp]")));
       builder.start();
 
     }
     return result;
   }
 
-
   private static String compareText(String s1, String s2) {
     for (int i = 0; i < Integer.min(s1.length(), s2.length()); i++) {
       if (s1.charAt(i) != s2.charAt(i))
-        return "Strings differ at character " + Integer.toString(i) + ": '" + s1.charAt(i) + "' vs '" + s2.charAt(i) + "'";
+        return "Strings differ at character " + Integer.toString(i) + ": '" + s1.charAt(i) + "' vs '" + s2.charAt(i)
+            + "'";
     }
     if (s1.length() != s2.length())
-      return "Strings differ in length: " + Integer.toString(s1.length()) + " vs " + Integer.toString(s2.length()) + " but match to the end of the shortest";
+      return "Strings differ in length: " + Integer.toString(s1.length()) + " vs " + Integer.toString(s2.length())
+          + " but match to the end of the shortest";
     return null;
   }
 
@@ -466,19 +481,23 @@ public class TestingUtilities extends BaseTestingUtilities {
   }
 
   public static String tempFolder(String name) throws IOException {
-    File tmp = new File(Utilities.path("[tmp]"));
+    File tmp = ManagedFileAccess.file(Utilities.path("[tmp]"));
     if (tmp.exists() && tmp.isDirectory()) {
       String path = Utilities.path(Utilities.path("[tmp]"), name);
-      Utilities.createDirectory(path);
+      FileUtilities.createDirectory(path);
       return path;
-    } else if (new File("/tmp").exists()) {
+    } else if (ManagedFileAccess.file("/tmp").exists()) {
       String path = Utilities.path("/tmp", name);
-      Utilities.createDirectory(path);
+      FileUtilities.createDirectory(path);
       return path;
     } else {
       String path = Utilities.path(System.getProperty("java.io.tmpdir"), name);
-      Utilities.createDirectory(path);
+      FileUtilities.createDirectory(path);
       return path;
     }
+  }
+
+  public static boolean runningAsSurefire() {
+    return "true".equals(System.getProperty("runningAsSurefire") != null ? System.getProperty("runningAsSurefire").toLowerCase(Locale.ENGLISH) : "");
   }
 }

@@ -236,7 +236,9 @@ public class DeviceDispense extends DomainResource {
         throw new FHIRException("Unknown DeviceDispenseStatusCodes code '"+codeString+"'");
         }
     public String toCode(DeviceDispenseStatusCodes code) {
-      if (code == DeviceDispenseStatusCodes.PREPARATION)
+       if (code == DeviceDispenseStatusCodes.NULL)
+           return null;
+       if (code == DeviceDispenseStatusCodes.PREPARATION)
         return "preparation";
       if (code == DeviceDispenseStatusCodes.INPROGRESS)
         return "in-progress";
@@ -255,7 +257,7 @@ public class DeviceDispense extends DomainResource {
       if (code == DeviceDispenseStatusCodes.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(DeviceDispenseStatusCodes code) {
       return code.getSystem();
       }
@@ -391,6 +393,17 @@ public class DeviceDispense extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1675,6 +1688,56 @@ public class DeviceDispense extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new DeviceDispenseStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<DeviceDispenseStatusCodes>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("receiver")) {
+          this.receiver = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((DeviceDispensePerformerComponent) value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("preparedDate")) {
+          this.preparedDate = null;
+        } else if (name.equals("whenHandedOver")) {
+          this.whenHandedOver = null;
+        } else if (name.equals("destination")) {
+          this.destination = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("usageInstruction")) {
+          this.usageInstruction = null;
+        } else if (name.equals("eventHistory")) {
+          this.getEventHistory().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1745,7 +1808,7 @@ public class DeviceDispense extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceDispense.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceDispense.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableReference();
@@ -1789,10 +1852,10 @@ public class DeviceDispense extends DomainResource {
           return this.quantity;
         }
         else if (name.equals("preparedDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceDispense.preparedDate");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceDispense.preparedDate");
         }
         else if (name.equals("whenHandedOver")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceDispense.whenHandedOver");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceDispense.whenHandedOver");
         }
         else if (name.equals("destination")) {
           this.destination = new Reference();
@@ -1802,7 +1865,7 @@ public class DeviceDispense extends DomainResource {
           return addNote();
         }
         else if (name.equals("usageInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceDispense.usageInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceDispense.usageInstruction");
         }
         else if (name.equals("eventHistory")) {
           return addEventHistory();

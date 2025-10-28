@@ -34,8 +34,11 @@ package org.hl7.fhir.r5.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.r5.model.Enumerations.*;
+
 import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.ICompositeType;
@@ -141,6 +144,9 @@ public class OperationOutcome extends DomainResource implements IBaseOperationOu
             default: return "?";
           }
         }
+        public boolean isHigherThan(IssueSeverity other) {
+          return this.ordinal() < other.ordinal();
+        }
     }
 
   public static class IssueSeverityEnumFactory implements EnumFactory<IssueSeverity> {
@@ -181,7 +187,9 @@ public class OperationOutcome extends DomainResource implements IBaseOperationOu
         throw new FHIRException("Unknown IssueSeverity code '"+codeString+"'");
         }
     public String toCode(IssueSeverity code) {
-      if (code == IssueSeverity.FATAL)
+       if (code == IssueSeverity.NULL)
+           return null;
+       if (code == IssueSeverity.FATAL)
         return "fatal";
       if (code == IssueSeverity.ERROR)
         return "error";
@@ -192,7 +200,7 @@ public class OperationOutcome extends DomainResource implements IBaseOperationOu
       if (code == IssueSeverity.SUCCESS)
         return "success";
       return "?";
-      }
+   }
     public String toSystem(IssueSeverity code) {
       return code.getSystem();
       }
@@ -717,7 +725,9 @@ public class OperationOutcome extends DomainResource implements IBaseOperationOu
         throw new FHIRException("Unknown IssueType code '"+codeString+"'");
         }
     public String toCode(IssueType code) {
-      if (code == IssueType.INVALID)
+       if (code == IssueType.NULL)
+           return null;
+       if (code == IssueType.INVALID)
         return "invalid";
       if (code == IssueType.STRUCTURE)
         return "structure";
@@ -784,7 +794,7 @@ public class OperationOutcome extends DomainResource implements IBaseOperationOu
       if (code == IssueType.SUCCESS)
         return "success";
       return "?";
-      }
+   }
     public String toSystem(IssueType code) {
       return code.getSystem();
       }
@@ -1237,6 +1247,27 @@ For resource issues, this will be a simple XPath limited to element names, repet
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("severity")) {
+          value = new IssueSeverityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.severity = (Enumeration) value; // Enumeration<IssueSeverity>
+        } else if (name.equals("code")) {
+          value = new IssueTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<IssueType>
+        } else if (name.equals("details")) {
+          this.details = null;
+        } else if (name.equals("diagnostics")) {
+          this.diagnostics = null;
+        } else if (name.equals("location")) {
+          this.getLocation().remove(value);
+        } else if (name.equals("expression")) {
+          this.getExpression().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1268,23 +1299,23 @@ For resource issues, this will be a simple XPath limited to element names, repet
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type OperationOutcome.issue.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property OperationOutcome.issue.severity");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type OperationOutcome.issue.code");
+          throw new FHIRException("Cannot call addChild on a singleton property OperationOutcome.issue.code");
         }
         else if (name.equals("details")) {
           this.details = new CodeableConcept();
           return this.details;
         }
         else if (name.equals("diagnostics")) {
-          throw new FHIRException("Cannot call addChild on a primitive type OperationOutcome.issue.diagnostics");
+          throw new FHIRException("Cannot call addChild on a singleton property OperationOutcome.issue.diagnostics");
         }
         else if (name.equals("location")) {
-          throw new FHIRException("Cannot call addChild on a primitive type OperationOutcome.issue.location");
+          throw new FHIRException("Cannot call addChild on a singleton property OperationOutcome.issue.location");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type OperationOutcome.issue.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property OperationOutcome.issue.expression");
         }
         else
           return super.addChild(name);
@@ -1342,46 +1373,77 @@ For resource issues, this will be a simple XPath limited to element names, repet
           , diagnostics, location, expression);
       }
 
-  public String fhirType() {
-    return "OperationOutcome.issue";
+      public String fhirType() {
+        return "OperationOutcome.issue";
 
-  }
+      }
 
-// added from java-adornments.txt:
-@Override 
-public String toString() { 
-  if (getExpression().size() == 1) { 
-    return getExpression().get(0)+" "+getDiagnostics()+" "+getSeverity().toCode()+"/"+getCode().toCode()+": "+getDetails().getText(); 
-  } else { 
-    return getExpression()+" "+getDiagnostics()+" "+getSeverity().toCode()+"/"+getCode().toCode()+": "+getDetails().getText(); 
-  } 
-} 
+      // added from java-adornments.txt:
+      @Override 
+      public String toString() { 
+        String srvr = hasExtension(ExtensionDefinitions.EXT_ISSUE_SERVER) ? " (from "+getExtensionString(ExtensionDefinitions.EXT_ISSUE_SERVER)+")" : "";
+        if (getExpression().size() == 1) { 
+          return getSeverity().toCode()+"/"+getCode().toCode()+" @ "+getExpression().get(0)+(hasDiagnostics() ? " "+getDiagnostics() : "")+": "+getDetails().getText()+srvr; 
+        } else { 
+          return getSeverity().toCode()+"/"+getCode().toCode()+" @ "+getExpression()+(hasDiagnostics() ? " "+getDiagnostics() : "")+": "+getDetails().getText()+srvr; 
+        } 
+      } 
 
-public boolean isWarningOrMore() {
-  switch (getSeverity()) {
-  case FATAL: return true;
-  case ERROR: return true;
-  case WARNING: return true;
-  case INFORMATION: return false;
-  case SUCCESS: return false;
-  case NULL: return false;
-  default: return false;
-}
-}
-public  boolean isInformationorLess() {
-  switch (getSeverity()) {
-  case FATAL: return false;
-  case ERROR: return true;
-  case WARNING: return false;
-  case INFORMATION: return true;
-  case SUCCESS: return true;
-  case NULL: return true;
-  default: return false;
-}
-}  
+      public boolean isWarningOrMore() {
+        switch (getSeverity()) {
+        case FATAL: return true;
+        case ERROR: return true;
+        case WARNING: return true;
+        case INFORMATION: return false;
+        case SUCCESS: return false;
+        case NULL: return false;
+        default: return false;
+        }
+      }
+      public  boolean isInformationorLess() {
+        switch (getSeverity()) {
+        case FATAL: return false;
+        case ERROR: return true;
+        case WARNING: return false;
+        case INFORMATION: return true;
+        case SUCCESS: return true;
+        case NULL: return true;
+        default: return false;
+        }
+      }
 
-// end addition
-  }
+      public List<StringType> getExpressionOrLocation() {
+        return hasExpression() ? getExpression() : getLocation();
+      }
+
+      public boolean hasExpressionOrLocation() {
+        return hasExpression() || hasLocation();
+      }
+
+      public void resetPath(String root, String newRoot) {
+        for (StringType st : getLocation()) {
+          if (st.hasValue() && st.getValue().startsWith(root+".")) {
+            st.setValue(newRoot+st.getValue().substring(root.length()));
+          }
+        }
+        for (StringType st : getExpression()) {
+          if (st.hasValue() && st.getValue().startsWith(root+".")) {
+            st.setValue(newRoot+st.getValue().substring(root.length()));
+          }
+        }
+      }  
+
+      public String getText() {
+        if (getDetails().hasText()) {
+          return getDetails().getText();
+        }
+        if (hasDiagnostics()) {
+          return getDiagnostics();
+        }
+        return null;
+      }
+      // end addition
+    }
 
     /**
      * An error, warning, or information message that results from a system action.
@@ -1501,6 +1563,15 @@ public  boolean isInformationorLess() {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("issue")) {
+          this.getIssue().remove((OperationOutcomeIssueComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override

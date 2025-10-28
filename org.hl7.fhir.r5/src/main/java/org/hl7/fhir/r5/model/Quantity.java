@@ -488,6 +488,24 @@ public class Quantity extends DataType implements ICompositeType, ICoding {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("comparator")) {
+          value = new QuantityComparatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.comparator = (Enumeration) value; // Enumeration<QuantityComparator>
+        } else if (name.equals("unit")) {
+          this.unit = null;
+        } else if (name.equals("system")) {
+          this.system = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -517,19 +535,19 @@ public class Quantity extends DataType implements ICompositeType, ICoding {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Quantity.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Quantity.value");
         }
         else if (name.equals("comparator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Quantity.comparator");
+          throw new FHIRException("Cannot call addChild on a singleton property Quantity.comparator");
         }
         else if (name.equals("unit")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Quantity.unit");
+          throw new FHIRException("Cannot call addChild on a singleton property Quantity.unit");
         }
         else if (name.equals("system")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Quantity.system");
+          throw new FHIRException("Cannot call addChild on a singleton property Quantity.system");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Quantity.code");
+          throw new FHIRException("Cannot call addChild on a singleton property Quantity.code");
         }
         else
           return super.addChild(name);

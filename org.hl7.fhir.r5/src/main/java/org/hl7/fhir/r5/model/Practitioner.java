@@ -293,6 +293,21 @@ public class Practitioner extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("issuer")) {
+          this.issuer = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -543,6 +558,17 @@ public class Practitioner extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("preferred")) {
+          this.preferred = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -570,7 +596,7 @@ public class Practitioner extends DomainResource {
           return this.language;
         }
         else if (name.equals("preferred")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Practitioner.communication.preferred");
+          throw new FHIRException("Cannot call addChild on a singleton property Practitioner.communication.preferred");
         }
         else
           return super.addChild(name);
@@ -1031,8 +1057,8 @@ The `PractitionerRole.communication` property should be used for publishing the 
       return (BooleanType) this.deceased;
     }
 
-    public boolean hasDeceasedBooleanType() { 
-      return this != null && this.deceased instanceof BooleanType;
+    public boolean hasDeceasedBooleanType() {
+        return this.deceased instanceof BooleanType;
     }
 
     /**
@@ -1046,8 +1072,8 @@ The `PractitionerRole.communication` property should be used for publishing the 
       return (DateTimeType) this.deceased;
     }
 
-    public boolean hasDeceasedDateTimeType() { 
-      return this != null && this.deceased instanceof DateTimeType;
+    public boolean hasDeceasedDateTimeType() {
+        return this.deceased instanceof DateTimeType;
     }
 
     public boolean hasDeceased() { 
@@ -1409,6 +1435,36 @@ The `PractitionerRole.communication` property should be used for publishing the 
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("name")) {
+          this.getName().remove(value);
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else if (name.equals("gender")) {
+          value = new AdministrativeGenderEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.gender = (Enumeration) value; // Enumeration<AdministrativeGender>
+        } else if (name.equals("birthDate")) {
+          this.birthDate = null;
+        } else if (name.equals("deceased[x]")) {
+          this.deceased = null;
+        } else if (name.equals("address")) {
+          this.getAddress().remove(value);
+        } else if (name.equals("photo")) {
+          this.getPhoto().remove(value);
+        } else if (name.equals("qualification")) {
+          this.getQualification().remove((PractitionerQualificationComponent) value);
+        } else if (name.equals("communication")) {
+          this.getCommunication().remove((PractitionerCommunicationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1454,7 +1510,7 @@ The `PractitionerRole.communication` property should be used for publishing the 
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Practitioner.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Practitioner.active");
         }
         else if (name.equals("name")) {
           return addName();
@@ -1463,10 +1519,10 @@ The `PractitionerRole.communication` property should be used for publishing the 
           return addTelecom();
         }
         else if (name.equals("gender")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Practitioner.gender");
+          throw new FHIRException("Cannot call addChild on a singleton property Practitioner.gender");
         }
         else if (name.equals("birthDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Practitioner.birthDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Practitioner.birthDate");
         }
         else if (name.equals("deceasedBoolean")) {
           this.deceased = new BooleanType();

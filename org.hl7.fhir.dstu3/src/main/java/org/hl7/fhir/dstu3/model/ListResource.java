@@ -150,14 +150,16 @@ public class ListResource extends DomainResource {
         throw new FHIRException("Unknown ListStatus code '"+codeString+"'");
         }
     public String toCode(ListStatus code) {
-      if (code == ListStatus.CURRENT)
+       if (code == ListStatus.NULL)
+           return null;
+       if (code == ListStatus.CURRENT)
         return "current";
       if (code == ListStatus.RETIRED)
         return "retired";
       if (code == ListStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(ListStatus code) {
       return code.getSystem();
       }
@@ -262,14 +264,16 @@ public class ListResource extends DomainResource {
         throw new FHIRException("Unknown ListMode code '"+codeString+"'");
         }
     public String toCode(ListMode code) {
-      if (code == ListMode.WORKING)
+       if (code == ListMode.NULL)
+           return null;
+       if (code == ListMode.WORKING)
         return "working";
       if (code == ListMode.SNAPSHOT)
         return "snapshot";
       if (code == ListMode.CHANGES)
         return "changes";
       return "?";
-      }
+   }
     public String toSystem(ListMode code) {
       return code.getSystem();
       }
@@ -583,10 +587,10 @@ public class ListResource extends DomainResource {
           return this.flag;
         }
         else if (name.equals("deleted")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.deleted");
+          throw new FHIRException("Cannot call addChild on a singleton property List.deleted");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.date");
+          throw new FHIRException("Cannot call addChild on a singleton property List.date");
         }
         else if (name.equals("item")) {
           this.item = new Reference();
@@ -1500,13 +1504,13 @@ public class ListResource extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.status");
+          throw new FHIRException("Cannot call addChild on a singleton property List.status");
         }
         else if (name.equals("mode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.mode");
+          throw new FHIRException("Cannot call addChild on a singleton property List.mode");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.title");
+          throw new FHIRException("Cannot call addChild on a singleton property List.title");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -1521,7 +1525,7 @@ public class ListResource extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type List.date");
+          throw new FHIRException("Cannot call addChild on a singleton property List.date");
         }
         else if (name.equals("source")) {
           this.source = new Reference();

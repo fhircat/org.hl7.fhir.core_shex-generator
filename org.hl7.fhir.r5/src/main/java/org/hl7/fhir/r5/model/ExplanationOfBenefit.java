@@ -167,7 +167,9 @@ public class ExplanationOfBenefit extends DomainResource {
         throw new FHIRException("Unknown ExplanationOfBenefitStatus code '"+codeString+"'");
         }
     public String toCode(ExplanationOfBenefitStatus code) {
-      if (code == ExplanationOfBenefitStatus.ACTIVE)
+       if (code == ExplanationOfBenefitStatus.NULL)
+           return null;
+       if (code == ExplanationOfBenefitStatus.ACTIVE)
         return "active";
       if (code == ExplanationOfBenefitStatus.CANCELLED)
         return "cancelled";
@@ -176,7 +178,7 @@ public class ExplanationOfBenefit extends DomainResource {
       if (code == ExplanationOfBenefitStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(ExplanationOfBenefitStatus code) {
       return code.getSystem();
       }
@@ -346,6 +348,19 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("claim")) {
+          this.claim = null;
+        } else if (name.equals("relationship")) {
+          this.relationship = null;
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -509,8 +524,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (DateTimeType) this.when;
         }
 
-        public boolean hasWhenDateTimeType() { 
-          return this != null && this.when instanceof DateTimeType;
+        public boolean hasWhenDateTimeType() {
+            return this.when instanceof DateTimeType;
         }
 
         /**
@@ -524,8 +539,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Period) this.when;
         }
 
-        public boolean hasWhenPeriod() { 
-          return this != null && this.when instanceof Period;
+        public boolean hasWhenPeriod() {
+            return this.when instanceof Period;
         }
 
         public boolean hasWhen() { 
@@ -594,6 +609,17 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("when[x]")) {
+          this.when = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -801,6 +827,17 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("party")) {
+          this.party = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1174,6 +1211,23 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("provider")) {
+          this.provider = null;
+        } else if (name.equals("responsible")) {
+          this.responsible = null;
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("specialty")) {
+          this.specialty = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1203,14 +1257,14 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.careTeam.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.careTeam.sequence");
         }
         else if (name.equals("provider")) {
           this.provider = new Reference();
           return this.provider;
         }
         else if (name.equals("responsible")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.careTeam.responsible");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.careTeam.responsible");
         }
         else if (name.equals("role")) {
           this.role = new CodeableConcept();
@@ -1449,8 +1503,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (DateType) this.timing;
         }
 
-        public boolean hasTimingDateType() { 
-          return this != null && this.timing instanceof DateType;
+        public boolean hasTimingDateType() {
+            return this.timing instanceof DateType;
         }
 
         /**
@@ -1464,8 +1518,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Period) this.timing;
         }
 
-        public boolean hasTimingPeriod() { 
-          return this != null && this.timing instanceof Period;
+        public boolean hasTimingPeriod() {
+            return this.timing instanceof Period;
         }
 
         public boolean hasTiming() { 
@@ -1500,8 +1554,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1515,8 +1569,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -1530,8 +1584,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1545,8 +1599,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -1560,8 +1614,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -1575,8 +1629,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Identifier) this.value;
         }
 
-        public boolean hasValueIdentifier() { 
-          return this != null && this.value instanceof Identifier;
+        public boolean hasValueIdentifier() {
+            return this.value instanceof Identifier;
         }
 
         public boolean hasValue() { 
@@ -1710,6 +1764,25 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("timing[x]")) {
+          this.timing = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1743,7 +1816,7 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.supportingInfo.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.supportingInfo.sequence");
         }
         else if (name.equals("category")) {
           this.category = new CodeableConcept();
@@ -1957,8 +2030,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (CodeableConcept) this.diagnosis;
         }
 
-        public boolean hasDiagnosisCodeableConcept() { 
-          return this != null && this.diagnosis instanceof CodeableConcept;
+        public boolean hasDiagnosisCodeableConcept() {
+            return this.diagnosis instanceof CodeableConcept;
         }
 
         /**
@@ -1972,8 +2045,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.diagnosis;
         }
 
-        public boolean hasDiagnosisReference() { 
-          return this != null && this.diagnosis instanceof Reference;
+        public boolean hasDiagnosisReference() {
+            return this.diagnosis instanceof Reference;
         }
 
         public boolean hasDiagnosis() { 
@@ -2137,6 +2210,21 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("diagnosis[x]")) {
+          this.diagnosis = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("onAdmission")) {
+          this.onAdmission = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2165,7 +2253,7 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.diagnosis.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.diagnosis.sequence");
         }
         else if (name.equals("diagnosisCodeableConcept")) {
           this.diagnosis = new CodeableConcept();
@@ -2459,8 +2547,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (CodeableConcept) this.procedure;
         }
 
-        public boolean hasProcedureCodeableConcept() { 
-          return this != null && this.procedure instanceof CodeableConcept;
+        public boolean hasProcedureCodeableConcept() {
+            return this.procedure instanceof CodeableConcept;
         }
 
         /**
@@ -2474,8 +2562,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.procedure;
         }
 
-        public boolean hasProcedureReference() { 
-          return this != null && this.procedure instanceof Reference;
+        public boolean hasProcedureReference() {
+            return this.procedure instanceof Reference;
         }
 
         public boolean hasProcedure() { 
@@ -2623,6 +2711,23 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("procedure[x]")) {
+          this.procedure = null;
+        } else if (name.equals("udi")) {
+          this.getUdi().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2653,13 +2758,13 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.procedure.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.procedure.sequence");
         }
         else if (name.equals("type")) {
           return addType();
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.procedure.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.procedure.date");
         }
         else if (name.equals("procedureCodeableConcept")) {
           this.procedure = new CodeableConcept();
@@ -2962,6 +3067,19 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("focal")) {
+          this.focal = null;
+        } else if (name.equals("coverage")) {
+          this.coverage = null;
+        } else if (name.equals("preAuthRef")) {
+          this.getPreAuthRef().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2987,14 +3105,14 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("focal")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.insurance.focal");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.insurance.focal");
         }
         else if (name.equals("coverage")) {
           this.coverage = new Reference();
           return this.coverage;
         }
         else if (name.equals("preAuthRef")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.insurance.preAuthRef");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.insurance.preAuthRef");
         }
         else
           return super.addChild(name);
@@ -3174,8 +3292,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Address) this.location;
         }
 
-        public boolean hasLocationAddress() { 
-          return this != null && this.location instanceof Address;
+        public boolean hasLocationAddress() {
+            return this.location instanceof Address;
         }
 
         /**
@@ -3189,8 +3307,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.location;
         }
 
-        public boolean hasLocationReference() { 
-          return this != null && this.location instanceof Reference;
+        public boolean hasLocationReference() {
+            return this.location instanceof Reference;
         }
 
         public boolean hasLocation() { 
@@ -3269,6 +3387,19 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("location[x]")) {
+          this.location = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3295,7 +3426,7 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.accident.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.accident.date");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -4195,8 +4326,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (DateType) this.serviced;
         }
 
-        public boolean hasServicedDateType() { 
-          return this != null && this.serviced instanceof DateType;
+        public boolean hasServicedDateType() {
+            return this.serviced instanceof DateType;
         }
 
         /**
@@ -4210,8 +4341,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Period) this.serviced;
         }
 
-        public boolean hasServicedPeriod() { 
-          return this != null && this.serviced instanceof Period;
+        public boolean hasServicedPeriod() {
+            return this.serviced instanceof Period;
         }
 
         public boolean hasServiced() { 
@@ -4246,8 +4377,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (CodeableConcept) this.location;
         }
 
-        public boolean hasLocationCodeableConcept() { 
-          return this != null && this.location instanceof CodeableConcept;
+        public boolean hasLocationCodeableConcept() {
+            return this.location instanceof CodeableConcept;
         }
 
         /**
@@ -4261,8 +4392,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Address) this.location;
         }
 
-        public boolean hasLocationAddress() { 
-          return this != null && this.location instanceof Address;
+        public boolean hasLocationAddress() {
+            return this.location instanceof Address;
         }
 
         /**
@@ -4276,8 +4407,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.location;
         }
 
-        public boolean hasLocationReference() { 
-          return this != null && this.location instanceof Reference;
+        public boolean hasLocationReference() {
+            return this.location instanceof Reference;
         }
 
         public boolean hasLocation() { 
@@ -5097,6 +5228,69 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("careTeamSequence")) {
+          this.getCareTeamSequence().remove(value);
+        } else if (name.equals("diagnosisSequence")) {
+          this.getDiagnosisSequence().remove(value);
+        } else if (name.equals("procedureSequence")) {
+          this.getProcedureSequence().remove(value);
+        } else if (name.equals("informationSequence")) {
+          this.getInformationSequence().remove(value);
+        } else if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("request")) {
+          this.getRequest().remove(value);
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("programCode")) {
+          this.getProgramCode().remove(value);
+        } else if (name.equals("serviced[x]")) {
+          this.serviced = null;
+        } else if (name.equals("location[x]")) {
+          this.location = null;
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("udi")) {
+          this.getUdi().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove((ItemBodySiteComponent) value);
+        } else if (name.equals("encounter")) {
+          this.getEncounter().remove(value);
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else if (name.equals("detail")) {
+          this.getDetail().remove((DetailComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5174,19 +5368,19 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.sequence");
         }
         else if (name.equals("careTeamSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.careTeamSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.careTeamSequence");
         }
         else if (name.equals("diagnosisSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.diagnosisSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.diagnosisSequence");
         }
         else if (name.equals("procedureSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.procedureSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.procedureSequence");
         }
         else if (name.equals("informationSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.informationSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.informationSequence");
         }
         else if (name.equals("traceNumber")) {
           return addTraceNumber();
@@ -5249,7 +5443,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -5269,7 +5463,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addEncounter();
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -5619,6 +5813,17 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("site")) {
+          this.getSite().remove(value);
+        } else if (name.equals("subSite")) {
+          this.getSubSite().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5960,6 +6165,21 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("decision")) {
+          this.decision = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("preAuthRef")) {
+          this.preAuthRef = null;
+        } else if (name.equals("preAuthPeriod")) {
+          this.preAuthPeriod = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5994,7 +6214,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addReason();
         }
         else if (name.equals("preAuthRef")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.reviewOutcome.preAuthRef");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.reviewOutcome.preAuthRef");
         }
         else if (name.equals("preAuthPeriod")) {
           this.preAuthPeriod = new Period();
@@ -6265,6 +6485,21 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -7436,6 +7671,51 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("programCode")) {
+          this.getProgramCode().remove(value);
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("udi")) {
+          this.getUdi().remove(value);
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else if (name.equals("subDetail")) {
+          this.getSubDetail().remove((SubDetailComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -7493,7 +7773,7 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.sequence");
         }
         else if (name.equals("traceNumber")) {
           return addTraceNumber();
@@ -7533,7 +7813,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -7547,7 +7827,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addUdi();
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -8671,6 +8951,49 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("programCode")) {
+          this.getProgramCode().remove(value);
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("udi")) {
+          this.getUdi().remove(value);
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -8726,7 +9049,7 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.subDetail.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.subDetail.sequence");
         }
         else if (name.equals("traceNumber")) {
           return addTraceNumber();
@@ -8766,7 +9089,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.subDetail.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.subDetail.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -8780,7 +9103,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addUdi();
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.item.detail.subDetail.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.item.detail.subDetail.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -9610,8 +9933,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (DateType) this.serviced;
         }
 
-        public boolean hasServicedDateType() { 
-          return this != null && this.serviced instanceof DateType;
+        public boolean hasServicedDateType() {
+            return this.serviced instanceof DateType;
         }
 
         /**
@@ -9625,8 +9948,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Period) this.serviced;
         }
 
-        public boolean hasServicedPeriod() { 
-          return this != null && this.serviced instanceof Period;
+        public boolean hasServicedPeriod() {
+            return this.serviced instanceof Period;
         }
 
         public boolean hasServiced() { 
@@ -9661,8 +9984,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (CodeableConcept) this.location;
         }
 
-        public boolean hasLocationCodeableConcept() { 
-          return this != null && this.location instanceof CodeableConcept;
+        public boolean hasLocationCodeableConcept() {
+            return this.location instanceof CodeableConcept;
         }
 
         /**
@@ -9676,8 +9999,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Address) this.location;
         }
 
-        public boolean hasLocationAddress() { 
-          return this != null && this.location instanceof Address;
+        public boolean hasLocationAddress() {
+            return this.location instanceof Address;
         }
 
         /**
@@ -9691,8 +10014,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Reference) this.location;
         }
 
-        public boolean hasLocationReference() { 
-          return this != null && this.location instanceof Reference;
+        public boolean hasLocationReference() {
+            return this.location instanceof Reference;
         }
 
         public boolean hasLocation() { 
@@ -10374,6 +10697,61 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("itemSequence")) {
+          this.getItemSequence().remove(value);
+        } else if (name.equals("detailSequence")) {
+          this.getDetailSequence().remove(value);
+        } else if (name.equals("subDetailSequence")) {
+          this.getSubDetailSequence().remove(value);
+        } else if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("provider")) {
+          this.getProvider().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("request")) {
+          this.getRequest().remove(value);
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("programCode")) {
+          this.getProgramCode().remove(value);
+        } else if (name.equals("serviced[x]")) {
+          this.serviced = null;
+        } else if (name.equals("location[x]")) {
+          this.location = null;
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove((AddedItemBodySiteComponent) value);
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else if (name.equals("detail")) {
+          this.getDetail().remove((AddedItemDetailComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -10443,13 +10821,13 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("itemSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.itemSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.itemSequence");
         }
         else if (name.equals("detailSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.detailSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.detailSequence");
         }
         else if (name.equals("subDetailSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.subDetailSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.subDetailSequence");
         }
         else if (name.equals("traceNumber")) {
           return addTraceNumber();
@@ -10511,7 +10889,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -10525,7 +10903,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addBodySite();
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -10859,6 +11237,17 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("site")) {
+          this.getSite().remove(value);
+        } else if (name.equals("subSite")) {
+          this.getSubSite().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -11775,6 +12164,43 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else if (name.equals("subDetail")) {
+          this.getSubDetail().remove((AddedItemDetailSubDetailComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -11854,7 +12280,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.detail.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.detail.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -11865,7 +12291,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.net;
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.detail.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.detail.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -12728,6 +13154,41 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("revenue")) {
+          this.revenue = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("productOrServiceEnd")) {
+          this.productOrServiceEnd = null;
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("tax")) {
+          this.tax = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("noteNumber")) {
+          this.getNoteNumber().remove(value);
+        } else if (name.equals("reviewOutcome")) {
+          this.reviewOutcome = (ItemReviewOutcomeComponent) value; // ItemReviewOutcomeComponent
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -12805,7 +13266,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.detail.subDetail.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.detail.subDetail.factor");
         }
         else if (name.equals("tax")) {
           this.tax = new Money();
@@ -12816,7 +13277,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.net;
         }
         else if (name.equals("noteNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.addItem.detail.subDetail.noteNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.addItem.detail.subDetail.noteNumber");
         }
         else if (name.equals("reviewOutcome")) {
           this.reviewOutcome = new ItemReviewOutcomeComponent();
@@ -13039,6 +13500,17 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -13425,6 +13897,25 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("adjustment")) {
+          this.adjustment = null;
+        } else if (name.equals("adjustmentReason")) {
+          this.adjustmentReason = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -13468,7 +13959,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.adjustmentReason;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.payment.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.payment.date");
         }
         else if (name.equals("amount")) {
           this.amount = new Money();
@@ -13782,6 +14273,21 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("number")) {
+          this.number = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -13809,14 +14315,14 @@ public class ExplanationOfBenefit extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.processNote.number");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.processNote.number");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
           return this.type;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.processNote.text");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.processNote.text");
         }
         else if (name.equals("language")) {
           this.language = new CodeableConcept();
@@ -14343,6 +14849,29 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("excluded")) {
+          this.excluded = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("network")) {
+          this.network = null;
+        } else if (name.equals("unit")) {
+          this.unit = null;
+        } else if (name.equals("term")) {
+          this.term = null;
+        } else if (name.equals("financial")) {
+          this.getFinancial().remove((BenefitComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -14382,13 +14911,13 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.category;
         }
         else if (name.equals("excluded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.benefitBalance.excluded");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.benefitBalance.excluded");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.benefitBalance.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.benefitBalance.name");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.benefitBalance.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.benefitBalance.description");
         }
         else if (name.equals("network")) {
           this.network = new CodeableConcept();
@@ -14549,8 +15078,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (UnsignedIntType) this.allowed;
         }
 
-        public boolean hasAllowedUnsignedIntType() { 
-          return this != null && this.allowed instanceof UnsignedIntType;
+        public boolean hasAllowedUnsignedIntType() {
+            return this.allowed instanceof UnsignedIntType;
         }
 
         /**
@@ -14564,8 +15093,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (StringType) this.allowed;
         }
 
-        public boolean hasAllowedStringType() { 
-          return this != null && this.allowed instanceof StringType;
+        public boolean hasAllowedStringType() {
+            return this.allowed instanceof StringType;
         }
 
         /**
@@ -14579,8 +15108,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Money) this.allowed;
         }
 
-        public boolean hasAllowedMoney() { 
-          return this != null && this.allowed instanceof Money;
+        public boolean hasAllowedMoney() {
+            return this.allowed instanceof Money;
         }
 
         public boolean hasAllowed() { 
@@ -14615,8 +15144,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (UnsignedIntType) this.used;
         }
 
-        public boolean hasUsedUnsignedIntType() { 
-          return this != null && this.used instanceof UnsignedIntType;
+        public boolean hasUsedUnsignedIntType() {
+            return this.used instanceof UnsignedIntType;
         }
 
         /**
@@ -14630,8 +15159,8 @@ public class ExplanationOfBenefit extends DomainResource {
           return (Money) this.used;
         }
 
-        public boolean hasUsedMoney() { 
-          return this != null && this.used instanceof Money;
+        public boolean hasUsedMoney() {
+            return this.used instanceof Money;
         }
 
         public boolean hasUsed() { 
@@ -14712,6 +15241,19 @@ public class ExplanationOfBenefit extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("allowed[x]")) {
+          this.allowed = null;
+        } else if (name.equals("used[x]")) {
+          this.used = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -17458,6 +18000,114 @@ public class ExplanationOfBenefit extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("traceNumber")) {
+          this.getTraceNumber().remove(value);
+        } else if (name.equals("status")) {
+          value = new ExplanationOfBenefitStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ExplanationOfBenefitStatus>
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subType")) {
+          this.subType = null;
+        } else if (name.equals("use")) {
+          value = new UseEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.use = (Enumeration) value; // Enumeration<Use>
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("billablePeriod")) {
+          this.billablePeriod = null;
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("enterer")) {
+          this.enterer = null;
+        } else if (name.equals("insurer")) {
+          this.insurer = null;
+        } else if (name.equals("provider")) {
+          this.provider = null;
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else if (name.equals("fundsReserveRequested")) {
+          this.fundsReserveRequested = null;
+        } else if (name.equals("fundsReserve")) {
+          this.fundsReserve = null;
+        } else if (name.equals("related")) {
+          this.getRelated().remove((RelatedClaimComponent) value);
+        } else if (name.equals("prescription")) {
+          this.prescription = null;
+        } else if (name.equals("originalPrescription")) {
+          this.originalPrescription = null;
+        } else if (name.equals("event")) {
+          this.getEvent().remove((ExplanationOfBenefitEventComponent) value);
+        } else if (name.equals("payee")) {
+          this.payee = (PayeeComponent) value; // PayeeComponent
+        } else if (name.equals("referral")) {
+          this.referral = null;
+        } else if (name.equals("encounter")) {
+          this.getEncounter().remove(value);
+        } else if (name.equals("facility")) {
+          this.facility = null;
+        } else if (name.equals("claim")) {
+          this.claim = null;
+        } else if (name.equals("claimResponse")) {
+          this.claimResponse = null;
+        } else if (name.equals("outcome")) {
+          value = new ClaimProcessingCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.outcome = (Enumeration) value; // Enumeration<ClaimProcessingCodes>
+        } else if (name.equals("decision")) {
+          this.decision = null;
+        } else if (name.equals("disposition")) {
+          this.disposition = null;
+        } else if (name.equals("preAuthRef")) {
+          this.getPreAuthRef().remove(value);
+        } else if (name.equals("preAuthRefPeriod")) {
+          this.getPreAuthRefPeriod().remove(value);
+        } else if (name.equals("diagnosisRelatedGroup")) {
+          this.diagnosisRelatedGroup = null;
+        } else if (name.equals("careTeam")) {
+          this.getCareTeam().remove((CareTeamComponent) value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove((SupportingInformationComponent) value);
+        } else if (name.equals("diagnosis")) {
+          this.getDiagnosis().remove((DiagnosisComponent) value);
+        } else if (name.equals("procedure")) {
+          this.getProcedure().remove((ProcedureComponent) value);
+        } else if (name.equals("precedence")) {
+          this.precedence = null;
+        } else if (name.equals("insurance")) {
+          this.getInsurance().remove((InsuranceComponent) value);
+        } else if (name.equals("accident")) {
+          this.accident = (AccidentComponent) value; // AccidentComponent
+        } else if (name.equals("patientPaid")) {
+          this.patientPaid = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((ItemComponent) value);
+        } else if (name.equals("addItem")) {
+          this.getAddItem().remove((AddedItemComponent) value);
+        } else if (name.equals("adjudication")) {
+          this.getAdjudication().remove((AdjudicationComponent) value);
+        } else if (name.equals("total")) {
+          this.getTotal().remove((TotalComponent) value);
+        } else if (name.equals("payment")) {
+          this.payment = (PaymentComponent) value; // PaymentComponent
+        } else if (name.equals("formCode")) {
+          this.formCode = null;
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else if (name.equals("processNote")) {
+          this.getProcessNote().remove((NoteComponent) value);
+        } else if (name.equals("benefitPeriod")) {
+          this.benefitPeriod = null;
+        } else if (name.equals("benefitBalance")) {
+          this.getBenefitBalance().remove((BenefitBalanceComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -17581,7 +18231,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addTraceNumber();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.status");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -17592,7 +18242,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.subType;
         }
         else if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.use");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.use");
         }
         else if (name.equals("patient")) {
           this.patient = new Reference();
@@ -17603,7 +18253,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.billablePeriod;
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.created");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.created");
         }
         else if (name.equals("enterer")) {
           this.enterer = new Reference();
@@ -17667,17 +18317,17 @@ public class ExplanationOfBenefit extends DomainResource {
           return this.claimResponse;
         }
         else if (name.equals("outcome")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.outcome");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.outcome");
         }
         else if (name.equals("decision")) {
           this.decision = new CodeableConcept();
           return this.decision;
         }
         else if (name.equals("disposition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.disposition");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.disposition");
         }
         else if (name.equals("preAuthRef")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.preAuthRef");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.preAuthRef");
         }
         else if (name.equals("preAuthRefPeriod")) {
           return addPreAuthRefPeriod();
@@ -17699,7 +18349,7 @@ public class ExplanationOfBenefit extends DomainResource {
           return addProcedure();
         }
         else if (name.equals("precedence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ExplanationOfBenefit.precedence");
+          throw new FHIRException("Cannot call addChild on a singleton property ExplanationOfBenefit.precedence");
         }
         else if (name.equals("insurance")) {
           return addInsurance();

@@ -47,6 +47,7 @@ import java.util.Set;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.utilities.StringPair;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode.Location;
@@ -59,6 +60,7 @@ import org.xmlpull.v1.XmlPullParserException;
 public class XhtmlParser {
   public static final String XHTML_NS = "http://www.w3.org/1999/xhtml";
   private static final char END_OF_CHARS = (char) -1;
+  private static final boolean DEBUG = false;
 
   public class NamespaceNormalizationMap {
 
@@ -369,7 +371,7 @@ public class XhtmlParser {
         res.addComment(child.getTextContent());
       } else if (child.getNodeType() == Node.ELEMENT_NODE) {
         if (elementIsOk(child.getLocalName()))
-          res.getChildNodes().add(parseNode((Element) child, defaultNS));
+          res.addChildNode(parseNode((Element) child, defaultNS));
       } else
         throw new FHIRFormatError("Unhandled XHTML feature: "+Integer.toString(child.getNodeType())+descLoc());
       child = child.getNextSibling();
@@ -416,7 +418,7 @@ public class XhtmlParser {
         xpp.next();
       } else if (eventType == XmlPullParser.START_TAG) {
         if (elementIsOk(xpp.getName()))
-          res.getChildNodes().add(parseNode(xpp));
+          res.addChildNode(parseNode(xpp));
       } else
         throw new FHIRFormatError("Unhandled XHTML feature: "+Integer.toString(eventType)+descLoc());
       eventType = xpp.getEventType();
@@ -491,13 +493,14 @@ public class XhtmlParser {
     XhtmlDocument result = new XhtmlDocument();
     skipWhiteSpaceAndComments(result);
     if (peekChar() != '<')
-      throw new FHIRFormatError("Unable to Parse HTML - does not start with tag. Found "+peekChar()+descLoc());
+      throw new FHIRFormatError("Unable to Parse HTML - does not start with tag. Found '"+peekChar()+"' "+descLoc());
     readChar();
     markLocation();
     ElementName n = new ElementName(readName().toLowerCase());
     if ((entryName != null) && !n.getName().equals(entryName))
       throw new FHIRFormatError("Unable to Parse HTML - starts with '"+n+"' not '"+entryName+"'"+descLoc());
     XhtmlNode root = result.addTag(n.getName());
+    root.setCheckParaTree(false);
     root.setLocation(markLocation());
     parseAttributes(root);
     markLocation();
@@ -510,7 +513,7 @@ public class XhtmlParser {
     } else {
       unwindPoint = null;
       List<XhtmlNode> p = new ArrayList<>();
-      parseElementInner(root, p, nsm, true);
+      parseElementInner(root, p, nsm);
       root.setEmptyExpanded(true);
     }
     return result;
@@ -577,18 +580,16 @@ public class XhtmlParser {
     return nodeNamespaceMap.hasDefaultNamespace() && (parentNamespaceMap == null || !nodeNamespaceMap.getDefaultNamespace().equals(parentNamespaceMap.getDefaultNamespace()));
   }
 
-  private void addTextNode(XhtmlNode node, StringBuilder s)
-  {
+  private void addTextNode(XhtmlNode node, StringBuilder s) {
     String t = isTrimWhitespace() ? s.toString().trim() : s.toString();
-    if (t.length() > 0)
-    {
+    if (t.length() > 0) {
       lastText = t;
-      // System.out.println(t);
       node.addText(t).setLocation(markLocation());
       s.setLength(0);
     }
   }
-  private void parseElementInner(XhtmlNode node, List<XhtmlNode> parents, NamespaceNormalizationMap nsm, boolean escaping) throws FHIRFormatError, IOException
+  
+  private void parseElementInner(XhtmlNode node, List<XhtmlNode> parents, NamespaceNormalizationMap nsm) throws FHIRFormatError, IOException
   {
     StringBuilder s = new StringBuilder();
     while (peekChar() != END_OF_CHARS && !parents.contains(unwindPoint) && !(node == unwindPoint))
@@ -598,11 +599,16 @@ public class XhtmlParser {
         addTextNode(node, s);
         readChar();
         if (peekChar() == '!') {
-          String sc = readToCommentEnd();
-          // moved the validator
-          //          if (sc.startsWith("DOCTYPE"))
-          //            throw new FHIRFormatError("Malformed XHTML: Found a DocType declaration, and these are not allowed (XXE security vulnerability protection)");
-          node.addComment(sc).setLocation(markLocation());
+          readChar();
+          String sc;
+          if (peekChar() == '[') {
+            sc = readCData();
+            node.addCData(sc).setLocation(markLocation());
+          } else {
+            pushChar('!');
+            sc = readToCommentEnd(true);
+            node.addComment(sc).setLocation(markLocation());
+          }
         } else if (peekChar() == '?')
           node.addComment(readToTagEnd()).setLocation(markLocation());
         else if (peekChar() == '/') {
@@ -628,12 +634,12 @@ public class XhtmlParser {
                   return;
                 if (i == parents.size())
                 {
-                  parents.get(i - 1).getChildNodes().addAll(node.getChildNodes());
+                  parents.get(i - 1).addChildNodes(node.getChildNodes());
                   node.getChildNodes().clear();
                 }
                 else
                 {
-                  parents.get(i - 1).getChildNodes().addAll(parents.get(i).getChildNodes());
+                  parents.get(i - 1).addChildNodes(parents.get(i).getChildNodes());
                   parents.get(i).getChildNodes().clear();
                 }
               }
@@ -657,6 +663,23 @@ public class XhtmlParser {
     addTextNode(node, s);
   }
 
+
+  private void parseScriptInner(XhtmlNode node) throws FHIRFormatError, IOException {
+    StringBuilder s = new StringBuilder();
+    while (peekChar() != END_OF_CHARS && !s.toString().endsWith("</script>")) {
+      s.append(readChar());
+    }      
+    String ss = s.toString();
+    if (ss.length() >= 9) {
+      ss = ss.substring(0, ss.length()-9);
+    }
+    String t = isTrimWhitespace() ? ss.trim() : ss;
+    if (t.length() > 0) {
+      lastText = t;
+      node.addText(t).setLocation(markLocation());
+    }
+  }
+
   private void parseElement(XhtmlNode parent, List<XhtmlNode> parents, NamespaceNormalizationMap namespaceMap) throws IOException, FHIRFormatError
   {
     markLocation();
@@ -674,9 +697,11 @@ public class XhtmlParser {
         throw new FHIRFormatError("unexpected non-end of element "+name+" "+descLoc());
       readChar();
       node.setEmptyExpanded(false);
+    } else if ("script".equals(name.getName())) {
+      parseScriptInner(node);
     } else {
       node.setEmptyExpanded(true);
-      parseElementInner(node, newParents, namespaceMap, "script".equals(name.getName()));
+      parseElementInner(node, newParents, namespaceMap);
     }
   }
 
@@ -747,7 +772,7 @@ public class XhtmlParser {
             readChar();
             if (peekChar() == ' ')
               readChar();
-            focus.addComment(readToCommentEnd());
+            focus.addComment(readToCommentEnd(false));
           } else 
             throw new FHIRFormatError("unrecognised element type <!"+peekChar()+descLoc());
         } else
@@ -851,13 +876,11 @@ public class XhtmlParser {
     return s.toString();
   }
 
-  private String readToCommentEnd() throws IOException, FHIRFormatError 
+  private String readToCommentEnd(boolean simple) throws IOException, FHIRFormatError
   {
     if (peekChar() == '!')
       readChar();
     StringBuilder s = new StringBuilder();
-
-    boolean simple = true;
     if (peekChar() == '-') {
       readChar();
       simple = peekChar() != '-';
@@ -908,6 +931,18 @@ public class XhtmlParser {
       parseDoctypeEntities(s.toString());
     }
     return s.toString();
+  }
+
+  private String readCData() throws IOException, FHIRFormatError {
+    StringBuilder s = new StringBuilder();
+    boolean done = false;
+    while (!done) {
+      s.append(readChar());
+      done = s.toString().endsWith("]]>");
+    }
+    String res = s.toString().substring(7);
+    res = res.substring(0, res.length()-3);
+    return res;
   }
 
   private void parseDoctypeEntities(String s) {
@@ -968,9 +1003,9 @@ public class XhtmlParser {
       throw new FHIRFormatError("Invalid literal declaration following text: " + s);
     else if (c.charAt(0) == '#') {
       if (isInteger(c.substring(1), 10))
-        s.append((char) Integer.parseInt(c.substring(1)));
+        s.append(Character.toString(Integer.parseInt(c.substring(1))));
       else if (c.charAt(1) == 'x' && isInteger(c.substring(2), 16))
-        s.append((char) Integer.parseInt(c.substring(2), 16));
+        s.append(Character.toString(Integer.parseInt(c.substring(2), 16)));
     } else if (declaredEntities.containsKey(c)) {
       s.append(declaredEntities.get(c));
     } else {
@@ -1283,9 +1318,30 @@ public class XhtmlParser {
     }
   }
 
+  public List<XhtmlNode> parseMDFragment(String source) throws IOException, FHIRException  {
+    XhtmlNode div = parseFragment( "<div>"+source+"</div>");
+    return div.getChildNodes();
+  }
+  
+  public List<XhtmlNode> parseMDFragmentStripParas(String source) throws IOException, FHIRException  {
+    XhtmlNode div = parseFragment( "<div>"+source+"</div>");
+    List<XhtmlNode> res = new ArrayList<>();
+    for (XhtmlNode x : div.getChildNodes()) {
+      res.addAll(x.getChildNodes());
+    }
+    return res;
+  }
+  
   public XhtmlNode parseFragment(String source) throws IOException, FHIRException  {
     rdr = new StringReader(source);
-    return parseFragment();
+    try {
+      return parseFragment();
+    } catch (Exception e) {
+      if (DEBUG) {
+        FileUtilities.stringToFile(source, Utilities.path("[tmp]", "html-fail.xhtml"));
+      }
+      throw e;
+    }
   }
 
   public XhtmlNode parseFragment(InputStream input) throws IOException, FHIRException  {
@@ -1318,7 +1374,7 @@ public class XhtmlParser {
     result.setName(n);
     unwindPoint = null;
     List<XhtmlNode> p = new ArrayList<>();
-    parseElementInner(result, p, null, true);
+    parseElementInner(result, p, null);
 
     return result;
   }

@@ -21,6 +21,13 @@ import org.hl7.fhir.r4b.renderers.utils.Resolver.ResourceContext;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+/**
+ * Rendering framework:
+ * 
+ * See R5 rendering framework to render R4B resources
+ * 
+ */
+@Deprecated
 public class CapabilityStatementRenderer extends ResourceRenderer {
 
   public CapabilityStatementRenderer(RenderingContext context) {
@@ -30,12 +37,13 @@ public class CapabilityStatementRenderer extends ResourceRenderer {
   public CapabilityStatementRenderer(RenderingContext context, ResourceContext rcontext) {
     super(context, rcontext);
   }
-  
+
   public boolean render(XhtmlNode x, Resource dr) throws FHIRFormatError, DefinitionException, IOException {
     return render(x, (CapabilityStatement) dr);
   }
 
-  public boolean render(XhtmlNode x, CapabilityStatement conf) throws FHIRFormatError, DefinitionException, IOException {
+  public boolean render(XhtmlNode x, CapabilityStatement conf)
+      throws FHIRFormatError, DefinitionException, IOException {
     x.h2().addText(conf.getName());
     addMarkdown(x, conf.getDescription());
     if (conf.getRest().size() > 0) {
@@ -78,7 +86,8 @@ public class CapabilityStatementRenderer extends ResourceRenderer {
       if (hasUpdates)
         tr.th().b().attribute("title", "GET changes to a resource (history interaction on instance)").tx("Updates");
       if (hasHistory)
-        tr.th().b().attribute("title", "GET changes for all resources of the type (history interaction on type)").tx("History");
+        tr.th().b().attribute("title", "GET changes for all resources of the type (history interaction on type)")
+            .tx("History");
 
       XhtmlNode profCell = null;
       boolean hasProf = false;
@@ -87,34 +96,32 @@ public class CapabilityStatementRenderer extends ResourceRenderer {
         tr = t.tr();
         tr.td().addText(r.getType());
 
-        //Show profiles
+        // Show profiles
         profCell = tr.td();
         hasProf = r.hasProfile();
         hasSupProf = r.hasSupportedProfile();
         if ((!hasProf) && (!hasSupProf)) {
           profCell.nbsp();
-        }
-        else if (hasProf) {
+        } else if (hasProf) {
           profCell.ah(r.getProfile()).addText(r.getProfile());
           if (hasSupProf) {
             profCell.br();
             profCell.addText("Additional supported profiles:");
-            for (CanonicalType sp: r.getSupportedProfile()) { 
+            for (CanonicalType sp : r.getSupportedProfile()) {
               profCell.br();
               profCell.nbsp().nbsp();
-              profCell.ah(sp.getValue()).addText(sp.getValue());   
+              profCell.ah(sp.getValue()).addText(sp.getValue());
             }
           }
-        }
-        else {    //Case of only supported profiles
+        } else { // Case of only supported profiles
           profCell.addText("Supported profiles:");
-          for (CanonicalType sp: r.getSupportedProfile()) { 
+          for (CanonicalType sp : r.getSupportedProfile()) {
             profCell.br();
             profCell.nbsp().nbsp();
-            profCell.ah(sp.getValue()).addText(sp.getValue());   
+            profCell.ah(sp.getValue()).addText(sp.getValue());
           }
         }
-        //Show capabilities
+        // Show capabilities
         tr.td().addText(showOp(r, TypeRestfulInteraction.READ));
         if (hasVRead)
           tr.td().addText(showOp(r, TypeRestfulInteraction.VREAD));
@@ -148,7 +155,6 @@ public class CapabilityStatementRenderer extends ResourceRenderer {
     return ((CapabilityStatement) r).present();
   }
 
-
   private boolean hasOp(CapabilityStatementRestResourceComponent r, TypeRestfulInteraction on) {
     for (ResourceInteractionComponent op : r.getInteraction()) {
       if (op.getCode() == on)
@@ -178,7 +184,7 @@ public class CapabilityStatementRenderer extends ResourceRenderer {
     tr.td().addText(name);
     return tr.td();
   }
-  
+
   private void addTableRow(XhtmlNode t, String name, String value) {
     XhtmlNode tr = t.tr();
     tr.td().addText(name);

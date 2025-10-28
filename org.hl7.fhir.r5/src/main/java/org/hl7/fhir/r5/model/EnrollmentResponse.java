@@ -166,7 +166,9 @@ public class EnrollmentResponse extends DomainResource {
         throw new FHIRException("Unknown EnrollmentOutcome code '"+codeString+"'");
         }
     public String toCode(EnrollmentOutcome code) {
-      if (code == EnrollmentOutcome.QUEUED)
+       if (code == EnrollmentOutcome.NULL)
+           return null;
+       if (code == EnrollmentOutcome.QUEUED)
         return "queued";
       if (code == EnrollmentOutcome.COMPLETE)
         return "complete";
@@ -175,7 +177,7 @@ public class EnrollmentResponse extends DomainResource {
       if (code == EnrollmentOutcome.PARTIAL)
         return "partial";
       return "?";
-      }
+   }
     public String toSystem(EnrollmentOutcome code) {
       return code.getSystem();
       }
@@ -672,6 +674,31 @@ public class EnrollmentResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new FinancialResourceStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FinancialResourceStatusCodes>
+        } else if (name.equals("request")) {
+          this.request = null;
+        } else if (name.equals("outcome")) {
+          value = new EnrollmentOutcomeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.outcome = (Enumeration) value; // Enumeration<EnrollmentOutcome>
+        } else if (name.equals("disposition")) {
+          this.disposition = null;
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("organization")) {
+          this.organization = null;
+        } else if (name.equals("requestProvider")) {
+          this.requestProvider = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -710,20 +737,20 @@ public class EnrollmentResponse extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EnrollmentResponse.status");
+          throw new FHIRException("Cannot call addChild on a singleton property EnrollmentResponse.status");
         }
         else if (name.equals("request")) {
           this.request = new Reference();
           return this.request;
         }
         else if (name.equals("outcome")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EnrollmentResponse.outcome");
+          throw new FHIRException("Cannot call addChild on a singleton property EnrollmentResponse.outcome");
         }
         else if (name.equals("disposition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EnrollmentResponse.disposition");
+          throw new FHIRException("Cannot call addChild on a singleton property EnrollmentResponse.disposition");
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EnrollmentResponse.created");
+          throw new FHIRException("Cannot call addChild on a singleton property EnrollmentResponse.created");
         }
         else if (name.equals("organization")) {
           this.organization = new Reference();

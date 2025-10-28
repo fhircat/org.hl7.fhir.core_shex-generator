@@ -180,7 +180,9 @@ public class Account extends DomainResource {
         throw new FHIRException("Unknown AccountStatus code '"+codeString+"'");
         }
     public String toCode(AccountStatus code) {
-      if (code == AccountStatus.ACTIVE)
+       if (code == AccountStatus.NULL)
+           return null;
+       if (code == AccountStatus.ACTIVE)
         return "active";
       if (code == AccountStatus.INACTIVE)
         return "inactive";
@@ -191,7 +193,7 @@ public class Account extends DomainResource {
       if (code == AccountStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(AccountStatus code) {
       return code.getSystem();
       }
@@ -356,6 +358,17 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("coverage")) {
+          this.coverage = null;
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -383,7 +396,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return this.coverage;
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.coverage.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.coverage.priority");
         }
         else
           return super.addChild(name);
@@ -624,6 +637,19 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("party")) {
+          this.party = null;
+        } else if (name.equals("onHold")) {
+          this.onHold = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -653,7 +679,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return this.party;
         }
         else if (name.equals("onHold")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.guarantor.onHold");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.guarantor.onHold");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -1123,6 +1149,25 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("condition")) {
+          this.condition = null;
+        } else if (name.equals("dateOfDiagnosis")) {
+          this.dateOfDiagnosis = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("onAdmission")) {
+          this.onAdmission = null;
+        } else if (name.equals("packageCode")) {
+          this.getPackageCode().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1154,20 +1199,20 @@ A coverage may only be responsible for specific types of charges, and the sequen
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.diagnosis.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.diagnosis.sequence");
         }
         else if (name.equals("condition")) {
           this.condition = new CodeableReference();
           return this.condition;
         }
         else if (name.equals("dateOfDiagnosis")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.diagnosis.dateOfDiagnosis");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.diagnosis.dateOfDiagnosis");
         }
         else if (name.equals("type")) {
           return addType();
         }
         else if (name.equals("onAdmission")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.diagnosis.onAdmission");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.diagnosis.onAdmission");
         }
         else if (name.equals("packageCode")) {
           return addPackageCode();
@@ -1657,6 +1702,25 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("dateOfService")) {
+          this.dateOfService = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("packageCode")) {
+          this.getPackageCode().remove(value);
+        } else if (name.equals("device")) {
+          this.getDevice().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1688,14 +1752,14 @@ A coverage may only be responsible for specific types of charges, and the sequen
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.procedure.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.procedure.sequence");
         }
         else if (name.equals("code")) {
           this.code = new CodeableReference();
           return this.code;
         }
         else if (name.equals("dateOfService")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.procedure.dateOfService");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.procedure.dateOfService");
         }
         else if (name.equals("type")) {
           return addType();
@@ -1904,6 +1968,17 @@ A coverage may only be responsible for specific types of charges, and the sequen
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("relationship")) {
+          this.relationship = null;
+        } else if (name.equals("account")) {
+          this.account = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2217,6 +2292,21 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("aggregate")) {
+          this.aggregate = null;
+        } else if (name.equals("term")) {
+          this.term = null;
+        } else if (name.equals("estimate")) {
+          this.estimate = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2252,7 +2342,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return this.term;
         }
         else if (name.equals("estimate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.balance.estimate");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.balance.estimate");
         }
         else if (name.equals("amount")) {
           this.amount = new Money();
@@ -2419,7 +2509,9 @@ A coverage may only be responsible for specific types of charges, and the sequen
     protected CodeableConcept currency;
 
     /**
-     * The calculated account balances - these are calculated and processed by the finance system.The balances with a `term` that is not current are usually generated/updated by an invoicing or similar process.
+     * The calculated account balances - these are calculated and processed by the finance system.
+
+The balances with a `term` that is not current are usually generated/updated by an invoicing or similar process.
      */
     @Child(name = "balance", type = {}, order=15, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
     @Description(shortDefinition="Calculated account balance(s)", formalDefinition="The calculated account balances - these are calculated and processed by the finance system.\r\rThe balances with a `term` that is not current are usually generated/updated by an invoicing or similar process." )
@@ -3084,7 +3176,9 @@ A coverage may only be responsible for specific types of charges, and the sequen
     }
 
     /**
-     * @return {@link #balance} (The calculated account balances - these are calculated and processed by the finance system.The balances with a `term` that is not current are usually generated/updated by an invoicing or similar process.)
+     * @return {@link #balance} (The calculated account balances - these are calculated and processed by the finance system.
+
+The balances with a `term` that is not current are usually generated/updated by an invoicing or similar process.)
      */
     public List<AccountBalanceComponent> getBalance() { 
       if (this.balance == null)
@@ -3358,6 +3452,48 @@ A coverage may only be responsible for specific types of charges, and the sequen
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new AccountStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<AccountStatus>
+        } else if (name.equals("billingStatus")) {
+          this.billingStatus = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("subject")) {
+          this.getSubject().remove(value);
+        } else if (name.equals("servicePeriod")) {
+          this.servicePeriod = null;
+        } else if (name.equals("coverage")) {
+          this.getCoverage().remove((CoverageComponent) value);
+        } else if (name.equals("owner")) {
+          this.owner = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("guarantor")) {
+          this.getGuarantor().remove((GuarantorComponent) value);
+        } else if (name.equals("diagnosis")) {
+          this.getDiagnosis().remove((AccountDiagnosisComponent) value);
+        } else if (name.equals("procedure")) {
+          this.getProcedure().remove((AccountProcedureComponent) value);
+        } else if (name.equals("relatedAccount")) {
+          this.getRelatedAccount().remove((AccountRelatedAccountComponent) value);
+        } else if (name.equals("currency")) {
+          this.currency = null;
+        } else if (name.equals("balance")) {
+          this.getBalance().remove((AccountBalanceComponent) value);
+        } else if (name.equals("calculatedAt")) {
+          this.calculatedAt = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3414,7 +3550,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.status");
         }
         else if (name.equals("billingStatus")) {
           this.billingStatus = new CodeableConcept();
@@ -3425,7 +3561,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return this.type;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.name");
         }
         else if (name.equals("subject")) {
           return addSubject();
@@ -3442,7 +3578,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return this.owner;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.description");
         }
         else if (name.equals("guarantor")) {
           return addGuarantor();
@@ -3464,7 +3600,7 @@ A coverage may only be responsible for specific types of charges, and the sequen
           return addBalance();
         }
         else if (name.equals("calculatedAt")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Account.calculatedAt");
+          throw new FHIRException("Cannot call addChild on a singleton property Account.calculatedAt");
         }
         else
           return super.addChild(name);

@@ -166,7 +166,9 @@ public class Patient extends DomainResource {
         throw new FHIRException("Unknown LinkType code '"+codeString+"'");
         }
     public String toCode(LinkType code) {
-      if (code == LinkType.REPLACEDBY)
+       if (code == LinkType.NULL)
+           return null;
+       if (code == LinkType.REPLACEDBY)
         return "replaced-by";
       if (code == LinkType.REPLACES)
         return "replaces";
@@ -175,7 +177,7 @@ public class Patient extends DomainResource {
       if (code == LinkType.SEEALSO)
         return "seealso";
       return "?";
-      }
+   }
     public String toSystem(LinkType code) {
       return code.getSystem();
       }
@@ -587,6 +589,28 @@ public class Patient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("relationship")) {
+          this.getRelationship().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else if (name.equals("address")) {
+          this.address = null;
+        } else if (name.equals("gender")) {
+          value = new AdministrativeGenderEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.gender = (Enumeration) value; // Enumeration<AdministrativeGender>
+        } else if (name.equals("organization")) {
+          this.organization = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -634,7 +658,7 @@ public class Patient extends DomainResource {
           return this.address;
         }
         else if (name.equals("gender")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.contact.gender");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.contact.gender");
         }
         else if (name.equals("organization")) {
           this.organization = new Reference();
@@ -861,6 +885,17 @@ public class Patient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("preferred")) {
+          this.preferred = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -888,7 +923,7 @@ public class Patient extends DomainResource {
           return this.language;
         }
         else if (name.equals("preferred")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.communication.preferred");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.communication.preferred");
         }
         else
           return super.addChild(name);
@@ -1094,6 +1129,18 @@ public class Patient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("other")) {
+          this.other = null;
+        } else if (name.equals("type")) {
+          value = new LinkTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<LinkType>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1121,7 +1168,7 @@ public class Patient extends DomainResource {
           return this.other;
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.link.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.link.type");
         }
         else
           return super.addChild(name);
@@ -1638,8 +1685,8 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
       return (BooleanType) this.deceased;
     }
 
-    public boolean hasDeceasedBooleanType() { 
-      return this != null && this.deceased instanceof BooleanType;
+    public boolean hasDeceasedBooleanType() {
+        return this.deceased instanceof BooleanType;
     }
 
     /**
@@ -1653,8 +1700,8 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
       return (DateTimeType) this.deceased;
     }
 
-    public boolean hasDeceasedDateTimeType() { 
-      return this != null && this.deceased instanceof DateTimeType;
+    public boolean hasDeceasedDateTimeType() {
+        return this.deceased instanceof DateTimeType;
     }
 
     public boolean hasDeceased() { 
@@ -1766,8 +1813,8 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
       return (BooleanType) this.multipleBirth;
     }
 
-    public boolean hasMultipleBirthBooleanType() { 
-      return this != null && this.multipleBirth instanceof BooleanType;
+    public boolean hasMultipleBirthBooleanType() {
+        return this.multipleBirth instanceof BooleanType;
     }
 
     /**
@@ -1781,8 +1828,8 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
       return (IntegerType) this.multipleBirth;
     }
 
-    public boolean hasMultipleBirthIntegerType() { 
-      return this != null && this.multipleBirth instanceof IntegerType;
+    public boolean hasMultipleBirthIntegerType() {
+        return this.multipleBirth instanceof IntegerType;
     }
 
     public boolean hasMultipleBirth() { 
@@ -2259,6 +2306,46 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("name")) {
+          this.getName().remove(value);
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else if (name.equals("gender")) {
+          value = new AdministrativeGenderEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.gender = (Enumeration) value; // Enumeration<AdministrativeGender>
+        } else if (name.equals("birthDate")) {
+          this.birthDate = null;
+        } else if (name.equals("deceased[x]")) {
+          this.deceased = null;
+        } else if (name.equals("address")) {
+          this.getAddress().remove(value);
+        } else if (name.equals("maritalStatus")) {
+          this.maritalStatus = null;
+        } else if (name.equals("multipleBirth[x]")) {
+          this.multipleBirth = null;
+        } else if (name.equals("photo")) {
+          this.getPhoto().remove(value);
+        } else if (name.equals("contact")) {
+          this.getContact().remove((ContactComponent) value);
+        } else if (name.equals("communication")) {
+          this.getCommunication().remove((PatientCommunicationComponent) value);
+        } else if (name.equals("generalPractitioner")) {
+          this.getGeneralPractitioner().remove(value);
+        } else if (name.equals("managingOrganization")) {
+          this.managingOrganization = null;
+        } else if (name.equals("link")) {
+          this.getLink().remove((PatientLinkComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2315,7 +2402,7 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.active");
         }
         else if (name.equals("name")) {
           return addName();
@@ -2324,10 +2411,10 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
           return addTelecom();
         }
         else if (name.equals("gender")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.gender");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.gender");
         }
         else if (name.equals("birthDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Patient.birthDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Patient.birthDate");
         }
         else if (name.equals("deceasedBoolean")) {
           this.deceased = new BooleanType();

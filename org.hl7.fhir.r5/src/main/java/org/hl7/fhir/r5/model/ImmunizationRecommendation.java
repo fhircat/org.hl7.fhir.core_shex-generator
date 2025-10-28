@@ -883,6 +883,37 @@ public class ImmunizationRecommendation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("vaccineCode")) {
+          this.getVaccineCode().remove(value);
+        } else if (name.equals("targetDisease")) {
+          this.getTargetDisease().remove(value);
+        } else if (name.equals("contraindicatedVaccineCode")) {
+          this.getContraindicatedVaccineCode().remove(value);
+        } else if (name.equals("forecastStatus")) {
+          this.forecastStatus = null;
+        } else if (name.equals("forecastReason")) {
+          this.getForecastReason().remove(value);
+        } else if (name.equals("dateCriterion")) {
+          this.getDateCriterion().remove((ImmunizationRecommendationRecommendationDateCriterionComponent) value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("series")) {
+          this.series = null;
+        } else if (name.equals("doseNumber")) {
+          this.doseNumber = null;
+        } else if (name.equals("seriesDoses")) {
+          this.seriesDoses = null;
+        } else if (name.equals("supportingImmunization")) {
+          this.getSupportingImmunization().remove(value);
+        } else if (name.equals("supportingPatientInformation")) {
+          this.getSupportingPatientInformation().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -945,16 +976,16 @@ public class ImmunizationRecommendation extends DomainResource {
           return addDateCriterion();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.recommendation.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.recommendation.description");
         }
         else if (name.equals("series")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.recommendation.series");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.recommendation.series");
         }
         else if (name.equals("doseNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.recommendation.doseNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.recommendation.doseNumber");
         }
         else if (name.equals("seriesDoses")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.recommendation.seriesDoses");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.recommendation.seriesDoses");
         }
         else if (name.equals("supportingImmunization")) {
           return addSupportingImmunization();
@@ -1211,6 +1242,17 @@ public class ImmunizationRecommendation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1238,7 +1280,7 @@ public class ImmunizationRecommendation extends DomainResource {
           return this.code;
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.recommendation.dateCriterion.value");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.recommendation.dateCriterion.value");
         }
         else
           return super.addChild(name);
@@ -1615,6 +1657,23 @@ public class ImmunizationRecommendation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("authority")) {
+          this.authority = null;
+        } else if (name.equals("recommendation")) {
+          this.getRecommendation().remove((ImmunizationRecommendationRecommendationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1651,7 +1710,7 @@ public class ImmunizationRecommendation extends DomainResource {
           return this.patient;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationRecommendation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationRecommendation.date");
         }
         else if (name.equals("authority")) {
           this.authority = new Reference();

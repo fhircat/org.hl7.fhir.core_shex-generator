@@ -216,7 +216,9 @@ public class RelatedArtifact extends Type implements ICompositeType {
         throw new FHIRException("Unknown RelatedArtifactType code '"+codeString+"'");
         }
     public String toCode(RelatedArtifactType code) {
-      if (code == RelatedArtifactType.DOCUMENTATION)
+       if (code == RelatedArtifactType.NULL)
+           return null;
+       if (code == RelatedArtifactType.DOCUMENTATION)
         return "documentation";
       if (code == RelatedArtifactType.JUSTIFICATION)
         return "justification";
@@ -233,7 +235,7 @@ public class RelatedArtifact extends Type implements ICompositeType {
       if (code == RelatedArtifactType.COMPOSEDOF)
         return "composed-of";
       return "?";
-      }
+   }
     public String toSystem(RelatedArtifactType code) {
       return code.getSystem();
       }
@@ -675,16 +677,16 @@ public class RelatedArtifact extends Type implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.type");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.type");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.display");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.display");
         }
         else if (name.equals("citation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.citation");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.citation");
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.url");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.url");
         }
         else if (name.equals("document")) {
           this.document = new Attachment();

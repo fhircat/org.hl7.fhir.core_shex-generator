@@ -264,6 +264,21 @@ public class Procedure extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else if (name.equals("onBehalfOf")) {
+          this.onBehalfOf = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -488,6 +503,17 @@ public class Procedure extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("action")) {
+          this.action = null;
+        } else if (name.equals("manipulated")) {
+          this.manipulated = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1308,8 +1334,8 @@ public class Procedure extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -1323,8 +1349,8 @@ public class Procedure extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     /**
@@ -1338,8 +1364,8 @@ public class Procedure extends DomainResource {
       return (StringType) this.occurrence;
     }
 
-    public boolean hasOccurrenceStringType() { 
-      return this != null && this.occurrence instanceof StringType;
+    public boolean hasOccurrenceStringType() {
+        return this.occurrence instanceof StringType;
     }
 
     /**
@@ -1353,8 +1379,8 @@ public class Procedure extends DomainResource {
       return (Age) this.occurrence;
     }
 
-    public boolean hasOccurrenceAge() { 
-      return this != null && this.occurrence instanceof Age;
+    public boolean hasOccurrenceAge() {
+        return this.occurrence instanceof Age;
     }
 
     /**
@@ -1368,8 +1394,8 @@ public class Procedure extends DomainResource {
       return (Range) this.occurrence;
     }
 
-    public boolean hasOccurrenceRange() { 
-      return this != null && this.occurrence instanceof Range;
+    public boolean hasOccurrenceRange() {
+        return this.occurrence instanceof Range;
     }
 
     /**
@@ -1383,8 +1409,8 @@ public class Procedure extends DomainResource {
       return (Timing) this.occurrence;
     }
 
-    public boolean hasOccurrenceTiming() { 
-      return this != null && this.occurrence instanceof Timing;
+    public boolean hasOccurrenceTiming() {
+        return this.occurrence instanceof Timing;
     }
 
     public boolean hasOccurrence() { 
@@ -1492,8 +1518,8 @@ public class Procedure extends DomainResource {
       return (BooleanType) this.reported;
     }
 
-    public boolean hasReportedBooleanType() { 
-      return this != null && this.reported instanceof BooleanType;
+    public boolean hasReportedBooleanType() {
+        return this.reported instanceof BooleanType;
     }
 
     /**
@@ -1507,8 +1533,8 @@ public class Procedure extends DomainResource {
       return (Reference) this.reported;
     }
 
-    public boolean hasReportedReference() { 
-      return this != null && this.reported instanceof Reference;
+    public boolean hasReportedReference() {
+        return this.reported instanceof Reference;
     }
 
     public boolean hasReported() { 
@@ -2374,6 +2400,70 @@ public class Procedure extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new EventStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EventStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("focus")) {
+          this.focus = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("recorder")) {
+          this.recorder = null;
+        } else if (name.equals("reported[x]")) {
+          this.reported = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((ProcedurePerformerComponent) value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove(value);
+        } else if (name.equals("outcome")) {
+          this.outcome = null;
+        } else if (name.equals("report")) {
+          this.getReport().remove(value);
+        } else if (name.equals("complication")) {
+          this.getComplication().remove(value);
+        } else if (name.equals("followUp")) {
+          this.getFollowUp().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("focalDevice")) {
+          this.getFocalDevice().remove((ProcedureFocalDeviceComponent) value);
+        } else if (name.equals("used")) {
+          this.getUsed().remove(value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2454,10 +2544,10 @@ public class Procedure extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Procedure.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property Procedure.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Procedure.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property Procedure.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -2466,7 +2556,7 @@ public class Procedure extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Procedure.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Procedure.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
@@ -2516,7 +2606,7 @@ public class Procedure extends DomainResource {
           return this.occurrence;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Procedure.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property Procedure.recorded");
         }
         else if (name.equals("recorder")) {
           this.recorder = new Reference();

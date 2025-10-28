@@ -1,6 +1,13 @@
 package org.hl7.fhir.utilities;
 
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /*
   Copyright (c) 2011+, HL7, Inc.
@@ -110,10 +117,95 @@ public class CommaSeparatedStringBuilder {
     
   }
 
-  public static String join(String sep, List<String> list) {
+  public static String join(String sep, Collection<String> list) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep);
+    for (String s : list) {
+      if (s != null) {
+        b.append(s);
+      }
+    }
+    return b.toString();
+  }
+  
+  public static String join2(String sep, String finalSep, Collection<String> list) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep, finalSep);
+    for (String s : list) {
+      if (s != null) {
+        b.append(s);
+      }
+    }
+    return b.toString();
+  }
+
+  public static String joinToLimit(String sep, int limit, String overflow, Collection<String> list) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep);
+    int i = 0;
+    for (String s : list) {
+      if (s != null) {
+        i++;
+        if (i == limit) {
+          b.append(overflow);
+          break;
+        } else {
+          b.append(s);
+        }
+      }
+    }
+    return b.toString();
+  }
+
+  public static String join(String sep, String[] list) {
     CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep);
     for (String s : list) {
       b.append(s);
+    }
+    return b.toString();
+  }
+
+  public static String build(List<String> list) {
+    CommaSeparatedStringBuilder self = new CommaSeparatedStringBuilder();
+    for (String s : list) {
+      self.append(s);
+    }
+    return self.toString();
+  }
+
+
+  public static String buildObjects(List<? extends Object> list) {
+    CommaSeparatedStringBuilder self = new CommaSeparatedStringBuilder();
+    for (Object s : list) {
+      self.append(s.toString());
+    }
+    return self.toString();
+  }
+  
+  public static Set<String> toSet(String source) {
+    if (source == null) {
+      return null;
+    }
+    Set<String> res = new HashSet<>();
+    if (!Utilities.noString(source)) {
+      for (String s : source.split("\\,")) {
+        res.add(s.trim());
+      }
+    }
+    return res;
+  }
+
+  public static String joinWrapped(String sep, String leftWrap, String rightWrap, Collection<String> list) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep);
+    for (String s : list) {
+      if (s != null) {
+        b.append(leftWrap+s+rightWrap);
+      }
+    }
+    return b.toString();
+  }
+
+  public static String join(String sep, EnumSet<? extends Enum> set) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder(sep);
+    for (Enum e : set) {
+      b.append(e.toString());
     }
     return b.toString();
   }

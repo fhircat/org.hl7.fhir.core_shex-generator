@@ -166,7 +166,9 @@ public class SupplyDelivery extends DomainResource {
         throw new FHIRException("Unknown SupplyDeliveryStatus code '"+codeString+"'");
         }
     public String toCode(SupplyDeliveryStatus code) {
-      if (code == SupplyDeliveryStatus.INPROGRESS)
+       if (code == SupplyDeliveryStatus.NULL)
+           return null;
+       if (code == SupplyDeliveryStatus.INPROGRESS)
         return "in-progress";
       if (code == SupplyDeliveryStatus.COMPLETED)
         return "completed";
@@ -175,7 +177,7 @@ public class SupplyDelivery extends DomainResource {
       if (code == SupplyDeliveryStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(SupplyDeliveryStatus code) {
       return code.getSystem();
       }
@@ -249,8 +251,8 @@ public class SupplyDelivery extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         /**
@@ -264,8 +266,8 @@ public class SupplyDelivery extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         public boolean hasItem() { 
@@ -334,6 +336,17 @@ public class SupplyDelivery extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -833,8 +846,8 @@ public class SupplyDelivery extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -848,8 +861,8 @@ public class SupplyDelivery extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     /**
@@ -863,8 +876,8 @@ public class SupplyDelivery extends DomainResource {
       return (Timing) this.occurrence;
     }
 
-    public boolean hasOccurrenceTiming() { 
-      return this != null && this.occurrence instanceof Timing;
+    public boolean hasOccurrenceTiming() {
+        return this.occurrence instanceof Timing;
     }
 
     public boolean hasOccurrence() { 
@@ -1111,6 +1124,36 @@ public class SupplyDelivery extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new SupplyDeliveryStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<SupplyDeliveryStatus>
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("suppliedItem")) {
+          this.getSuppliedItem().remove((SupplyDeliverySuppliedItemComponent) value);
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("supplier")) {
+          this.supplier = null;
+        } else if (name.equals("destination")) {
+          this.destination = null;
+        } else if (name.equals("receiver")) {
+          this.getReceiver().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1162,7 +1205,7 @@ public class SupplyDelivery extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SupplyDelivery.status");
+          throw new FHIRException("Cannot call addChild on a singleton property SupplyDelivery.status");
         }
         else if (name.equals("patient")) {
           this.patient = new Reference();

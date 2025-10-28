@@ -25,6 +25,7 @@ import org.hl7.fhir.r4b.renderers.utils.BaseWrappers.ResourceWrapper;
 import org.hl7.fhir.r4b.renderers.utils.BaseWrappers.WrapperBaseImpl;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+@Deprecated
 public class DirectWrappers {
 
   public static class PropertyWrapperDirect extends RendererWrapperImpl implements PropertyWrapper {
@@ -99,12 +100,12 @@ public class DirectWrappers {
     @Override
     public BaseWrapper value() {
       if (getValues().size() != 1)
-        throw new Error("Access single value, but value count is "+getValues().size());
+        throw new Error("Access single value, but value count is " + getValues().size());
       return getValues().get(0);
     }
 
     public String toString() {
-      return "#."+wrapped.toString();
+      return "#." + wrapped.toString();
     }
 
     @Override
@@ -214,7 +215,7 @@ public class DirectWrappers {
       if (name != null && name.hasValues()) {
         Base b = name.getValues().get(0);
         if (b.isPrimitive()) {
-          return b.primitiveValue();          
+          return b.primitiveValue();
         } else if (b.fhirType().equals("HumanName")) {
           Property family = b.getChildByName("family");
           Property given = wrapped.getChildByName("given");
@@ -254,7 +255,7 @@ public class DirectWrappers {
     @Override
     public void injectNarrative(XhtmlNode x, NarrativeStatus status) {
       ResourceRenderer.inject((DomainResource) wrapped, x, status);
-      
+
     }
 
     @Override
@@ -289,7 +290,7 @@ public class DirectWrappers {
     public String fhirType() {
       return wrapped.fhirType();
     }
-    
+
     @Override
     public PropertyWrapper getChildByName(String name) {
       Property p = wrapped.getChildByName(name);

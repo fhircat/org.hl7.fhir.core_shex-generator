@@ -250,7 +250,9 @@ public class Appointment extends DomainResource {
         throw new FHIRException("Unknown AppointmentStatus code '"+codeString+"'");
         }
     public String toCode(AppointmentStatus code) {
-      if (code == AppointmentStatus.PROPOSED)
+       if (code == AppointmentStatus.NULL)
+           return null;
+       if (code == AppointmentStatus.PROPOSED)
         return "proposed";
       if (code == AppointmentStatus.PENDING)
         return "pending";
@@ -271,7 +273,7 @@ public class Appointment extends DomainResource {
       if (code == AppointmentStatus.WAITLIST)
         return "waitlist";
       return "?";
-      }
+   }
     public String toSystem(AppointmentStatus code) {
       return code.getSystem();
       }
@@ -390,7 +392,9 @@ public class Appointment extends DomainResource {
         throw new FHIRException("Unknown ParticipationStatus code '"+codeString+"'");
         }
     public String toCode(ParticipationStatus code) {
-      if (code == ParticipationStatus.ACCEPTED)
+       if (code == ParticipationStatus.NULL)
+           return null;
+       if (code == ParticipationStatus.ACCEPTED)
         return "accepted";
       if (code == ParticipationStatus.DECLINED)
         return "declined";
@@ -399,7 +403,7 @@ public class Appointment extends DomainResource {
       if (code == ParticipationStatus.NEEDSACTION)
         return "needs-action";
       return "?";
-      }
+   }
     public String toSystem(ParticipationStatus code) {
       return code.getSystem();
       }
@@ -729,6 +733,24 @@ public class Appointment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else if (name.equals("required")) {
+          this.required = null;
+        } else if (name.equals("status")) {
+          value = new ParticipationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ParticipationStatus>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -769,10 +791,10 @@ public class Appointment extends DomainResource {
           return this.actor;
         }
         else if (name.equals("required")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.participant.required");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.participant.required");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.participant.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.participant.status");
         }
         else
           return super.addChild(name);
@@ -1433,6 +1455,33 @@ public class Appointment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("timezone")) {
+          this.timezone = null;
+        } else if (name.equals("recurrenceType")) {
+          this.recurrenceType = null;
+        } else if (name.equals("lastOccurrenceDate")) {
+          this.lastOccurrenceDate = null;
+        } else if (name.equals("occurrenceCount")) {
+          this.occurrenceCount = null;
+        } else if (name.equals("occurrenceDate")) {
+          this.getOccurrenceDate().remove(value);
+        } else if (name.equals("weeklyTemplate")) {
+          this.weeklyTemplate = (AppointmentRecurrenceTemplateWeeklyTemplateComponent) value; // AppointmentRecurrenceTemplateWeeklyTemplateComponent
+        } else if (name.equals("monthlyTemplate")) {
+          this.monthlyTemplate = (AppointmentRecurrenceTemplateMonthlyTemplateComponent) value; // AppointmentRecurrenceTemplateMonthlyTemplateComponent
+        } else if (name.equals("yearlyTemplate")) {
+          this.yearlyTemplate = (AppointmentRecurrenceTemplateYearlyTemplateComponent) value; // AppointmentRecurrenceTemplateYearlyTemplateComponent
+        } else if (name.equals("excludingDate")) {
+          this.getExcludingDate().remove(value);
+        } else if (name.equals("excludingRecurrenceId")) {
+          this.getExcludingRecurrenceId().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1480,13 +1529,13 @@ public class Appointment extends DomainResource {
           return this.recurrenceType;
         }
         else if (name.equals("lastOccurrenceDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.lastOccurrenceDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.lastOccurrenceDate");
         }
         else if (name.equals("occurrenceCount")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.occurrenceCount");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.occurrenceCount");
         }
         else if (name.equals("occurrenceDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.occurrenceDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.occurrenceDate");
         }
         else if (name.equals("weeklyTemplate")) {
           this.weeklyTemplate = new AppointmentRecurrenceTemplateWeeklyTemplateComponent();
@@ -1501,10 +1550,10 @@ public class Appointment extends DomainResource {
           return this.yearlyTemplate;
         }
         else if (name.equals("excludingDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.excludingDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.excludingDate");
         }
         else if (name.equals("excludingRecurrenceId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.excludingRecurrenceId");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.excludingRecurrenceId");
         }
         else
           return super.addChild(name);
@@ -1634,7 +1683,9 @@ public class Appointment extends DomainResource {
         protected BooleanType sunday;
 
         /**
-         * The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
+         * The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.
+
+e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
          */
         @Child(name = "weekInterval", type = {PositiveIntType.class}, order=8, min=0, max=1, modifier=false, summary=false)
         @Description(shortDefinition="Recurs every nth week", formalDefinition="The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.\r\re.g. For recurring every second week this interval would be 2, or every third week the interval would be 3." )
@@ -1965,7 +2016,9 @@ public class Appointment extends DomainResource {
         }
 
         /**
-         * @return {@link #weekInterval} (The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.). This is the underlying object with id, value and extensions. The accessor "getWeekInterval" gives direct access to the value
+         * @return {@link #weekInterval} (The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.
+
+e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.). This is the underlying object with id, value and extensions. The accessor "getWeekInterval" gives direct access to the value
          */
         public PositiveIntType getWeekIntervalElement() { 
           if (this.weekInterval == null)
@@ -1985,7 +2038,9 @@ public class Appointment extends DomainResource {
         }
 
         /**
-         * @param value {@link #weekInterval} (The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.). This is the underlying object with id, value and extensions. The accessor "getWeekInterval" gives direct access to the value
+         * @param value {@link #weekInterval} (The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.
+
+e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.). This is the underlying object with id, value and extensions. The accessor "getWeekInterval" gives direct access to the value
          */
         public AppointmentRecurrenceTemplateWeeklyTemplateComponent setWeekIntervalElement(PositiveIntType value) { 
           this.weekInterval = value;
@@ -1993,14 +2048,18 @@ public class Appointment extends DomainResource {
         }
 
         /**
-         * @return The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
+         * @return The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.
+
+e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
          */
         public int getWeekInterval() { 
           return this.weekInterval == null || this.weekInterval.isEmpty() ? 0 : this.weekInterval.getValue();
         }
 
         /**
-         * @param value The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
+         * @param value The interval defines if the recurrence is every nth week. The default is every week, so it is expected that this value will be 2 or more.
+
+e.g. For recurring every second week this interval would be 2, or every third week the interval would be 3.
          */
         public AppointmentRecurrenceTemplateWeeklyTemplateComponent setWeekInterval(int value) { 
             if (this.weekInterval == null)
@@ -2108,6 +2167,29 @@ public class Appointment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("monday")) {
+          this.monday = null;
+        } else if (name.equals("tuesday")) {
+          this.tuesday = null;
+        } else if (name.equals("wednesday")) {
+          this.wednesday = null;
+        } else if (name.equals("thursday")) {
+          this.thursday = null;
+        } else if (name.equals("friday")) {
+          this.friday = null;
+        } else if (name.equals("saturday")) {
+          this.saturday = null;
+        } else if (name.equals("sunday")) {
+          this.sunday = null;
+        } else if (name.equals("weekInterval")) {
+          this.weekInterval = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2143,28 +2225,28 @@ public class Appointment extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("monday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.monday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.monday");
         }
         else if (name.equals("tuesday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.tuesday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.tuesday");
         }
         else if (name.equals("wednesday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.wednesday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.wednesday");
         }
         else if (name.equals("thursday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.thursday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.thursday");
         }
         else if (name.equals("friday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.friday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.friday");
         }
         else if (name.equals("saturday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.saturday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.saturday");
         }
         else if (name.equals("sunday")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.sunday");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.sunday");
         }
         else if (name.equals("weekInterval")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.weeklyTemplate.weekInterval");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.weeklyTemplate.weekInterval");
         }
         else
           return super.addChild(name);
@@ -2478,6 +2560,21 @@ public class Appointment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("dayOfMonth")) {
+          this.dayOfMonth = null;
+        } else if (name.equals("nthWeekOfMonth")) {
+          this.nthWeekOfMonth = null;
+        } else if (name.equals("dayOfWeek")) {
+          this.dayOfWeek = null;
+        } else if (name.equals("monthInterval")) {
+          this.monthInterval = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2505,7 +2602,7 @@ public class Appointment extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("dayOfMonth")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.monthlyTemplate.dayOfMonth");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.monthlyTemplate.dayOfMonth");
         }
         else if (name.equals("nthWeekOfMonth")) {
           this.nthWeekOfMonth = new Coding();
@@ -2516,7 +2613,7 @@ public class Appointment extends DomainResource {
           return this.dayOfWeek;
         }
         else if (name.equals("monthInterval")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.monthlyTemplate.monthInterval");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.monthlyTemplate.monthInterval");
         }
         else
           return super.addChild(name);
@@ -2685,6 +2782,15 @@ public class Appointment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("yearInterval")) {
+          this.yearInterval = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2706,7 +2812,7 @@ public class Appointment extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("yearInterval")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceTemplate.yearlyTemplate.yearInterval");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceTemplate.yearlyTemplate.yearInterval");
         }
         else
           return super.addChild(name);
@@ -4772,6 +4878,78 @@ The duration (usually in minutes) could also be provided to indicate the length 
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new AppointmentStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<AppointmentStatus>
+        } else if (name.equals("cancellationReason")) {
+          this.cancellationReason = null;
+        } else if (name.equals("class")) {
+          this.getClass_().remove(value);
+        } else if (name.equals("serviceCategory")) {
+          this.getServiceCategory().remove(value);
+        } else if (name.equals("serviceType")) {
+          this.getServiceType().remove(value);
+        } else if (name.equals("specialty")) {
+          this.getSpecialty().remove(value);
+        } else if (name.equals("appointmentType")) {
+          this.appointmentType = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("replaces")) {
+          this.getReplaces().remove(value);
+        } else if (name.equals("virtualService")) {
+          this.getVirtualService().remove(value);
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("previousAppointment")) {
+          this.previousAppointment = null;
+        } else if (name.equals("originatingAppointment")) {
+          this.originatingAppointment = null;
+        } else if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("end")) {
+          this.end = null;
+        } else if (name.equals("minutesDuration")) {
+          this.minutesDuration = null;
+        } else if (name.equals("requestedPeriod")) {
+          this.getRequestedPeriod().remove(value);
+        } else if (name.equals("slot")) {
+          this.getSlot().remove(value);
+        } else if (name.equals("account")) {
+          this.getAccount().remove(value);
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("cancellationDate")) {
+          this.cancellationDate = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("patientInstruction")) {
+          this.getPatientInstruction().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((AppointmentParticipantComponent) value);
+        } else if (name.equals("recurrenceId")) {
+          this.recurrenceId = null;
+        } else if (name.equals("occurrenceChanged")) {
+          this.occurrenceChanged = null;
+        } else if (name.equals("recurrenceTemplate")) {
+          this.getRecurrenceTemplate().remove((AppointmentRecurrenceTemplateComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4858,7 +5036,7 @@ The duration (usually in minutes) could also be provided to indicate the length 
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.status");
         }
         else if (name.equals("cancellationReason")) {
           this.cancellationReason = new CodeableConcept();
@@ -4888,7 +5066,7 @@ The duration (usually in minutes) could also be provided to indicate the length 
           return this.priority;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.description");
         }
         else if (name.equals("replaces")) {
           return addReplaces();
@@ -4908,13 +5086,13 @@ The duration (usually in minutes) could also be provided to indicate the length 
           return this.originatingAppointment;
         }
         else if (name.equals("start")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.start");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.start");
         }
         else if (name.equals("end")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.end");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.end");
         }
         else if (name.equals("minutesDuration")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.minutesDuration");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.minutesDuration");
         }
         else if (name.equals("requestedPeriod")) {
           return addRequestedPeriod();
@@ -4926,10 +5104,10 @@ The duration (usually in minutes) could also be provided to indicate the length 
           return addAccount();
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.created");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.created");
         }
         else if (name.equals("cancellationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.cancellationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.cancellationDate");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -4948,10 +5126,10 @@ The duration (usually in minutes) could also be provided to indicate the length 
           return addParticipant();
         }
         else if (name.equals("recurrenceId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.recurrenceId");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.recurrenceId");
         }
         else if (name.equals("occurrenceChanged")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Appointment.occurrenceChanged");
+          throw new FHIRException("Cannot call addChild on a singleton property Appointment.occurrenceChanged");
         }
         else if (name.equals("recurrenceTemplate")) {
           return addRecurrenceTemplate();

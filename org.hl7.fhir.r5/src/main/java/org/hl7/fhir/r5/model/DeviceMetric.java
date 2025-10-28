@@ -166,7 +166,9 @@ public class DeviceMetric extends DomainResource {
         throw new FHIRException("Unknown DeviceMetricCalibrationState code '"+codeString+"'");
         }
     public String toCode(DeviceMetricCalibrationState code) {
-      if (code == DeviceMetricCalibrationState.NOTCALIBRATED)
+       if (code == DeviceMetricCalibrationState.NULL)
+           return null;
+       if (code == DeviceMetricCalibrationState.NOTCALIBRATED)
         return "not-calibrated";
       if (code == DeviceMetricCalibrationState.CALIBRATIONREQUIRED)
         return "calibration-required";
@@ -175,7 +177,7 @@ public class DeviceMetric extends DomainResource {
       if (code == DeviceMetricCalibrationState.UNSPECIFIED)
         return "unspecified";
       return "?";
-      }
+   }
     public String toSystem(DeviceMetricCalibrationState code) {
       return code.getSystem();
       }
@@ -294,7 +296,9 @@ public class DeviceMetric extends DomainResource {
         throw new FHIRException("Unknown DeviceMetricCalibrationType code '"+codeString+"'");
         }
     public String toCode(DeviceMetricCalibrationType code) {
-      if (code == DeviceMetricCalibrationType.UNSPECIFIED)
+       if (code == DeviceMetricCalibrationType.NULL)
+           return null;
+       if (code == DeviceMetricCalibrationType.UNSPECIFIED)
         return "unspecified";
       if (code == DeviceMetricCalibrationType.OFFSET)
         return "offset";
@@ -303,7 +307,7 @@ public class DeviceMetric extends DomainResource {
       if (code == DeviceMetricCalibrationType.TWOPOINT)
         return "two-point";
       return "?";
-      }
+   }
     public String toSystem(DeviceMetricCalibrationType code) {
       return code.getSystem();
       }
@@ -422,7 +426,9 @@ public class DeviceMetric extends DomainResource {
         throw new FHIRException("Unknown DeviceMetricCategory code '"+codeString+"'");
         }
     public String toCode(DeviceMetricCategory code) {
-      if (code == DeviceMetricCategory.MEASUREMENT)
+       if (code == DeviceMetricCategory.NULL)
+           return null;
+       if (code == DeviceMetricCategory.MEASUREMENT)
         return "measurement";
       if (code == DeviceMetricCategory.SETTING)
         return "setting";
@@ -431,7 +437,7 @@ public class DeviceMetric extends DomainResource {
       if (code == DeviceMetricCategory.UNSPECIFIED)
         return "unspecified";
       return "?";
-      }
+   }
     public String toSystem(DeviceMetricCategory code) {
       return code.getSystem();
       }
@@ -550,7 +556,9 @@ public class DeviceMetric extends DomainResource {
         throw new FHIRException("Unknown DeviceMetricOperationalStatus code '"+codeString+"'");
         }
     public String toCode(DeviceMetricOperationalStatus code) {
-      if (code == DeviceMetricOperationalStatus.ON)
+       if (code == DeviceMetricOperationalStatus.NULL)
+           return null;
+       if (code == DeviceMetricOperationalStatus.ON)
         return "on";
       if (code == DeviceMetricOperationalStatus.OFF)
         return "off";
@@ -559,7 +567,7 @@ public class DeviceMetric extends DomainResource {
       if (code == DeviceMetricOperationalStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(DeviceMetricOperationalStatus code) {
       return code.getSystem();
       }
@@ -809,6 +817,21 @@ public class DeviceMetric extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new DeviceMetricCalibrationTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<DeviceMetricCalibrationType>
+        } else if (name.equals("state")) {
+          value = new DeviceMetricCalibrationStateEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.state = (Enumeration) value; // Enumeration<DeviceMetricCalibrationState>
+        } else if (name.equals("time")) {
+          this.time = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -834,13 +857,13 @@ public class DeviceMetric extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.calibration.type");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.calibration.type");
         }
         else if (name.equals("state")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.calibration.state");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.calibration.state");
         }
         else if (name.equals("time")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.calibration.time");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.calibration.time");
         }
         else
           return super.addChild(name);
@@ -1435,6 +1458,33 @@ public class DeviceMetric extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("unit")) {
+          this.unit = null;
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("operationalStatus")) {
+          value = new DeviceMetricOperationalStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.operationalStatus = (Enumeration) value; // Enumeration<DeviceMetricOperationalStatus>
+        } else if (name.equals("color")) {
+          this.color = null;
+        } else if (name.equals("category")) {
+          value = new DeviceMetricCategoryEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.category = (Enumeration) value; // Enumeration<DeviceMetricCategory>
+        } else if (name.equals("measurementFrequency")) {
+          this.measurementFrequency = null;
+        } else if (name.equals("calibration")) {
+          this.getCalibration().remove((DeviceMetricCalibrationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1487,13 +1537,13 @@ public class DeviceMetric extends DomainResource {
           return this.device;
         }
         else if (name.equals("operationalStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.operationalStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.operationalStatus");
         }
         else if (name.equals("color")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.color");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.color");
         }
         else if (name.equals("category")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceMetric.category");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceMetric.category");
         }
         else if (name.equals("measurementFrequency")) {
           this.measurementFrequency = new Quantity();

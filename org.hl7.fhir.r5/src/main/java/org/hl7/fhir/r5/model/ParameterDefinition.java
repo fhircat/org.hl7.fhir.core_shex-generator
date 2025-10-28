@@ -546,6 +546,29 @@ public class ParameterDefinition extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("use")) {
+          value = new OperationParameterUseEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.use = (Enumeration) value; // Enumeration<OperationParameterUse>
+        } else if (name.equals("min")) {
+          this.min = null;
+        } else if (name.equals("max")) {
+          this.max = null;
+        } else if (name.equals("documentation")) {
+          this.documentation = null;
+        } else if (name.equals("type")) {
+          value = new FHIRTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<FHIRTypes>
+        } else if (name.equals("profile")) {
+          this.profile = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -579,25 +602,25 @@ public class ParameterDefinition extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.name");
         }
         else if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.use");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.use");
         }
         else if (name.equals("min")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.min");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.min");
         }
         else if (name.equals("max")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.max");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.max");
         }
         else if (name.equals("documentation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.documentation");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.documentation");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.type");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ParameterDefinition.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property ParameterDefinition.profile");
         }
         else
           return super.addChild(name);

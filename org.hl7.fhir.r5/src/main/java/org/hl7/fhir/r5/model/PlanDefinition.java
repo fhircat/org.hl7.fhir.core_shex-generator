@@ -472,6 +472,27 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("addresses")) {
+          this.getAddresses().remove(value);
+        } else if (name.equals("documentation")) {
+          this.getDocumentation().remove(value);
+        } else if (name.equals("target")) {
+          this.getTarget().remove((PlanDefinitionGoalTargetComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -671,8 +692,8 @@ public class PlanDefinition extends MetadataResource {
           return (Quantity) this.detail;
         }
 
-        public boolean hasDetailQuantity() { 
-          return this != null && this.detail instanceof Quantity;
+        public boolean hasDetailQuantity() {
+            return this.detail instanceof Quantity;
         }
 
         /**
@@ -686,8 +707,8 @@ public class PlanDefinition extends MetadataResource {
           return (Range) this.detail;
         }
 
-        public boolean hasDetailRange() { 
-          return this != null && this.detail instanceof Range;
+        public boolean hasDetailRange() {
+            return this.detail instanceof Range;
         }
 
         /**
@@ -701,8 +722,8 @@ public class PlanDefinition extends MetadataResource {
           return (CodeableConcept) this.detail;
         }
 
-        public boolean hasDetailCodeableConcept() { 
-          return this != null && this.detail instanceof CodeableConcept;
+        public boolean hasDetailCodeableConcept() {
+            return this.detail instanceof CodeableConcept;
         }
 
         /**
@@ -716,8 +737,8 @@ public class PlanDefinition extends MetadataResource {
           return (StringType) this.detail;
         }
 
-        public boolean hasDetailStringType() { 
-          return this != null && this.detail instanceof StringType;
+        public boolean hasDetailStringType() {
+            return this.detail instanceof StringType;
         }
 
         /**
@@ -731,8 +752,8 @@ public class PlanDefinition extends MetadataResource {
           return (BooleanType) this.detail;
         }
 
-        public boolean hasDetailBooleanType() { 
-          return this != null && this.detail instanceof BooleanType;
+        public boolean hasDetailBooleanType() {
+            return this.detail instanceof BooleanType;
         }
 
         /**
@@ -746,8 +767,8 @@ public class PlanDefinition extends MetadataResource {
           return (IntegerType) this.detail;
         }
 
-        public boolean hasDetailIntegerType() { 
-          return this != null && this.detail instanceof IntegerType;
+        public boolean hasDetailIntegerType() {
+            return this.detail instanceof IntegerType;
         }
 
         /**
@@ -761,8 +782,8 @@ public class PlanDefinition extends MetadataResource {
           return (Ratio) this.detail;
         }
 
-        public boolean hasDetailRatio() { 
-          return this != null && this.detail instanceof Ratio;
+        public boolean hasDetailRatio() {
+            return this.detail instanceof Ratio;
         }
 
         public boolean hasDetail() { 
@@ -868,6 +889,19 @@ public class PlanDefinition extends MetadataResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("measure")) {
+          this.measure = null;
+        } else if (name.equals("detail[x]")) {
+          this.detail = null;
+        } else if (name.equals("due")) {
+          this.due = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1230,6 +1264,19 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("option")) {
+          this.getOption().remove((PlanDefinitionActorOptionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1255,10 +1302,10 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.actor.title");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.actor.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.actor.description");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.actor.description");
         }
         else if (name.equals("option")) {
           return addOption();
@@ -1573,6 +1620,22 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new ActionParticipantTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ActionParticipantType>
+        } else if (name.equals("typeCanonical")) {
+          this.typeCanonical = null;
+        } else if (name.equals("typeReference")) {
+          this.typeReference = null;
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1600,10 +1663,10 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.actor.option.type");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.actor.option.type");
         }
         else if (name.equals("typeCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.actor.option.typeCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.actor.option.typeCanonical");
         }
         else if (name.equals("typeReference")) {
           this.typeReference = new Reference();
@@ -2391,8 +2454,8 @@ public class PlanDefinition extends MetadataResource {
           return (CodeableConcept) this.subject;
         }
 
-        public boolean hasSubjectCodeableConcept() { 
-          return this != null && this.subject instanceof CodeableConcept;
+        public boolean hasSubjectCodeableConcept() {
+            return this.subject instanceof CodeableConcept;
         }
 
         /**
@@ -2406,8 +2469,8 @@ public class PlanDefinition extends MetadataResource {
           return (Reference) this.subject;
         }
 
-        public boolean hasSubjectReference() { 
-          return this != null && this.subject instanceof Reference;
+        public boolean hasSubjectReference() {
+            return this.subject instanceof Reference;
         }
 
         /**
@@ -2421,8 +2484,8 @@ public class PlanDefinition extends MetadataResource {
           return (CanonicalType) this.subject;
         }
 
-        public boolean hasSubjectCanonicalType() { 
-          return this != null && this.subject instanceof CanonicalType;
+        public boolean hasSubjectCanonicalType() {
+            return this.subject instanceof CanonicalType;
         }
 
         public boolean hasSubject() { 
@@ -2722,8 +2785,8 @@ public class PlanDefinition extends MetadataResource {
           return (Age) this.timing;
         }
 
-        public boolean hasTimingAge() { 
-          return this != null && this.timing instanceof Age;
+        public boolean hasTimingAge() {
+            return this.timing instanceof Age;
         }
 
         /**
@@ -2737,8 +2800,8 @@ public class PlanDefinition extends MetadataResource {
           return (Duration) this.timing;
         }
 
-        public boolean hasTimingDuration() { 
-          return this != null && this.timing instanceof Duration;
+        public boolean hasTimingDuration() {
+            return this.timing instanceof Duration;
         }
 
         /**
@@ -2752,8 +2815,8 @@ public class PlanDefinition extends MetadataResource {
           return (Range) this.timing;
         }
 
-        public boolean hasTimingRange() { 
-          return this != null && this.timing instanceof Range;
+        public boolean hasTimingRange() {
+            return this.timing instanceof Range;
         }
 
         /**
@@ -2767,8 +2830,8 @@ public class PlanDefinition extends MetadataResource {
           return (Timing) this.timing;
         }
 
-        public boolean hasTimingTiming() { 
-          return this != null && this.timing instanceof Timing;
+        public boolean hasTimingTiming() {
+            return this.timing instanceof Timing;
         }
 
         public boolean hasTiming() { 
@@ -3149,8 +3212,8 @@ public class PlanDefinition extends MetadataResource {
           return (CanonicalType) this.definition;
         }
 
-        public boolean hasDefinitionCanonicalType() { 
-          return this != null && this.definition instanceof CanonicalType;
+        public boolean hasDefinitionCanonicalType() {
+            return this.definition instanceof CanonicalType;
         }
 
         /**
@@ -3164,8 +3227,8 @@ public class PlanDefinition extends MetadataResource {
           return (UriType) this.definition;
         }
 
-        public boolean hasDefinitionUriType() { 
-          return this != null && this.definition instanceof UriType;
+        public boolean hasDefinitionUriType() {
+            return this.definition instanceof UriType;
         }
 
         public boolean hasDefinition() { 
@@ -3628,6 +3691,77 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("prefix")) {
+          this.prefix = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("textEquivalent")) {
+          this.textEquivalent = null;
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("documentation")) {
+          this.getDocumentation().remove(value);
+        } else if (name.equals("goalId")) {
+          this.getGoalId().remove(value);
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("trigger")) {
+          this.getTrigger().remove(value);
+        } else if (name.equals("condition")) {
+          this.getCondition().remove((PlanDefinitionActionConditionComponent) value);
+        } else if (name.equals("input")) {
+          this.getInput().remove((PlanDefinitionActionInputComponent) value);
+        } else if (name.equals("output")) {
+          this.getOutput().remove((PlanDefinitionActionOutputComponent) value);
+        } else if (name.equals("relatedAction")) {
+          this.getRelatedAction().remove((PlanDefinitionActionRelatedActionComponent) value);
+        } else if (name.equals("timing[x]")) {
+          this.timing = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((PlanDefinitionActionParticipantComponent) value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("groupingBehavior")) {
+          value = new ActionGroupingBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.groupingBehavior = (Enumeration) value; // Enumeration<ActionGroupingBehavior>
+        } else if (name.equals("selectionBehavior")) {
+          value = new ActionSelectionBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.selectionBehavior = (Enumeration) value; // Enumeration<ActionSelectionBehavior>
+        } else if (name.equals("requiredBehavior")) {
+          value = new ActionRequiredBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.requiredBehavior = (Enumeration) value; // Enumeration<ActionRequiredBehavior>
+        } else if (name.equals("precheckBehavior")) {
+          value = new ActionPrecheckBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.precheckBehavior = (Enumeration) value; // Enumeration<ActionPrecheckBehavior>
+        } else if (name.equals("cardinalityBehavior")) {
+          value = new ActionCardinalityBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.cardinalityBehavior = (Enumeration) value; // Enumeration<ActionCardinalityBehavior>
+        } else if (name.equals("definition[x]")) {
+          this.definition = null;
+        } else if (name.equals("transform")) {
+          this.transform = null;
+        } else if (name.equals("dynamicValue")) {
+          this.getDynamicValue().remove((PlanDefinitionActionDynamicValueComponent) value);
+        } else if (name.equals("action")) {
+          this.getAction().remove((PlanDefinitionActionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3708,22 +3842,22 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.linkId");
         }
         else if (name.equals("prefix")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.prefix");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.prefix");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.title");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.description");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.description");
         }
         else if (name.equals("textEquivalent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.textEquivalent");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.textEquivalent");
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.priority");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -3736,7 +3870,7 @@ public class PlanDefinition extends MetadataResource {
           return addDocumentation();
         }
         else if (name.equals("goalId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.goalId");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.goalId");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -3793,19 +3927,19 @@ public class PlanDefinition extends MetadataResource {
           return this.type;
         }
         else if (name.equals("groupingBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.groupingBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.groupingBehavior");
         }
         else if (name.equals("selectionBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.selectionBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.selectionBehavior");
         }
         else if (name.equals("requiredBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.requiredBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.requiredBehavior");
         }
         else if (name.equals("precheckBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.precheckBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.precheckBehavior");
         }
         else if (name.equals("cardinalityBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.cardinalityBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.cardinalityBehavior");
         }
         else if (name.equals("definitionCanonical")) {
           this.definition = new CanonicalType();
@@ -3816,7 +3950,7 @@ public class PlanDefinition extends MetadataResource {
           return this.definition;
         }
         else if (name.equals("transform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.transform");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.transform");
         }
         else if (name.equals("dynamicValue")) {
           return addDynamicValue();
@@ -4118,6 +4252,18 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("kind")) {
+          value = new ActionConditionKindEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.kind = (Enumeration) value; // Enumeration<ActionConditionKind>
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4141,7 +4287,7 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("kind")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.condition.kind");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.condition.kind");
         }
         else if (name.equals("expression")) {
           this.expression = new Expression();
@@ -4407,6 +4553,19 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("requirement")) {
+          this.requirement = null;
+        } else if (name.equals("relatedData")) {
+          this.relatedData = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4432,14 +4591,14 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.input.title");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.input.title");
         }
         else if (name.equals("requirement")) {
           this.requirement = new DataRequirement();
           return this.requirement;
         }
         else if (name.equals("relatedData")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.input.relatedData");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.input.relatedData");
         }
         else
           return super.addChild(name);
@@ -4704,6 +4863,19 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("requirement")) {
+          this.requirement = null;
+        } else if (name.equals("relatedData")) {
+          this.relatedData = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4729,14 +4901,14 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.output.title");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.output.title");
         }
         else if (name.equals("requirement")) {
           this.requirement = new DataRequirement();
           return this.requirement;
         }
         else if (name.equals("relatedData")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.output.relatedData");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.output.relatedData");
         }
         else
           return super.addChild(name);
@@ -4995,8 +5167,8 @@ public class PlanDefinition extends MetadataResource {
           return (Duration) this.offset;
         }
 
-        public boolean hasOffsetDuration() { 
-          return this != null && this.offset instanceof Duration;
+        public boolean hasOffsetDuration() {
+            return this.offset instanceof Duration;
         }
 
         /**
@@ -5010,8 +5182,8 @@ public class PlanDefinition extends MetadataResource {
           return (Range) this.offset;
         }
 
-        public boolean hasOffsetRange() { 
-          return this != null && this.offset instanceof Range;
+        public boolean hasOffsetRange() {
+            return this.offset instanceof Range;
         }
 
         public boolean hasOffset() { 
@@ -5102,6 +5274,23 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("targetId")) {
+          this.targetId = null;
+        } else if (name.equals("relationship")) {
+          value = new ActionRelationshipTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.relationship = (Enumeration) value; // Enumeration<ActionRelationshipType>
+        } else if (name.equals("endRelationship")) {
+          value = new ActionRelationshipTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.endRelationship = (Enumeration) value; // Enumeration<ActionRelationshipType>
+        } else if (name.equals("offset[x]")) {
+          this.offset = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5130,13 +5319,13 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("targetId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.relatedAction.targetId");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.relatedAction.targetId");
         }
         else if (name.equals("relationship")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.relatedAction.relationship");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.relatedAction.relationship");
         }
         else if (name.equals("endRelationship")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.relatedAction.endRelationship");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.relatedAction.endRelationship");
         }
         else if (name.equals("offsetDuration")) {
           this.offset = new Duration();
@@ -5559,6 +5748,26 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("actorId")) {
+          this.actorId = null;
+        } else if (name.equals("type")) {
+          value = new ActionParticipantTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ActionParticipantType>
+        } else if (name.equals("typeCanonical")) {
+          this.typeCanonical = null;
+        } else if (name.equals("typeReference")) {
+          this.typeReference = null;
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("function")) {
+          this.function = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5590,13 +5799,13 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("actorId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.participant.actorId");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.participant.actorId");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.participant.type");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.participant.type");
         }
         else if (name.equals("typeCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.participant.typeCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.participant.typeCanonical");
         }
         else if (name.equals("typeReference")) {
           this.typeReference = new Reference();
@@ -5814,6 +6023,17 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5837,7 +6057,7 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.action.dynamicValue.path");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.action.dynamicValue.path");
         }
         else if (name.equals("expression")) {
           this.expression = new Expression();
@@ -6328,8 +6548,8 @@ public class PlanDefinition extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -6343,8 +6563,8 @@ public class PlanDefinition extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -6640,8 +6860,8 @@ public class PlanDefinition extends MetadataResource {
       return (CodeableConcept) this.subject;
     }
 
-    public boolean hasSubjectCodeableConcept() { 
-      return this != null && this.subject instanceof CodeableConcept;
+    public boolean hasSubjectCodeableConcept() {
+        return this.subject instanceof CodeableConcept;
     }
 
     /**
@@ -6655,8 +6875,8 @@ public class PlanDefinition extends MetadataResource {
       return (Reference) this.subject;
     }
 
-    public boolean hasSubjectReference() { 
-      return this != null && this.subject instanceof Reference;
+    public boolean hasSubjectReference() {
+        return this.subject instanceof Reference;
     }
 
     /**
@@ -6670,8 +6890,8 @@ public class PlanDefinition extends MetadataResource {
       return (CanonicalType) this.subject;
     }
 
-    public boolean hasSubjectCanonicalType() { 
-      return this != null && this.subject instanceof CanonicalType;
+    public boolean hasSubjectCanonicalType() {
+        return this.subject instanceof CanonicalType;
     }
 
     public boolean hasSubject() { 
@@ -7868,8 +8088,8 @@ public class PlanDefinition extends MetadataResource {
       return (BooleanType) this.asNeeded;
     }
 
-    public boolean hasAsNeededBooleanType() { 
-      return this != null && this.asNeeded instanceof BooleanType;
+    public boolean hasAsNeededBooleanType() {
+        return this.asNeeded instanceof BooleanType;
     }
 
     /**
@@ -7883,8 +8103,8 @@ public class PlanDefinition extends MetadataResource {
       return (CodeableConcept) this.asNeeded;
     }
 
-    public boolean hasAsNeededCodeableConcept() { 
-      return this != null && this.asNeeded instanceof CodeableConcept;
+    public boolean hasAsNeededCodeableConcept() {
+        return this.asNeeded instanceof CodeableConcept;
     }
 
     public boolean hasAsNeeded() { 
@@ -8228,6 +8448,84 @@ public class PlanDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("subtitle")) {
+          this.subtitle = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("usage")) {
+          this.usage = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("library")) {
+          this.getLibrary().remove(value);
+        } else if (name.equals("goal")) {
+          this.getGoal().remove((PlanDefinitionGoalComponent) value);
+        } else if (name.equals("actor")) {
+          this.getActor().remove((PlanDefinitionActorComponent) value);
+        } else if (name.equals("action")) {
+          this.getAction().remove((PlanDefinitionActionComponent) value);
+        } else if (name.equals("asNeeded[x]")) {
+          this.asNeeded = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -8320,13 +8618,13 @@ public class PlanDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -8337,23 +8635,23 @@ public class PlanDefinition extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.title");
         }
         else if (name.equals("subtitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.subtitle");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.subtitle");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
           return this.type;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.experimental");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -8368,16 +8666,16 @@ public class PlanDefinition extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -8386,22 +8684,22 @@ public class PlanDefinition extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.purpose");
         }
         else if (name.equals("usage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.usage");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.usage");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -8426,7 +8724,7 @@ public class PlanDefinition extends MetadataResource {
           return addRelatedArtifact();
         }
         else if (name.equals("library")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PlanDefinition.library");
+          throw new FHIRException("Cannot call addChild on a singleton property PlanDefinition.library");
         }
         else if (name.equals("goal")) {
           return addGoal();

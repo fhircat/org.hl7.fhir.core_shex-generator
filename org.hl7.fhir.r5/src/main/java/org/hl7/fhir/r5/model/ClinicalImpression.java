@@ -203,6 +203,17 @@ public class ClinicalImpression extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item")) {
+          this.item = null;
+        } else if (name.equals("basis")) {
+          this.basis = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -230,7 +241,7 @@ public class ClinicalImpression extends DomainResource {
           return this.item;
         }
         else if (name.equals("basis")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.finding.basis");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.finding.basis");
         }
         else
           return super.addChild(name);
@@ -671,8 +682,8 @@ public class ClinicalImpression extends DomainResource {
       return (DateTimeType) this.effective;
     }
 
-    public boolean hasEffectiveDateTimeType() { 
-      return this != null && this.effective instanceof DateTimeType;
+    public boolean hasEffectiveDateTimeType() {
+        return this.effective instanceof DateTimeType;
     }
 
     /**
@@ -686,8 +697,8 @@ public class ClinicalImpression extends DomainResource {
       return (Period) this.effective;
     }
 
-    public boolean hasEffectivePeriod() { 
-      return this != null && this.effective instanceof Period;
+    public boolean hasEffectivePeriod() {
+        return this.effective instanceof Period;
     }
 
     public boolean hasEffective() { 
@@ -1445,6 +1456,52 @@ public class ClinicalImpression extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new EventStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EventStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("effective[x]")) {
+          this.effective = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("performer")) {
+          this.performer = null;
+        } else if (name.equals("previous")) {
+          this.previous = null;
+        } else if (name.equals("problem")) {
+          this.getProblem().remove(value);
+        } else if (name.equals("changePattern")) {
+          this.changePattern = null;
+        } else if (name.equals("protocol")) {
+          this.getProtocol().remove(value);
+        } else if (name.equals("summary")) {
+          this.summary = null;
+        } else if (name.equals("finding")) {
+          this.getFinding().remove((ClinicalImpressionFindingComponent) value);
+        } else if (name.equals("prognosisCodeableConcept")) {
+          this.getPrognosisCodeableConcept().remove(value);
+        } else if (name.equals("prognosisReference")) {
+          this.getPrognosisReference().remove(value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1506,14 +1563,14 @@ public class ClinicalImpression extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
           return this.statusReason;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.description");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -1532,7 +1589,7 @@ public class ClinicalImpression extends DomainResource {
           return this.effective;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.date");
         }
         else if (name.equals("performer")) {
           this.performer = new Reference();
@@ -1550,10 +1607,10 @@ public class ClinicalImpression extends DomainResource {
           return this.changePattern;
         }
         else if (name.equals("protocol")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.protocol");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.protocol");
         }
         else if (name.equals("summary")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalImpression.summary");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalImpression.summary");
         }
         else if (name.equals("finding")) {
           return addFinding();

@@ -348,7 +348,9 @@ public class ActivityDefinition extends MetadataResource {
         throw new FHIRException("Unknown RequestResourceTypes code '"+codeString+"'");
         }
     public String toCode(RequestResourceTypes code) {
-      if (code == RequestResourceTypes.APPOINTMENT)
+       if (code == RequestResourceTypes.NULL)
+           return null;
+       if (code == RequestResourceTypes.APPOINTMENT)
         return "Appointment";
       if (code == RequestResourceTypes.APPOINTMENTRESPONSE)
         return "AppointmentResponse";
@@ -383,7 +385,7 @@ public class ActivityDefinition extends MetadataResource {
       if (code == RequestResourceTypes.VISIONPRESCRIPTION)
         return "VisionPrescription";
       return "?";
-      }
+   }
     public String toSystem(RequestResourceTypes code) {
       return code.getSystem();
       }
@@ -685,6 +687,24 @@ public class ActivityDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new ActionParticipantTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ActionParticipantType>
+        } else if (name.equals("typeCanonical")) {
+          this.typeCanonical = null;
+        } else if (name.equals("typeReference")) {
+          this.typeReference = null;
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("function")) {
+          this.function = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -714,10 +734,10 @@ public class ActivityDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.participant.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.participant.type");
         }
         else if (name.equals("typeCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.participant.typeCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.participant.typeCanonical");
         }
         else if (name.equals("typeReference")) {
           this.typeReference = new Reference();
@@ -937,6 +957,17 @@ public class ActivityDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -960,7 +991,7 @@ public class ActivityDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.dynamicValue.path");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.dynamicValue.path");
         }
         else if (name.equals("expression")) {
           this.expression = new Expression();
@@ -1554,8 +1585,8 @@ public class ActivityDefinition extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -1569,8 +1600,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -1842,8 +1873,8 @@ public class ActivityDefinition extends MetadataResource {
       return (CodeableConcept) this.subject;
     }
 
-    public boolean hasSubjectCodeableConcept() { 
-      return this != null && this.subject instanceof CodeableConcept;
+    public boolean hasSubjectCodeableConcept() {
+        return this.subject instanceof CodeableConcept;
     }
 
     /**
@@ -1857,8 +1888,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Reference) this.subject;
     }
 
-    public boolean hasSubjectReference() { 
-      return this != null && this.subject instanceof Reference;
+    public boolean hasSubjectReference() {
+        return this.subject instanceof Reference;
     }
 
     /**
@@ -1872,8 +1903,8 @@ public class ActivityDefinition extends MetadataResource {
       return (CanonicalType) this.subject;
     }
 
-    public boolean hasSubjectCanonicalType() { 
-      return this != null && this.subject instanceof CanonicalType;
+    public boolean hasSubjectCanonicalType() {
+        return this.subject instanceof CanonicalType;
     }
 
     public boolean hasSubject() { 
@@ -3176,8 +3207,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Timing) this.timing;
     }
 
-    public boolean hasTimingTiming() { 
-      return this != null && this.timing instanceof Timing;
+    public boolean hasTimingTiming() {
+        return this.timing instanceof Timing;
     }
 
     /**
@@ -3191,8 +3222,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Age) this.timing;
     }
 
-    public boolean hasTimingAge() { 
-      return this != null && this.timing instanceof Age;
+    public boolean hasTimingAge() {
+        return this.timing instanceof Age;
     }
 
     /**
@@ -3206,8 +3237,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Range) this.timing;
     }
 
-    public boolean hasTimingRange() { 
-      return this != null && this.timing instanceof Range;
+    public boolean hasTimingRange() {
+        return this.timing instanceof Range;
     }
 
     /**
@@ -3221,8 +3252,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Duration) this.timing;
     }
 
-    public boolean hasTimingDuration() { 
-      return this != null && this.timing instanceof Duration;
+    public boolean hasTimingDuration() {
+        return this.timing instanceof Duration;
     }
 
     public boolean hasTiming() { 
@@ -3257,8 +3288,8 @@ public class ActivityDefinition extends MetadataResource {
       return (BooleanType) this.asNeeded;
     }
 
-    public boolean hasAsNeededBooleanType() { 
-      return this != null && this.asNeeded instanceof BooleanType;
+    public boolean hasAsNeededBooleanType() {
+        return this.asNeeded instanceof BooleanType;
     }
 
     /**
@@ -3272,8 +3303,8 @@ public class ActivityDefinition extends MetadataResource {
       return (CodeableConcept) this.asNeeded;
     }
 
-    public boolean hasAsNeededCodeableConcept() { 
-      return this != null && this.asNeeded instanceof CodeableConcept;
+    public boolean hasAsNeededCodeableConcept() {
+        return this.asNeeded instanceof CodeableConcept;
     }
 
     public boolean hasAsNeeded() { 
@@ -3385,8 +3416,8 @@ public class ActivityDefinition extends MetadataResource {
       return (Reference) this.product;
     }
 
-    public boolean hasProductReference() { 
-      return this != null && this.product instanceof Reference;
+    public boolean hasProductReference() {
+        return this.product instanceof Reference;
     }
 
     /**
@@ -3400,8 +3431,8 @@ public class ActivityDefinition extends MetadataResource {
       return (CodeableConcept) this.product;
     }
 
-    public boolean hasProductCodeableConcept() { 
-      return this != null && this.product instanceof CodeableConcept;
+    public boolean hasProductCodeableConcept() {
+        return this.product instanceof CodeableConcept;
     }
 
     public boolean hasProduct() { 
@@ -4286,6 +4317,115 @@ public class ActivityDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("subtitle")) {
+          this.subtitle = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("usage")) {
+          this.usage = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("library")) {
+          this.getLibrary().remove(value);
+        } else if (name.equals("kind")) {
+          value = new RequestResourceTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.kind = (Enumeration) value; // Enumeration<RequestResourceTypes>
+        } else if (name.equals("profile")) {
+          this.profile = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("intent")) {
+          value = new RequestIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<RequestIntent>
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("doNotPerform")) {
+          this.doNotPerform = null;
+        } else if (name.equals("timing[x]")) {
+          this.timing = null;
+        } else if (name.equals("asNeeded[x]")) {
+          this.asNeeded = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((ActivityDefinitionParticipantComponent) value);
+        } else if (name.equals("product[x]")) {
+          this.product = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("dosage")) {
+          this.getDosage().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove(value);
+        } else if (name.equals("specimenRequirement")) {
+          this.getSpecimenRequirement().remove(value);
+        } else if (name.equals("observationRequirement")) {
+          this.getObservationRequirement().remove(value);
+        } else if (name.equals("observationResultRequirement")) {
+          this.getObservationResultRequirement().remove(value);
+        } else if (name.equals("transform")) {
+          this.transform = null;
+        } else if (name.equals("dynamicValue")) {
+          this.getDynamicValue().remove((ActivityDefinitionDynamicValueComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4408,13 +4548,13 @@ public class ActivityDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -4425,19 +4565,19 @@ public class ActivityDefinition extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.title");
         }
         else if (name.equals("subtitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.subtitle");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.subtitle");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.experimental");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -4452,16 +4592,16 @@ public class ActivityDefinition extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -4470,22 +4610,22 @@ public class ActivityDefinition extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.purpose");
         }
         else if (name.equals("usage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.usage");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.usage");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -4510,26 +4650,26 @@ public class ActivityDefinition extends MetadataResource {
           return addRelatedArtifact();
         }
         else if (name.equals("library")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.library");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.library");
         }
         else if (name.equals("kind")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.kind");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.kind");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.profile");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.intent");
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.priority");
         }
         else if (name.equals("doNotPerform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.doNotPerform");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.doNotPerform");
         }
         else if (name.equals("timingTiming")) {
           this.timing = new Timing();
@@ -4581,16 +4721,16 @@ public class ActivityDefinition extends MetadataResource {
           return addBodySite();
         }
         else if (name.equals("specimenRequirement")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.specimenRequirement");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.specimenRequirement");
         }
         else if (name.equals("observationRequirement")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.observationRequirement");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.observationRequirement");
         }
         else if (name.equals("observationResultRequirement")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.observationResultRequirement");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.observationResultRequirement");
         }
         else if (name.equals("transform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ActivityDefinition.transform");
+          throw new FHIRException("Cannot call addChild on a singleton property ActivityDefinition.transform");
         }
         else if (name.equals("dynamicValue")) {
           return addDynamicValue();

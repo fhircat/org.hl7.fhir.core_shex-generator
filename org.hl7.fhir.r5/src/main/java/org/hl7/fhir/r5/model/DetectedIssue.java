@@ -152,14 +152,16 @@ public class DetectedIssue extends DomainResource {
         throw new FHIRException("Unknown DetectedIssueSeverity code '"+codeString+"'");
         }
     public String toCode(DetectedIssueSeverity code) {
-      if (code == DetectedIssueSeverity.HIGH)
+       if (code == DetectedIssueSeverity.NULL)
+           return null;
+       if (code == DetectedIssueSeverity.HIGH)
         return "high";
       if (code == DetectedIssueSeverity.MODERATE)
         return "moderate";
       if (code == DetectedIssueSeverity.LOW)
         return "low";
       return "?";
-      }
+   }
     public String toSystem(DetectedIssueSeverity code) {
       return code.getSystem();
       }
@@ -278,7 +280,9 @@ public class DetectedIssue extends DomainResource {
         throw new FHIRException("Unknown DetectedIssueStatus code '"+codeString+"'");
         }
     public String toCode(DetectedIssueStatus code) {
-      if (code == DetectedIssueStatus.PRELIMINARY)
+       if (code == DetectedIssueStatus.NULL)
+           return null;
+       if (code == DetectedIssueStatus.PRELIMINARY)
         return "preliminary";
       if (code == DetectedIssueStatus.FINAL)
         return "final";
@@ -287,7 +291,7 @@ public class DetectedIssue extends DomainResource {
       if (code == DetectedIssueStatus.MITIGATED)
         return "mitigated";
       return "?";
-      }
+   }
     public String toSystem(DetectedIssueStatus code) {
       return code.getSystem();
       }
@@ -474,6 +478,17 @@ public class DetectedIssue extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("detail")) {
+          this.getDetail().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -824,6 +839,21 @@ public class DetectedIssue extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("action")) {
+          this.action = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -855,7 +885,7 @@ public class DetectedIssue extends DomainResource {
           return this.action;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.mitigation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.mitigation.date");
         }
         else if (name.equals("author")) {
           this.author = new Reference();
@@ -1328,8 +1358,8 @@ public class DetectedIssue extends DomainResource {
       return (DateTimeType) this.identified;
     }
 
-    public boolean hasIdentifiedDateTimeType() { 
-      return this != null && this.identified instanceof DateTimeType;
+    public boolean hasIdentifiedDateTimeType() {
+        return this.identified instanceof DateTimeType;
     }
 
     /**
@@ -1343,8 +1373,8 @@ public class DetectedIssue extends DomainResource {
       return (Period) this.identified;
     }
 
-    public boolean hasIdentifiedPeriod() { 
-      return this != null && this.identified instanceof Period;
+    public boolean hasIdentifiedPeriod() {
+        return this.identified instanceof Period;
     }
 
     public boolean hasIdentified() { 
@@ -1796,6 +1826,43 @@ public class DetectedIssue extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new DetectedIssueStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<DetectedIssueStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("severity")) {
+          value = new DetectedIssueSeverityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.severity = (Enumeration) value; // Enumeration<DetectedIssueSeverity>
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("identified[x]")) {
+          this.identified = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("implicated")) {
+          this.getImplicated().remove(value);
+        } else if (name.equals("evidence")) {
+          this.getEvidence().remove((DetectedIssueEvidenceComponent) value);
+        } else if (name.equals("detail")) {
+          this.detail = null;
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else if (name.equals("mitigation")) {
+          this.getMitigation().remove((DetectedIssueMitigationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1847,7 +1914,7 @@ public class DetectedIssue extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -1857,7 +1924,7 @@ public class DetectedIssue extends DomainResource {
           return this.code;
         }
         else if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.severity");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -1886,10 +1953,10 @@ public class DetectedIssue extends DomainResource {
           return addEvidence();
         }
         else if (name.equals("detail")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.detail");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.detail");
         }
         else if (name.equals("reference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.reference");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.reference");
         }
         else if (name.equals("mitigation")) {
           return addMitigation();

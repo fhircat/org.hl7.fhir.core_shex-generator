@@ -264,7 +264,9 @@ public class ObservationDefinition extends DomainResource {
         throw new FHIRException("Unknown ObservationDataType code '"+codeString+"'");
         }
     public String toCode(ObservationDataType code) {
-      if (code == ObservationDataType.QUANTITY)
+       if (code == ObservationDataType.NULL)
+           return null;
+       if (code == ObservationDataType.QUANTITY)
         return "Quantity";
       if (code == ObservationDataType.CODEABLECONCEPT)
         return "CodeableConcept";
@@ -287,7 +289,7 @@ public class ObservationDefinition extends DomainResource {
       if (code == ObservationDataType.PERIOD)
         return "Period";
       return "?";
-      }
+   }
     public String toSystem(ObservationDataType code) {
       return code.getSystem();
       }
@@ -392,14 +394,16 @@ public class ObservationDefinition extends DomainResource {
         throw new FHIRException("Unknown ObservationRangeCategory code '"+codeString+"'");
         }
     public String toCode(ObservationRangeCategory code) {
-      if (code == ObservationRangeCategory.REFERENCE)
+       if (code == ObservationRangeCategory.NULL)
+           return null;
+       if (code == ObservationRangeCategory.REFERENCE)
         return "reference";
       if (code == ObservationRangeCategory.CRITICAL)
         return "critical";
       if (code == ObservationRangeCategory.ABSOLUTE)
         return "absolute";
       return "?";
-      }
+   }
     public String toSystem(ObservationRangeCategory code) {
       return code.getSystem();
       }
@@ -1131,6 +1135,39 @@ public class ObservationDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("context")) {
+          this.context = null;
+        } else if (name.equals("appliesTo")) {
+          this.getAppliesTo().remove(value);
+        } else if (name.equals("gender")) {
+          value = new AdministrativeGenderEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.gender = (Enumeration) value; // Enumeration<AdministrativeGender>
+        } else if (name.equals("age")) {
+          this.age = null;
+        } else if (name.equals("gestationalAge")) {
+          this.gestationalAge = null;
+        } else if (name.equals("condition")) {
+          this.condition = null;
+        } else if (name.equals("rangeCategory")) {
+          value = new ObservationRangeCategoryEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.rangeCategory = (Enumeration) value; // Enumeration<ObservationRangeCategory>
+        } else if (name.equals("range")) {
+          this.range = null;
+        } else if (name.equals("validCodedValueSet")) {
+          this.validCodedValueSet = null;
+        } else if (name.equals("normalCodedValueSet")) {
+          this.normalCodedValueSet = null;
+        } else if (name.equals("abnormalCodedValueSet")) {
+          this.abnormalCodedValueSet = null;
+        } else if (name.equals("criticalCodedValueSet")) {
+          this.criticalCodedValueSet = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1181,7 +1218,7 @@ public class ObservationDefinition extends DomainResource {
           return addAppliesTo();
         }
         else if (name.equals("gender")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.gender");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.gender");
         }
         else if (name.equals("age")) {
           this.age = new Range();
@@ -1192,26 +1229,26 @@ public class ObservationDefinition extends DomainResource {
           return this.gestationalAge;
         }
         else if (name.equals("condition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.condition");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.condition");
         }
         else if (name.equals("rangeCategory")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.rangeCategory");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.rangeCategory");
         }
         else if (name.equals("range")) {
           this.range = new Range();
           return this.range;
         }
         else if (name.equals("validCodedValueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.validCodedValueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.validCodedValueSet");
         }
         else if (name.equals("normalCodedValueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.normalCodedValueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.normalCodedValueSet");
         }
         else if (name.equals("abnormalCodedValueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.abnormalCodedValueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.abnormalCodedValueSet");
         }
         else if (name.equals("criticalCodedValueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.qualifiedValue.criticalCodedValueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.qualifiedValue.criticalCodedValueSet");
         }
         else
           return super.addChild(name);
@@ -1593,6 +1630,22 @@ public class ObservationDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("permittedDataType")) {
+          value = new ObservationDataTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getPermittedDataType().remove((Enumeration) value);
+        } else if (name.equals("permittedUnit")) {
+          this.getPermittedUnit().remove(value);
+        } else if (name.equals("qualifiedValue")) {
+          this.getQualifiedValue().remove((ObservationDefinitionQualifiedValueComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1624,7 +1677,7 @@ public class ObservationDefinition extends DomainResource {
           return this.code;
         }
         else if (name.equals("permittedDataType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.component.permittedDataType");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.component.permittedDataType");
         }
         else if (name.equals("permittedUnit")) {
           return addPermittedUnit();
@@ -2122,8 +2175,8 @@ public class ObservationDefinition extends DomainResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -2137,8 +2190,8 @@ public class ObservationDefinition extends DomainResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -4053,6 +4106,89 @@ public class ObservationDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("derivedFromCanonical")) {
+          this.getDerivedFromCanonical().remove(value);
+        } else if (name.equals("derivedFromUri")) {
+          this.getDerivedFromUri().remove(value);
+        } else if (name.equals("subject")) {
+          this.getSubject().remove(value);
+        } else if (name.equals("performerType")) {
+          this.performerType = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("permittedDataType")) {
+          value = new ObservationDataTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getPermittedDataType().remove((Enumeration) value);
+        } else if (name.equals("multipleResultsAllowed")) {
+          this.multipleResultsAllowed = null;
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("specimen")) {
+          this.getSpecimen().remove(value);
+        } else if (name.equals("device")) {
+          this.getDevice().remove(value);
+        } else if (name.equals("preferredReportName")) {
+          this.preferredReportName = null;
+        } else if (name.equals("permittedUnit")) {
+          this.getPermittedUnit().remove(value);
+        } else if (name.equals("qualifiedValue")) {
+          this.getQualifiedValue().remove((ObservationDefinitionQualifiedValueComponent) value);
+        } else if (name.equals("hasMember")) {
+          this.getHasMember().remove(value);
+        } else if (name.equals("component")) {
+          this.getComponent().remove((ObservationDefinitionComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4147,14 +4283,14 @@ public class ObservationDefinition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.url");
         }
         else if (name.equals("identifier")) {
           this.identifier = new Identifier();
           return this.identifier;
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -4165,28 +4301,28 @@ public class ObservationDefinition extends DomainResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -4195,29 +4331,29 @@ public class ObservationDefinition extends DomainResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
           return this.effectivePeriod;
         }
         else if (name.equals("derivedFromCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.derivedFromCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.derivedFromCanonical");
         }
         else if (name.equals("derivedFromUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.derivedFromUri");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.derivedFromUri");
         }
         else if (name.equals("subject")) {
           return addSubject();
@@ -4234,10 +4370,10 @@ public class ObservationDefinition extends DomainResource {
           return this.code;
         }
         else if (name.equals("permittedDataType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.permittedDataType");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.permittedDataType");
         }
         else if (name.equals("multipleResultsAllowed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.multipleResultsAllowed");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.multipleResultsAllowed");
         }
         else if (name.equals("bodySite")) {
           this.bodySite = new CodeableConcept();
@@ -4254,7 +4390,7 @@ public class ObservationDefinition extends DomainResource {
           return addDevice();
         }
         else if (name.equals("preferredReportName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ObservationDefinition.preferredReportName");
+          throw new FHIRException("Cannot call addChild on a singleton property ObservationDefinition.preferredReportName");
         }
         else if (name.equals("permittedUnit")) {
           return addPermittedUnit();

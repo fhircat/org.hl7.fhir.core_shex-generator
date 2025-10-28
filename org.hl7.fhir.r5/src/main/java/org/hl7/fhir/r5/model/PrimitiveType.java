@@ -209,6 +209,15 @@ public abstract class PrimitiveType<T> extends DataType implements IPrimitiveTyp
   }
 
   @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+    if (name.equals("value"))
+      setValueAsString(value.toString()); 
+    else
+      super.removeChild(name, value);
+    
+  }
+
+  @Override
   public Base makeProperty(int hash, String name) throws FHIRException {
     if (hash == 111972721) {
       return this; 
@@ -237,7 +246,7 @@ public abstract class PrimitiveType<T> extends DataType implements IPrimitiveTyp
   }
 
   /*
-   * this is a work around for representation issues with Bigdecimal. So comments in DecimaType. 
+   * this is a workaround for representation issues with BigDecimal. So comments in DecimalType.
    * Yes, you can cut yourself with this method... 
    */
   protected void forceStringValue(String value) {
@@ -248,6 +257,11 @@ public abstract class PrimitiveType<T> extends DataType implements IPrimitiveTyp
   public boolean hasPrimitiveValue() {
     return StringUtils.isNotBlank(getValueAsString());
   }
+
+  public boolean canHavePrimitiveValue() {
+    return true;
+  }
+  
   
   public String fpValue() {
     return primitiveValue();

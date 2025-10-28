@@ -1,9 +1,10 @@
 package org.hl7.fhir.r4b.utils.validation.constants;
 
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
+@MarkedToMoveToAdjunctPackage
 public enum ContainedReferenceValidationPolicy {
-  IGNORE,
-  CHECK_TYPE,
-  CHECK_VALID;
+  IGNORE, CHECK_TYPE, CHECK_VALID;
 
   public boolean ignore() {
     return this == IGNORE;

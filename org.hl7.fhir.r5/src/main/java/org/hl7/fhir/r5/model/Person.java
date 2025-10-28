@@ -166,7 +166,9 @@ public class Person extends DomainResource {
         throw new FHIRException("Unknown IdentityAssuranceLevel code '"+codeString+"'");
         }
     public String toCode(IdentityAssuranceLevel code) {
-      if (code == IdentityAssuranceLevel.LEVEL1)
+       if (code == IdentityAssuranceLevel.NULL)
+           return null;
+       if (code == IdentityAssuranceLevel.LEVEL1)
         return "level1";
       if (code == IdentityAssuranceLevel.LEVEL2)
         return "level2";
@@ -175,7 +177,7 @@ public class Person extends DomainResource {
       if (code == IdentityAssuranceLevel.LEVEL4)
         return "level4";
       return "?";
-      }
+   }
     public String toSystem(IdentityAssuranceLevel code) {
       return code.getSystem();
       }
@@ -335,6 +337,17 @@ public class Person extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("preferred")) {
+          this.preferred = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -362,7 +375,7 @@ public class Person extends DomainResource {
           return this.language;
         }
         else if (name.equals("preferred")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Person.communication.preferred");
+          throw new FHIRException("Cannot call addChild on a singleton property Person.communication.preferred");
         }
         else
           return super.addChild(name);
@@ -571,6 +584,18 @@ public class Person extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("target")) {
+          this.target = null;
+        } else if (name.equals("assurance")) {
+          value = new IdentityAssuranceLevelEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.assurance = (Enumeration) value; // Enumeration<IdentityAssuranceLevel>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -598,7 +623,7 @@ public class Person extends DomainResource {
           return this.target;
         }
         else if (name.equals("assurance")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Person.link.assurance");
+          throw new FHIRException("Cannot call addChild on a singleton property Person.link.assurance");
         }
         else
           return super.addChild(name);
@@ -1069,8 +1094,8 @@ public class Person extends DomainResource {
       return (BooleanType) this.deceased;
     }
 
-    public boolean hasDeceasedBooleanType() { 
-      return this != null && this.deceased instanceof BooleanType;
+    public boolean hasDeceasedBooleanType() {
+        return this.deceased instanceof BooleanType;
     }
 
     /**
@@ -1084,8 +1109,8 @@ public class Person extends DomainResource {
       return (DateTimeType) this.deceased;
     }
 
-    public boolean hasDeceasedDateTimeType() { 
-      return this != null && this.deceased instanceof DateTimeType;
+    public boolean hasDeceasedDateTimeType() {
+        return this.deceased instanceof DateTimeType;
     }
 
     public boolean hasDeceased() { 
@@ -1506,6 +1531,40 @@ public class Person extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("name")) {
+          this.getName().remove(value);
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else if (name.equals("gender")) {
+          value = new AdministrativeGenderEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.gender = (Enumeration) value; // Enumeration<AdministrativeGender>
+        } else if (name.equals("birthDate")) {
+          this.birthDate = null;
+        } else if (name.equals("deceased[x]")) {
+          this.deceased = null;
+        } else if (name.equals("address")) {
+          this.getAddress().remove(value);
+        } else if (name.equals("maritalStatus")) {
+          this.maritalStatus = null;
+        } else if (name.equals("photo")) {
+          this.getPhoto().remove(value);
+        } else if (name.equals("communication")) {
+          this.getCommunication().remove((PersonCommunicationComponent) value);
+        } else if (name.equals("managingOrganization")) {
+          this.managingOrganization = null;
+        } else if (name.equals("link")) {
+          this.getLink().remove((PersonLinkComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1555,7 +1614,7 @@ public class Person extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Person.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Person.active");
         }
         else if (name.equals("name")) {
           return addName();
@@ -1564,10 +1623,10 @@ public class Person extends DomainResource {
           return addTelecom();
         }
         else if (name.equals("gender")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Person.gender");
+          throw new FHIRException("Cannot call addChild on a singleton property Person.gender");
         }
         else if (name.equals("birthDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Person.birthDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Person.birthDate");
         }
         else if (name.equals("deceasedBoolean")) {
           this.deceased = new BooleanType();

@@ -16,8 +16,9 @@ public class PackageInformation {
   private String web;
 
   private List<String> dependencies = new ArrayList<>();
+  private String fhirVersion;
 
-  public PackageInformation(String id, String version, Date date, String name, String canonical, String web) {
+  public PackageInformation(String id, String version, String fhirVersion, Date date, String name, String canonical, String web) {
     super();
     this.id = id;
     this.version = version;
@@ -25,12 +26,14 @@ public class PackageInformation {
     this.name = name;
     this.canonical = canonical;
     this.web = web;
+    this.fhirVersion = fhirVersion;
   }
 
-  public PackageInformation(String src, Date date) {
+  public PackageInformation(String src, String fhirVersion, Date date) {
     super();
     this.id = src;
     this.date = date;
+    this.fhirVersion = fhirVersion;
   }
 
   public PackageInformation(NpmPackage pi) {
@@ -41,13 +44,15 @@ public class PackageInformation {
     this.name = pi.title();
     this.canonical = pi.canonical();
     this.web = pi.getWebLocation();
+    this.fhirVersion = pi.fhirVersion();
     dependencies.addAll(pi.dependencies());
   }
 
-  public PackageInformation(String id, String version, Date date) {
+  public PackageInformation(String id, String version, String fhirVersion, Date date) {
     super();
     this.id = id;
     this.version = version;
+    this.fhirVersion = fhirVersion;
     this.date = date;
   }
 
@@ -80,11 +85,11 @@ public class PackageInformation {
   }
 
   public boolean isExamplesPackage() {
-    boolean b = id.startsWith("hl7.fhir.") && id.endsWith(".examples");
+    boolean b = id.startsWith("hl7.fhir.r") && id.endsWith(".examples");
     return b;
   }
 
-  public boolean isHTO() {
+  public boolean isTHO() {
     boolean b = id.startsWith("hl7.terminology.r");
     return b;
   }
@@ -93,7 +98,16 @@ public class PackageInformation {
     return id+"#"+version;
   }
 
+  public String getFhirVersion() {
+    return fhirVersion;
+  }
+
   public String toString() {
     return getVID();
+  }
+
+  public boolean isCore() {
+    boolean b = id.startsWith("hl7.fhir.r") && id.endsWith(".core");
+    return b;
   }
 }

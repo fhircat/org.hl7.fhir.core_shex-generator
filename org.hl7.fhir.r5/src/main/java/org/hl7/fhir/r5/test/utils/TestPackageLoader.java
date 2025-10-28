@@ -1,25 +1,31 @@
 package org.hl7.fhir.r5.test.utils;
 
-import java.io.IOException;
+ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.r5.context.IWorkerContext.IContextResourceLoader;
+import org.hl7.fhir.r5.context.IContextResourceLoader;
+import org.hl7.fhir.r5.context.SimpleWorkerContext.PackageResourceLoader;
 import org.hl7.fhir.r5.formats.JsonParser;
 import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.CodeSystem;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager.ITerminologyClientFactory;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientR5.TerminologyClientR5Factory;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.npm.NpmPackage.PackageResourceInformation;
 
+@MarkedToMoveToAdjunctPackage
 public class TestPackageLoader implements IContextResourceLoader {
 
-  private List<String> types;
+  private Set<String> types;
 
-  public TestPackageLoader(List<String> types) {
+  public TestPackageLoader(Set<String> types) {
     this.types = types;
   }
 
@@ -34,7 +40,7 @@ public class TestPackageLoader implements IContextResourceLoader {
   }
 
   @Override
-  public List<String> getTypes() {
+  public Set<String> getTypes() {
     return types;
   }
 
@@ -73,4 +79,18 @@ public class TestPackageLoader implements IContextResourceLoader {
     return true;
   }
 
+  @Override
+  public ITerminologyClientFactory txFactory() {
+    return new TerminologyClientR5Factory();
+  }
+
+  @Override
+  public Set<String> reviewActualTypes(Set<String> types) {
+    return types;
+  }
+
+  @Override
+  public PackageResourceLoader editInfo(PackageResourceLoader pri) {
+    return pri;
+  }
 }

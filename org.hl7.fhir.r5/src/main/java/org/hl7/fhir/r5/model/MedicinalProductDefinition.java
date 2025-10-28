@@ -186,6 +186,17 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("contact")) {
+          this.contact = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -553,6 +564,21 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("productName")) {
+          this.productName = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("part")) {
+          this.getPart().remove((MedicinalProductDefinitionNamePartComponent) value);
+        } else if (name.equals("usage")) {
+          this.getUsage().remove((MedicinalProductDefinitionNameUsageComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -580,7 +606,7 @@ public class MedicinalProductDefinition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("productName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.name.productName");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.name.productName");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -806,6 +832,17 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("part")) {
+          this.part = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -829,7 +866,7 @@ public class MedicinalProductDefinition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("part")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.name.part.part");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.name.part.part");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -1057,6 +1094,19 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("country")) {
+          this.country = null;
+        } else if (name.equals("jurisdiction")) {
+          this.jurisdiction = null;
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1274,6 +1324,17 @@ public class MedicinalProductDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("product")) {
+          this.product = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1585,6 +1646,21 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("effectiveDate")) {
+          this.effectiveDate = null;
+        } else if (name.equals("organization")) {
+          this.getOrganization().remove(value);
+        } else if (name.equals("confidentialityIndicator")) {
+          this.confidentialityIndicator = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1757,8 +1833,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1772,8 +1848,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -1787,8 +1863,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1802,8 +1878,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -1817,8 +1893,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -1832,8 +1908,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1847,8 +1923,8 @@ public class MedicinalProductDefinition extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -1922,6 +1998,17 @@ public class MedicinalProductDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3845,6 +3932,71 @@ public class MedicinalProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("domain")) {
+          this.domain = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("statusDate")) {
+          this.statusDate = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("combinedPharmaceuticalDoseForm")) {
+          this.combinedPharmaceuticalDoseForm = null;
+        } else if (name.equals("route")) {
+          this.getRoute().remove(value);
+        } else if (name.equals("indication")) {
+          this.indication = null;
+        } else if (name.equals("legalStatusOfSupply")) {
+          this.legalStatusOfSupply = null;
+        } else if (name.equals("additionalMonitoringIndicator")) {
+          this.additionalMonitoringIndicator = null;
+        } else if (name.equals("specialMeasures")) {
+          this.getSpecialMeasures().remove(value);
+        } else if (name.equals("pediatricUseIndicator")) {
+          this.pediatricUseIndicator = null;
+        } else if (name.equals("classification")) {
+          this.getClassification().remove(value);
+        } else if (name.equals("marketingStatus")) {
+          this.getMarketingStatus().remove(value);
+        } else if (name.equals("packagedMedicinalProduct")) {
+          this.getPackagedMedicinalProduct().remove(value);
+        } else if (name.equals("comprisedOf")) {
+          this.getComprisedOf().remove(value);
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove(value);
+        } else if (name.equals("impurity")) {
+          this.getImpurity().remove(value);
+        } else if (name.equals("attachedDocument")) {
+          this.getAttachedDocument().remove(value);
+        } else if (name.equals("masterFile")) {
+          this.getMasterFile().remove(value);
+        } else if (name.equals("contact")) {
+          this.getContact().remove((MedicinalProductDefinitionContactComponent) value);
+        } else if (name.equals("clinicalTrial")) {
+          this.getClinicalTrial().remove(value);
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("name")) {
+          this.getName().remove((MedicinalProductDefinitionNameComponent) value);
+        } else if (name.equals("crossReference")) {
+          this.getCrossReference().remove((MedicinalProductDefinitionCrossReferenceComponent) value);
+        } else if (name.equals("operation")) {
+          this.getOperation().remove((MedicinalProductDefinitionOperationComponent) value);
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((MedicinalProductDefinitionCharacteristicComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3933,17 +4085,17 @@ public class MedicinalProductDefinition extends DomainResource {
           return this.domain;
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.version");
         }
         else if (name.equals("status")) {
           this.status = new CodeableConcept();
           return this.status;
         }
         else if (name.equals("statusDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.statusDate");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.statusDate");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.description");
         }
         else if (name.equals("combinedPharmaceuticalDoseForm")) {
           this.combinedPharmaceuticalDoseForm = new CodeableConcept();
@@ -3953,7 +4105,7 @@ public class MedicinalProductDefinition extends DomainResource {
           return addRoute();
         }
         else if (name.equals("indication")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicinalProductDefinition.indication");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicinalProductDefinition.indication");
         }
         else if (name.equals("legalStatusOfSupply")) {
           this.legalStatusOfSupply = new CodeableConcept();

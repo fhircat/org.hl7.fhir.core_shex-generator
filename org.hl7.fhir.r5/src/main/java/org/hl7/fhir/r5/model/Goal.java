@@ -236,7 +236,9 @@ public class Goal extends DomainResource {
         throw new FHIRException("Unknown GoalLifecycleStatus code '"+codeString+"'");
         }
     public String toCode(GoalLifecycleStatus code) {
-      if (code == GoalLifecycleStatus.PROPOSED)
+       if (code == GoalLifecycleStatus.NULL)
+           return null;
+       if (code == GoalLifecycleStatus.PROPOSED)
         return "proposed";
       if (code == GoalLifecycleStatus.PLANNED)
         return "planned";
@@ -255,7 +257,7 @@ public class Goal extends DomainResource {
       if (code == GoalLifecycleStatus.REJECTED)
         return "rejected";
       return "?";
-      }
+   }
     public String toSystem(GoalLifecycleStatus code) {
       return code.getSystem();
       }
@@ -336,8 +338,8 @@ public class Goal extends DomainResource {
           return (Quantity) this.detail;
         }
 
-        public boolean hasDetailQuantity() { 
-          return this != null && this.detail instanceof Quantity;
+        public boolean hasDetailQuantity() {
+            return this.detail instanceof Quantity;
         }
 
         /**
@@ -351,8 +353,8 @@ public class Goal extends DomainResource {
           return (Range) this.detail;
         }
 
-        public boolean hasDetailRange() { 
-          return this != null && this.detail instanceof Range;
+        public boolean hasDetailRange() {
+            return this.detail instanceof Range;
         }
 
         /**
@@ -366,8 +368,8 @@ public class Goal extends DomainResource {
           return (CodeableConcept) this.detail;
         }
 
-        public boolean hasDetailCodeableConcept() { 
-          return this != null && this.detail instanceof CodeableConcept;
+        public boolean hasDetailCodeableConcept() {
+            return this.detail instanceof CodeableConcept;
         }
 
         /**
@@ -381,8 +383,8 @@ public class Goal extends DomainResource {
           return (StringType) this.detail;
         }
 
-        public boolean hasDetailStringType() { 
-          return this != null && this.detail instanceof StringType;
+        public boolean hasDetailStringType() {
+            return this.detail instanceof StringType;
         }
 
         /**
@@ -396,8 +398,8 @@ public class Goal extends DomainResource {
           return (BooleanType) this.detail;
         }
 
-        public boolean hasDetailBooleanType() { 
-          return this != null && this.detail instanceof BooleanType;
+        public boolean hasDetailBooleanType() {
+            return this.detail instanceof BooleanType;
         }
 
         /**
@@ -411,8 +413,8 @@ public class Goal extends DomainResource {
           return (IntegerType) this.detail;
         }
 
-        public boolean hasDetailIntegerType() { 
-          return this != null && this.detail instanceof IntegerType;
+        public boolean hasDetailIntegerType() {
+            return this.detail instanceof IntegerType;
         }
 
         /**
@@ -426,8 +428,8 @@ public class Goal extends DomainResource {
           return (Ratio) this.detail;
         }
 
-        public boolean hasDetailRatio() { 
-          return this != null && this.detail instanceof Ratio;
+        public boolean hasDetailRatio() {
+            return this.detail instanceof Ratio;
         }
 
         public boolean hasDetail() { 
@@ -462,8 +464,8 @@ public class Goal extends DomainResource {
           return (DateType) this.due;
         }
 
-        public boolean hasDueDateType() { 
-          return this != null && this.due instanceof DateType;
+        public boolean hasDueDateType() {
+            return this.due instanceof DateType;
         }
 
         /**
@@ -477,8 +479,8 @@ public class Goal extends DomainResource {
           return (Duration) this.due;
         }
 
-        public boolean hasDueDuration() { 
-          return this != null && this.due instanceof Duration;
+        public boolean hasDueDuration() {
+            return this.due instanceof Duration;
         }
 
         public boolean hasDue() { 
@@ -563,6 +565,19 @@ public class Goal extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("measure")) {
+          this.measure = null;
+        } else if (name.equals("detail[x]")) {
+          this.detail = null;
+        } else if (name.equals("due[x]")) {
+          this.due = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1128,8 +1143,8 @@ public class Goal extends DomainResource {
       return (DateType) this.start;
     }
 
-    public boolean hasStartDateType() { 
-      return this != null && this.start instanceof DateType;
+    public boolean hasStartDateType() {
+        return this.start instanceof DateType;
     }
 
     /**
@@ -1143,8 +1158,8 @@ public class Goal extends DomainResource {
       return (CodeableConcept) this.start;
     }
 
-    public boolean hasStartCodeableConcept() { 
-      return this != null && this.start instanceof CodeableConcept;
+    public boolean hasStartCodeableConcept() {
+        return this.start instanceof CodeableConcept;
     }
 
     public boolean hasStart() { 
@@ -1663,6 +1678,46 @@ public class Goal extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("lifecycleStatus")) {
+          value = new GoalLifecycleStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.lifecycleStatus = (Enumeration) value; // Enumeration<GoalLifecycleStatus>
+        } else if (name.equals("achievementStatus")) {
+          this.achievementStatus = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("continuous")) {
+          this.continuous = null;
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("start[x]")) {
+          this.start = null;
+        } else if (name.equals("target")) {
+          this.getTarget().remove((GoalTargetComponent) value);
+        } else if (name.equals("statusDate")) {
+          this.statusDate = null;
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("addresses")) {
+          this.getAddresses().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("outcome")) {
+          this.getOutcome().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1718,7 +1773,7 @@ public class Goal extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("lifecycleStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Goal.lifecycleStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property Goal.lifecycleStatus");
         }
         else if (name.equals("achievementStatus")) {
           this.achievementStatus = new CodeableConcept();
@@ -1728,7 +1783,7 @@ public class Goal extends DomainResource {
           return addCategory();
         }
         else if (name.equals("continuous")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Goal.continuous");
+          throw new FHIRException("Cannot call addChild on a singleton property Goal.continuous");
         }
         else if (name.equals("priority")) {
           this.priority = new CodeableConcept();
@@ -1754,10 +1809,10 @@ public class Goal extends DomainResource {
           return addTarget();
         }
         else if (name.equals("statusDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Goal.statusDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Goal.statusDate");
         }
         else if (name.equals("statusReason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Goal.statusReason");
+          throw new FHIRException("Cannot call addChild on a singleton property Goal.statusReason");
         }
         else if (name.equals("source")) {
           this.source = new Reference();

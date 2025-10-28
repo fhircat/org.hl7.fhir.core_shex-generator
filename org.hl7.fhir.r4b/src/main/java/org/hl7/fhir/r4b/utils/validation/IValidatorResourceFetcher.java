@@ -3,24 +3,28 @@ package org.hl7.fhir.r4b.utils.validation;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4b.elementmodel.Element;
 import org.hl7.fhir.r4b.model.CanonicalResource;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
+@MarkedToMoveToAdjunctPackage
 public interface IValidatorResourceFetcher {
 
   Element fetch(IResourceValidator validator, Object appContext, String url) throws FHIRException, IOException;
 
-  boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type) throws IOException, FHIRException;
+  boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type)
+      throws IOException, FHIRException;
 
   byte[] fetchRaw(IResourceValidator validator, String url) throws IOException; // for attachment checking
 
   IValidatorResourceFetcher setLocale(Locale locale);
 
   /**
-   * this is used when the validator encounters a reference to a structure definition, value set or code system at some random URL reference
-   * while validating.
+   * this is used when the validator encounters a reference to a structure
+   * definition, value set or code system at some random URL reference while
+   * validating.
    * <p>
    * Added in v5.2.2. return null to leave functionality as it was before then.
    *
@@ -30,7 +34,9 @@ public interface IValidatorResourceFetcher {
   CanonicalResource fetchCanonicalResource(IResourceValidator validator, String url) throws URISyntaxException;
 
   /**
-   * Whether to try calling fetchCanonicalResource for this reference (not whether it will succeed - just throw an exception from fetchCanonicalResource if it doesn't resolve. This is a policy thing.
+   * Whether to try calling fetchCanonicalResource for this reference (not whether
+   * it will succeed - just throw an exception from fetchCanonicalResource if it
+   * doesn't resolve. This is a policy thing.
    * <p>
    * Added in v5.2.2. return false to leave functionality as it was before then.
    *

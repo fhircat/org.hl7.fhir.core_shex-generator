@@ -138,12 +138,14 @@ public class MolecularSequence extends DomainResource {
         throw new FHIRException("Unknown OrientationType code '"+codeString+"'");
         }
     public String toCode(OrientationType code) {
-      if (code == OrientationType.SENSE)
+       if (code == OrientationType.NULL)
+           return null;
+       if (code == OrientationType.SENSE)
         return "sense";
       if (code == OrientationType.ANTISENSE)
         return "antisense";
       return "?";
-      }
+   }
     public String toSystem(OrientationType code) {
       return code.getSystem();
       }
@@ -248,14 +250,16 @@ public class MolecularSequence extends DomainResource {
         throw new FHIRException("Unknown SequenceType code '"+codeString+"'");
         }
     public String toCode(SequenceType code) {
-      if (code == SequenceType.AA)
+       if (code == SequenceType.NULL)
+           return null;
+       if (code == SequenceType.AA)
         return "aa";
       if (code == SequenceType.DNA)
         return "dna";
       if (code == SequenceType.RNA)
         return "rna";
       return "?";
-      }
+   }
     public String toSystem(SequenceType code) {
       return code.getSystem();
       }
@@ -346,12 +350,14 @@ public class MolecularSequence extends DomainResource {
         throw new FHIRException("Unknown StrandType code '"+codeString+"'");
         }
     public String toCode(StrandType code) {
-      if (code == StrandType.WATSON)
+       if (code == StrandType.NULL)
+           return null;
+       if (code == StrandType.WATSON)
         return "watson";
       if (code == StrandType.CRICK)
         return "crick";
       return "?";
-      }
+   }
     public String toSystem(StrandType code) {
       return code.getSystem();
       }
@@ -657,6 +663,23 @@ public class MolecularSequence extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("coordinateSystem")) {
+          this.coordinateSystem = null;
+        } else if (name.equals("ordinalPosition")) {
+          this.ordinalPosition = null;
+        } else if (name.equals("sequenceRange")) {
+          this.sequenceRange = null;
+        } else if (name.equals("startingSequence")) {
+          this.startingSequence = (MolecularSequenceRelativeStartingSequenceComponent) value; // MolecularSequenceRelativeStartingSequenceComponent
+        } else if (name.equals("edit")) {
+          this.getEdit().remove((MolecularSequenceRelativeEditComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -690,7 +713,7 @@ public class MolecularSequence extends DomainResource {
           return this.coordinateSystem;
         }
         else if (name.equals("ordinalPosition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.ordinalPosition");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.ordinalPosition");
         }
         else if (name.equals("sequenceRange")) {
           this.sequenceRange = new Range();
@@ -890,8 +913,8 @@ public class MolecularSequence extends DomainResource {
           return (CodeableConcept) this.sequence;
         }
 
-        public boolean hasSequenceCodeableConcept() { 
-          return this != null && this.sequence instanceof CodeableConcept;
+        public boolean hasSequenceCodeableConcept() {
+            return this.sequence instanceof CodeableConcept;
         }
 
         /**
@@ -905,8 +928,8 @@ public class MolecularSequence extends DomainResource {
           return (StringType) this.sequence;
         }
 
-        public boolean hasSequenceStringType() { 
-          return this != null && this.sequence instanceof StringType;
+        public boolean hasSequenceStringType() {
+            return this.sequence instanceof StringType;
         }
 
         /**
@@ -920,8 +943,8 @@ public class MolecularSequence extends DomainResource {
           return (Reference) this.sequence;
         }
 
-        public boolean hasSequenceReference() { 
-          return this != null && this.sequence instanceof Reference;
+        public boolean hasSequenceReference() {
+            return this.sequence instanceof Reference;
         }
 
         public boolean hasSequence() { 
@@ -1225,6 +1248,29 @@ public class MolecularSequence extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("genomeAssembly")) {
+          this.genomeAssembly = null;
+        } else if (name.equals("chromosome")) {
+          this.chromosome = null;
+        } else if (name.equals("sequence[x]")) {
+          this.sequence = null;
+        } else if (name.equals("windowStart")) {
+          this.windowStart = null;
+        } else if (name.equals("windowEnd")) {
+          this.windowEnd = null;
+        } else if (name.equals("orientation")) {
+          value = new OrientationTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.orientation = (Enumeration) value; // Enumeration<OrientationType>
+        } else if (name.equals("strand")) {
+          value = new StrandTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.strand = (Enumeration) value; // Enumeration<StrandType>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1279,16 +1325,16 @@ public class MolecularSequence extends DomainResource {
           return this.sequence;
         }
         else if (name.equals("windowStart")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.startingSequence.windowStart");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.startingSequence.windowStart");
         }
         else if (name.equals("windowEnd")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.startingSequence.windowEnd");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.startingSequence.windowEnd");
         }
         else if (name.equals("orientation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.startingSequence.orientation");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.startingSequence.orientation");
         }
         else if (name.equals("strand")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.startingSequence.strand");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.startingSequence.strand");
         }
         else
           return super.addChild(name);
@@ -1640,6 +1686,21 @@ public class MolecularSequence extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("end")) {
+          this.end = null;
+        } else if (name.equals("replacementSequence")) {
+          this.replacementSequence = null;
+        } else if (name.equals("replacedSequence")) {
+          this.replacedSequence = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1667,16 +1728,16 @@ public class MolecularSequence extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("start")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.edit.start");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.edit.start");
         }
         else if (name.equals("end")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.edit.end");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.edit.end");
         }
         else if (name.equals("replacementSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.edit.replacementSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.edit.replacementSequence");
         }
         else if (name.equals("replacedSequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.relative.edit.replacedSequence");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.relative.edit.replacedSequence");
         }
         else
           return super.addChild(name);
@@ -2333,6 +2394,34 @@ public class MolecularSequence extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          value = new SequenceTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<SequenceType>
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("focus")) {
+          this.getFocus().remove(value);
+        } else if (name.equals("specimen")) {
+          this.specimen = null;
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("performer")) {
+          this.performer = null;
+        } else if (name.equals("literal")) {
+          this.literal = null;
+        } else if (name.equals("formatted")) {
+          this.getFormatted().remove(value);
+        } else if (name.equals("relative")) {
+          this.getRelative().remove((MolecularSequenceRelativeComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2375,7 +2464,7 @@ public class MolecularSequence extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.type");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.type");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -2397,7 +2486,7 @@ public class MolecularSequence extends DomainResource {
           return this.performer;
         }
         else if (name.equals("literal")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MolecularSequence.literal");
+          throw new FHIRException("Cannot call addChild on a singleton property MolecularSequence.literal");
         }
         else if (name.equals("formatted")) {
           return addFormatted();

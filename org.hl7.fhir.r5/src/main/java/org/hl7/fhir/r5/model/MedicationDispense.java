@@ -236,7 +236,9 @@ public class MedicationDispense extends DomainResource {
         throw new FHIRException("Unknown MedicationDispenseStatusCodes code '"+codeString+"'");
         }
     public String toCode(MedicationDispenseStatusCodes code) {
-      if (code == MedicationDispenseStatusCodes.PREPARATION)
+       if (code == MedicationDispenseStatusCodes.NULL)
+           return null;
+       if (code == MedicationDispenseStatusCodes.PREPARATION)
         return "preparation";
       if (code == MedicationDispenseStatusCodes.INPROGRESS)
         return "in-progress";
@@ -255,7 +257,7 @@ public class MedicationDispense extends DomainResource {
       if (code == MedicationDispenseStatusCodes.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(MedicationDispenseStatusCodes code) {
       return code.getSystem();
       }
@@ -392,6 +394,17 @@ public class MedicationDispense extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -733,6 +746,21 @@ public class MedicationDispense extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("wasSubstituted")) {
+          this.wasSubstituted = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("responsibleParty")) {
+          this.responsibleParty = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -760,7 +788,7 @@ public class MedicationDispense extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("wasSubstituted")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.substitution.wasSubstituted");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.substitution.wasSubstituted");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -2407,6 +2435,68 @@ public class MedicationDispense extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new MedicationDispenseStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MedicationDispenseStatusCodes>
+        } else if (name.equals("notPerformedReason")) {
+          this.notPerformedReason = null;
+        } else if (name.equals("statusChanged")) {
+          this.statusChanged = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("medication")) {
+          this.medication = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((MedicationDispensePerformerComponent) value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("authorizingPrescription")) {
+          this.getAuthorizingPrescription().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("daysSupply")) {
+          this.daysSupply = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("whenPrepared")) {
+          this.whenPrepared = null;
+        } else if (name.equals("whenHandedOver")) {
+          this.whenHandedOver = null;
+        } else if (name.equals("destination")) {
+          this.destination = null;
+        } else if (name.equals("receiver")) {
+          this.getReceiver().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("renderedDosageInstruction")) {
+          this.renderedDosageInstruction = null;
+        } else if (name.equals("dosageInstruction")) {
+          this.getDosageInstruction().remove(value);
+        } else if (name.equals("substitution")) {
+          this.substitution = (MedicationDispenseSubstitutionComponent) value; // MedicationDispenseSubstitutionComponent
+        } else if (name.equals("eventHistory")) {
+          this.getEventHistory().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2489,14 +2579,14 @@ public class MedicationDispense extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.status");
         }
         else if (name.equals("notPerformedReason")) {
           this.notPerformedReason = new CodeableReference();
           return this.notPerformedReason;
         }
         else if (name.equals("statusChanged")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.statusChanged");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.statusChanged");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -2539,13 +2629,13 @@ public class MedicationDispense extends DomainResource {
           return this.daysSupply;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.recorded");
         }
         else if (name.equals("whenPrepared")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.whenPrepared");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.whenPrepared");
         }
         else if (name.equals("whenHandedOver")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.whenHandedOver");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.whenHandedOver");
         }
         else if (name.equals("destination")) {
           this.destination = new Reference();
@@ -2558,7 +2648,7 @@ public class MedicationDispense extends DomainResource {
           return addNote();
         }
         else if (name.equals("renderedDosageInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationDispense.renderedDosageInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationDispense.renderedDosageInstruction");
         }
         else if (name.equals("dosageInstruction")) {
           return addDosageInstruction();

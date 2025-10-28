@@ -9,26 +9,29 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.Utilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hl7.fhir.utilities.VersionUtilities;
 
+@Slf4j
 public abstract class BasePackageCacheManager implements IPackageCacheManager {
 
-  private static final Logger ourLog = LoggerFactory.getLogger(BasePackageCacheManager.class);
-  protected List<PackageServer> myPackageServers = new ArrayList<>();
+  protected final List<PackageServer> myPackageServers;
   private Function<PackageServer, PackageClient> myClientFactory = server -> new PackageClient(server);
-  protected boolean silent;
 
   /**
    * Constructor
    */
   public BasePackageCacheManager() {
     super();
+    myPackageServers = new ArrayList<>();
   }
 
+  protected BasePackageCacheManager(@Nonnull List<PackageServer> thePackageServers) {
+    myPackageServers = thePackageServers;
+  }
   /**
    * Provide a new client factory implementation
    */
@@ -71,18 +74,20 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
         PackageClient packageClient = myClientFactory.apply(nextPackageServer);
         try {
           if (Utilities.noString(version)) {
-            version = packageClient.getLatestVersion(id);
+            version = packageClient.getLatestVersion(id, false);
           }
-          if (version.endsWith(".x")) {
+          if (VersionUtilities.versionHasWildcards(version)) {
             version = packageClient.getLatestVersion(id, version);
+            if (version == null) {
+              return null;
+            }
           }
+
           InputStream stream = packageClient.fetch(id, version);
           String url = packageClient.url(id, version);
           return new InputStreamWithSrc(stream, url, version);
         } catch (IOException e) {
-          if (!silent) {
-            ourLog.info("Failed to resolve package {}#{} from server: {} ({})", id, version, nextPackageServer, e.getMessage());
-          }
+          log.debug("Failed to resolve package {}#{} from server: {} ({})", id, version, nextPackageServer, e.getMessage());
         }
       }
     }
@@ -94,7 +99,7 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
   // this is not a long term thing, but it's not clear how to release patches for 
   // 1.4.0
   private boolean okToUsePackageServer(String server, String id) {
-    if ("http://packages.fhir.org".equals(server) && "hl7.fhir.r2b.core".equals(id)) {
+    if (PackageServer.PRIMARY_SERVER.equals(server) && "hl7.fhir.r2b.core".equals(id)) {
       return false;
     }
     return true;
@@ -104,6 +109,7 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
 
   @Override
   public String getPackageUrl(String packageId) throws IOException {
+    packageId = stripAlias(packageId);
     String result = null;
     NpmPackage npm = loadPackageFromCacheOnly(packageId);
     if (npm != null) {
@@ -123,7 +129,7 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
 
   private String getPackageUrl(String packageId, PackageServer server) throws IOException {
     PackageClient pc = myClientFactory.apply(server);
-    List<PackageInfo> res = pc.search(packageId, null, null, false);
+    List<PackageInfo> res = pc.search(packageId, null, null, false, null);
     if (res.size() == 0) {
       return null;
     } else {
@@ -151,7 +157,7 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
       return null;
     }
     PackageClient pc = myClientFactory.apply(server);
-    List<PackageInfo> res = pc.search(null, canonical, null, false);
+    List<PackageInfo> res = pc.search(null, canonical, null, false, null);
     if (res.size() == 0) {
       return null;
     } else {
@@ -178,13 +184,33 @@ public abstract class BasePackageCacheManager implements IPackageCacheManager {
     }
   }
 
+  @Override
   public NpmPackage loadPackage(String idAndVer) throws FHIRException, IOException {
+    idAndVer = stripAlias(idAndVer);
     return loadPackage(idAndVer, null);
   }
 
 
-  public void setSilent(boolean silent) {
-    this.silent = silent;    
+  /**
+   * The NPM Alias format is:
+   *   npm install <alias>@npm:<name>:
+   *   
+   * (see https://docs.npmjs.com/cli/v8/commands/npm-install)
+   * 
+   * We're using that format to allow us to use more than one version of the same package in packages.json,
+   * but what the prefix actually is is irrelevant here - we just load the actual package the user 
+   * is interested in
+   * 
+   * Corollary: you will get a different package name than you asked for when using aliases
+   * 
+   * @param id
+   * @return
+   */
+  protected String stripAlias(String id) {
+    if (id != null && id.contains("@npm:")) {
+      return id.substring(id.indexOf("@npm:")+5);
+    } else {
+      return id;
+    }
   }
-
 }

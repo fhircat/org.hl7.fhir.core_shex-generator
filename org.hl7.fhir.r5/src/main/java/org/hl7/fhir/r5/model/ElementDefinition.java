@@ -32,25 +32,21 @@ package org.hl7.fhir.r5.model;
 // Generated on Thu, Mar 23, 2023 19:59+1100 for FHIR v5.0.0
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import org.hl7.fhir.utilities.Utilities;
-import org.hl7.fhir.r5.model.Enumerations.*;
-import org.hl7.fhir.instance.model.api.IBaseDatatypeElement;
-import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.ICompositeType;
-import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.ChildOrder;
-import ca.uhn.fhir.model.api.annotation.DatatypeDef;
-import ca.uhn.fhir.model.api.annotation.Description;
-import ca.uhn.fhir.model.api.annotation.Block;
 
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IBaseDatatypeElement;
 import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import  org.hl7.fhir.r5.model.Enumerations.BindingStrength;
 import  org.hl7.fhir.r5.model.Enumerations.BindingStrengthEnumFactory;
-import  org.hl7.fhir.r5.utils.ToolingExtensions;
-import  org.hl7.fhir.instance.model.api.IBaseDatatypeElement;
 import  org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.Utilities;
+
+import ca.uhn.fhir.model.api.annotation.Block;
+import ca.uhn.fhir.model.api.annotation.Child;
+import ca.uhn.fhir.model.api.annotation.DatatypeDef;
+import ca.uhn.fhir.model.api.annotation.Description;
 /**
  * ElementDefinition Type: Captures constraints on each element within the resource, profile, or extension.
  */
@@ -254,7 +250,9 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown AdditionalBindingPurposeVS code '"+codeString+"'");
         }
     public String toCode(AdditionalBindingPurposeVS code) {
-      if (code == AdditionalBindingPurposeVS.MAXIMUM)
+       if (code == AdditionalBindingPurposeVS.NULL)
+           return null;
+       if (code == AdditionalBindingPurposeVS.MAXIMUM)
         return "maximum";
       if (code == AdditionalBindingPurposeVS.MINIMUM)
         return "minimum";
@@ -275,7 +273,7 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       if (code == AdditionalBindingPurposeVS.COMPONENT)
         return "component";
       return "?";
-      }
+   }
     public String toSystem(AdditionalBindingPurposeVS code) {
       return code.getSystem();
       }
@@ -380,14 +378,16 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown AggregationMode code '"+codeString+"'");
         }
     public String toCode(AggregationMode code) {
-      if (code == AggregationMode.CONTAINED)
+       if (code == AggregationMode.NULL)
+           return null;
+       if (code == AggregationMode.CONTAINED)
         return "contained";
       if (code == AggregationMode.REFERENCED)
         return "referenced";
       if (code == AggregationMode.BUNDLED)
         return "bundled";
       return "?";
-      }
+   }
     public String toSystem(AggregationMode code) {
       return code.getSystem();
       }
@@ -478,12 +478,14 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown ConstraintSeverity code '"+codeString+"'");
         }
     public String toCode(ConstraintSeverity code) {
-      if (code == ConstraintSeverity.ERROR)
+       if (code == ConstraintSeverity.NULL)
+           return null;
+       if (code == ConstraintSeverity.ERROR)
         return "error";
       if (code == ConstraintSeverity.WARNING)
         return "warning";
       return "?";
-      }
+   }
     public String toSystem(ConstraintSeverity code) {
       return code.getSystem();
       }
@@ -630,7 +632,9 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown DiscriminatorType code '"+codeString+"'");
         }
     public String toCode(DiscriminatorType code) {
-      if (code == DiscriminatorType.VALUE)
+       if (code == DiscriminatorType.NULL)
+           return null;
+       if (code == DiscriminatorType.VALUE)
         return "value";
       if (code == DiscriminatorType.EXISTS)
         return "exists";
@@ -643,7 +647,7 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       if (code == DiscriminatorType.POSITION)
         return "position";
       return "?";
-      }
+   }
     public String toSystem(DiscriminatorType code) {
       return code.getSystem();
       }
@@ -776,7 +780,9 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown PropertyRepresentation code '"+codeString+"'");
         }
     public String toCode(PropertyRepresentation code) {
-      if (code == PropertyRepresentation.XMLATTR)
+       if (code == PropertyRepresentation.NULL)
+           return null;
+       if (code == PropertyRepresentation.XMLATTR)
         return "xmlAttr";
       if (code == PropertyRepresentation.XMLTEXT)
         return "xmlText";
@@ -787,7 +793,7 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       if (code == PropertyRepresentation.XHTML)
         return "xhtml";
       return "?";
-      }
+   }
     public String toSystem(PropertyRepresentation code) {
       return code.getSystem();
       }
@@ -892,14 +898,16 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown ReferenceVersionRules code '"+codeString+"'");
         }
     public String toCode(ReferenceVersionRules code) {
-      if (code == ReferenceVersionRules.EITHER)
+       if (code == ReferenceVersionRules.NULL)
+           return null;
+       if (code == ReferenceVersionRules.EITHER)
         return "either";
       if (code == ReferenceVersionRules.INDEPENDENT)
         return "independent";
       if (code == ReferenceVersionRules.SPECIFIC)
         return "specific";
       return "?";
-      }
+   }
     public String toSystem(ReferenceVersionRules code) {
       return code.getSystem();
       }
@@ -1004,14 +1012,16 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         throw new FHIRException("Unknown SlicingRules code '"+codeString+"'");
         }
     public String toCode(SlicingRules code) {
-      if (code == SlicingRules.CLOSED)
+       if (code == SlicingRules.NULL)
+           return null;
+       if (code == SlicingRules.CLOSED)
         return "closed";
       if (code == SlicingRules.OPEN)
         return "open";
       if (code == SlicingRules.OPENATEND)
         return "openAtEnd";
       return "?";
-      }
+   }
     public String toSystem(SlicingRules code) {
       return code.getSystem();
       }
@@ -1326,6 +1336,22 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("discriminator")) {
+          this.getDiscriminator().remove((ElementDefinitionSlicingDiscriminatorComponent) value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("ordered")) {
+          this.ordered = null;
+        } else if (name.equals("rules")) {
+          value = new SlicingRulesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.rules = (Enumeration) value; // Enumeration<SlicingRules>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1356,13 +1382,13 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
           return addDiscriminator();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.slicing.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.slicing.description");
         }
         else if (name.equals("ordered")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.slicing.ordered");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.slicing.ordered");
         }
         else if (name.equals("rules")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.slicing.rules");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.slicing.rules");
         }
         else
           return super.addChild(name);
@@ -1422,6 +1448,37 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       public String toString() {
         return (ordered == null ? "??" : "true".equals(ordered.asStringValue()) ? "ordered" : "unordered")+"/"+
             (rules == null ? "??" : rules.asStringValue())+" "+discriminator.toString();
+      }
+
+      public String summary() {
+        StringBuilder b = new StringBuilder();
+        if (!hasRulesElement() && !hasOrdered() && !hasDiscriminator()) {
+          return "(no slicing)";
+        }
+        if (hasRulesElement() || hasOrdered()) {
+          if (hasRulesElement() && hasOrdered()) {
+            b.append((getOrdered() ? "orderer" : "unordered")+" and " +getRules().toCode()+", by");            
+          } else if (hasRules()) {
+            b.append(getRules().toCode()+", by");
+          } else if (getOrdered()) {
+            b.append("ordered, by");
+          } else {
+            b.append("unordered, by");            
+          }
+        } 
+        boolean first = true;
+        for (ElementDefinitionSlicingDiscriminatorComponent d : getDiscriminator()) {
+          if (first) {
+            first = false;
+          } else {
+            b.append(",");
+          }
+          b.append(" ");
+          b.append(d.getType().toCode());
+          b.append("=");
+          b.append(d.getPath());
+        }
+        return b.toString();
       }
     }
 
@@ -1603,6 +1660,18 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new DiscriminatorTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<DiscriminatorType>
+        } else if (name.equals("path")) {
+          this.path = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1626,10 +1695,10 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.slicing.discriminator.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.slicing.discriminator.type");
         }
         else if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.slicing.discriminator.path");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.slicing.discriminator.path");
         }
         else
           return super.addChild(name);
@@ -1919,6 +1988,19 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("min")) {
+          this.min = null;
+        } else if (name.equals("max")) {
+          this.max = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1944,13 +2026,13 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.base.path");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.base.path");
         }
         else if (name.equals("min")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.base.min");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.base.min");
         }
         else if (name.equals("max")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.base.max");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.base.max");
         }
         else
           return super.addChild(name);
@@ -2221,7 +2303,7 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
           if (this.targetProfile == null)
             return false;
           for (CanonicalType v : this.targetProfile)
-            if (v.getValue().equals(value)) // canonical
+            if (v.getValue().equals(value) || v.getValue().startsWith(value+"|")) // canonical
               return true;
           return false;
         }
@@ -2415,6 +2497,25 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("profile")) {
+          this.getProfile().remove(value);
+        } else if (name.equals("targetProfile")) {
+          this.getTargetProfile().remove(value);
+        } else if (name.equals("aggregation")) {
+          value = new AggregationModeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getAggregation().remove((Enumeration) value);
+        } else if (name.equals("versioning")) {
+          value = new ReferenceVersionRulesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.versioning = (Enumeration) value; // Enumeration<ReferenceVersionRules>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2444,19 +2545,19 @@ public class ElementDefinition extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.type.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.type.code");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.type.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.type.profile");
         }
         else if (name.equals("targetProfile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.type.targetProfile");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.type.targetProfile");
         }
         else if (name.equals("aggregation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.type.aggregation");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.type.aggregation");
         }
         else if (name.equals("versioning")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.type.versioning");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.type.versioning");
         }
         else
           return super.addChild(name);
@@ -2534,12 +2635,12 @@ public boolean hasTarget() {
    * @return
    */
   public String getWorkingCode() {
-    if (hasExtension(ToolingExtensions.EXT_FHIR_TYPE))
-      return getExtensionString(ToolingExtensions.EXT_FHIR_TYPE);
+    if (hasExtension(ExtensionDefinitions.EXT_FHIR_TYPE))
+      return getExtensionString(ExtensionDefinitions.EXT_FHIR_TYPE);
     if (!hasCodeElement()) 
       return null;
-    if (getCodeElement().hasExtension(ToolingExtensions.EXT_XML_TYPE)) {
-      String s = getCodeElement().getExtensionString(ToolingExtensions.EXT_XML_TYPE);
+    if (getCodeElement().hasExtension(ExtensionDefinitions.EXT_XML_TYPE)) {
+      String s = getCodeElement().getExtensionString(ExtensionDefinitions.EXT_XML_TYPE);
       if ("xsd:gYear OR xsd:gYearMonth OR xsd:date OR xsd:dateTime".equalsIgnoreCase(s))
         return "dateTime";
       if ("xsd:gYear OR xsd:gYearMonth OR xsd:date".equalsIgnoreCase(s))
@@ -2568,6 +2669,8 @@ public boolean hasTarget() {
         return "unsignedInt";
       if ("xsd:anyURI".equalsIgnoreCase(s))
         return "uri";
+      if ("xhtml:div".equalsIgnoreCase(s))
+        return "xhtml";
       
       throw new Error("Unknown xml type '"+s+"'");
     }
@@ -2587,7 +2690,7 @@ public boolean hasTarget() {
       res = res + "}";
     }
     if (hasTargetProfile()) {
-      res = res + "->(";
+      res = res + "(";
       boolean first = true;
       for (CanonicalType s : getTargetProfile()) {
         if (first) first = false; else res = res + "|";
@@ -2705,8 +2808,8 @@ public boolean hasTarget() {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+            return this.value instanceof Base64BinaryType;
         }
 
         /**
@@ -2720,8 +2823,8 @@ public boolean hasTarget() {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -2735,8 +2838,8 @@ public boolean hasTarget() {
           return (CanonicalType) this.value;
         }
 
-        public boolean hasValueCanonicalType() { 
-          return this != null && this.value instanceof CanonicalType;
+        public boolean hasValueCanonicalType() {
+            return this.value instanceof CanonicalType;
         }
 
         /**
@@ -2750,8 +2853,8 @@ public boolean hasTarget() {
           return (CodeType) this.value;
         }
 
-        public boolean hasValueCodeType() { 
-          return this != null && this.value instanceof CodeType;
+        public boolean hasValueCodeType() {
+            return this.value instanceof CodeType;
         }
 
         /**
@@ -2765,8 +2868,8 @@ public boolean hasTarget() {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -2780,8 +2883,8 @@ public boolean hasTarget() {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -2795,8 +2898,8 @@ public boolean hasTarget() {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -2810,8 +2913,8 @@ public boolean hasTarget() {
           return (IdType) this.value;
         }
 
-        public boolean hasValueIdType() { 
-          return this != null && this.value instanceof IdType;
+        public boolean hasValueIdType() {
+            return this.value instanceof IdType;
         }
 
         /**
@@ -2825,8 +2928,8 @@ public boolean hasTarget() {
           return (InstantType) this.value;
         }
 
-        public boolean hasValueInstantType() { 
-          return this != null && this.value instanceof InstantType;
+        public boolean hasValueInstantType() {
+            return this.value instanceof InstantType;
         }
 
         /**
@@ -2840,8 +2943,8 @@ public boolean hasTarget() {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -2855,8 +2958,8 @@ public boolean hasTarget() {
           return (Integer64Type) this.value;
         }
 
-        public boolean hasValueInteger64Type() { 
-          return this != null && this.value instanceof Integer64Type;
+        public boolean hasValueInteger64Type() {
+            return this.value instanceof Integer64Type;
         }
 
         /**
@@ -2870,8 +2973,8 @@ public boolean hasTarget() {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -2885,8 +2988,8 @@ public boolean hasTarget() {
           return (OidType) this.value;
         }
 
-        public boolean hasValueOidType() { 
-          return this != null && this.value instanceof OidType;
+        public boolean hasValueOidType() {
+            return this.value instanceof OidType;
         }
 
         /**
@@ -2900,8 +3003,8 @@ public boolean hasTarget() {
           return (PositiveIntType) this.value;
         }
 
-        public boolean hasValuePositiveIntType() { 
-          return this != null && this.value instanceof PositiveIntType;
+        public boolean hasValuePositiveIntType() {
+            return this.value instanceof PositiveIntType;
         }
 
         /**
@@ -2915,8 +3018,8 @@ public boolean hasTarget() {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -2930,8 +3033,8 @@ public boolean hasTarget() {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -2945,8 +3048,8 @@ public boolean hasTarget() {
           return (UnsignedIntType) this.value;
         }
 
-        public boolean hasValueUnsignedIntType() { 
-          return this != null && this.value instanceof UnsignedIntType;
+        public boolean hasValueUnsignedIntType() {
+            return this.value instanceof UnsignedIntType;
         }
 
         /**
@@ -2960,8 +3063,8 @@ public boolean hasTarget() {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -2975,8 +3078,8 @@ public boolean hasTarget() {
           return (UrlType) this.value;
         }
 
-        public boolean hasValueUrlType() { 
-          return this != null && this.value instanceof UrlType;
+        public boolean hasValueUrlType() {
+            return this.value instanceof UrlType;
         }
 
         /**
@@ -2990,8 +3093,8 @@ public boolean hasTarget() {
           return (UuidType) this.value;
         }
 
-        public boolean hasValueUuidType() { 
-          return this != null && this.value instanceof UuidType;
+        public boolean hasValueUuidType() {
+            return this.value instanceof UuidType;
         }
 
         /**
@@ -3005,8 +3108,8 @@ public boolean hasTarget() {
           return (Address) this.value;
         }
 
-        public boolean hasValueAddress() { 
-          return this != null && this.value instanceof Address;
+        public boolean hasValueAddress() {
+            return this.value instanceof Address;
         }
 
         /**
@@ -3020,8 +3123,8 @@ public boolean hasTarget() {
           return (Age) this.value;
         }
 
-        public boolean hasValueAge() { 
-          return this != null && this.value instanceof Age;
+        public boolean hasValueAge() {
+            return this.value instanceof Age;
         }
 
         /**
@@ -3035,8 +3138,8 @@ public boolean hasTarget() {
           return (Annotation) this.value;
         }
 
-        public boolean hasValueAnnotation() { 
-          return this != null && this.value instanceof Annotation;
+        public boolean hasValueAnnotation() {
+            return this.value instanceof Annotation;
         }
 
         /**
@@ -3050,8 +3153,8 @@ public boolean hasTarget() {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -3065,8 +3168,8 @@ public boolean hasTarget() {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -3080,8 +3183,8 @@ public boolean hasTarget() {
           return (CodeableReference) this.value;
         }
 
-        public boolean hasValueCodeableReference() { 
-          return this != null && this.value instanceof CodeableReference;
+        public boolean hasValueCodeableReference() {
+            return this.value instanceof CodeableReference;
         }
 
         /**
@@ -3095,8 +3198,8 @@ public boolean hasTarget() {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -3110,8 +3213,8 @@ public boolean hasTarget() {
           return (ContactPoint) this.value;
         }
 
-        public boolean hasValueContactPoint() { 
-          return this != null && this.value instanceof ContactPoint;
+        public boolean hasValueContactPoint() {
+            return this.value instanceof ContactPoint;
         }
 
         /**
@@ -3125,8 +3228,8 @@ public boolean hasTarget() {
           return (Count) this.value;
         }
 
-        public boolean hasValueCount() { 
-          return this != null && this.value instanceof Count;
+        public boolean hasValueCount() {
+            return this.value instanceof Count;
         }
 
         /**
@@ -3140,8 +3243,8 @@ public boolean hasTarget() {
           return (Distance) this.value;
         }
 
-        public boolean hasValueDistance() { 
-          return this != null && this.value instanceof Distance;
+        public boolean hasValueDistance() {
+            return this.value instanceof Distance;
         }
 
         /**
@@ -3155,8 +3258,8 @@ public boolean hasTarget() {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         /**
@@ -3170,8 +3273,8 @@ public boolean hasTarget() {
           return (HumanName) this.value;
         }
 
-        public boolean hasValueHumanName() { 
-          return this != null && this.value instanceof HumanName;
+        public boolean hasValueHumanName() {
+            return this.value instanceof HumanName;
         }
 
         /**
@@ -3185,8 +3288,8 @@ public boolean hasTarget() {
           return (Identifier) this.value;
         }
 
-        public boolean hasValueIdentifier() { 
-          return this != null && this.value instanceof Identifier;
+        public boolean hasValueIdentifier() {
+            return this.value instanceof Identifier;
         }
 
         /**
@@ -3200,8 +3303,8 @@ public boolean hasTarget() {
           return (Money) this.value;
         }
 
-        public boolean hasValueMoney() { 
-          return this != null && this.value instanceof Money;
+        public boolean hasValueMoney() {
+            return this.value instanceof Money;
         }
 
         /**
@@ -3215,8 +3318,8 @@ public boolean hasTarget() {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -3230,8 +3333,8 @@ public boolean hasTarget() {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -3245,8 +3348,8 @@ public boolean hasTarget() {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -3260,8 +3363,8 @@ public boolean hasTarget() {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -3275,8 +3378,8 @@ public boolean hasTarget() {
           return (RatioRange) this.value;
         }
 
-        public boolean hasValueRatioRange() { 
-          return this != null && this.value instanceof RatioRange;
+        public boolean hasValueRatioRange() {
+            return this.value instanceof RatioRange;
         }
 
         /**
@@ -3290,8 +3393,8 @@ public boolean hasTarget() {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -3305,8 +3408,8 @@ public boolean hasTarget() {
           return (SampledData) this.value;
         }
 
-        public boolean hasValueSampledData() { 
-          return this != null && this.value instanceof SampledData;
+        public boolean hasValueSampledData() {
+            return this.value instanceof SampledData;
         }
 
         /**
@@ -3320,8 +3423,8 @@ public boolean hasTarget() {
           return (Signature) this.value;
         }
 
-        public boolean hasValueSignature() { 
-          return this != null && this.value instanceof Signature;
+        public boolean hasValueSignature() {
+            return this.value instanceof Signature;
         }
 
         /**
@@ -3335,8 +3438,8 @@ public boolean hasTarget() {
           return (Timing) this.value;
         }
 
-        public boolean hasValueTiming() { 
-          return this != null && this.value instanceof Timing;
+        public boolean hasValueTiming() {
+            return this.value instanceof Timing;
         }
 
         /**
@@ -3350,8 +3453,8 @@ public boolean hasTarget() {
           return (ContactDetail) this.value;
         }
 
-        public boolean hasValueContactDetail() { 
-          return this != null && this.value instanceof ContactDetail;
+        public boolean hasValueContactDetail() {
+            return this.value instanceof ContactDetail;
         }
 
         /**
@@ -3365,8 +3468,8 @@ public boolean hasTarget() {
           return (DataRequirement) this.value;
         }
 
-        public boolean hasValueDataRequirement() { 
-          return this != null && this.value instanceof DataRequirement;
+        public boolean hasValueDataRequirement() {
+            return this.value instanceof DataRequirement;
         }
 
         /**
@@ -3380,8 +3483,8 @@ public boolean hasTarget() {
           return (Expression) this.value;
         }
 
-        public boolean hasValueExpression() { 
-          return this != null && this.value instanceof Expression;
+        public boolean hasValueExpression() {
+            return this.value instanceof Expression;
         }
 
         /**
@@ -3395,8 +3498,8 @@ public boolean hasTarget() {
           return (ParameterDefinition) this.value;
         }
 
-        public boolean hasValueParameterDefinition() { 
-          return this != null && this.value instanceof ParameterDefinition;
+        public boolean hasValueParameterDefinition() {
+            return this.value instanceof ParameterDefinition;
         }
 
         /**
@@ -3410,8 +3513,8 @@ public boolean hasTarget() {
           return (RelatedArtifact) this.value;
         }
 
-        public boolean hasValueRelatedArtifact() { 
-          return this != null && this.value instanceof RelatedArtifact;
+        public boolean hasValueRelatedArtifact() {
+            return this.value instanceof RelatedArtifact;
         }
 
         /**
@@ -3425,8 +3528,8 @@ public boolean hasTarget() {
           return (TriggerDefinition) this.value;
         }
 
-        public boolean hasValueTriggerDefinition() { 
-          return this != null && this.value instanceof TriggerDefinition;
+        public boolean hasValueTriggerDefinition() {
+            return this.value instanceof TriggerDefinition;
         }
 
         /**
@@ -3440,8 +3543,8 @@ public boolean hasTarget() {
           return (UsageContext) this.value;
         }
 
-        public boolean hasValueUsageContext() { 
-          return this != null && this.value instanceof UsageContext;
+        public boolean hasValueUsageContext() {
+            return this.value instanceof UsageContext;
         }
 
         /**
@@ -3455,8 +3558,8 @@ public boolean hasTarget() {
           return (Availability) this.value;
         }
 
-        public boolean hasValueAvailability() { 
-          return this != null && this.value instanceof Availability;
+        public boolean hasValueAvailability() {
+            return this.value instanceof Availability;
         }
 
         /**
@@ -3470,8 +3573,8 @@ public boolean hasTarget() {
           return (ExtendedContactDetail) this.value;
         }
 
-        public boolean hasValueExtendedContactDetail() { 
-          return this != null && this.value instanceof ExtendedContactDetail;
+        public boolean hasValueExtendedContactDetail() {
+            return this.value instanceof ExtendedContactDetail;
         }
 
         /**
@@ -3485,8 +3588,8 @@ public boolean hasTarget() {
           return (Dosage) this.value;
         }
 
-        public boolean hasValueDosage() { 
-          return this != null && this.value instanceof Dosage;
+        public boolean hasValueDosage() {
+            return this.value instanceof Dosage;
         }
 
         /**
@@ -3500,8 +3603,8 @@ public boolean hasTarget() {
           return (Meta) this.value;
         }
 
-        public boolean hasValueMeta() { 
-          return this != null && this.value instanceof Meta;
+        public boolean hasValueMeta() {
+            return this.value instanceof Meta;
         }
 
         public boolean hasValue() { 
@@ -3624,6 +3727,17 @@ public boolean hasTarget() {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("label")) {
+          this.label = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3648,7 +3762,7 @@ public boolean hasTarget() {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("label")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.example.label");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.example.label");
         }
         else if (name.equals("valueBase64Binary")) {
           this.value = new Base64BinaryType();
@@ -4404,6 +4518,28 @@ public boolean hasTarget() {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("key")) {
+          this.key = null;
+        } else if (name.equals("requirements")) {
+          this.requirements = null;
+        } else if (name.equals("severity")) {
+          value = new ConstraintSeverityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.severity = (Enumeration) value; // Enumeration<ConstraintSeverity>
+        } else if (name.equals("suppress")) {
+          this.suppress = null;
+        } else if (name.equals("human")) {
+          this.human = null;
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4437,25 +4573,25 @@ public boolean hasTarget() {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("key")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.key");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.key");
         }
         else if (name.equals("requirements")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.requirements");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.requirements");
         }
         else if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.severity");
         }
         else if (name.equals("suppress")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.suppress");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.suppress");
         }
         else if (name.equals("human")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.human");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.human");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.expression");
         }
         else if (name.equals("source")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.constraint.source");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.constraint.source");
         }
         else
           return super.addChild(name);
@@ -4510,6 +4646,11 @@ public boolean hasTarget() {
   public String fhirType() {
     return "ElementDefinition.constraint";
 
+  }
+
+  @Override
+  public String toString() {
+    return key + ":" + expression + (severity == null ? "("+severity.asStringValue()+")" : "");
   }
 
   }
@@ -4827,6 +4968,22 @@ public boolean hasTarget() {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("strength")) {
+          value = new BindingStrengthEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.strength = (Enumeration) value; // Enumeration<BindingStrength>
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("additional")) {
+          this.getAdditional().remove((ElementDefinitionBindingAdditionalComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4854,13 +5011,13 @@ public boolean hasTarget() {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("strength")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.strength");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.strength");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.description");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.valueSet");
         }
         else if (name.equals("additional")) {
           return addAdditional();
@@ -5366,6 +5523,26 @@ public boolean hasTarget() {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("purpose")) {
+          value = new AdditionalBindingPurposeVSEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.purpose = (Enumeration) value; // Enumeration<AdditionalBindingPurposeVS>
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("documentation")) {
+          this.documentation = null;
+        } else if (name.equals("shortDoco")) {
+          this.shortDoco = null;
+        } else if (name.equals("usage")) {
+          this.getUsage().remove(value);
+        } else if (name.equals("any")) {
+          this.any = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5397,22 +5574,22 @@ public boolean hasTarget() {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.additional.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.additional.purpose");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.additional.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.additional.valueSet");
         }
         else if (name.equals("documentation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.additional.documentation");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.additional.documentation");
         }
         else if (name.equals("shortDoco")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.additional.shortDoco");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.additional.shortDoco");
         }
         else if (name.equals("usage")) {
           return addUsage();
         }
         else if (name.equals("any")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.binding.additional.any");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.binding.additional.any");
         }
         else
           return super.addChild(name);
@@ -5475,6 +5652,11 @@ public boolean hasTarget() {
 
     @Block()
     public static class ElementDefinitionMappingComponent extends Element implements IBaseDatatypeElement {
+        @Override
+      public String toString() {
+        return identity+"=" + map;
+      }
+
         /**
          * An internal reference to the definition of a mapping.
          */
@@ -5777,6 +5959,21 @@ public boolean hasTarget() {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identity")) {
+          this.identity = null;
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("map")) {
+          this.map = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5804,16 +6001,16 @@ public boolean hasTarget() {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("identity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mapping.identity");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mapping.identity");
         }
         else if (name.equals("language")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mapping.language");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mapping.language");
         }
         else if (name.equals("map")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mapping.map");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mapping.map");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mapping.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mapping.comment");
         }
         else
           return super.addChild(name);
@@ -6971,8 +7168,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Base64BinaryType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueBase64BinaryType() { 
-      return this != null && this.defaultValue instanceof Base64BinaryType;
+    public boolean hasDefaultValueBase64BinaryType() {
+        return this.defaultValue instanceof Base64BinaryType;
     }
 
     /**
@@ -6986,8 +7183,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (BooleanType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueBooleanType() { 
-      return this != null && this.defaultValue instanceof BooleanType;
+    public boolean hasDefaultValueBooleanType() {
+        return this.defaultValue instanceof BooleanType;
     }
 
     /**
@@ -7001,8 +7198,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CanonicalType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCanonicalType() { 
-      return this != null && this.defaultValue instanceof CanonicalType;
+    public boolean hasDefaultValueCanonicalType() {
+        return this.defaultValue instanceof CanonicalType;
     }
 
     /**
@@ -7016,8 +7213,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCodeType() { 
-      return this != null && this.defaultValue instanceof CodeType;
+    public boolean hasDefaultValueCodeType() {
+        return this.defaultValue instanceof CodeType;
     }
 
     /**
@@ -7031,8 +7228,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDateType() { 
-      return this != null && this.defaultValue instanceof DateType;
+    public boolean hasDefaultValueDateType() {
+        return this.defaultValue instanceof DateType;
     }
 
     /**
@@ -7046,8 +7243,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateTimeType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDateTimeType() { 
-      return this != null && this.defaultValue instanceof DateTimeType;
+    public boolean hasDefaultValueDateTimeType() {
+        return this.defaultValue instanceof DateTimeType;
     }
 
     /**
@@ -7061,8 +7258,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DecimalType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDecimalType() { 
-      return this != null && this.defaultValue instanceof DecimalType;
+    public boolean hasDefaultValueDecimalType() {
+        return this.defaultValue instanceof DecimalType;
     }
 
     /**
@@ -7076,8 +7273,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IdType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueIdType() { 
-      return this != null && this.defaultValue instanceof IdType;
+    public boolean hasDefaultValueIdType() {
+        return this.defaultValue instanceof IdType;
     }
 
     /**
@@ -7091,8 +7288,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (InstantType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueInstantType() { 
-      return this != null && this.defaultValue instanceof InstantType;
+    public boolean hasDefaultValueInstantType() {
+        return this.defaultValue instanceof InstantType;
     }
 
     /**
@@ -7106,8 +7303,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IntegerType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueIntegerType() { 
-      return this != null && this.defaultValue instanceof IntegerType;
+    public boolean hasDefaultValueIntegerType() {
+        return this.defaultValue instanceof IntegerType;
     }
 
     /**
@@ -7121,8 +7318,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Integer64Type) this.defaultValue;
     }
 
-    public boolean hasDefaultValueInteger64Type() { 
-      return this != null && this.defaultValue instanceof Integer64Type;
+    public boolean hasDefaultValueInteger64Type() {
+        return this.defaultValue instanceof Integer64Type;
     }
 
     /**
@@ -7136,8 +7333,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (MarkdownType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueMarkdownType() { 
-      return this != null && this.defaultValue instanceof MarkdownType;
+    public boolean hasDefaultValueMarkdownType() {
+        return this.defaultValue instanceof MarkdownType;
     }
 
     /**
@@ -7151,8 +7348,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (OidType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueOidType() { 
-      return this != null && this.defaultValue instanceof OidType;
+    public boolean hasDefaultValueOidType() {
+        return this.defaultValue instanceof OidType;
     }
 
     /**
@@ -7166,8 +7363,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (PositiveIntType) this.defaultValue;
     }
 
-    public boolean hasDefaultValuePositiveIntType() { 
-      return this != null && this.defaultValue instanceof PositiveIntType;
+    public boolean hasDefaultValuePositiveIntType() {
+        return this.defaultValue instanceof PositiveIntType;
     }
 
     /**
@@ -7181,8 +7378,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (StringType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueStringType() { 
-      return this != null && this.defaultValue instanceof StringType;
+    public boolean hasDefaultValueStringType() {
+        return this.defaultValue instanceof StringType;
     }
 
     /**
@@ -7196,8 +7393,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TimeType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueTimeType() { 
-      return this != null && this.defaultValue instanceof TimeType;
+    public boolean hasDefaultValueTimeType() {
+        return this.defaultValue instanceof TimeType;
     }
 
     /**
@@ -7211,8 +7408,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UnsignedIntType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueUnsignedIntType() { 
-      return this != null && this.defaultValue instanceof UnsignedIntType;
+    public boolean hasDefaultValueUnsignedIntType() {
+        return this.defaultValue instanceof UnsignedIntType;
     }
 
     /**
@@ -7226,8 +7423,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UriType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueUriType() { 
-      return this != null && this.defaultValue instanceof UriType;
+    public boolean hasDefaultValueUriType() {
+        return this.defaultValue instanceof UriType;
     }
 
     /**
@@ -7241,8 +7438,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UrlType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueUrlType() { 
-      return this != null && this.defaultValue instanceof UrlType;
+    public boolean hasDefaultValueUrlType() {
+        return this.defaultValue instanceof UrlType;
     }
 
     /**
@@ -7256,8 +7453,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UuidType) this.defaultValue;
     }
 
-    public boolean hasDefaultValueUuidType() { 
-      return this != null && this.defaultValue instanceof UuidType;
+    public boolean hasDefaultValueUuidType() {
+        return this.defaultValue instanceof UuidType;
     }
 
     /**
@@ -7271,8 +7468,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Address) this.defaultValue;
     }
 
-    public boolean hasDefaultValueAddress() { 
-      return this != null && this.defaultValue instanceof Address;
+    public boolean hasDefaultValueAddress() {
+        return this.defaultValue instanceof Address;
     }
 
     /**
@@ -7286,8 +7483,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Age) this.defaultValue;
     }
 
-    public boolean hasDefaultValueAge() { 
-      return this != null && this.defaultValue instanceof Age;
+    public boolean hasDefaultValueAge() {
+        return this.defaultValue instanceof Age;
     }
 
     /**
@@ -7301,8 +7498,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Annotation) this.defaultValue;
     }
 
-    public boolean hasDefaultValueAnnotation() { 
-      return this != null && this.defaultValue instanceof Annotation;
+    public boolean hasDefaultValueAnnotation() {
+        return this.defaultValue instanceof Annotation;
     }
 
     /**
@@ -7316,8 +7513,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Attachment) this.defaultValue;
     }
 
-    public boolean hasDefaultValueAttachment() { 
-      return this != null && this.defaultValue instanceof Attachment;
+    public boolean hasDefaultValueAttachment() {
+        return this.defaultValue instanceof Attachment;
     }
 
     /**
@@ -7331,8 +7528,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableConcept) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCodeableConcept() { 
-      return this != null && this.defaultValue instanceof CodeableConcept;
+    public boolean hasDefaultValueCodeableConcept() {
+        return this.defaultValue instanceof CodeableConcept;
     }
 
     /**
@@ -7346,8 +7543,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableReference) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCodeableReference() { 
-      return this != null && this.defaultValue instanceof CodeableReference;
+    public boolean hasDefaultValueCodeableReference() {
+        return this.defaultValue instanceof CodeableReference;
     }
 
     /**
@@ -7361,8 +7558,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Coding) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCoding() { 
-      return this != null && this.defaultValue instanceof Coding;
+    public boolean hasDefaultValueCoding() {
+        return this.defaultValue instanceof Coding;
     }
 
     /**
@@ -7376,8 +7573,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactPoint) this.defaultValue;
     }
 
-    public boolean hasDefaultValueContactPoint() { 
-      return this != null && this.defaultValue instanceof ContactPoint;
+    public boolean hasDefaultValueContactPoint() {
+        return this.defaultValue instanceof ContactPoint;
     }
 
     /**
@@ -7391,8 +7588,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Count) this.defaultValue;
     }
 
-    public boolean hasDefaultValueCount() { 
-      return this != null && this.defaultValue instanceof Count;
+    public boolean hasDefaultValueCount() {
+        return this.defaultValue instanceof Count;
     }
 
     /**
@@ -7406,8 +7603,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Distance) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDistance() { 
-      return this != null && this.defaultValue instanceof Distance;
+    public boolean hasDefaultValueDistance() {
+        return this.defaultValue instanceof Distance;
     }
 
     /**
@@ -7421,8 +7618,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Duration) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDuration() { 
-      return this != null && this.defaultValue instanceof Duration;
+    public boolean hasDefaultValueDuration() {
+        return this.defaultValue instanceof Duration;
     }
 
     /**
@@ -7436,8 +7633,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (HumanName) this.defaultValue;
     }
 
-    public boolean hasDefaultValueHumanName() { 
-      return this != null && this.defaultValue instanceof HumanName;
+    public boolean hasDefaultValueHumanName() {
+        return this.defaultValue instanceof HumanName;
     }
 
     /**
@@ -7451,8 +7648,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Identifier) this.defaultValue;
     }
 
-    public boolean hasDefaultValueIdentifier() { 
-      return this != null && this.defaultValue instanceof Identifier;
+    public boolean hasDefaultValueIdentifier() {
+        return this.defaultValue instanceof Identifier;
     }
 
     /**
@@ -7466,8 +7663,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Money) this.defaultValue;
     }
 
-    public boolean hasDefaultValueMoney() { 
-      return this != null && this.defaultValue instanceof Money;
+    public boolean hasDefaultValueMoney() {
+        return this.defaultValue instanceof Money;
     }
 
     /**
@@ -7481,8 +7678,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Period) this.defaultValue;
     }
 
-    public boolean hasDefaultValuePeriod() { 
-      return this != null && this.defaultValue instanceof Period;
+    public boolean hasDefaultValuePeriod() {
+        return this.defaultValue instanceof Period;
     }
 
     /**
@@ -7496,8 +7693,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Quantity) this.defaultValue;
     }
 
-    public boolean hasDefaultValueQuantity() { 
-      return this != null && this.defaultValue instanceof Quantity;
+    public boolean hasDefaultValueQuantity() {
+        return this.defaultValue instanceof Quantity;
     }
 
     /**
@@ -7511,8 +7708,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Range) this.defaultValue;
     }
 
-    public boolean hasDefaultValueRange() { 
-      return this != null && this.defaultValue instanceof Range;
+    public boolean hasDefaultValueRange() {
+        return this.defaultValue instanceof Range;
     }
 
     /**
@@ -7526,8 +7723,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Ratio) this.defaultValue;
     }
 
-    public boolean hasDefaultValueRatio() { 
-      return this != null && this.defaultValue instanceof Ratio;
+    public boolean hasDefaultValueRatio() {
+        return this.defaultValue instanceof Ratio;
     }
 
     /**
@@ -7541,8 +7738,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RatioRange) this.defaultValue;
     }
 
-    public boolean hasDefaultValueRatioRange() { 
-      return this != null && this.defaultValue instanceof RatioRange;
+    public boolean hasDefaultValueRatioRange() {
+        return this.defaultValue instanceof RatioRange;
     }
 
     /**
@@ -7556,8 +7753,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Reference) this.defaultValue;
     }
 
-    public boolean hasDefaultValueReference() { 
-      return this != null && this.defaultValue instanceof Reference;
+    public boolean hasDefaultValueReference() {
+        return this.defaultValue instanceof Reference;
     }
 
     /**
@@ -7571,8 +7768,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (SampledData) this.defaultValue;
     }
 
-    public boolean hasDefaultValueSampledData() { 
-      return this != null && this.defaultValue instanceof SampledData;
+    public boolean hasDefaultValueSampledData() {
+        return this.defaultValue instanceof SampledData;
     }
 
     /**
@@ -7586,8 +7783,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Signature) this.defaultValue;
     }
 
-    public boolean hasDefaultValueSignature() { 
-      return this != null && this.defaultValue instanceof Signature;
+    public boolean hasDefaultValueSignature() {
+        return this.defaultValue instanceof Signature;
     }
 
     /**
@@ -7601,8 +7798,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Timing) this.defaultValue;
     }
 
-    public boolean hasDefaultValueTiming() { 
-      return this != null && this.defaultValue instanceof Timing;
+    public boolean hasDefaultValueTiming() {
+        return this.defaultValue instanceof Timing;
     }
 
     /**
@@ -7616,8 +7813,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactDetail) this.defaultValue;
     }
 
-    public boolean hasDefaultValueContactDetail() { 
-      return this != null && this.defaultValue instanceof ContactDetail;
+    public boolean hasDefaultValueContactDetail() {
+        return this.defaultValue instanceof ContactDetail;
     }
 
     /**
@@ -7631,8 +7828,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DataRequirement) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDataRequirement() { 
-      return this != null && this.defaultValue instanceof DataRequirement;
+    public boolean hasDefaultValueDataRequirement() {
+        return this.defaultValue instanceof DataRequirement;
     }
 
     /**
@@ -7646,8 +7843,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Expression) this.defaultValue;
     }
 
-    public boolean hasDefaultValueExpression() { 
-      return this != null && this.defaultValue instanceof Expression;
+    public boolean hasDefaultValueExpression() {
+        return this.defaultValue instanceof Expression;
     }
 
     /**
@@ -7661,8 +7858,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ParameterDefinition) this.defaultValue;
     }
 
-    public boolean hasDefaultValueParameterDefinition() { 
-      return this != null && this.defaultValue instanceof ParameterDefinition;
+    public boolean hasDefaultValueParameterDefinition() {
+        return this.defaultValue instanceof ParameterDefinition;
     }
 
     /**
@@ -7676,8 +7873,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RelatedArtifact) this.defaultValue;
     }
 
-    public boolean hasDefaultValueRelatedArtifact() { 
-      return this != null && this.defaultValue instanceof RelatedArtifact;
+    public boolean hasDefaultValueRelatedArtifact() {
+        return this.defaultValue instanceof RelatedArtifact;
     }
 
     /**
@@ -7691,8 +7888,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TriggerDefinition) this.defaultValue;
     }
 
-    public boolean hasDefaultValueTriggerDefinition() { 
-      return this != null && this.defaultValue instanceof TriggerDefinition;
+    public boolean hasDefaultValueTriggerDefinition() {
+        return this.defaultValue instanceof TriggerDefinition;
     }
 
     /**
@@ -7706,8 +7903,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UsageContext) this.defaultValue;
     }
 
-    public boolean hasDefaultValueUsageContext() { 
-      return this != null && this.defaultValue instanceof UsageContext;
+    public boolean hasDefaultValueUsageContext() {
+        return this.defaultValue instanceof UsageContext;
     }
 
     /**
@@ -7721,8 +7918,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Availability) this.defaultValue;
     }
 
-    public boolean hasDefaultValueAvailability() { 
-      return this != null && this.defaultValue instanceof Availability;
+    public boolean hasDefaultValueAvailability() {
+        return this.defaultValue instanceof Availability;
     }
 
     /**
@@ -7736,8 +7933,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ExtendedContactDetail) this.defaultValue;
     }
 
-    public boolean hasDefaultValueExtendedContactDetail() { 
-      return this != null && this.defaultValue instanceof ExtendedContactDetail;
+    public boolean hasDefaultValueExtendedContactDetail() {
+        return this.defaultValue instanceof ExtendedContactDetail;
     }
 
     /**
@@ -7751,8 +7948,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Dosage) this.defaultValue;
     }
 
-    public boolean hasDefaultValueDosage() { 
-      return this != null && this.defaultValue instanceof Dosage;
+    public boolean hasDefaultValueDosage() {
+        return this.defaultValue instanceof Dosage;
     }
 
     /**
@@ -7766,8 +7963,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Meta) this.defaultValue;
     }
 
-    public boolean hasDefaultValueMeta() { 
-      return this != null && this.defaultValue instanceof Meta;
+    public boolean hasDefaultValueMeta() {
+        return this.defaultValue instanceof Meta;
     }
 
     public boolean hasDefaultValue() { 
@@ -7900,8 +8097,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Base64BinaryType) this.fixed;
     }
 
-    public boolean hasFixedBase64BinaryType() { 
-      return this != null && this.fixed instanceof Base64BinaryType;
+    public boolean hasFixedBase64BinaryType() {
+        return this.fixed instanceof Base64BinaryType;
     }
 
     /**
@@ -7915,8 +8112,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (BooleanType) this.fixed;
     }
 
-    public boolean hasFixedBooleanType() { 
-      return this != null && this.fixed instanceof BooleanType;
+    public boolean hasFixedBooleanType() {
+        return this.fixed instanceof BooleanType;
     }
 
     /**
@@ -7930,8 +8127,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CanonicalType) this.fixed;
     }
 
-    public boolean hasFixedCanonicalType() { 
-      return this != null && this.fixed instanceof CanonicalType;
+    public boolean hasFixedCanonicalType() {
+        return this.fixed instanceof CanonicalType;
     }
 
     /**
@@ -7945,8 +8142,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeType) this.fixed;
     }
 
-    public boolean hasFixedCodeType() { 
-      return this != null && this.fixed instanceof CodeType;
+    public boolean hasFixedCodeType() {
+        return this.fixed instanceof CodeType;
     }
 
     /**
@@ -7960,8 +8157,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateType) this.fixed;
     }
 
-    public boolean hasFixedDateType() { 
-      return this != null && this.fixed instanceof DateType;
+    public boolean hasFixedDateType() {
+        return this.fixed instanceof DateType;
     }
 
     /**
@@ -7975,8 +8172,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateTimeType) this.fixed;
     }
 
-    public boolean hasFixedDateTimeType() { 
-      return this != null && this.fixed instanceof DateTimeType;
+    public boolean hasFixedDateTimeType() {
+        return this.fixed instanceof DateTimeType;
     }
 
     /**
@@ -7990,8 +8187,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DecimalType) this.fixed;
     }
 
-    public boolean hasFixedDecimalType() { 
-      return this != null && this.fixed instanceof DecimalType;
+    public boolean hasFixedDecimalType() {
+        return this.fixed instanceof DecimalType;
     }
 
     /**
@@ -8005,8 +8202,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IdType) this.fixed;
     }
 
-    public boolean hasFixedIdType() { 
-      return this != null && this.fixed instanceof IdType;
+    public boolean hasFixedIdType() {
+        return this.fixed instanceof IdType;
     }
 
     /**
@@ -8020,8 +8217,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (InstantType) this.fixed;
     }
 
-    public boolean hasFixedInstantType() { 
-      return this != null && this.fixed instanceof InstantType;
+    public boolean hasFixedInstantType() {
+        return this.fixed instanceof InstantType;
     }
 
     /**
@@ -8035,8 +8232,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IntegerType) this.fixed;
     }
 
-    public boolean hasFixedIntegerType() { 
-      return this != null && this.fixed instanceof IntegerType;
+    public boolean hasFixedIntegerType() {
+        return this.fixed instanceof IntegerType;
     }
 
     /**
@@ -8050,8 +8247,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Integer64Type) this.fixed;
     }
 
-    public boolean hasFixedInteger64Type() { 
-      return this != null && this.fixed instanceof Integer64Type;
+    public boolean hasFixedInteger64Type() {
+        return this.fixed instanceof Integer64Type;
     }
 
     /**
@@ -8065,8 +8262,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (MarkdownType) this.fixed;
     }
 
-    public boolean hasFixedMarkdownType() { 
-      return this != null && this.fixed instanceof MarkdownType;
+    public boolean hasFixedMarkdownType() {
+        return this.fixed instanceof MarkdownType;
     }
 
     /**
@@ -8080,8 +8277,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (OidType) this.fixed;
     }
 
-    public boolean hasFixedOidType() { 
-      return this != null && this.fixed instanceof OidType;
+    public boolean hasFixedOidType() {
+        return this.fixed instanceof OidType;
     }
 
     /**
@@ -8095,8 +8292,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (PositiveIntType) this.fixed;
     }
 
-    public boolean hasFixedPositiveIntType() { 
-      return this != null && this.fixed instanceof PositiveIntType;
+    public boolean hasFixedPositiveIntType() {
+        return this.fixed instanceof PositiveIntType;
     }
 
     /**
@@ -8110,8 +8307,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (StringType) this.fixed;
     }
 
-    public boolean hasFixedStringType() { 
-      return this != null && this.fixed instanceof StringType;
+    public boolean hasFixedStringType() {
+        return this.fixed instanceof StringType;
     }
 
     /**
@@ -8125,8 +8322,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TimeType) this.fixed;
     }
 
-    public boolean hasFixedTimeType() { 
-      return this != null && this.fixed instanceof TimeType;
+    public boolean hasFixedTimeType() {
+        return this.fixed instanceof TimeType;
     }
 
     /**
@@ -8140,8 +8337,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UnsignedIntType) this.fixed;
     }
 
-    public boolean hasFixedUnsignedIntType() { 
-      return this != null && this.fixed instanceof UnsignedIntType;
+    public boolean hasFixedUnsignedIntType() {
+        return this.fixed instanceof UnsignedIntType;
     }
 
     /**
@@ -8155,8 +8352,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UriType) this.fixed;
     }
 
-    public boolean hasFixedUriType() { 
-      return this != null && this.fixed instanceof UriType;
+    public boolean hasFixedUriType() {
+        return this.fixed instanceof UriType;
     }
 
     /**
@@ -8170,8 +8367,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UrlType) this.fixed;
     }
 
-    public boolean hasFixedUrlType() { 
-      return this != null && this.fixed instanceof UrlType;
+    public boolean hasFixedUrlType() {
+        return this.fixed instanceof UrlType;
     }
 
     /**
@@ -8185,8 +8382,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UuidType) this.fixed;
     }
 
-    public boolean hasFixedUuidType() { 
-      return this != null && this.fixed instanceof UuidType;
+    public boolean hasFixedUuidType() {
+        return this.fixed instanceof UuidType;
     }
 
     /**
@@ -8200,8 +8397,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Address) this.fixed;
     }
 
-    public boolean hasFixedAddress() { 
-      return this != null && this.fixed instanceof Address;
+    public boolean hasFixedAddress() {
+        return this.fixed instanceof Address;
     }
 
     /**
@@ -8215,8 +8412,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Age) this.fixed;
     }
 
-    public boolean hasFixedAge() { 
-      return this != null && this.fixed instanceof Age;
+    public boolean hasFixedAge() {
+        return this.fixed instanceof Age;
     }
 
     /**
@@ -8230,8 +8427,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Annotation) this.fixed;
     }
 
-    public boolean hasFixedAnnotation() { 
-      return this != null && this.fixed instanceof Annotation;
+    public boolean hasFixedAnnotation() {
+        return this.fixed instanceof Annotation;
     }
 
     /**
@@ -8245,8 +8442,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Attachment) this.fixed;
     }
 
-    public boolean hasFixedAttachment() { 
-      return this != null && this.fixed instanceof Attachment;
+    public boolean hasFixedAttachment() {
+        return this.fixed instanceof Attachment;
     }
 
     /**
@@ -8260,8 +8457,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableConcept) this.fixed;
     }
 
-    public boolean hasFixedCodeableConcept() { 
-      return this != null && this.fixed instanceof CodeableConcept;
+    public boolean hasFixedCodeableConcept() {
+        return this.fixed instanceof CodeableConcept;
     }
 
     /**
@@ -8275,8 +8472,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableReference) this.fixed;
     }
 
-    public boolean hasFixedCodeableReference() { 
-      return this != null && this.fixed instanceof CodeableReference;
+    public boolean hasFixedCodeableReference() {
+        return this.fixed instanceof CodeableReference;
     }
 
     /**
@@ -8290,8 +8487,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Coding) this.fixed;
     }
 
-    public boolean hasFixedCoding() { 
-      return this != null && this.fixed instanceof Coding;
+    public boolean hasFixedCoding() {
+        return this.fixed instanceof Coding;
     }
 
     /**
@@ -8305,8 +8502,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactPoint) this.fixed;
     }
 
-    public boolean hasFixedContactPoint() { 
-      return this != null && this.fixed instanceof ContactPoint;
+    public boolean hasFixedContactPoint() {
+        return this.fixed instanceof ContactPoint;
     }
 
     /**
@@ -8320,8 +8517,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Count) this.fixed;
     }
 
-    public boolean hasFixedCount() { 
-      return this != null && this.fixed instanceof Count;
+    public boolean hasFixedCount() {
+        return this.fixed instanceof Count;
     }
 
     /**
@@ -8335,8 +8532,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Distance) this.fixed;
     }
 
-    public boolean hasFixedDistance() { 
-      return this != null && this.fixed instanceof Distance;
+    public boolean hasFixedDistance() {
+        return this.fixed instanceof Distance;
     }
 
     /**
@@ -8350,8 +8547,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Duration) this.fixed;
     }
 
-    public boolean hasFixedDuration() { 
-      return this != null && this.fixed instanceof Duration;
+    public boolean hasFixedDuration() {
+        return this.fixed instanceof Duration;
     }
 
     /**
@@ -8365,8 +8562,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (HumanName) this.fixed;
     }
 
-    public boolean hasFixedHumanName() { 
-      return this != null && this.fixed instanceof HumanName;
+    public boolean hasFixedHumanName() {
+        return this.fixed instanceof HumanName;
     }
 
     /**
@@ -8380,8 +8577,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Identifier) this.fixed;
     }
 
-    public boolean hasFixedIdentifier() { 
-      return this != null && this.fixed instanceof Identifier;
+    public boolean hasFixedIdentifier() {
+        return this.fixed instanceof Identifier;
     }
 
     /**
@@ -8395,8 +8592,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Money) this.fixed;
     }
 
-    public boolean hasFixedMoney() { 
-      return this != null && this.fixed instanceof Money;
+    public boolean hasFixedMoney() {
+        return this.fixed instanceof Money;
     }
 
     /**
@@ -8410,8 +8607,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Period) this.fixed;
     }
 
-    public boolean hasFixedPeriod() { 
-      return this != null && this.fixed instanceof Period;
+    public boolean hasFixedPeriod() {
+        return this.fixed instanceof Period;
     }
 
     /**
@@ -8425,8 +8622,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Quantity) this.fixed;
     }
 
-    public boolean hasFixedQuantity() { 
-      return this != null && this.fixed instanceof Quantity;
+    public boolean hasFixedQuantity() {
+        return this.fixed instanceof Quantity;
     }
 
     /**
@@ -8440,8 +8637,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Range) this.fixed;
     }
 
-    public boolean hasFixedRange() { 
-      return this != null && this.fixed instanceof Range;
+    public boolean hasFixedRange() {
+        return this.fixed instanceof Range;
     }
 
     /**
@@ -8455,8 +8652,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Ratio) this.fixed;
     }
 
-    public boolean hasFixedRatio() { 
-      return this != null && this.fixed instanceof Ratio;
+    public boolean hasFixedRatio() {
+        return this.fixed instanceof Ratio;
     }
 
     /**
@@ -8470,8 +8667,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RatioRange) this.fixed;
     }
 
-    public boolean hasFixedRatioRange() { 
-      return this != null && this.fixed instanceof RatioRange;
+    public boolean hasFixedRatioRange() {
+        return this.fixed instanceof RatioRange;
     }
 
     /**
@@ -8485,8 +8682,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Reference) this.fixed;
     }
 
-    public boolean hasFixedReference() { 
-      return this != null && this.fixed instanceof Reference;
+    public boolean hasFixedReference() {
+        return this.fixed instanceof Reference;
     }
 
     /**
@@ -8500,8 +8697,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (SampledData) this.fixed;
     }
 
-    public boolean hasFixedSampledData() { 
-      return this != null && this.fixed instanceof SampledData;
+    public boolean hasFixedSampledData() {
+        return this.fixed instanceof SampledData;
     }
 
     /**
@@ -8515,8 +8712,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Signature) this.fixed;
     }
 
-    public boolean hasFixedSignature() { 
-      return this != null && this.fixed instanceof Signature;
+    public boolean hasFixedSignature() {
+        return this.fixed instanceof Signature;
     }
 
     /**
@@ -8530,8 +8727,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Timing) this.fixed;
     }
 
-    public boolean hasFixedTiming() { 
-      return this != null && this.fixed instanceof Timing;
+    public boolean hasFixedTiming() {
+        return this.fixed instanceof Timing;
     }
 
     /**
@@ -8545,8 +8742,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactDetail) this.fixed;
     }
 
-    public boolean hasFixedContactDetail() { 
-      return this != null && this.fixed instanceof ContactDetail;
+    public boolean hasFixedContactDetail() {
+        return this.fixed instanceof ContactDetail;
     }
 
     /**
@@ -8560,8 +8757,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DataRequirement) this.fixed;
     }
 
-    public boolean hasFixedDataRequirement() { 
-      return this != null && this.fixed instanceof DataRequirement;
+    public boolean hasFixedDataRequirement() {
+        return this.fixed instanceof DataRequirement;
     }
 
     /**
@@ -8575,8 +8772,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Expression) this.fixed;
     }
 
-    public boolean hasFixedExpression() { 
-      return this != null && this.fixed instanceof Expression;
+    public boolean hasFixedExpression() {
+        return this.fixed instanceof Expression;
     }
 
     /**
@@ -8590,8 +8787,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ParameterDefinition) this.fixed;
     }
 
-    public boolean hasFixedParameterDefinition() { 
-      return this != null && this.fixed instanceof ParameterDefinition;
+    public boolean hasFixedParameterDefinition() {
+        return this.fixed instanceof ParameterDefinition;
     }
 
     /**
@@ -8605,8 +8802,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RelatedArtifact) this.fixed;
     }
 
-    public boolean hasFixedRelatedArtifact() { 
-      return this != null && this.fixed instanceof RelatedArtifact;
+    public boolean hasFixedRelatedArtifact() {
+        return this.fixed instanceof RelatedArtifact;
     }
 
     /**
@@ -8620,8 +8817,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TriggerDefinition) this.fixed;
     }
 
-    public boolean hasFixedTriggerDefinition() { 
-      return this != null && this.fixed instanceof TriggerDefinition;
+    public boolean hasFixedTriggerDefinition() {
+        return this.fixed instanceof TriggerDefinition;
     }
 
     /**
@@ -8635,8 +8832,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UsageContext) this.fixed;
     }
 
-    public boolean hasFixedUsageContext() { 
-      return this != null && this.fixed instanceof UsageContext;
+    public boolean hasFixedUsageContext() {
+        return this.fixed instanceof UsageContext;
     }
 
     /**
@@ -8650,8 +8847,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Availability) this.fixed;
     }
 
-    public boolean hasFixedAvailability() { 
-      return this != null && this.fixed instanceof Availability;
+    public boolean hasFixedAvailability() {
+        return this.fixed instanceof Availability;
     }
 
     /**
@@ -8665,8 +8862,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ExtendedContactDetail) this.fixed;
     }
 
-    public boolean hasFixedExtendedContactDetail() { 
-      return this != null && this.fixed instanceof ExtendedContactDetail;
+    public boolean hasFixedExtendedContactDetail() {
+        return this.fixed instanceof ExtendedContactDetail;
     }
 
     /**
@@ -8680,8 +8877,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Dosage) this.fixed;
     }
 
-    public boolean hasFixedDosage() { 
-      return this != null && this.fixed instanceof Dosage;
+    public boolean hasFixedDosage() {
+        return this.fixed instanceof Dosage;
     }
 
     /**
@@ -8695,8 +8892,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Meta) this.fixed;
     }
 
-    public boolean hasFixedMeta() { 
-      return this != null && this.fixed instanceof Meta;
+    public boolean hasFixedMeta() {
+        return this.fixed instanceof Meta;
     }
 
     public boolean hasFixed() { 
@@ -8755,8 +8952,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Base64BinaryType) this.pattern;
     }
 
-    public boolean hasPatternBase64BinaryType() { 
-      return this != null && this.pattern instanceof Base64BinaryType;
+    public boolean hasPatternBase64BinaryType() {
+        return this.pattern instanceof Base64BinaryType;
     }
 
     /**
@@ -8782,8 +8979,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (BooleanType) this.pattern;
     }
 
-    public boolean hasPatternBooleanType() { 
-      return this != null && this.pattern instanceof BooleanType;
+    public boolean hasPatternBooleanType() {
+        return this.pattern instanceof BooleanType;
     }
 
     /**
@@ -8809,8 +9006,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CanonicalType) this.pattern;
     }
 
-    public boolean hasPatternCanonicalType() { 
-      return this != null && this.pattern instanceof CanonicalType;
+    public boolean hasPatternCanonicalType() {
+        return this.pattern instanceof CanonicalType;
     }
 
     /**
@@ -8836,8 +9033,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeType) this.pattern;
     }
 
-    public boolean hasPatternCodeType() { 
-      return this != null && this.pattern instanceof CodeType;
+    public boolean hasPatternCodeType() {
+        return this.pattern instanceof CodeType;
     }
 
     /**
@@ -8863,8 +9060,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateType) this.pattern;
     }
 
-    public boolean hasPatternDateType() { 
-      return this != null && this.pattern instanceof DateType;
+    public boolean hasPatternDateType() {
+        return this.pattern instanceof DateType;
     }
 
     /**
@@ -8890,8 +9087,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateTimeType) this.pattern;
     }
 
-    public boolean hasPatternDateTimeType() { 
-      return this != null && this.pattern instanceof DateTimeType;
+    public boolean hasPatternDateTimeType() {
+        return this.pattern instanceof DateTimeType;
     }
 
     /**
@@ -8917,8 +9114,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DecimalType) this.pattern;
     }
 
-    public boolean hasPatternDecimalType() { 
-      return this != null && this.pattern instanceof DecimalType;
+    public boolean hasPatternDecimalType() {
+        return this.pattern instanceof DecimalType;
     }
 
     /**
@@ -8944,8 +9141,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IdType) this.pattern;
     }
 
-    public boolean hasPatternIdType() { 
-      return this != null && this.pattern instanceof IdType;
+    public boolean hasPatternIdType() {
+        return this.pattern instanceof IdType;
     }
 
     /**
@@ -8971,8 +9168,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (InstantType) this.pattern;
     }
 
-    public boolean hasPatternInstantType() { 
-      return this != null && this.pattern instanceof InstantType;
+    public boolean hasPatternInstantType() {
+        return this.pattern instanceof InstantType;
     }
 
     /**
@@ -8998,8 +9195,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IntegerType) this.pattern;
     }
 
-    public boolean hasPatternIntegerType() { 
-      return this != null && this.pattern instanceof IntegerType;
+    public boolean hasPatternIntegerType() {
+        return this.pattern instanceof IntegerType;
     }
 
     /**
@@ -9025,8 +9222,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Integer64Type) this.pattern;
     }
 
-    public boolean hasPatternInteger64Type() { 
-      return this != null && this.pattern instanceof Integer64Type;
+    public boolean hasPatternInteger64Type() {
+        return this.pattern instanceof Integer64Type;
     }
 
     /**
@@ -9052,8 +9249,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (MarkdownType) this.pattern;
     }
 
-    public boolean hasPatternMarkdownType() { 
-      return this != null && this.pattern instanceof MarkdownType;
+    public boolean hasPatternMarkdownType() {
+        return this.pattern instanceof MarkdownType;
     }
 
     /**
@@ -9079,8 +9276,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (OidType) this.pattern;
     }
 
-    public boolean hasPatternOidType() { 
-      return this != null && this.pattern instanceof OidType;
+    public boolean hasPatternOidType() {
+        return this.pattern instanceof OidType;
     }
 
     /**
@@ -9106,8 +9303,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (PositiveIntType) this.pattern;
     }
 
-    public boolean hasPatternPositiveIntType() { 
-      return this != null && this.pattern instanceof PositiveIntType;
+    public boolean hasPatternPositiveIntType() {
+        return this.pattern instanceof PositiveIntType;
     }
 
     /**
@@ -9133,8 +9330,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (StringType) this.pattern;
     }
 
-    public boolean hasPatternStringType() { 
-      return this != null && this.pattern instanceof StringType;
+    public boolean hasPatternStringType() {
+        return this.pattern instanceof StringType;
     }
 
     /**
@@ -9160,8 +9357,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TimeType) this.pattern;
     }
 
-    public boolean hasPatternTimeType() { 
-      return this != null && this.pattern instanceof TimeType;
+    public boolean hasPatternTimeType() {
+        return this.pattern instanceof TimeType;
     }
 
     /**
@@ -9187,8 +9384,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UnsignedIntType) this.pattern;
     }
 
-    public boolean hasPatternUnsignedIntType() { 
-      return this != null && this.pattern instanceof UnsignedIntType;
+    public boolean hasPatternUnsignedIntType() {
+        return this.pattern instanceof UnsignedIntType;
     }
 
     /**
@@ -9214,8 +9411,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UriType) this.pattern;
     }
 
-    public boolean hasPatternUriType() { 
-      return this != null && this.pattern instanceof UriType;
+    public boolean hasPatternUriType() {
+        return this.pattern instanceof UriType;
     }
 
     /**
@@ -9241,8 +9438,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UrlType) this.pattern;
     }
 
-    public boolean hasPatternUrlType() { 
-      return this != null && this.pattern instanceof UrlType;
+    public boolean hasPatternUrlType() {
+        return this.pattern instanceof UrlType;
     }
 
     /**
@@ -9268,8 +9465,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UuidType) this.pattern;
     }
 
-    public boolean hasPatternUuidType() { 
-      return this != null && this.pattern instanceof UuidType;
+    public boolean hasPatternUuidType() {
+        return this.pattern instanceof UuidType;
     }
 
     /**
@@ -9295,8 +9492,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Address) this.pattern;
     }
 
-    public boolean hasPatternAddress() { 
-      return this != null && this.pattern instanceof Address;
+    public boolean hasPatternAddress() {
+        return this.pattern instanceof Address;
     }
 
     /**
@@ -9322,8 +9519,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Age) this.pattern;
     }
 
-    public boolean hasPatternAge() { 
-      return this != null && this.pattern instanceof Age;
+    public boolean hasPatternAge() {
+        return this.pattern instanceof Age;
     }
 
     /**
@@ -9349,8 +9546,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Annotation) this.pattern;
     }
 
-    public boolean hasPatternAnnotation() { 
-      return this != null && this.pattern instanceof Annotation;
+    public boolean hasPatternAnnotation() {
+        return this.pattern instanceof Annotation;
     }
 
     /**
@@ -9376,8 +9573,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Attachment) this.pattern;
     }
 
-    public boolean hasPatternAttachment() { 
-      return this != null && this.pattern instanceof Attachment;
+    public boolean hasPatternAttachment() {
+        return this.pattern instanceof Attachment;
     }
 
     /**
@@ -9403,8 +9600,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableConcept) this.pattern;
     }
 
-    public boolean hasPatternCodeableConcept() { 
-      return this != null && this.pattern instanceof CodeableConcept;
+    public boolean hasPatternCodeableConcept() {
+        return this.pattern instanceof CodeableConcept;
     }
 
     /**
@@ -9430,8 +9627,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (CodeableReference) this.pattern;
     }
 
-    public boolean hasPatternCodeableReference() { 
-      return this != null && this.pattern instanceof CodeableReference;
+    public boolean hasPatternCodeableReference() {
+        return this.pattern instanceof CodeableReference;
     }
 
     /**
@@ -9457,8 +9654,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Coding) this.pattern;
     }
 
-    public boolean hasPatternCoding() { 
-      return this != null && this.pattern instanceof Coding;
+    public boolean hasPatternCoding() {
+        return this.pattern instanceof Coding;
     }
 
     /**
@@ -9484,8 +9681,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactPoint) this.pattern;
     }
 
-    public boolean hasPatternContactPoint() { 
-      return this != null && this.pattern instanceof ContactPoint;
+    public boolean hasPatternContactPoint() {
+        return this.pattern instanceof ContactPoint;
     }
 
     /**
@@ -9511,8 +9708,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Count) this.pattern;
     }
 
-    public boolean hasPatternCount() { 
-      return this != null && this.pattern instanceof Count;
+    public boolean hasPatternCount() {
+        return this.pattern instanceof Count;
     }
 
     /**
@@ -9538,8 +9735,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Distance) this.pattern;
     }
 
-    public boolean hasPatternDistance() { 
-      return this != null && this.pattern instanceof Distance;
+    public boolean hasPatternDistance() {
+        return this.pattern instanceof Distance;
     }
 
     /**
@@ -9565,8 +9762,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Duration) this.pattern;
     }
 
-    public boolean hasPatternDuration() { 
-      return this != null && this.pattern instanceof Duration;
+    public boolean hasPatternDuration() {
+        return this.pattern instanceof Duration;
     }
 
     /**
@@ -9592,8 +9789,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (HumanName) this.pattern;
     }
 
-    public boolean hasPatternHumanName() { 
-      return this != null && this.pattern instanceof HumanName;
+    public boolean hasPatternHumanName() {
+        return this.pattern instanceof HumanName;
     }
 
     /**
@@ -9619,8 +9816,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Identifier) this.pattern;
     }
 
-    public boolean hasPatternIdentifier() { 
-      return this != null && this.pattern instanceof Identifier;
+    public boolean hasPatternIdentifier() {
+        return this.pattern instanceof Identifier;
     }
 
     /**
@@ -9646,8 +9843,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Money) this.pattern;
     }
 
-    public boolean hasPatternMoney() { 
-      return this != null && this.pattern instanceof Money;
+    public boolean hasPatternMoney() {
+        return this.pattern instanceof Money;
     }
 
     /**
@@ -9673,8 +9870,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Period) this.pattern;
     }
 
-    public boolean hasPatternPeriod() { 
-      return this != null && this.pattern instanceof Period;
+    public boolean hasPatternPeriod() {
+        return this.pattern instanceof Period;
     }
 
     /**
@@ -9700,8 +9897,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Quantity) this.pattern;
     }
 
-    public boolean hasPatternQuantity() { 
-      return this != null && this.pattern instanceof Quantity;
+    public boolean hasPatternQuantity() {
+        return this.pattern instanceof Quantity;
     }
 
     /**
@@ -9727,8 +9924,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Range) this.pattern;
     }
 
-    public boolean hasPatternRange() { 
-      return this != null && this.pattern instanceof Range;
+    public boolean hasPatternRange() {
+        return this.pattern instanceof Range;
     }
 
     /**
@@ -9754,8 +9951,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Ratio) this.pattern;
     }
 
-    public boolean hasPatternRatio() { 
-      return this != null && this.pattern instanceof Ratio;
+    public boolean hasPatternRatio() {
+        return this.pattern instanceof Ratio;
     }
 
     /**
@@ -9781,8 +9978,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RatioRange) this.pattern;
     }
 
-    public boolean hasPatternRatioRange() { 
-      return this != null && this.pattern instanceof RatioRange;
+    public boolean hasPatternRatioRange() {
+        return this.pattern instanceof RatioRange;
     }
 
     /**
@@ -9808,8 +10005,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Reference) this.pattern;
     }
 
-    public boolean hasPatternReference() { 
-      return this != null && this.pattern instanceof Reference;
+    public boolean hasPatternReference() {
+        return this.pattern instanceof Reference;
     }
 
     /**
@@ -9835,8 +10032,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (SampledData) this.pattern;
     }
 
-    public boolean hasPatternSampledData() { 
-      return this != null && this.pattern instanceof SampledData;
+    public boolean hasPatternSampledData() {
+        return this.pattern instanceof SampledData;
     }
 
     /**
@@ -9862,8 +10059,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Signature) this.pattern;
     }
 
-    public boolean hasPatternSignature() { 
-      return this != null && this.pattern instanceof Signature;
+    public boolean hasPatternSignature() {
+        return this.pattern instanceof Signature;
     }
 
     /**
@@ -9889,8 +10086,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Timing) this.pattern;
     }
 
-    public boolean hasPatternTiming() { 
-      return this != null && this.pattern instanceof Timing;
+    public boolean hasPatternTiming() {
+        return this.pattern instanceof Timing;
     }
 
     /**
@@ -9916,8 +10113,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ContactDetail) this.pattern;
     }
 
-    public boolean hasPatternContactDetail() { 
-      return this != null && this.pattern instanceof ContactDetail;
+    public boolean hasPatternContactDetail() {
+        return this.pattern instanceof ContactDetail;
     }
 
     /**
@@ -9943,8 +10140,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DataRequirement) this.pattern;
     }
 
-    public boolean hasPatternDataRequirement() { 
-      return this != null && this.pattern instanceof DataRequirement;
+    public boolean hasPatternDataRequirement() {
+        return this.pattern instanceof DataRequirement;
     }
 
     /**
@@ -9970,8 +10167,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Expression) this.pattern;
     }
 
-    public boolean hasPatternExpression() { 
-      return this != null && this.pattern instanceof Expression;
+    public boolean hasPatternExpression() {
+        return this.pattern instanceof Expression;
     }
 
     /**
@@ -9997,8 +10194,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ParameterDefinition) this.pattern;
     }
 
-    public boolean hasPatternParameterDefinition() { 
-      return this != null && this.pattern instanceof ParameterDefinition;
+    public boolean hasPatternParameterDefinition() {
+        return this.pattern instanceof ParameterDefinition;
     }
 
     /**
@@ -10024,8 +10221,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (RelatedArtifact) this.pattern;
     }
 
-    public boolean hasPatternRelatedArtifact() { 
-      return this != null && this.pattern instanceof RelatedArtifact;
+    public boolean hasPatternRelatedArtifact() {
+        return this.pattern instanceof RelatedArtifact;
     }
 
     /**
@@ -10051,8 +10248,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TriggerDefinition) this.pattern;
     }
 
-    public boolean hasPatternTriggerDefinition() { 
-      return this != null && this.pattern instanceof TriggerDefinition;
+    public boolean hasPatternTriggerDefinition() {
+        return this.pattern instanceof TriggerDefinition;
     }
 
     /**
@@ -10078,8 +10275,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UsageContext) this.pattern;
     }
 
-    public boolean hasPatternUsageContext() { 
-      return this != null && this.pattern instanceof UsageContext;
+    public boolean hasPatternUsageContext() {
+        return this.pattern instanceof UsageContext;
     }
 
     /**
@@ -10105,8 +10302,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Availability) this.pattern;
     }
 
-    public boolean hasPatternAvailability() { 
-      return this != null && this.pattern instanceof Availability;
+    public boolean hasPatternAvailability() {
+        return this.pattern instanceof Availability;
     }
 
     /**
@@ -10132,8 +10329,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (ExtendedContactDetail) this.pattern;
     }
 
-    public boolean hasPatternExtendedContactDetail() { 
-      return this != null && this.pattern instanceof ExtendedContactDetail;
+    public boolean hasPatternExtendedContactDetail() {
+        return this.pattern instanceof ExtendedContactDetail;
     }
 
     /**
@@ -10159,8 +10356,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Dosage) this.pattern;
     }
 
-    public boolean hasPatternDosage() { 
-      return this != null && this.pattern instanceof Dosage;
+    public boolean hasPatternDosage() {
+        return this.pattern instanceof Dosage;
     }
 
     /**
@@ -10186,8 +10383,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Meta) this.pattern;
     }
 
-    public boolean hasPatternMeta() { 
-      return this != null && this.pattern instanceof Meta;
+    public boolean hasPatternMeta() {
+        return this.pattern instanceof Meta;
     }
 
     public boolean hasPattern() { 
@@ -10287,8 +10484,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateType) this.minValue;
     }
 
-    public boolean hasMinValueDateType() { 
-      return this != null && this.minValue instanceof DateType;
+    public boolean hasMinValueDateType() {
+        return this.minValue instanceof DateType;
     }
 
     /**
@@ -10302,8 +10499,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateTimeType) this.minValue;
     }
 
-    public boolean hasMinValueDateTimeType() { 
-      return this != null && this.minValue instanceof DateTimeType;
+    public boolean hasMinValueDateTimeType() {
+        return this.minValue instanceof DateTimeType;
     }
 
     /**
@@ -10317,8 +10514,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (InstantType) this.minValue;
     }
 
-    public boolean hasMinValueInstantType() { 
-      return this != null && this.minValue instanceof InstantType;
+    public boolean hasMinValueInstantType() {
+        return this.minValue instanceof InstantType;
     }
 
     /**
@@ -10332,8 +10529,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TimeType) this.minValue;
     }
 
-    public boolean hasMinValueTimeType() { 
-      return this != null && this.minValue instanceof TimeType;
+    public boolean hasMinValueTimeType() {
+        return this.minValue instanceof TimeType;
     }
 
     /**
@@ -10347,8 +10544,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DecimalType) this.minValue;
     }
 
-    public boolean hasMinValueDecimalType() { 
-      return this != null && this.minValue instanceof DecimalType;
+    public boolean hasMinValueDecimalType() {
+        return this.minValue instanceof DecimalType;
     }
 
     /**
@@ -10362,8 +10559,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IntegerType) this.minValue;
     }
 
-    public boolean hasMinValueIntegerType() { 
-      return this != null && this.minValue instanceof IntegerType;
+    public boolean hasMinValueIntegerType() {
+        return this.minValue instanceof IntegerType;
     }
 
     /**
@@ -10377,8 +10574,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Integer64Type) this.minValue;
     }
 
-    public boolean hasMinValueInteger64Type() { 
-      return this != null && this.minValue instanceof Integer64Type;
+    public boolean hasMinValueInteger64Type() {
+        return this.minValue instanceof Integer64Type;
     }
 
     /**
@@ -10392,8 +10589,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (PositiveIntType) this.minValue;
     }
 
-    public boolean hasMinValuePositiveIntType() { 
-      return this != null && this.minValue instanceof PositiveIntType;
+    public boolean hasMinValuePositiveIntType() {
+        return this.minValue instanceof PositiveIntType;
     }
 
     /**
@@ -10407,8 +10604,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UnsignedIntType) this.minValue;
     }
 
-    public boolean hasMinValueUnsignedIntType() { 
-      return this != null && this.minValue instanceof UnsignedIntType;
+    public boolean hasMinValueUnsignedIntType() {
+        return this.minValue instanceof UnsignedIntType;
     }
 
     /**
@@ -10422,8 +10619,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Quantity) this.minValue;
     }
 
-    public boolean hasMinValueQuantity() { 
-      return this != null && this.minValue instanceof Quantity;
+    public boolean hasMinValueQuantity() {
+        return this.minValue instanceof Quantity;
     }
 
     public boolean hasMinValue() { 
@@ -10458,8 +10655,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateType) this.maxValue;
     }
 
-    public boolean hasMaxValueDateType() { 
-      return this != null && this.maxValue instanceof DateType;
+    public boolean hasMaxValueDateType() {
+        return this.maxValue instanceof DateType;
     }
 
     /**
@@ -10473,8 +10670,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DateTimeType) this.maxValue;
     }
 
-    public boolean hasMaxValueDateTimeType() { 
-      return this != null && this.maxValue instanceof DateTimeType;
+    public boolean hasMaxValueDateTimeType() {
+        return this.maxValue instanceof DateTimeType;
     }
 
     /**
@@ -10488,8 +10685,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (InstantType) this.maxValue;
     }
 
-    public boolean hasMaxValueInstantType() { 
-      return this != null && this.maxValue instanceof InstantType;
+    public boolean hasMaxValueInstantType() {
+        return this.maxValue instanceof InstantType;
     }
 
     /**
@@ -10503,8 +10700,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (TimeType) this.maxValue;
     }
 
-    public boolean hasMaxValueTimeType() { 
-      return this != null && this.maxValue instanceof TimeType;
+    public boolean hasMaxValueTimeType() {
+        return this.maxValue instanceof TimeType;
     }
 
     /**
@@ -10518,8 +10715,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (DecimalType) this.maxValue;
     }
 
-    public boolean hasMaxValueDecimalType() { 
-      return this != null && this.maxValue instanceof DecimalType;
+    public boolean hasMaxValueDecimalType() {
+        return this.maxValue instanceof DecimalType;
     }
 
     /**
@@ -10533,8 +10730,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (IntegerType) this.maxValue;
     }
 
-    public boolean hasMaxValueIntegerType() { 
-      return this != null && this.maxValue instanceof IntegerType;
+    public boolean hasMaxValueIntegerType() {
+        return this.maxValue instanceof IntegerType;
     }
 
     /**
@@ -10548,8 +10745,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Integer64Type) this.maxValue;
     }
 
-    public boolean hasMaxValueInteger64Type() { 
-      return this != null && this.maxValue instanceof Integer64Type;
+    public boolean hasMaxValueInteger64Type() {
+        return this.maxValue instanceof Integer64Type;
     }
 
     /**
@@ -10563,8 +10760,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (PositiveIntType) this.maxValue;
     }
 
-    public boolean hasMaxValuePositiveIntType() { 
-      return this != null && this.maxValue instanceof PositiveIntType;
+    public boolean hasMaxValuePositiveIntType() {
+        return this.maxValue instanceof PositiveIntType;
     }
 
     /**
@@ -10578,8 +10775,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (UnsignedIntType) this.maxValue;
     }
 
-    public boolean hasMaxValueUnsignedIntType() { 
-      return this != null && this.maxValue instanceof UnsignedIntType;
+    public boolean hasMaxValueUnsignedIntType() {
+        return this.maxValue instanceof UnsignedIntType;
     }
 
     /**
@@ -10593,8 +10790,8 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       return (Quantity) this.maxValue;
     }
 
-    public boolean hasMaxValueQuantity() { 
-      return this != null && this.maxValue instanceof Quantity;
+    public boolean hasMaxValueQuantity() {
+        return this.maxValue instanceof Quantity;
     }
 
     public boolean hasMaxValue() { 
@@ -11649,6 +11846,86 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("representation")) {
+          value = new PropertyRepresentationEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getRepresentation().remove((Enumeration) value);
+        } else if (name.equals("sliceName")) {
+          this.sliceName = null;
+        } else if (name.equals("sliceIsConstraining")) {
+          this.sliceIsConstraining = null;
+        } else if (name.equals("label")) {
+          this.label = null;
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("slicing")) {
+          this.slicing = (ElementDefinitionSlicingComponent) value; // ElementDefinitionSlicingComponent
+        } else if (name.equals("short")) {
+          this.short_ = null;
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("requirements")) {
+          this.requirements = null;
+        } else if (name.equals("alias")) {
+          this.getAlias().remove(value);
+        } else if (name.equals("min")) {
+          this.min = null;
+        } else if (name.equals("max")) {
+          this.max = null;
+        } else if (name.equals("base")) {
+          this.base = (ElementDefinitionBaseComponent) value; // ElementDefinitionBaseComponent
+        } else if (name.equals("contentReference")) {
+          this.contentReference = null;
+        } else if (name.equals("type")) {
+          this.getType().remove((TypeRefComponent) value);
+        } else if (name.equals("defaultValue[x]")) {
+          this.defaultValue = null;
+        } else if (name.equals("meaningWhenMissing")) {
+          this.meaningWhenMissing = null;
+        } else if (name.equals("orderMeaning")) {
+          this.orderMeaning = null;
+        } else if (name.equals("fixed[x]")) {
+          this.fixed = null;
+        } else if (name.equals("pattern[x]")) {
+          this.pattern = null;
+        } else if (name.equals("example")) {
+          this.getExample().remove((ElementDefinitionExampleComponent) value);
+        } else if (name.equals("minValue[x]")) {
+          this.minValue = null;
+        } else if (name.equals("maxValue[x]")) {
+          this.maxValue = null;
+        } else if (name.equals("maxLength")) {
+          this.maxLength = null;
+        } else if (name.equals("condition")) {
+          this.getCondition().remove(value);
+        } else if (name.equals("constraint")) {
+          this.getConstraint().remove((ElementDefinitionConstraintComponent) value);
+        } else if (name.equals("mustHaveValue")) {
+          this.mustHaveValue = null;
+        } else if (name.equals("valueAlternatives")) {
+          this.getValueAlternatives().remove(value);
+        } else if (name.equals("mustSupport")) {
+          this.mustSupport = null;
+        } else if (name.equals("isModifier")) {
+          this.isModifier = null;
+        } else if (name.equals("isModifierReason")) {
+          this.isModifierReason = null;
+        } else if (name.equals("isSummary")) {
+          this.isSummary = null;
+        } else if (name.equals("binding")) {
+          this.binding = (ElementDefinitionBindingComponent) value; // ElementDefinitionBindingComponent
+        } else if (name.equals("mapping")) {
+          this.getMapping().remove((ElementDefinitionMappingComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -11745,19 +12022,19 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.path");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.path");
         }
         else if (name.equals("representation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.representation");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.representation");
         }
         else if (name.equals("sliceName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.sliceName");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.sliceName");
         }
         else if (name.equals("sliceIsConstraining")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.sliceIsConstraining");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.sliceIsConstraining");
         }
         else if (name.equals("label")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.label");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.label");
         }
         else if (name.equals("code")) {
           return addCode();
@@ -11767,32 +12044,32 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
           return this.slicing;
         }
         else if (name.equals("short")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.short");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.short");
         }
         else if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.definition");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.comment");
         }
         else if (name.equals("requirements")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.requirements");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.requirements");
         }
         else if (name.equals("alias")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.alias");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.alias");
         }
         else if (name.equals("min")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.min");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.min");
         }
         else if (name.equals("max")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.max");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.max");
         }
         else if (name.equals("base")) {
           this.base = new ElementDefinitionBaseComponent();
           return this.base;
         }
         else if (name.equals("contentReference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.contentReference");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.contentReference");
         }
         else if (name.equals("type")) {
           return addType();
@@ -12014,10 +12291,10 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
           return this.defaultValue;
         }
         else if (name.equals("meaningWhenMissing")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.meaningWhenMissing");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.meaningWhenMissing");
         }
         else if (name.equals("orderMeaning")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.orderMeaning");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.orderMeaning");
         }
         else if (name.equals("fixedBase64Binary")) {
           this.fixed = new Base64BinaryType();
@@ -12535,31 +12812,31 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
           return this.maxValue;
         }
         else if (name.equals("maxLength")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.maxLength");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.maxLength");
         }
         else if (name.equals("condition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.condition");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.condition");
         }
         else if (name.equals("constraint")) {
           return addConstraint();
         }
         else if (name.equals("mustHaveValue")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mustHaveValue");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mustHaveValue");
         }
         else if (name.equals("valueAlternatives")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.valueAlternatives");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.valueAlternatives");
         }
         else if (name.equals("mustSupport")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.mustSupport");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.mustSupport");
         }
         else if (name.equals("isModifier")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.isModifier");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.isModifier");
         }
         else if (name.equals("isModifierReason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.isModifierReason");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.isModifierReason");
         }
         else if (name.equals("isSummary")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ElementDefinition.isSummary");
+          throw new FHIRException("Cannot call addChild on a singleton property ElementDefinition.isSummary");
         }
         else if (name.equals("binding")) {
           this.binding = new ElementDefinitionBindingComponent();
@@ -12748,6 +13025,15 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
     }
     return b.toString();
   }
+
+  public List<String> typeList() {
+    List<String> res = new ArrayList<>();
+    for (TypeRefComponent tr : getType()) {
+      if (tr.hasCode())
+        res.add(tr.getWorkingCode());
+    }
+    return res;
+  }
   
   public String typeSummaryVB() {
     CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder("|");
@@ -12821,6 +13107,9 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
   }
 
   public boolean unbounded() {
+    if (getMax() == null) {
+      throw new Error("No max on "+getPath());
+    }
     return getMax().equals("*") || Integer.parseInt(getMax()) > 1;
   }
 
@@ -12860,7 +13149,39 @@ If a pattern[x] is declared on a repeating element, the pattern applies to all r
     return t;
   }
 
+  public boolean repeats() {
+    return !Utilities.existsInList(getMax(), "0", "1");
+  }
 
+  public String getIdOrPath() {
+    return hasId() ? getId() : getPath();
+  }
+
+  public int getMaxAsInt() {
+    return "*".equals(getMax()) ? Integer.MAX_VALUE : Integer.parseInt(getMax());
+  }
+
+  public TypeRefComponent getByType(String code) {
+    for (TypeRefComponent tr : getType()) {
+      if (tr.getWorkingCode().equals(code)) {
+        return tr;
+      }
+    }
+    return null;
+  }
+
+  public boolean hasObligations() {
+    boolean res = hasExtension(ExtensionDefinitions.EXT_OBLIGATION_CORE);
+    for (TypeRefComponent tr : getType()) {
+      res = res || tr.hasExtension(ExtensionDefinitions.EXT_OBLIGATION_CORE);
+    }
+    return res;
+  }
+  
+  public boolean isProfiledExtension() {
+    return getType().size() == 1 && "Extension".equals(getTypeFirstRep().getCode()) && 
+        getTypeFirstRep().getProfile().size() == 1;
+  }
 // end addition
 
 }

@@ -138,12 +138,14 @@ public class Group extends DomainResource {
         throw new FHIRException("Unknown GroupMembershipBasis code '"+codeString+"'");
         }
     public String toCode(GroupMembershipBasis code) {
-      if (code == GroupMembershipBasis.DEFINITIONAL)
+       if (code == GroupMembershipBasis.NULL)
+           return null;
+       if (code == GroupMembershipBasis.DEFINITIONAL)
         return "definitional";
       if (code == GroupMembershipBasis.ENUMERATED)
         return "enumerated";
       return "?";
-      }
+   }
     public String toSystem(GroupMembershipBasis code) {
       return code.getSystem();
       }
@@ -346,7 +348,9 @@ public class Group extends DomainResource {
         throw new FHIRException("Unknown GroupType code '"+codeString+"'");
         }
     public String toCode(GroupType code) {
-      if (code == GroupType.PERSON)
+       if (code == GroupType.NULL)
+           return null;
+       if (code == GroupType.PERSON)
         return "person";
       if (code == GroupType.ANIMAL)
         return "animal";
@@ -367,7 +371,7 @@ public class Group extends DomainResource {
       if (code == GroupType.SPECIMEN)
         return "specimen";
       return "?";
-      }
+   }
     public String toSystem(GroupType code) {
       return code.getSystem();
       }
@@ -464,8 +468,8 @@ public class Group extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -479,8 +483,8 @@ public class Group extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -494,8 +498,8 @@ public class Group extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -509,8 +513,8 @@ public class Group extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -524,8 +528,8 @@ public class Group extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -684,6 +688,21 @@ public class Group extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("exclude")) {
+          this.exclude = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -736,7 +755,7 @@ public class Group extends DomainResource {
           return this.value;
         }
         else if (name.equals("exclude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.characteristic.exclude");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.characteristic.exclude");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -985,6 +1004,19 @@ public class Group extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("entity")) {
+          this.entity = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("inactive")) {
+          this.inactive = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1018,7 +1050,7 @@ public class Group extends DomainResource {
           return this.period;
         }
         else if (name.equals("inactive")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.member.inactive");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.member.inactive");
         }
         else
           return super.addChild(name);
@@ -1794,6 +1826,37 @@ public class Group extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("type")) {
+          value = new GroupTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<GroupType>
+        } else if (name.equals("membership")) {
+          value = new GroupMembershipBasisEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.membership = (Enumeration) value; // Enumeration<GroupMembershipBasis>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("managingEntity")) {
+          this.managingEntity = null;
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((GroupCharacteristicComponent) value);
+        } else if (name.equals("member")) {
+          this.getMember().remove((GroupMemberComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1838,26 +1901,26 @@ public class Group extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.active");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.type");
         }
         else if (name.equals("membership")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.membership");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.membership");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.name");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.description");
         }
         else if (name.equals("quantity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Group.quantity");
+          throw new FHIRException("Cannot call addChild on a singleton property Group.quantity");
         }
         else if (name.equals("managingEntity")) {
           this.managingEntity = new Reference();

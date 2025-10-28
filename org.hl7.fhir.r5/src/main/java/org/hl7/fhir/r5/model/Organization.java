@@ -292,6 +292,21 @@ public class Organization extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("issuer")) {
+          this.issuer = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1076,6 +1091,33 @@ public class Organization extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("alias")) {
+          this.getAlias().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("partOf")) {
+          this.partOf = null;
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("qualification")) {
+          this.getQualification().remove((OrganizationQualificationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1118,19 +1160,19 @@ public class Organization extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Organization.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Organization.active");
         }
         else if (name.equals("type")) {
           return addType();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Organization.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Organization.name");
         }
         else if (name.equals("alias")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Organization.alias");
+          throw new FHIRException("Cannot call addChild on a singleton property Organization.alias");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Organization.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Organization.description");
         }
         else if (name.equals("contact")) {
           return addContact();

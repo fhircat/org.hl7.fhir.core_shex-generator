@@ -1,5 +1,7 @@
 package org.hl7.fhir.r4b.openapi;
 
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
@@ -29,24 +31,23 @@ package org.hl7.fhir.r4b.openapi;
   
  */
 
-
-
 import com.google.gson.JsonObject;
 
+@MarkedToMoveToAdjunctPackage
 public class ExternalDocsWriter extends BaseWriter {
 
   public ExternalDocsWriter(JsonObject object) {
     super(object);
   }
-  
+
   public ExternalDocsWriter description(String value) {
     object.addProperty("description", value);
-    return this;            
+    return this;
   }
-  
+
   public ExternalDocsWriter url(String value) {
     object.addProperty("url", value);
-    return this;            
+    return this;
   }
-  
+
 }

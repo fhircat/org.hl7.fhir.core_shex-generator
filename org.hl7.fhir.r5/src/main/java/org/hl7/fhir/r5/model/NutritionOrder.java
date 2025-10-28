@@ -476,6 +476,25 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("schedule")) {
+          this.schedule = (OralDietScheduleComponent) value; // OralDietScheduleComponent
+        } else if (name.equals("nutrient")) {
+          this.getNutrient().remove((NutritionOrderOralDietNutrientComponent) value);
+        } else if (name.equals("texture")) {
+          this.getTexture().remove((NutritionOrderOralDietTextureComponent) value);
+        } else if (name.equals("fluidConsistencyType")) {
+          this.getFluidConsistencyType().remove(value);
+        } else if (name.equals("instruction")) {
+          this.instruction = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -523,7 +542,7 @@ public class NutritionOrder extends DomainResource {
           return addFluidConsistencyType();
         }
         else if (name.equals("instruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.oralDiet.instruction");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.oralDiet.instruction");
         }
         else
           return super.addChild(name);
@@ -809,6 +828,19 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("timing")) {
+          this.getTiming().remove(value);
+        } else if (name.equals("asNeeded")) {
+          this.asNeeded = null;
+        } else if (name.equals("asNeededFor")) {
+          this.asNeededFor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -837,7 +869,7 @@ public class NutritionOrder extends DomainResource {
           return addTiming();
         }
         else if (name.equals("asNeeded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.oralDiet.schedule.asNeeded");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.oralDiet.schedule.asNeeded");
         }
         else if (name.equals("asNeededFor")) {
           this.asNeededFor = new CodeableConcept();
@@ -1020,6 +1052,17 @@ public class NutritionOrder extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("modifier")) {
+          this.modifier = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1223,6 +1266,17 @@ public class NutritionOrder extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("modifier")) {
+          this.modifier = null;
+        } else if (name.equals("foodType")) {
+          this.foodType = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1594,6 +1648,23 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("productName")) {
+          this.productName = null;
+        } else if (name.equals("schedule")) {
+          this.schedule = (SupplementScheduleComponent) value; // SupplementScheduleComponent
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("instruction")) {
+          this.instruction = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1627,7 +1698,7 @@ public class NutritionOrder extends DomainResource {
           return this.type;
         }
         else if (name.equals("productName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.supplement.productName");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.supplement.productName");
         }
         else if (name.equals("schedule")) {
           this.schedule = new SupplementScheduleComponent();
@@ -1638,7 +1709,7 @@ public class NutritionOrder extends DomainResource {
           return this.quantity;
         }
         else if (name.equals("instruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.supplement.instruction");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.supplement.instruction");
         }
         else
           return super.addChild(name);
@@ -1907,6 +1978,19 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("timing")) {
+          this.getTiming().remove(value);
+        } else if (name.equals("asNeeded")) {
+          this.asNeeded = null;
+        } else if (name.equals("asNeededFor")) {
+          this.asNeededFor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1935,7 +2019,7 @@ public class NutritionOrder extends DomainResource {
           return addTiming();
         }
         else if (name.equals("asNeeded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.supplement.schedule.asNeeded");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.supplement.schedule.asNeeded");
         }
         else if (name.equals("asNeededFor")) {
           this.asNeededFor = new CodeableConcept();
@@ -2531,6 +2615,31 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("baseFormulaType")) {
+          this.baseFormulaType = null;
+        } else if (name.equals("baseFormulaProductName")) {
+          this.baseFormulaProductName = null;
+        } else if (name.equals("deliveryDevice")) {
+          this.getDeliveryDevice().remove(value);
+        } else if (name.equals("additive")) {
+          this.getAdditive().remove((NutritionOrderEnteralFormulaAdditiveComponent) value);
+        } else if (name.equals("caloricDensity")) {
+          this.caloricDensity = null;
+        } else if (name.equals("routeOfAdministration")) {
+          this.routeOfAdministration = null;
+        } else if (name.equals("administration")) {
+          this.getAdministration().remove((NutritionOrderEnteralFormulaAdministrationComponent) value);
+        } else if (name.equals("maxVolumeToDeliver")) {
+          this.maxVolumeToDeliver = null;
+        } else if (name.equals("administrationInstruction")) {
+          this.administrationInstruction = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2572,7 +2681,7 @@ public class NutritionOrder extends DomainResource {
           return this.baseFormulaType;
         }
         else if (name.equals("baseFormulaProductName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.enteralFormula.baseFormulaProductName");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.enteralFormula.baseFormulaProductName");
         }
         else if (name.equals("deliveryDevice")) {
           return addDeliveryDevice();
@@ -2596,7 +2705,7 @@ public class NutritionOrder extends DomainResource {
           return this.maxVolumeToDeliver;
         }
         else if (name.equals("administrationInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.enteralFormula.administrationInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.enteralFormula.administrationInstruction");
         }
         else
           return super.addChild(name);
@@ -2860,6 +2969,19 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("productName")) {
+          this.productName = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2889,7 +3011,7 @@ public class NutritionOrder extends DomainResource {
           return this.type;
         }
         else if (name.equals("productName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.enteralFormula.additive.productName");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.enteralFormula.additive.productName");
         }
         else if (name.equals("quantity")) {
           this.quantity = new Quantity();
@@ -3043,8 +3165,8 @@ public class NutritionOrder extends DomainResource {
           return (Quantity) this.rate;
         }
 
-        public boolean hasRateQuantity() { 
-          return this != null && this.rate instanceof Quantity;
+        public boolean hasRateQuantity() {
+            return this.rate instanceof Quantity;
         }
 
         /**
@@ -3058,8 +3180,8 @@ public class NutritionOrder extends DomainResource {
           return (Ratio) this.rate;
         }
 
-        public boolean hasRateRatio() { 
-          return this != null && this.rate instanceof Ratio;
+        public boolean hasRateRatio() {
+            return this.rate instanceof Ratio;
         }
 
         public boolean hasRate() { 
@@ -3136,6 +3258,19 @@ public class NutritionOrder extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("schedule")) {
+          this.schedule = (EnteralFormulaScheduleComponent) value; // EnteralFormulaScheduleComponent
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("rate[x]")) {
+          this.rate = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3443,6 +3578,19 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("timing")) {
+          this.getTiming().remove(value);
+        } else if (name.equals("asNeeded")) {
+          this.asNeeded = null;
+        } else if (name.equals("asNeededFor")) {
+          this.asNeededFor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3471,7 +3619,7 @@ public class NutritionOrder extends DomainResource {
           return addTiming();
         }
         else if (name.equals("asNeeded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.enteralFormula.administration.schedule.asNeeded");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.enteralFormula.administration.schedule.asNeeded");
         }
         else if (name.equals("asNeededFor")) {
           this.asNeededFor = new CodeableConcept();
@@ -4975,6 +5123,62 @@ public class NutritionOrder extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("instantiates")) {
+          this.getInstantiates().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("groupIdentifier")) {
+          this.groupIdentifier = null;
+        } else if (name.equals("status")) {
+          value = new RequestStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<RequestStatus>
+        } else if (name.equals("intent")) {
+          value = new RequestIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<RequestIntent>
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("dateTime")) {
+          this.dateTime = null;
+        } else if (name.equals("orderer")) {
+          this.orderer = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove(value);
+        } else if (name.equals("allergyIntolerance")) {
+          this.getAllergyIntolerance().remove(value);
+        } else if (name.equals("foodPreferenceModifier")) {
+          this.getFoodPreferenceModifier().remove(value);
+        } else if (name.equals("excludeFoodModifier")) {
+          this.getExcludeFoodModifier().remove(value);
+        } else if (name.equals("outsideFoodAllowed")) {
+          this.outsideFoodAllowed = null;
+        } else if (name.equals("oralDiet")) {
+          this.oralDiet = (NutritionOrderOralDietComponent) value; // NutritionOrderOralDietComponent
+        } else if (name.equals("supplement")) {
+          this.getSupplement().remove((NutritionOrderSupplementComponent) value);
+        } else if (name.equals("enteralFormula")) {
+          this.enteralFormula = (NutritionOrderEnteralFormulaComponent) value; // NutritionOrderEnteralFormulaComponent
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5043,13 +5247,13 @@ public class NutritionOrder extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.instantiatesUri");
         }
         else if (name.equals("instantiates")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.instantiates");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.instantiates");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -5059,13 +5263,13 @@ public class NutritionOrder extends DomainResource {
           return this.groupIdentifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.status");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.status");
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.intent");
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.priority");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -5079,7 +5283,7 @@ public class NutritionOrder extends DomainResource {
           return addSupportingInformation();
         }
         else if (name.equals("dateTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.dateTime");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.dateTime");
         }
         else if (name.equals("orderer")) {
           this.orderer = new Reference();
@@ -5098,7 +5302,7 @@ public class NutritionOrder extends DomainResource {
           return addExcludeFoodModifier();
         }
         else if (name.equals("outsideFoodAllowed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionOrder.outsideFoodAllowed");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionOrder.outsideFoodAllowed");
         }
         else if (name.equals("oralDiet")) {
           this.oralDiet = new NutritionOrderOralDietComponent();

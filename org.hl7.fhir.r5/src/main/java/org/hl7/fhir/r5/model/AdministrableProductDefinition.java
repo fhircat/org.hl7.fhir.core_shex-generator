@@ -137,8 +137,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -152,8 +152,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -167,8 +167,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -182,8 +182,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -197,8 +197,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -212,8 +212,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -227,8 +227,8 @@ public class AdministrableProductDefinition extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -334,6 +334,19 @@ public class AdministrableProductDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -803,6 +816,27 @@ public class AdministrableProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("firstDose")) {
+          this.firstDose = null;
+        } else if (name.equals("maxSingleDose")) {
+          this.maxSingleDose = null;
+        } else if (name.equals("maxDosePerDay")) {
+          this.maxDosePerDay = null;
+        } else if (name.equals("maxDosePerTreatmentPeriod")) {
+          this.maxDosePerTreatmentPeriod = null;
+        } else if (name.equals("maxTreatmentPeriod")) {
+          this.maxTreatmentPeriod = null;
+        } else if (name.equals("targetSpecies")) {
+          this.getTargetSpecies().remove((AdministrableProductDefinitionRouteOfAdministrationTargetSpeciesComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1084,6 +1118,17 @@ public class AdministrableProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("withdrawalPeriod")) {
+          this.getWithdrawalPeriod().remove((AdministrableProductDefinitionRouteOfAdministrationTargetSpeciesWithdrawalPeriodComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1363,6 +1408,19 @@ public class AdministrableProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("tissue")) {
+          this.tissue = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("supportingInformation")) {
+          this.supportingInformation = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1396,7 +1454,7 @@ public class AdministrableProductDefinition extends DomainResource {
           return this.value;
         }
         else if (name.equals("supportingInformation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdministrableProductDefinition.routeOfAdministration.targetSpecies.withdrawalPeriod.supportingInformation");
+          throw new FHIRException("Cannot call addChild on a singleton property AdministrableProductDefinition.routeOfAdministration.targetSpecies.withdrawalPeriod.supportingInformation");
         }
         else
           return super.addChild(name);
@@ -2156,6 +2214,36 @@ public class AdministrableProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("formOf")) {
+          this.getFormOf().remove(value);
+        } else if (name.equals("administrableDoseForm")) {
+          this.administrableDoseForm = null;
+        } else if (name.equals("unitOfPresentation")) {
+          this.unitOfPresentation = null;
+        } else if (name.equals("producedFrom")) {
+          this.getProducedFrom().remove(value);
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove(value);
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("property")) {
+          this.getProperty().remove((AdministrableProductDefinitionPropertyComponent) value);
+        } else if (name.equals("routeOfAdministration")) {
+          this.getRouteOfAdministration().remove((AdministrableProductDefinitionRouteOfAdministrationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2200,7 +2288,7 @@ public class AdministrableProductDefinition extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdministrableProductDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property AdministrableProductDefinition.status");
         }
         else if (name.equals("formOf")) {
           return addFormOf();
@@ -2224,7 +2312,7 @@ public class AdministrableProductDefinition extends DomainResource {
           return this.device;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdministrableProductDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property AdministrableProductDefinition.description");
         }
         else if (name.equals("property")) {
           return addProperty();

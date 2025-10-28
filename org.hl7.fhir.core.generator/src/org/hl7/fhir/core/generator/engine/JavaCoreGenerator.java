@@ -31,16 +31,15 @@ import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.CodeSystem;
 import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.Enumerations.BindingStrength;
-import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.hl7.fhir.utilities.npm.ToolsVersion;
 
 public class JavaCoreGenerator {
 
@@ -75,7 +74,7 @@ public class JavaCoreGenerator {
     Date ddate = new Date();
     String date = config.DATE_FORMAT().format(ddate);
     
-    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager(org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
+    FilesystemPackageCacheManager pcm = new org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.Builder().build();
     System.out.println("Cache: "+pcm.getFolder());
     System.out.println("Load hl7.fhir."+pid+".core");
     NpmPackage npm = pcm.loadPackage("hl7.fhir."+pid+".core", version);
@@ -91,19 +90,19 @@ public class JavaCoreGenerator {
     
     System.out.println("Generate Model in "+dest);   
     System.out.println(" .. Constants");
-    JavaConstantsGenerator cgen = new JavaConstantsGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "Constants.java")), master, config, date, npm.version(), jid);
+    JavaConstantsGenerator cgen = new JavaConstantsGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "Constants.java")), master, config, date, npm.version(), jid);
     cgen.generate();
     cgen.close();
     System.out.println(" .. Enumerations");
-    JavaEnumerationsGenerator egen = new JavaEnumerationsGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "Enumerations.java")), master, config, date, npm.version(), jid);
+    JavaEnumerationsGenerator egen = new JavaEnumerationsGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "Enumerations.java")), master, config, date, npm.version(), jid);
     egen.generate();
     egen.close();
     
-    JavaFactoryGenerator fgen = new JavaFactoryGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "ResourceFactory.java")), master, config, date, npm.version(), jid);
-    JavaTypeGenerator tgen = new JavaTypeGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "ResourceType.java")), master, config, date, npm.version(), jid);
-    JavaParserJsonGenerator jgen = new JavaParserJsonGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "JsonParser.java")), master, config, date, npm.version(), jid);
-    JavaParserXmlGenerator xgen = new JavaParserXmlGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "XmlParser.java")), master, config, date, npm.version(), jid);
-    JavaParserRdfGenerator rgen = new JavaParserRdfGenerator(new FileOutputStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "RdfParser.java")), master, config, date, npm.version(), jid);
+    JavaFactoryGenerator fgen = new JavaFactoryGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "ResourceFactory.java")), master, config, date, npm.version(), jid);
+    JavaTypeGenerator tgen = new JavaTypeGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", "ResourceType.java")), master, config, date, npm.version(), jid);
+    JavaParserJsonGenerator jgen = new JavaParserJsonGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "JsonParser.java")), master, config, date, npm.version(), jid);
+    JavaParserXmlGenerator xgen = new JavaParserXmlGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "XmlParser.java")), master, config, date, npm.version(), jid);
+    JavaParserRdfGenerator rgen = new JavaParserRdfGenerator(ManagedFileAccess.outStream(Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "formats", "RdfParser.java")), master, config, date, npm.version(), jid);
     
     if (VersionUtilities.isR4BVer(version)) {
       StructureDefinition sd = master.getStructures().get("http://hl7.org/fhir/StructureDefinition/Element");
@@ -208,7 +207,7 @@ public class JavaCoreGenerator {
     Analysis analysis = jca.analyse(sd, elementInfo);
     
     String fn = Utilities.path(dest, "src", "main", "java", "org", "hl7", "fhir", jid, "model", name+".java");
-    JavaResourceGenerator gen = new JavaResourceGenerator(new FileOutputStream(fn), master, config, date, npm.version(), jid);
+    JavaResourceGenerator gen = new JavaResourceGenerator(ManagedFileAccess.outStream(fn), master, config, date, npm.version(), jid);
     gen.generate(analysis); 
     gen.close();
     jgen.seeClass(analysis);

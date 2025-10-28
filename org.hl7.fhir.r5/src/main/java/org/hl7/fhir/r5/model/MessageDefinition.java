@@ -152,14 +152,16 @@ public class MessageDefinition extends CanonicalResource {
         throw new FHIRException("Unknown MessageSignificanceCategory code '"+codeString+"'");
         }
     public String toCode(MessageSignificanceCategory code) {
-      if (code == MessageSignificanceCategory.CONSEQUENCE)
+       if (code == MessageSignificanceCategory.NULL)
+           return null;
+       if (code == MessageSignificanceCategory.CONSEQUENCE)
         return "consequence";
       if (code == MessageSignificanceCategory.CURRENCY)
         return "currency";
       if (code == MessageSignificanceCategory.NOTIFICATION)
         return "notification";
       return "?";
-      }
+   }
     public String toSystem(MessageSignificanceCategory code) {
       return code.getSystem();
       }
@@ -278,7 +280,9 @@ public class MessageDefinition extends CanonicalResource {
         throw new FHIRException("Unknown MessageheaderResponseRequest code '"+codeString+"'");
         }
     public String toCode(MessageheaderResponseRequest code) {
-      if (code == MessageheaderResponseRequest.ALWAYS)
+       if (code == MessageheaderResponseRequest.NULL)
+           return null;
+       if (code == MessageheaderResponseRequest.ALWAYS)
         return "always";
       if (code == MessageheaderResponseRequest.ONERROR)
         return "on-error";
@@ -287,7 +291,7 @@ public class MessageDefinition extends CanonicalResource {
       if (code == MessageheaderResponseRequest.ONSUCCESS)
         return "on-success";
       return "?";
-      }
+   }
     public String toSystem(MessageheaderResponseRequest code) {
       return code.getSystem();
       }
@@ -597,6 +601,21 @@ public class MessageDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("profile")) {
+          this.profile = null;
+        } else if (name.equals("min")) {
+          this.min = null;
+        } else if (name.equals("max")) {
+          this.max = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -624,16 +643,16 @@ public class MessageDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.focus.code");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.focus.code");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.focus.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.focus.profile");
         }
         else if (name.equals("min")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.focus.min");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.focus.min");
         }
         else if (name.equals("max")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.focus.max");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.focus.max");
         }
         else
           return super.addChild(name);
@@ -865,6 +884,17 @@ public class MessageDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("message")) {
+          this.message = null;
+        } else if (name.equals("situation")) {
+          this.situation = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -888,10 +918,10 @@ public class MessageDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("message")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.allowedResponse.message");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.allowedResponse.message");
         }
         else if (name.equals("situation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.allowedResponse.situation");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.allowedResponse.situation");
         }
         else
           return super.addChild(name);
@@ -1316,8 +1346,8 @@ public class MessageDefinition extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -1331,8 +1361,8 @@ public class MessageDefinition extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -2175,8 +2205,8 @@ public class MessageDefinition extends CanonicalResource {
       return (Coding) this.event;
     }
 
-    public boolean hasEventCoding() { 
-      return this != null && this.event instanceof Coding;
+    public boolean hasEventCoding() {
+        return this.event instanceof Coding;
     }
 
     /**
@@ -2190,8 +2220,8 @@ public class MessageDefinition extends CanonicalResource {
       return (UriType) this.event;
     }
 
-    public boolean hasEventUriType() { 
-      return this != null && this.event instanceof UriType;
+    public boolean hasEventUriType() {
+        return this.event instanceof UriType;
     }
 
     public boolean hasEvent() { 
@@ -2716,6 +2746,68 @@ public class MessageDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("replaces")) {
+          this.getReplaces().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("base")) {
+          this.base = null;
+        } else if (name.equals("parent")) {
+          this.getParent().remove(value);
+        } else if (name.equals("event[x]")) {
+          this.event = null;
+        } else if (name.equals("category")) {
+          value = new MessageSignificanceCategoryEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.category = (Enumeration) value; // Enumeration<MessageSignificanceCategory>
+        } else if (name.equals("focus")) {
+          this.getFocus().remove((MessageDefinitionFocusComponent) value);
+        } else if (name.equals("responseRequired")) {
+          value = new MessageheaderResponseRequestEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.responseRequired = (Enumeration) value; // Enumeration<MessageheaderResponseRequest>
+        } else if (name.equals("allowedResponse")) {
+          this.getAllowedResponse().remove((MessageDefinitionAllowedResponseComponent) value);
+        } else if (name.equals("graph")) {
+          this.graph = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2789,13 +2881,13 @@ public class MessageDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -2806,31 +2898,31 @@ public class MessageDefinition extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.title");
         }
         else if (name.equals("replaces")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.replaces");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.replaces");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -2839,19 +2931,19 @@ public class MessageDefinition extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.copyrightLabel");
         }
         else if (name.equals("base")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.base");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.base");
         }
         else if (name.equals("parent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.parent");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.parent");
         }
         else if (name.equals("eventCoding")) {
           this.event = new Coding();
@@ -2862,19 +2954,19 @@ public class MessageDefinition extends CanonicalResource {
           return this.event;
         }
         else if (name.equals("category")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.category");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.category");
         }
         else if (name.equals("focus")) {
           return addFocus();
         }
         else if (name.equals("responseRequired")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.responseRequired");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.responseRequired");
         }
         else if (name.equals("allowedResponse")) {
           return addAllowedResponse();
         }
         else if (name.equals("graph")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MessageDefinition.graph");
+          throw new FHIRException("Cannot call addChild on a singleton property MessageDefinition.graph");
         }
         else
           return super.addChild(name);

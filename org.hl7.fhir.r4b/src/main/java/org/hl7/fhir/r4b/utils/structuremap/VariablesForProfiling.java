@@ -1,12 +1,14 @@
 package org.hl7.fhir.r4b.utils.structuremap;
 
 import org.hl7.fhir.r4b.elementmodel.Property;
-import org.hl7.fhir.r4b.model.TypeDetails;
+import org.hl7.fhir.r4b.fhirpath.TypeDetails;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@MarkedToMoveToAdjunctPackage
 public class VariablesForProfiling {
   private final StructureMapUtilities structureMapUtilities;
   private List<VariableForProfiling> list = new ArrayList<VariableForProfiling>();
@@ -23,7 +25,8 @@ public class VariablesForProfiling {
     add(mode, name, new PropertyWithType(path, property, null, types));
   }
 
-  public void add(VariableMode mode, String name, String path, Property baseProperty, Property profileProperty, TypeDetails types) {
+  public void add(VariableMode mode, String name, String path, Property baseProperty, Property profileProperty,
+      TypeDetails types) {
     add(mode, name, new PropertyWithType(path, baseProperty, profileProperty, types));
   }
 

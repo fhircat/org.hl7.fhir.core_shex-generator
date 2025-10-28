@@ -2,6 +2,10 @@ package org.hl7.fhir.r5.utils;
 
 import java.util.List;
 
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
+import org.hl7.fhir.r5.model.CodeType;
+
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
@@ -34,19 +38,26 @@ import java.util.List;
 
 
 import org.hl7.fhir.r5.model.CodeableConcept;
+import org.hl7.fhir.r5.model.Extension;
 import org.hl7.fhir.r5.model.IntegerType;
+import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r5.model.OperationOutcome.IssueType;
 import org.hl7.fhir.r5.model.OperationOutcome.OperationOutcomeIssueComponent;
+import org.hl7.fhir.r5.model.StringType;
+import org.hl7.fhir.r5.model.UrlType;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
+import org.hl7.fhir.utilities.xhtml.NodeType;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 public class OperationOutcomeUtilities {
 
 
   public static OperationOutcomeIssueComponent convertToIssue(ValidationMessage message, OperationOutcome op) {
     OperationOutcomeIssueComponent issue = new OperationOutcome.OperationOutcomeIssueComponent();
-    issue.setUserData("source.vm", message);   
+    issue.setUserData(UserDataNames.validator_source_vm, message);   
     issue.setCode(convert(message.getType()));
     
     if (message.getLocation() != null) {
@@ -54,38 +65,51 @@ public class OperationOutcomeUtilities {
       issue.addExpression(message.getLocation());
     }
     // pass through line/col if they're present
-    if (message.getLine() >= 0)
-      issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_LINE).setValue(new IntegerType(message.getLine()));
-    if (message.getCol() >= 0)
-      issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_COL).setValue(new IntegerType(message.getCol()));
+    if (message.getLine() >= 0) {
+      issue.addExtension().setUrl(ExtensionDefinitions.EXT_ISSUE_LINE).setValue(new IntegerType(message.getLine()));
+    }
+    if (message.getCol() >= 0) {
+      issue.addExtension().setUrl(ExtensionDefinitions.EXT_ISSUE_COL).setValue(new IntegerType(message.getCol()));
+    }
     issue.setSeverity(convert(message.getLevel()));
     CodeableConcept c = new CodeableConcept();
     c.setText(message.getMessage());
     issue.setDetails(c);
     if (message.getSource() != null) {
-      issue.getExtension().add(ToolingExtensions.makeIssueSource(message.getSource()));
+      issue.getExtension().add(ExtensionUtilities.makeIssueSource(message.getSource()));
     }
     if (message.getMessageId() != null) {
-      issue.getExtension().add(ToolingExtensions.makeIssueMessageId(message.getMessageId()));
+      issue.getExtension().add(ExtensionUtilities.makeIssueMessageId(message.getMessageId()));
     }
-    issue.setUserData("source.msg", message);
+    issue.setUserData(UserDataNames.validator_source_msg, message);
     return issue;
   }
 
-  private static IssueSeverity convert(org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity level) {
+  public static IssueSeverity convert(org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity level) {
     switch (level) {
     case FATAL : return IssueSeverity.FATAL;
     case ERROR : return IssueSeverity.ERROR;
     case WARNING : return IssueSeverity.WARNING;
     case INFORMATION : return IssueSeverity.INFORMATION;
-	 case NULL : return IssueSeverity.NULL;
+   case NULL : return IssueSeverity.NULL;
     }
     return IssueSeverity.NULL;
   }
 
+  public static org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity convert(IssueSeverity level) {
+    switch (level) {
+    case FATAL : return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.FATAL;
+    case ERROR : return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.ERROR;
+    case WARNING : return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.WARNING;
+    case INFORMATION : return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.INFORMATION;
+   case NULL : return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.NULL;
+    }
+    return org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.NULL;
+  }
+
   private static IssueType convert(org.hl7.fhir.utilities.validation.ValidationMessage.IssueType type) {
     switch (type) {
-    case INVALID: 
+    case INVALID: return IssueType.INVALID; 
     case STRUCTURE: return IssueType.STRUCTURE;
     case REQUIRED: return IssueType.REQUIRED;
     case VALUE: return IssueType.VALUE;
@@ -133,7 +157,7 @@ public class OperationOutcomeUtilities {
 
   public static OperationOutcomeIssueComponent convertToIssueSimple(ValidationMessage message, OperationOutcome op) {
     OperationOutcomeIssueComponent issue = new OperationOutcome.OperationOutcomeIssueComponent();
-    issue.setUserData("source.vm", message);   
+    issue.setUserData(UserDataNames.validator_source_vm, message);   
     issue.setCode(convert(message.getType()));
     
     if (message.getLocation() != null) {
@@ -147,7 +171,47 @@ public class OperationOutcomeUtilities {
     CodeableConcept c = new CodeableConcept();
     c.setText(message.getMessage());
     issue.setDetails(c);
+    if (message.hasSliceInfo()) {
+      // issue.addExtension(ExtensionDefinitions.EXT_ISSUE_SLICE_INFO, new StringType(errorSummaryForSlicingAsText(message.getSliceInfo())));
+      for (ValidationMessage vm : message.getSliceInfo()) {
+        Extension ext = issue.addExtension();
+        ext.setUrl(ExtensionDefinitions.EXT_ISSUE_INNER_MESSAGE);
+        ext.addExtension("severity", new CodeType(vm.getLevel().toCode()));
+        ext.addExtension("type", new CodeType(vm.getType().toCode()));
+        ext.addExtension("path", new StringType(vm.getLocation()));
+        ext.addExtension("message", new StringType(vm.getMessage()));
+      }
+    }
+    if (message.getServer() != null) {
+      issue.addExtension(ExtensionDefinitions.EXT_ISSUE_SERVER, new UrlType(message.getServer()));
+    }
     return issue;
+  }
+
+  public static OperationOutcomeIssueComponent convertToIssueSimpleWithId(ValidationMessage message, OperationOutcome op) {
+    OperationOutcomeIssueComponent issue = convertToIssueSimple(message, op);
+    if (message.getMessageId() != null) {
+      ExtensionUtilities.setStringExtension(issue, ExtensionDefinitions.EXT_ISSUE_MSG_ID, message.getMessageId());
+    }
+    return issue;
+  }
+
+  private static String errorSummaryForSlicingAsText(List<ValidationMessage> list) {
+    StringBuilder b = new StringBuilder();
+    for (ValidationMessage vm : list) {
+      if (vm.isSlicingHint()) {
+        if (vm.hasSliceInfo()) {
+          for (ValidationMessage s : vm.getSliceInfo()) {
+            b.append(vm.getLocation() + ": " + s);
+          }
+        } else {
+          b.append(vm.getLocation() + ": " + vm.getMessage());
+        }
+      } else if (vm.getLevel() == org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.ERROR || vm.getLevel() == org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity.FATAL) {
+        b.append(vm.getLocation() + ": " + vm.getHtml());
+      }
+    }
+    return b.toString();
   }
 
   public static OperationOutcome createOutcomeSimple(List<ValidationMessage> messages) {
@@ -156,6 +220,26 @@ public class OperationOutcomeUtilities {
       res.addIssue(convertToIssueSimple(vm, res));
     }
     return res;
+  }
+
+  public static OperationOutcome createOutcomeSimpleWithIds(List<ValidationMessage> messages) {
+    OperationOutcome res = new OperationOutcome();
+    for (ValidationMessage vm : messages) {
+      res.addIssue(convertToIssueSimpleWithId(vm, res));
+    }
+    return res;
+  }
+
+  public static OperationOutcome outcomeFromTextError(String text) {
+    OperationOutcome oo = new OperationOutcome();
+    oo.getText().setStatus(NarrativeStatus.GENERATED);
+    oo.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+    oo.getText().getDiv().tx(text);
+    OperationOutcomeIssueComponent issue = oo.addIssue();
+    issue.setSeverity(IssueSeverity.ERROR);
+    issue.setCode(IssueType.EXCEPTION);
+    issue.getDetails().setText(text);
+    return oo;
   }
 
 }

@@ -194,7 +194,9 @@ public class Consent extends DomainResource {
         throw new FHIRException("Unknown ConsentState code '"+codeString+"'");
         }
     public String toCode(ConsentState code) {
-      if (code == ConsentState.DRAFT)
+       if (code == ConsentState.NULL)
+           return null;
+       if (code == ConsentState.DRAFT)
         return "draft";
       if (code == ConsentState.ACTIVE)
         return "active";
@@ -207,7 +209,7 @@ public class Consent extends DomainResource {
       if (code == ConsentState.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(ConsentState code) {
       return code.getSystem();
       }
@@ -362,6 +364,17 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.reference = null;
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -389,7 +402,7 @@ public class Consent extends DomainResource {
           return this.reference;
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.policyBasis.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.policyBasis.url");
         }
         else
           return super.addChild(name);
@@ -746,6 +759,23 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("verified")) {
+          this.verified = null;
+        } else if (name.equals("verificationType")) {
+          this.verificationType = null;
+        } else if (name.equals("verifiedBy")) {
+          this.verifiedBy = null;
+        } else if (name.equals("verifiedWith")) {
+          this.verifiedWith = null;
+        } else if (name.equals("verificationDate")) {
+          this.getVerificationDate().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -775,7 +805,7 @@ public class Consent extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("verified")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.verification.verified");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.verification.verified");
         }
         else if (name.equals("verificationType")) {
           this.verificationType = new CodeableConcept();
@@ -790,7 +820,7 @@ public class Consent extends DomainResource {
           return this.verifiedWith;
         }
         else if (name.equals("verificationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.verification.verificationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.verification.verificationDate");
         }
         else
           return super.addChild(name);
@@ -1631,6 +1661,37 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("actor")) {
+          this.getActor().remove((ProvisionActorComponent) value);
+        } else if (name.equals("action")) {
+          this.getAction().remove(value);
+        } else if (name.equals("securityLabel")) {
+          this.getSecurityLabel().remove(value);
+        } else if (name.equals("purpose")) {
+          this.getPurpose().remove(value);
+        } else if (name.equals("documentType")) {
+          this.getDocumentType().remove(value);
+        } else if (name.equals("resourceType")) {
+          this.getResourceType().remove(value);
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("dataPeriod")) {
+          this.dataPeriod = null;
+        } else if (name.equals("data")) {
+          this.getData().remove((ProvisionDataComponent) value);
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else if (name.equals("provision")) {
+          this.getProvision().remove((ProvisionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1936,6 +1997,17 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2170,6 +2242,18 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("meaning")) {
+          value = new ConsentDataMeaningEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.meaning = (Enumeration) value; // Enumeration<ConsentDataMeaning>
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2193,7 +2277,7 @@ public class Consent extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("meaning")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.provision.data.meaning");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.provision.data.meaning");
         }
         else if (name.equals("reference")) {
           this.reference = new Reference();
@@ -3427,6 +3511,51 @@ public class Consent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new ConsentStateEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ConsentState>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("grantor")) {
+          this.getGrantor().remove(value);
+        } else if (name.equals("grantee")) {
+          this.getGrantee().remove(value);
+        } else if (name.equals("manager")) {
+          this.getManager().remove(value);
+        } else if (name.equals("controller")) {
+          this.getController().remove(value);
+        } else if (name.equals("sourceAttachment")) {
+          this.getSourceAttachment().remove(value);
+        } else if (name.equals("sourceReference")) {
+          this.getSourceReference().remove(value);
+        } else if (name.equals("regulatoryBasis")) {
+          this.getRegulatoryBasis().remove(value);
+        } else if (name.equals("policyBasis")) {
+          this.policyBasis = (ConsentPolicyBasisComponent) value; // ConsentPolicyBasisComponent
+        } else if (name.equals("policyText")) {
+          this.getPolicyText().remove(value);
+        } else if (name.equals("verification")) {
+          this.getVerification().remove((ConsentVerificationComponent) value);
+        } else if (name.equals("decision")) {
+          value = new ConsentProvisionTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.decision = (Enumeration) value; // Enumeration<ConsentProvisionType>
+        } else if (name.equals("provision")) {
+          this.getProvision().remove((ProvisionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3485,7 +3614,7 @@ public class Consent extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -3495,7 +3624,7 @@ public class Consent extends DomainResource {
           return this.subject;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.date");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -3533,7 +3662,7 @@ public class Consent extends DomainResource {
           return addVerification();
         }
         else if (name.equals("decision")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Consent.decision");
+          throw new FHIRException("Cannot call addChild on a singleton property Consent.decision");
         }
         else if (name.equals("provision")) {
           return addProvision();

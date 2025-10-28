@@ -1,13 +1,16 @@
 package org.hl7.fhir.utilities;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+import org.hl7.fhir.utilities.settings.FhirSettings;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.With;
-import org.hl7.fhir.utilities.settings.FhirSettings;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PathBuilder {
@@ -75,13 +78,14 @@ public class PathBuilder {
    * @param args entries with which to construct the filesystem path
    * @throws RuntimeException
    * @return a local filesystem path
+   * @throws IOException 
    *
    * @see this#withRequiredTarget(String)
    * @see this#withRequireNonNullNonEmptyFirstEntry(boolean)
    * @see this#withRequireNonRootFirstEntry(boolean)
    * @see this#withRequirePathIsChildOfTarget(boolean)
    */
-  public String buildPath(String... args) {
+  public String buildPath(String... args) throws IOException {
 
     checkNonNullNonEmptyFirstEntry(args);
     checkNonRootFirstEntry(args);
@@ -130,7 +134,7 @@ public class PathBuilder {
     return stringBuilder.toString();
   }
 
-  private void checkPathIsChildOfTarget(String path, String[] args) {
+  private void checkPathIsChildOfTarget(String path, String[] args) throws IOException {
     if (!requirePathIsChildOfTarget) {
       return;
     }
@@ -149,7 +153,7 @@ public class PathBuilder {
       return;
     }
     if (isPathRoot(args[0])) {
-      throw new RuntimeException("First entry cannot be root: " + args[0]);
+      throw new RuntimeException("First entry in file path cannot be root: " + args[0]+", full path = "+String.join(", ", args));
     }
   }
 
@@ -158,38 +162,37 @@ public class PathBuilder {
       return;
     }
     if (args[0] == null || Utilities.noString(args[0].trim())) {
-      throw new RuntimeException("First path entry cannot be null or empty");
+      throw new RuntimeException("First entry in file path cannot be null or empty, full path = "+String.join(", ", args));
     }
   }
 
 
-  private String replaceVariables(String a) {
+  private String replaceVariables(String a) throws IOException {
     if ("[tmp]".equals(a)) {
-      if (hasCTempDir()) {
-        return Utilities.C_TEMP_DIR;
-      } else if (FhirSettings.hasTempPath()) {
-        return FhirSettings.getTempPath();
-      } else {
-        return System.getProperty("java.io.tmpdir");
-      }
+      return getTempDir();
+    } else if (a.startsWith("[tmp]")) {
+      return getTempDir()+a.substring(5);
     } else if ("[user]".equals(a)) {
       return System.getProperty("user.home");
-    } else if (a.startsWith("[") && a.endsWith("]")) {
-      String ev = System.getenv(a.replace("[", "").replace("]", ""));
-      if (ev != null) {
-        return ev;
-      } else {
-        return "null";
-      }
     }
     return a;
   }
 
-  protected static boolean hasCTempDir() {
+  private String getTempDir() throws IOException {
+    if (hasCTempDir()) {
+      return Utilities.C_TEMP_DIR;
+    } else if (FhirSettings.hasTempPath()) {
+      return FhirSettings.getTempPath();
+    } else {
+      return System.getProperty("java.io.tmpdir");
+    }
+  }
+
+  protected static boolean hasCTempDir() throws IOException {
     if (!System.getProperty("os.name").toLowerCase().contains("win")) {
       return false;
     }
-    File tmp = new File(Utilities.C_TEMP_DIR);
+    File tmp = ManagedFileAccess.file(Utilities.C_TEMP_DIR);
     return tmp.exists() && tmp.isDirectory() && tmp.canWrite();
   }
 

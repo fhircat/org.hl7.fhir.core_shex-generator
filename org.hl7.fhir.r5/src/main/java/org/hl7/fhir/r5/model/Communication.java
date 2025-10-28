@@ -97,8 +97,8 @@ public class Communication extends DomainResource {
           return (Attachment) this.content;
         }
 
-        public boolean hasContentAttachment() { 
-          return this != null && this.content instanceof Attachment;
+        public boolean hasContentAttachment() {
+            return this.content instanceof Attachment;
         }
 
         /**
@@ -112,8 +112,8 @@ public class Communication extends DomainResource {
           return (Reference) this.content;
         }
 
-        public boolean hasContentReference() { 
-          return this != null && this.content instanceof Reference;
+        public boolean hasContentReference() {
+            return this.content instanceof Reference;
         }
 
         /**
@@ -127,8 +127,8 @@ public class Communication extends DomainResource {
           return (CodeableConcept) this.content;
         }
 
-        public boolean hasContentCodeableConcept() { 
-          return this != null && this.content instanceof CodeableConcept;
+        public boolean hasContentCodeableConcept() {
+            return this.content instanceof CodeableConcept;
         }
 
         public boolean hasContent() { 
@@ -190,6 +190,15 @@ public class Communication extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("content[x]")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1681,6 +1690,59 @@ public class Communication extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("inResponseTo")) {
+          this.getInResponseTo().remove(value);
+        } else if (name.equals("status")) {
+          value = new EventStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EventStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("medium")) {
+          this.getMedium().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("topic")) {
+          this.topic = null;
+        } else if (name.equals("about")) {
+          this.getAbout().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("sent")) {
+          this.sent = null;
+        } else if (name.equals("received")) {
+          this.received = null;
+        } else if (name.equals("recipient")) {
+          this.getRecipient().remove(value);
+        } else if (name.equals("sender")) {
+          this.sender = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("payload")) {
+          this.getPayload().remove((CommunicationPayloadComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1747,10 +1809,10 @@ public class Communication extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -1762,7 +1824,7 @@ public class Communication extends DomainResource {
           return addInResponseTo();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
@@ -1772,7 +1834,7 @@ public class Communication extends DomainResource {
           return addCategory();
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.priority");
         }
         else if (name.equals("medium")) {
           return addMedium();
@@ -1793,10 +1855,10 @@ public class Communication extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("sent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.sent");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.sent");
         }
         else if (name.equals("received")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Communication.received");
+          throw new FHIRException("Cannot call addChild on a singleton property Communication.received");
         }
         else if (name.equals("recipient")) {
           return addRecipient();

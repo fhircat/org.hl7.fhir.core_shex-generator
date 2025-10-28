@@ -202,6 +202,17 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("fraction")) {
+          this.fraction = null;
+        } else if (name.equals("materialType")) {
+          this.materialType = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -225,7 +236,7 @@ public class SubstanceSourceMaterial extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("fraction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.fractionDescription.fraction");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.fractionDescription.fraction");
         }
         else if (name.equals("materialType")) {
           this.materialType = new CodeableConcept();
@@ -691,6 +702,29 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("family")) {
+          this.family = null;
+        } else if (name.equals("genus")) {
+          this.genus = null;
+        } else if (name.equals("species")) {
+          this.species = null;
+        } else if (name.equals("intraspecificType")) {
+          this.intraspecificType = null;
+        } else if (name.equals("intraspecificDescription")) {
+          this.intraspecificDescription = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove((SubstanceSourceMaterialOrganismAuthorComponent) value);
+        } else if (name.equals("hybrid")) {
+          this.hybrid = (SubstanceSourceMaterialOrganismHybridComponent) value; // SubstanceSourceMaterialOrganismHybridComponent
+        } else if (name.equals("organismGeneral")) {
+          this.organismGeneral = (SubstanceSourceMaterialOrganismOrganismGeneralComponent) value; // SubstanceSourceMaterialOrganismOrganismGeneralComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -742,7 +776,7 @@ public class SubstanceSourceMaterial extends DomainResource {
           return this.intraspecificType;
         }
         else if (name.equals("intraspecificDescription")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.intraspecificDescription");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.intraspecificDescription");
         }
         else if (name.equals("author")) {
           return addAuthor();
@@ -965,6 +999,17 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("authorType")) {
+          this.authorType = null;
+        } else if (name.equals("authorDescription")) {
+          this.authorDescription = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -992,7 +1037,7 @@ public class SubstanceSourceMaterial extends DomainResource {
           return this.authorType;
         }
         else if (name.equals("authorDescription")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.author.authorDescription");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.author.authorDescription");
         }
         else
           return super.addChild(name);
@@ -1384,6 +1429,23 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("maternalOrganismId")) {
+          this.maternalOrganismId = null;
+        } else if (name.equals("maternalOrganismName")) {
+          this.maternalOrganismName = null;
+        } else if (name.equals("paternalOrganismId")) {
+          this.paternalOrganismId = null;
+        } else if (name.equals("paternalOrganismName")) {
+          this.paternalOrganismName = null;
+        } else if (name.equals("hybridType")) {
+          this.hybridType = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1413,16 +1475,16 @@ public class SubstanceSourceMaterial extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("maternalOrganismId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.hybrid.maternalOrganismId");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.hybrid.maternalOrganismId");
         }
         else if (name.equals("maternalOrganismName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.hybrid.maternalOrganismName");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.hybrid.maternalOrganismName");
         }
         else if (name.equals("paternalOrganismId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.hybrid.paternalOrganismId");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.hybrid.paternalOrganismId");
         }
         else if (name.equals("paternalOrganismName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organism.hybrid.paternalOrganismName");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organism.hybrid.paternalOrganismName");
         }
         else if (name.equals("hybridType")) {
           this.hybridType = new CodeableConcept();
@@ -1685,6 +1747,21 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("kingdom")) {
+          this.kingdom = null;
+        } else if (name.equals("phylum")) {
+          this.phylum = null;
+        } else if (name.equals("class")) {
+          this.class_ = null;
+        } else if (name.equals("order")) {
+          this.order = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1900,6 +1977,17 @@ public class SubstanceSourceMaterial extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("part")) {
+          this.part = null;
+        } else if (name.equals("partLocation")) {
+          this.partLocation = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2745,6 +2833,39 @@ public class SubstanceSourceMaterial extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sourceMaterialClass")) {
+          this.sourceMaterialClass = null;
+        } else if (name.equals("sourceMaterialType")) {
+          this.sourceMaterialType = null;
+        } else if (name.equals("sourceMaterialState")) {
+          this.sourceMaterialState = null;
+        } else if (name.equals("organismId")) {
+          this.organismId = null;
+        } else if (name.equals("organismName")) {
+          this.organismName = null;
+        } else if (name.equals("parentSubstanceId")) {
+          this.getParentSubstanceId().remove(value);
+        } else if (name.equals("parentSubstanceName")) {
+          this.getParentSubstanceName().remove(value);
+        } else if (name.equals("countryOfOrigin")) {
+          this.getCountryOfOrigin().remove(value);
+        } else if (name.equals("geographicalLocation")) {
+          this.getGeographicalLocation().remove(value);
+        } else if (name.equals("developmentStage")) {
+          this.developmentStage = null;
+        } else if (name.equals("fractionDescription")) {
+          this.getFractionDescription().remove((SubstanceSourceMaterialFractionDescriptionComponent) value);
+        } else if (name.equals("organism")) {
+          this.organism = (SubstanceSourceMaterialOrganismComponent) value; // SubstanceSourceMaterialOrganismComponent
+        } else if (name.equals("partDescription")) {
+          this.getPartDescription().remove((SubstanceSourceMaterialPartDescriptionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2806,19 +2927,19 @@ public class SubstanceSourceMaterial extends DomainResource {
           return this.organismId;
         }
         else if (name.equals("organismName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.organismName");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.organismName");
         }
         else if (name.equals("parentSubstanceId")) {
           return addParentSubstanceId();
         }
         else if (name.equals("parentSubstanceName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.parentSubstanceName");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.parentSubstanceName");
         }
         else if (name.equals("countryOfOrigin")) {
           return addCountryOfOrigin();
         }
         else if (name.equals("geographicalLocation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceSourceMaterial.geographicalLocation");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceSourceMaterial.geographicalLocation");
         }
         else if (name.equals("developmentStage")) {
           this.developmentStage = new CodeableConcept();

@@ -152,14 +152,16 @@ public class MeasureReport extends DomainResource {
         throw new FHIRException("Unknown MeasureReportStatus code '"+codeString+"'");
         }
     public String toCode(MeasureReportStatus code) {
-      if (code == MeasureReportStatus.COMPLETE)
+       if (code == MeasureReportStatus.NULL)
+           return null;
+       if (code == MeasureReportStatus.COMPLETE)
         return "complete";
       if (code == MeasureReportStatus.PENDING)
         return "pending";
       if (code == MeasureReportStatus.ERROR)
         return "error";
       return "?";
-      }
+   }
     public String toSystem(MeasureReportStatus code) {
       return code.getSystem();
       }
@@ -278,7 +280,9 @@ public class MeasureReport extends DomainResource {
         throw new FHIRException("Unknown MeasureReportType code '"+codeString+"'");
         }
     public String toCode(MeasureReportType code) {
-      if (code == MeasureReportType.INDIVIDUAL)
+       if (code == MeasureReportType.NULL)
+           return null;
+       if (code == MeasureReportType.INDIVIDUAL)
         return "individual";
       if (code == MeasureReportType.SUBJECTLIST)
         return "subject-list";
@@ -287,7 +291,7 @@ public class MeasureReport extends DomainResource {
       if (code == MeasureReportType.DATAEXCHANGE)
         return "data-exchange";
       return "?";
-      }
+   }
     public String toSystem(MeasureReportType code) {
       return code.getSystem();
       }
@@ -378,12 +382,14 @@ public class MeasureReport extends DomainResource {
         throw new FHIRException("Unknown SubmitDataUpdateType code '"+codeString+"'");
         }
     public String toCode(SubmitDataUpdateType code) {
-      if (code == SubmitDataUpdateType.INCREMENTAL)
+       if (code == SubmitDataUpdateType.NULL)
+           return null;
+       if (code == SubmitDataUpdateType.INCREMENTAL)
         return "incremental";
       if (code == SubmitDataUpdateType.SNAPSHOT)
         return "snapshot";
       return "?";
-      }
+   }
     public String toSystem(SubmitDataUpdateType code) {
       return code.getSystem();
       }
@@ -611,8 +617,8 @@ public class MeasureReport extends DomainResource {
           return (Quantity) this.measureScore;
         }
 
-        public boolean hasMeasureScoreQuantity() { 
-          return this != null && this.measureScore instanceof Quantity;
+        public boolean hasMeasureScoreQuantity() {
+            return this.measureScore instanceof Quantity;
         }
 
         /**
@@ -626,8 +632,8 @@ public class MeasureReport extends DomainResource {
           return (DateTimeType) this.measureScore;
         }
 
-        public boolean hasMeasureScoreDateTimeType() { 
-          return this != null && this.measureScore instanceof DateTimeType;
+        public boolean hasMeasureScoreDateTimeType() {
+            return this.measureScore instanceof DateTimeType;
         }
 
         /**
@@ -641,8 +647,8 @@ public class MeasureReport extends DomainResource {
           return (CodeableConcept) this.measureScore;
         }
 
-        public boolean hasMeasureScoreCodeableConcept() { 
-          return this != null && this.measureScore instanceof CodeableConcept;
+        public boolean hasMeasureScoreCodeableConcept() {
+            return this.measureScore instanceof CodeableConcept;
         }
 
         /**
@@ -656,8 +662,8 @@ public class MeasureReport extends DomainResource {
           return (Period) this.measureScore;
         }
 
-        public boolean hasMeasureScorePeriod() { 
-          return this != null && this.measureScore instanceof Period;
+        public boolean hasMeasureScorePeriod() {
+            return this.measureScore instanceof Period;
         }
 
         /**
@@ -671,8 +677,8 @@ public class MeasureReport extends DomainResource {
           return (Range) this.measureScore;
         }
 
-        public boolean hasMeasureScoreRange() { 
-          return this != null && this.measureScore instanceof Range;
+        public boolean hasMeasureScoreRange() {
+            return this.measureScore instanceof Range;
         }
 
         /**
@@ -686,8 +692,8 @@ public class MeasureReport extends DomainResource {
           return (Duration) this.measureScore;
         }
 
-        public boolean hasMeasureScoreDuration() { 
-          return this != null && this.measureScore instanceof Duration;
+        public boolean hasMeasureScoreDuration() {
+            return this.measureScore instanceof Duration;
         }
 
         public boolean hasMeasureScore() { 
@@ -847,6 +853,25 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("population")) {
+          this.getPopulation().remove((MeasureReportGroupPopulationComponent) value);
+        } else if (name.equals("measureScore[x]")) {
+          this.measureScore = null;
+        } else if (name.equals("stratifier")) {
+          this.getStratifier().remove((MeasureReportGroupStratifierComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -879,7 +904,7 @@ public class MeasureReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -1337,6 +1362,25 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("count")) {
+          this.count = null;
+        } else if (name.equals("subjectResults")) {
+          this.subjectResults = null;
+        } else if (name.equals("subjectReport")) {
+          this.getSubjectReport().remove(value);
+        } else if (name.equals("subjects")) {
+          this.subjects = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1368,14 +1412,14 @@ public class MeasureReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.population.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.population.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("count")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.population.count");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.population.count");
         }
         else if (name.equals("subjectResults")) {
           this.subjectResults = new Reference();
@@ -1664,6 +1708,19 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("stratum")) {
+          this.getStratum().remove((StratifierGroupComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1689,7 +1746,7 @@ public class MeasureReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.stratifier.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.stratifier.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -1809,8 +1866,8 @@ public class MeasureReport extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1824,8 +1881,8 @@ public class MeasureReport extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1839,8 +1896,8 @@ public class MeasureReport extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1854,8 +1911,8 @@ public class MeasureReport extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -1869,8 +1926,8 @@ public class MeasureReport extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -2011,8 +2068,8 @@ public class MeasureReport extends DomainResource {
           return (Quantity) this.measureScore;
         }
 
-        public boolean hasMeasureScoreQuantity() { 
-          return this != null && this.measureScore instanceof Quantity;
+        public boolean hasMeasureScoreQuantity() {
+            return this.measureScore instanceof Quantity;
         }
 
         /**
@@ -2026,8 +2083,8 @@ public class MeasureReport extends DomainResource {
           return (DateTimeType) this.measureScore;
         }
 
-        public boolean hasMeasureScoreDateTimeType() { 
-          return this != null && this.measureScore instanceof DateTimeType;
+        public boolean hasMeasureScoreDateTimeType() {
+            return this.measureScore instanceof DateTimeType;
         }
 
         /**
@@ -2041,8 +2098,8 @@ public class MeasureReport extends DomainResource {
           return (CodeableConcept) this.measureScore;
         }
 
-        public boolean hasMeasureScoreCodeableConcept() { 
-          return this != null && this.measureScore instanceof CodeableConcept;
+        public boolean hasMeasureScoreCodeableConcept() {
+            return this.measureScore instanceof CodeableConcept;
         }
 
         /**
@@ -2056,8 +2113,8 @@ public class MeasureReport extends DomainResource {
           return (Period) this.measureScore;
         }
 
-        public boolean hasMeasureScorePeriod() { 
-          return this != null && this.measureScore instanceof Period;
+        public boolean hasMeasureScorePeriod() {
+            return this.measureScore instanceof Period;
         }
 
         /**
@@ -2071,8 +2128,8 @@ public class MeasureReport extends DomainResource {
           return (Range) this.measureScore;
         }
 
-        public boolean hasMeasureScoreRange() { 
-          return this != null && this.measureScore instanceof Range;
+        public boolean hasMeasureScoreRange() {
+            return this.measureScore instanceof Range;
         }
 
         /**
@@ -2086,8 +2143,8 @@ public class MeasureReport extends DomainResource {
           return (Duration) this.measureScore;
         }
 
-        public boolean hasMeasureScoreDuration() { 
-          return this != null && this.measureScore instanceof Duration;
+        public boolean hasMeasureScoreDuration() {
+            return this.measureScore instanceof Duration;
         }
 
         public boolean hasMeasureScore() { 
@@ -2182,6 +2239,21 @@ public class MeasureReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("component")) {
+          this.getComponent().remove((StratifierGroupComponentComponent) value);
+        } else if (name.equals("population")) {
+          this.getPopulation().remove((StratifierGroupPopulationComponent) value);
+        } else if (name.equals("measureScore[x]")) {
+          this.measureScore = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2455,8 +2527,8 @@ public class MeasureReport extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -2470,8 +2542,8 @@ public class MeasureReport extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -2485,8 +2557,8 @@ public class MeasureReport extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -2500,8 +2572,8 @@ public class MeasureReport extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -2515,8 +2587,8 @@ public class MeasureReport extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -2598,6 +2670,19 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2624,7 +2709,7 @@ public class MeasureReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.stratifier.stratum.component.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.stratifier.stratum.component.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -3055,6 +3140,25 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("count")) {
+          this.count = null;
+        } else if (name.equals("subjectResults")) {
+          this.subjectResults = null;
+        } else if (name.equals("subjectReport")) {
+          this.getSubjectReport().remove(value);
+        } else if (name.equals("subjects")) {
+          this.subjects = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3086,14 +3190,14 @@ public class MeasureReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.stratifier.stratum.population.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.stratifier.stratum.population.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("count")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.group.stratifier.stratum.population.count");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.group.stratifier.stratum.population.count");
         }
         else if (name.equals("subjectResults")) {
           this.subjectResults = new Reference();
@@ -4125,6 +4229,50 @@ public class MeasureReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new MeasureReportStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MeasureReportStatus>
+        } else if (name.equals("type")) {
+          value = new MeasureReportTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<MeasureReportType>
+        } else if (name.equals("dataUpdateType")) {
+          value = new SubmitDataUpdateTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.dataUpdateType = (Enumeration) value; // Enumeration<SubmitDataUpdateType>
+        } else if (name.equals("measure")) {
+          this.measure = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("reporter")) {
+          this.reporter = null;
+        } else if (name.equals("reportingVendor")) {
+          this.reportingVendor = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("inputParameters")) {
+          this.inputParameters = null;
+        } else if (name.equals("scoring")) {
+          this.scoring = null;
+        } else if (name.equals("improvementNotation")) {
+          this.improvementNotation = null;
+        } else if (name.equals("group")) {
+          this.getGroup().remove((MeasureReportGroupComponent) value);
+        } else if (name.equals("supplementalData")) {
+          this.getSupplementalData().remove(value);
+        } else if (name.equals("evaluatedResource")) {
+          this.getEvaluatedResource().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4181,23 +4329,23 @@ public class MeasureReport extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.status");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.type");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.type");
         }
         else if (name.equals("dataUpdateType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.dataUpdateType");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.dataUpdateType");
         }
         else if (name.equals("measure")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.measure");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.measure");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
           return this.subject;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MeasureReport.date");
+          throw new FHIRException("Cannot call addChild on a singleton property MeasureReport.date");
         }
         else if (name.equals("reporter")) {
           this.reporter = new Reference();

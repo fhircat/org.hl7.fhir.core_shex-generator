@@ -152,14 +152,16 @@ public class DocumentReference extends DomainResource {
         throw new FHIRException("Unknown DocumentReferenceStatus code '"+codeString+"'");
         }
     public String toCode(DocumentReferenceStatus code) {
-      if (code == DocumentReferenceStatus.CURRENT)
+       if (code == DocumentReferenceStatus.NULL)
+           return null;
+       if (code == DocumentReferenceStatus.CURRENT)
         return "current";
       if (code == DocumentReferenceStatus.SUPERSEDED)
         return "superseded";
       if (code == DocumentReferenceStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(DocumentReferenceStatus code) {
       return code.getSystem();
       }
@@ -362,6 +364,19 @@ public class DocumentReference extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("mode")) {
+          this.mode = null;
+        } else if (name.equals("time")) {
+          this.time = null;
+        } else if (name.equals("party")) {
+          this.party = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -391,7 +406,7 @@ public class DocumentReference extends DomainResource {
           return this.mode;
         }
         else if (name.equals("time")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.attester.time");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.attester.time");
         }
         else if (name.equals("party")) {
           this.party = new Reference();
@@ -578,6 +593,17 @@ public class DocumentReference extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("target")) {
+          this.target = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -818,6 +844,17 @@ public class DocumentReference extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("attachment")) {
+          this.attachment = null;
+        } else if (name.equals("profile")) {
+          this.getProfile().remove((DocumentReferenceContentProfileComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -943,8 +980,8 @@ public class DocumentReference extends DomainResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -958,8 +995,8 @@ public class DocumentReference extends DomainResource {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -973,8 +1010,8 @@ public class DocumentReference extends DomainResource {
           return (CanonicalType) this.value;
         }
 
-        public boolean hasValueCanonicalType() { 
-          return this != null && this.value instanceof CanonicalType;
+        public boolean hasValueCanonicalType() {
+            return this.value instanceof CanonicalType;
         }
 
         public boolean hasValue() { 
@@ -1036,6 +1073,15 @@ public class DocumentReference extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2550,6 +2596,61 @@ public class DocumentReference extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("status")) {
+          value = new DocumentReferenceStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<DocumentReferenceStatus>
+        } else if (name.equals("docStatus")) {
+          value = new CompositionStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.docStatus = (Enumeration) value; // Enumeration<CompositionStatus>
+        } else if (name.equals("modality")) {
+          this.getModality().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("context")) {
+          this.getContext().remove(value);
+        } else if (name.equals("event")) {
+          this.getEvent().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove(value);
+        } else if (name.equals("facilityType")) {
+          this.facilityType = null;
+        } else if (name.equals("practiceSetting")) {
+          this.practiceSetting = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("attester")) {
+          this.getAttester().remove((DocumentReferenceAttesterComponent) value);
+        } else if (name.equals("custodian")) {
+          this.custodian = null;
+        } else if (name.equals("relatesTo")) {
+          this.getRelatesTo().remove((DocumentReferenceRelatesToComponent) value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("securityLabel")) {
+          this.getSecurityLabel().remove(value);
+        } else if (name.equals("content")) {
+          this.getContent().remove((DocumentReferenceContentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2618,16 +2719,16 @@ public class DocumentReference extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.version");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.version");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.status");
         }
         else if (name.equals("docStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.docStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.docStatus");
         }
         else if (name.equals("modality")) {
           return addModality();
@@ -2665,7 +2766,7 @@ public class DocumentReference extends DomainResource {
           return this.period;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.date");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.date");
         }
         else if (name.equals("author")) {
           return addAuthor();
@@ -2681,7 +2782,7 @@ public class DocumentReference extends DomainResource {
           return addRelatesTo();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DocumentReference.description");
+          throw new FHIRException("Cannot call addChild on a singleton property DocumentReference.description");
         }
         else if (name.equals("securityLabel")) {
           return addSecurityLabel();

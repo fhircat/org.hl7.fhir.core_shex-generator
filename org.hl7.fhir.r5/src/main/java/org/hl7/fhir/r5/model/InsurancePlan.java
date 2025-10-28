@@ -283,6 +283,19 @@ public class InsurancePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("network")) {
+          this.getNetwork().remove(value);
+        } else if (name.equals("benefit")) {
+          this.getBenefit().remove((CoverageBenefitComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -599,6 +612,19 @@ public class InsurancePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("requirement")) {
+          this.requirement = null;
+        } else if (name.equals("limit")) {
+          this.getLimit().remove((CoverageBenefitLimitComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -628,7 +654,7 @@ public class InsurancePlan extends DomainResource {
           return this.type;
         }
         else if (name.equals("requirement")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.coverage.benefit.requirement");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.coverage.benefit.requirement");
         }
         else if (name.equals("limit")) {
           return addLimit();
@@ -809,6 +835,17 @@ public class InsurancePlan extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1313,6 +1350,25 @@ public class InsurancePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("coverageArea")) {
+          this.getCoverageArea().remove(value);
+        } else if (name.equals("network")) {
+          this.getNetwork().remove(value);
+        } else if (name.equals("generalCost")) {
+          this.getGeneralCost().remove((InsurancePlanPlanGeneralCostComponent) value);
+        } else if (name.equals("specificCost")) {
+          this.getSpecificCost().remove((InsurancePlanPlanSpecificCostComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1684,6 +1740,21 @@ public class InsurancePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("groupSize")) {
+          this.groupSize = null;
+        } else if (name.equals("cost")) {
+          this.cost = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1715,14 +1786,14 @@ public class InsurancePlan extends DomainResource {
           return this.type;
         }
         else if (name.equals("groupSize")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.plan.generalCost.groupSize");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.plan.generalCost.groupSize");
         }
         else if (name.equals("cost")) {
           this.cost = new Money();
           return this.cost;
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.plan.generalCost.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.plan.generalCost.comment");
         }
         else
           return super.addChild(name);
@@ -1934,6 +2005,17 @@ public class InsurancePlan extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("benefit")) {
+          this.getBenefit().remove((PlanBenefitComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2175,6 +2257,17 @@ public class InsurancePlan extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("cost")) {
+          this.getCost().remove((PlanBenefitCostComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2495,6 +2588,21 @@ public class InsurancePlan extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("applicability")) {
+          this.applicability = null;
+        } else if (name.equals("qualifiers")) {
+          this.getQualifiers().remove(value);
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3506,6 +3614,42 @@ public class InsurancePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("alias")) {
+          this.getAlias().remove(value);
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("ownedBy")) {
+          this.ownedBy = null;
+        } else if (name.equals("administeredBy")) {
+          this.administeredBy = null;
+        } else if (name.equals("coverageArea")) {
+          this.getCoverageArea().remove(value);
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("network")) {
+          this.getNetwork().remove(value);
+        } else if (name.equals("coverage")) {
+          this.getCoverage().remove((InsurancePlanCoverageComponent) value);
+        } else if (name.equals("plan")) {
+          this.getPlan().remove((InsurancePlanPlanComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3556,16 +3700,16 @@ public class InsurancePlan extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.status");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.status");
         }
         else if (name.equals("type")) {
           return addType();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.name");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.name");
         }
         else if (name.equals("alias")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InsurancePlan.alias");
+          throw new FHIRException("Cannot call addChild on a singleton property InsurancePlan.alias");
         }
         else if (name.equals("period")) {
           this.period = new Period();

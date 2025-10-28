@@ -1,16 +1,19 @@
 package org.hl7.fhir.utilities.json.parser;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
-import org.hl7.fhir.utilities.SimpleHTTPClient;
-import org.hl7.fhir.utilities.SimpleHTTPClient.HTTPResult;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+import org.hl7.fhir.utilities.http.HTTPResult;
+import org.hl7.fhir.utilities.http.ManagedWebAccess;
 import org.hl7.fhir.utilities.json.JsonException;
 import org.hl7.fhir.utilities.json.model.JsonArray;
 import org.hl7.fhir.utilities.json.model.JsonBoolean;
@@ -50,66 +53,89 @@ import org.hl7.fhir.utilities.json.parser.JsonLexer.TokenType;
  */
 public class JsonParser {
 
+  protected JsonParser() {
+    super();
+  }
+
+  protected JsonParser(int line) {
+    super();
+    this.line = line;
+  }
+
   public static JsonObject parseObject(InputStream stream) throws IOException, JsonException {
-    return parseObject(TextFile.streamToString(stream));
+    return new JsonParser().parseJsonObject(FileUtilities.streamToString(stream), false, false);
   }
   
-  public static JsonObject parseObject(byte[] stream) throws IOException, JsonException {
-    return parseObject(TextFile.bytesToString(stream));
+  public static JsonObject parseObject(byte[] content) throws IOException, JsonException {
+    return new JsonParser().parseJsonObject(FileUtilities.bytesToString(content), false, false);
   }
 
   public static JsonObject parseObject(String source) throws IOException, JsonException {
-    return parseObject(source, false);
+    return new JsonParser().parseJsonObject(source, false, false);
   }
   
   public static JsonObject parseObject(File source) throws IOException, JsonException {
-    return parseObject(TextFile.fileToString(source));
+    if (!source.exists()) {
+      throw new IOException("File "+source+" not found");
+    }
+    return new JsonParser().setSourceName(source.getAbsolutePath()).parseJsonObject(FileUtilities.fileToString(source), false, false);
+  }
+
+  public static JsonObject parseObject(File source, boolean isJson5) throws IOException, JsonException {
+    if (!source.exists()) {
+      throw new IOException("File "+source+" not found");
+    }
+    return new JsonParser().setSourceName(source.getAbsolutePath()).parseJsonObject(FileUtilities.fileToString(source), isJson5, false);
   }
   
   public static JsonObject parseObjectFromFile(String source) throws IOException, JsonException {
-    return parseObject(TextFile.fileToString(source));
+    return new JsonParser().setSourceName(source).parseJsonObject(FileUtilities.fileToString(source), false, false);
   }
   
   public static JsonObject parseObjectFromUrl(String source) throws IOException, JsonException {
-    return parseObject(fetch(source));
+    return new JsonParser().setSourceName(source).parseJsonObject(FileUtilities.bytesToString(fetch(source)), false, false);
   }
   
   public static JsonObject parseObject(InputStream stream, boolean isJson5) throws IOException, JsonException {
-    return parseObject(TextFile.streamToString(stream), isJson5);
+    return new JsonParser().parseJsonObject(FileUtilities.streamToString(stream), isJson5, false);
   }
   
-  public static JsonObject parseObject(byte[] stream, boolean isJson5) throws IOException, JsonException {
-    return parseObject(TextFile.bytesToString(stream), isJson5);
+  public static JsonObject parseObject(byte[] content, boolean isJson5) throws IOException, JsonException {
+    return new JsonParser().parseJsonObject(FileUtilities.bytesToString(content), isJson5, false);
   }
     
   public static JsonObject parseObject(String source, boolean isJson5) throws IOException, JsonException {
-    return parseObject(source, isJson5, false);
+    return new JsonParser().parseJsonObject(source, isJson5, false);
   }
   
   public static JsonObject parseObjectFromUrl(String source, boolean isJson5) throws IOException, JsonException {
-    return parseObject(fetch(source), isJson5);
+    return new JsonParser().setSourceName(source).parseJsonObject(FileUtilities.bytesToString(fetch(source)), isJson5, false);
   }
   
   public static JsonObject parseObject(InputStream stream, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
-    return parseObject(TextFile.streamToString(stream), isJson5, allowDuplicates);
+    return parseObject(FileUtilities.streamToString(stream), isJson5, allowDuplicates);
   }
   
   public static JsonObject parseObject(byte[] stream, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
-    return parseObject(TextFile.bytesToString(stream), isJson5, allowDuplicates);
+    return parseObject(FileUtilities.bytesToString(stream), isJson5, allowDuplicates);
   }
-    
+
   public static JsonObject parseObject(String source, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
     return new JsonParser().parseJsonObject(source, isJson5, allowDuplicates);
+  }
+  
+  public static JsonObject parseObject(String source, boolean isJson5, boolean allowDuplicates, int line) throws IOException, JsonException {
+    return new JsonParser(line).parseJsonObject(source, isJson5, allowDuplicates);
   }
   
   // ================================================================
   
   public static JsonElement parse(InputStream stream) throws IOException, JsonException {
-    return parse(TextFile.streamToString(stream));
+    return parse(FileUtilities.streamToString(stream));
   }
   
   public static JsonElement parse(byte[] stream) throws IOException, JsonException {
-    return parse(TextFile.bytesToString(stream));
+    return parse(FileUtilities.bytesToString(stream));
   }
 
   public static JsonElement parse(String source) throws IOException, JsonException {
@@ -117,11 +143,11 @@ public class JsonParser {
   }
   
   public static JsonElement parse(File source) throws IOException, JsonException {
-    return parse(TextFile.fileToString(source));
+    return parse(FileUtilities.fileToString(source));
   }
   
   public static JsonElement parseFromFile(String source) throws IOException, JsonException {
-    return parse(TextFile.fileToString(source));
+    return parse(FileUtilities.fileToString(source));
   }
   
   public static JsonElement parseFromUrl(String source) throws IOException, JsonException {
@@ -129,11 +155,11 @@ public class JsonParser {
   }
   
   public static JsonElement parse(InputStream stream, boolean isJson5) throws IOException, JsonException {
-    return parse(TextFile.streamToString(stream), isJson5);
+    return parse(FileUtilities.streamToString(stream), isJson5);
   }
   
   public static JsonElement parse(byte[] stream, boolean isJson5) throws IOException, JsonException {
-    return parse(TextFile.bytesToString(stream), isJson5);
+    return parse(FileUtilities.bytesToString(stream), isJson5);
   }
     
   public static JsonElement parse(String source, boolean isJson5) throws IOException, JsonException {
@@ -145,11 +171,11 @@ public class JsonParser {
   }
   
   public static JsonElement parse(InputStream stream, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
-    return parse(TextFile.streamToString(stream), isJson5, allowDuplicates);
+    return parse(FileUtilities.streamToString(stream), isJson5, allowDuplicates);
   }
   
   public static JsonElement parse(byte[] stream, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
-    return parse(TextFile.bytesToString(stream), isJson5, allowDuplicates);
+    return parse(FileUtilities.bytesToString(stream), isJson5, allowDuplicates);
   }
     
   public static JsonElement parse(String source, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
@@ -167,6 +193,12 @@ public class JsonParser {
     compose(element, stream, false);    
   }
   
+  public static void compose(JsonElement element, File file) throws IOException {
+    FileOutputStream fo = ManagedFileAccess.outStream(file);
+    compose(element, fo, false);
+    fo.close();
+  }
+  
   public static byte[] composeBytes(JsonElement element) {
     return composeBytes(element, false);    
   }
@@ -178,6 +210,12 @@ public class JsonParser {
   public static void compose(JsonElement element, OutputStream stream, boolean pretty) throws IOException {
     byte[] cnt = composeBytes(element, pretty);
     stream.write(cnt);
+  }
+  public static void compose(JsonElement element, File file, boolean pretty) throws IOException {
+    byte[] cnt = composeBytes(element, pretty);
+    FileOutputStream fo = ManagedFileAccess.outStream(file);
+    fo.write(cnt);
+    fo.close();
   }
 
   public static byte[] composeBytes(JsonElement element, boolean pretty) {
@@ -203,6 +241,8 @@ public class JsonParser {
   private boolean allowUnquotedStrings;
   private boolean itemUnquoted;
   private boolean valueUnquoted;
+  private String sourceName;
+  private int line = 0;
 
   private JsonObject parseJsonObject(String source, boolean isJson5, boolean allowDuplicates) throws IOException, JsonException {
     this.allowDuplicates = allowDuplicates;
@@ -213,7 +253,8 @@ public class JsonParser {
   }
 
   private JsonObject parseSource(String source) throws IOException, JsonException {
-    lexer = new JsonLexer(source, allowComments, allowUnquotedStrings);
+    lexer = new JsonLexer(source, allowComments, allowUnquotedStrings, line);
+    lexer.setSourceName(sourceName);
     JsonObject result = new JsonObject();
     lexer.takeComments(result);
     result.setStart(lexer.getLastLocationAWS().copy());
@@ -230,8 +271,14 @@ public class JsonParser {
     if (lexer.getType() != TokenType.Close) {
       parseProperty();
       readObject("$", result, true);
+      result.setEnd(endProperty != null ? endProperty.copy() : lexer.getLocation().copy());
+    } else {
+      result.setEnd(endProperty != null ? endProperty.copy() : lexer.getLocation().copy());
+      lexer.next();
     }
-    result.setEnd(endProperty != null ? endProperty.copy() : lexer.getLocation().copy());
+    if (lexer.getType() != TokenType.Eof) {
+      throw lexer.error("Unexpected content at end of JSON: "+lexer.getType().toString());
+    }
     return result;
   }
   
@@ -244,7 +291,7 @@ public class JsonParser {
   }
   
   private JsonElement parseSourceElement(String source) throws IOException, JsonException {
-    lexer = new JsonLexer(source, allowComments, allowUnquotedStrings);
+    lexer = new JsonLexer(source, allowComments, allowUnquotedStrings, line);
     switch (lexer.getType()) {
     case Boolean:
       JsonBoolean bool = new JsonBoolean(lexer.getValue().equals("true"));
@@ -643,7 +690,7 @@ public class JsonParser {
       break;
     case STRING:
       b.append("\"");
-      b.append(Utilities.escapeJson(((JsonString) e).getValue()));
+      b.append(Utilities.escapeJson(((JsonString) e).getValue(), false));
       b.append("\"");
       break;
     default:
@@ -652,10 +699,20 @@ public class JsonParser {
   }
 
   private static byte[] fetch(String source) throws IOException {
-    SimpleHTTPClient fetcher = new SimpleHTTPClient();
-    fetcher.addHeader("Accept", "application/json, application/fhir+json");
-    HTTPResult res = fetcher.get(source+"?nocache=" + System.currentTimeMillis());
+    String murl = source.contains("?") ? source+"&nocache=" + System.currentTimeMillis() : source+"?nocache=" + System.currentTimeMillis();
+    HTTPResult res = ManagedWebAccess.get(Arrays.asList("web"), murl, "application/json, application/fhir+json");
     res.checkThrowException();
     return res.getContent();
   }
+
+  public String getSourceName() {
+    return sourceName;
+  }
+
+  public JsonParser setSourceName(String sourceName) {
+    this.sourceName = sourceName;
+    return this;
+  }
+  
+  
 }

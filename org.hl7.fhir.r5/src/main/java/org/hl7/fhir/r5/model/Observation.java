@@ -152,14 +152,16 @@ public class Observation extends DomainResource {
         throw new FHIRException("Unknown TriggeredBytype code '"+codeString+"'");
         }
     public String toCode(TriggeredBytype code) {
-      if (code == TriggeredBytype.REFLEX)
+       if (code == TriggeredBytype.NULL)
+           return null;
+       if (code == TriggeredBytype.REFLEX)
         return "reflex";
       if (code == TriggeredBytype.REPEAT)
         return "repeat";
       if (code == TriggeredBytype.RERUN)
         return "re-run";
       return "?";
-      }
+   }
     public String toSystem(TriggeredBytype code) {
       return code.getSystem();
       }
@@ -391,6 +393,20 @@ Reflex | Repeat | Re-run.
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("observation")) {
+          this.observation = null;
+        } else if (name.equals("type")) {
+          value = new TriggeredBytypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<TriggeredBytype>
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -420,10 +436,10 @@ Reflex | Repeat | Re-run.
           return this.observation;
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Observation.triggeredBy.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Observation.triggeredBy.type");
         }
         else if (name.equals("reason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Observation.triggeredBy.reason");
+          throw new FHIRException("Cannot call addChild on a singleton property Observation.triggeredBy.reason");
         }
         else
           return super.addChild(name);
@@ -851,6 +867,27 @@ Reflex | Repeat | Re-run.
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("low")) {
+          this.low = null;
+        } else if (name.equals("high")) {
+          this.high = null;
+        } else if (name.equals("normalValue")) {
+          this.normalValue = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("appliesTo")) {
+          this.getAppliesTo().remove(value);
+        } else if (name.equals("age")) {
+          this.age = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -907,7 +944,7 @@ Reflex | Repeat | Re-run.
           return this.age;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Observation.referenceRange.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Observation.referenceRange.text");
         }
         else
           return super.addChild(name);
@@ -1067,8 +1104,8 @@ Reflex | Repeat | Re-run.
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+          return this.value instanceof Quantity;
         }
 
         /**
@@ -1082,8 +1119,8 @@ Reflex | Repeat | Re-run.
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+          return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1097,8 +1134,8 @@ Reflex | Repeat | Re-run.
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+          return this.value instanceof StringType;
         }
 
         /**
@@ -1112,8 +1149,8 @@ Reflex | Repeat | Re-run.
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+          return this.value instanceof BooleanType;
         }
 
         /**
@@ -1127,8 +1164,8 @@ Reflex | Repeat | Re-run.
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+          return this.value instanceof IntegerType;
         }
 
         /**
@@ -1142,8 +1179,8 @@ Reflex | Repeat | Re-run.
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+          return this.value instanceof Range;
         }
 
         /**
@@ -1157,8 +1194,8 @@ Reflex | Repeat | Re-run.
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+          return this.value instanceof Ratio;
         }
 
         /**
@@ -1172,8 +1209,8 @@ Reflex | Repeat | Re-run.
           return (SampledData) this.value;
         }
 
-        public boolean hasValueSampledData() { 
-          return this != null && this.value instanceof SampledData;
+        public boolean hasValueSampledData() {
+          return this.value instanceof SampledData;
         }
 
         /**
@@ -1187,8 +1224,8 @@ Reflex | Repeat | Re-run.
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+          return this.value instanceof TimeType;
         }
 
         /**
@@ -1202,8 +1239,8 @@ Reflex | Repeat | Re-run.
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+          return this.value instanceof DateTimeType;
         }
 
         /**
@@ -1217,8 +1254,8 @@ Reflex | Repeat | Re-run.
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+          return this.value instanceof Period;
         }
 
         /**
@@ -1232,8 +1269,8 @@ Reflex | Repeat | Re-run.
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+          return this.value instanceof Attachment;
         }
 
         /**
@@ -1247,8 +1284,8 @@ Reflex | Repeat | Re-run.
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+          return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -1482,6 +1519,23 @@ Reflex | Repeat | Re-run.
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("dataAbsentReason")) {
+          this.dataAbsentReason = null;
+        } else if (name.equals("interpretation")) {
+          this.getInterpretation().remove(value);
+        } else if (name.equals("referenceRange")) {
+          this.getReferenceRange().remove((ObservationReferenceRangeComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1925,8 +1979,8 @@ Reflex | Repeat | Re-run.
       return (CanonicalType) this.instantiates;
     }
 
-    public boolean hasInstantiatesCanonicalType() { 
-      return this != null && this.instantiates instanceof CanonicalType;
+    public boolean hasInstantiatesCanonicalType() {
+      return this.instantiates instanceof CanonicalType;
     }
 
     /**
@@ -1940,8 +1994,8 @@ Reflex | Repeat | Re-run.
       return (Reference) this.instantiates;
     }
 
-    public boolean hasInstantiatesReference() { 
-      return this != null && this.instantiates instanceof Reference;
+    public boolean hasInstantiatesReference() {
+      return this.instantiates instanceof Reference;
     }
 
     public boolean hasInstantiates() { 
@@ -2358,8 +2412,8 @@ Reflex | Repeat | Re-run.
       return (DateTimeType) this.effective;
     }
 
-    public boolean hasEffectiveDateTimeType() { 
-      return this != null && this.effective instanceof DateTimeType;
+    public boolean hasEffectiveDateTimeType() {
+      return this.effective instanceof DateTimeType;
     }
 
     /**
@@ -2373,8 +2427,8 @@ Reflex | Repeat | Re-run.
       return (Period) this.effective;
     }
 
-    public boolean hasEffectivePeriod() { 
-      return this != null && this.effective instanceof Period;
+    public boolean hasEffectivePeriod() {
+      return this.effective instanceof Period;
     }
 
     /**
@@ -2388,8 +2442,8 @@ Reflex | Repeat | Re-run.
       return (Timing) this.effective;
     }
 
-    public boolean hasEffectiveTiming() { 
-      return this != null && this.effective instanceof Timing;
+    public boolean hasEffectiveTiming() {
+      return this.effective instanceof Timing;
     }
 
     /**
@@ -2403,8 +2457,8 @@ Reflex | Repeat | Re-run.
       return (InstantType) this.effective;
     }
 
-    public boolean hasEffectiveInstantType() { 
-      return this != null && this.effective instanceof InstantType;
+    public boolean hasEffectiveInstantType() {
+      return this.effective instanceof InstantType;
     }
 
     public boolean hasEffective() { 
@@ -2541,8 +2595,8 @@ Reflex | Repeat | Re-run.
       return (Quantity) this.value;
     }
 
-    public boolean hasValueQuantity() { 
-      return this != null && this.value instanceof Quantity;
+    public boolean hasValueQuantity() {
+      return this.value instanceof Quantity;
     }
 
     /**
@@ -2556,8 +2610,8 @@ Reflex | Repeat | Re-run.
       return (CodeableConcept) this.value;
     }
 
-    public boolean hasValueCodeableConcept() { 
-      return this != null && this.value instanceof CodeableConcept;
+    public boolean hasValueCodeableConcept() {
+      return this.value instanceof CodeableConcept;
     }
 
     /**
@@ -2571,8 +2625,8 @@ Reflex | Repeat | Re-run.
       return (StringType) this.value;
     }
 
-    public boolean hasValueStringType() { 
-      return this != null && this.value instanceof StringType;
+    public boolean hasValueStringType() {
+      return this.value instanceof StringType;
     }
 
     /**
@@ -2586,8 +2640,8 @@ Reflex | Repeat | Re-run.
       return (BooleanType) this.value;
     }
 
-    public boolean hasValueBooleanType() { 
-      return this != null && this.value instanceof BooleanType;
+    public boolean hasValueBooleanType() {
+      return this.value instanceof BooleanType;
     }
 
     /**
@@ -2601,8 +2655,8 @@ Reflex | Repeat | Re-run.
       return (IntegerType) this.value;
     }
 
-    public boolean hasValueIntegerType() { 
-      return this != null && this.value instanceof IntegerType;
+    public boolean hasValueIntegerType() {
+      return this.value instanceof IntegerType;
     }
 
     /**
@@ -2616,8 +2670,8 @@ Reflex | Repeat | Re-run.
       return (Range) this.value;
     }
 
-    public boolean hasValueRange() { 
-      return this != null && this.value instanceof Range;
+    public boolean hasValueRange() {
+      return this.value instanceof Range;
     }
 
     /**
@@ -2631,8 +2685,8 @@ Reflex | Repeat | Re-run.
       return (Ratio) this.value;
     }
 
-    public boolean hasValueRatio() { 
-      return this != null && this.value instanceof Ratio;
+    public boolean hasValueRatio() {
+      return this.value instanceof Ratio;
     }
 
     /**
@@ -2646,8 +2700,8 @@ Reflex | Repeat | Re-run.
       return (SampledData) this.value;
     }
 
-    public boolean hasValueSampledData() { 
-      return this != null && this.value instanceof SampledData;
+    public boolean hasValueSampledData() {
+      return this.value instanceof SampledData;
     }
 
     /**
@@ -2661,8 +2715,8 @@ Reflex | Repeat | Re-run.
       return (TimeType) this.value;
     }
 
-    public boolean hasValueTimeType() { 
-      return this != null && this.value instanceof TimeType;
+    public boolean hasValueTimeType() {
+      return this.value instanceof TimeType;
     }
 
     /**
@@ -2676,8 +2730,8 @@ Reflex | Repeat | Re-run.
       return (DateTimeType) this.value;
     }
 
-    public boolean hasValueDateTimeType() { 
-      return this != null && this.value instanceof DateTimeType;
+    public boolean hasValueDateTimeType() {
+      return this.value instanceof DateTimeType;
     }
 
     /**
@@ -2691,8 +2745,8 @@ Reflex | Repeat | Re-run.
       return (Period) this.value;
     }
 
-    public boolean hasValuePeriod() { 
-      return this != null && this.value instanceof Period;
+    public boolean hasValuePeriod() {
+      return this.value instanceof Period;
     }
 
     /**
@@ -2706,8 +2760,8 @@ Reflex | Repeat | Re-run.
       return (Attachment) this.value;
     }
 
-    public boolean hasValueAttachment() { 
-      return this != null && this.value instanceof Attachment;
+    public boolean hasValueAttachment() {
+      return this.value instanceof Attachment;
     }
 
     /**
@@ -2721,8 +2775,8 @@ Reflex | Repeat | Re-run.
       return (Reference) this.value;
     }
 
-    public boolean hasValueReference() { 
-      return this != null && this.value instanceof Reference;
+    public boolean hasValueReference() {
+      return this.value instanceof Reference;
     }
 
     public boolean hasValue() { 
@@ -3476,6 +3530,68 @@ Reflex | Repeat | Re-run.
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiates[x]")) {
+          this.instantiates = null;
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("triggeredBy")) {
+          this.getTriggeredBy().remove((ObservationTriggeredByComponent) value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new ObservationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ObservationStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("focus")) {
+          this.getFocus().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("effective[x]")) {
+          this.effective = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove(value);
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("dataAbsentReason")) {
+          this.dataAbsentReason = null;
+        } else if (name.equals("interpretation")) {
+          this.getInterpretation().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("bodyStructure")) {
+          this.bodyStructure = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("specimen")) {
+          this.specimen = null;
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("referenceRange")) {
+          this.getReferenceRange().remove((ObservationReferenceRangeComponent) value);
+        } else if (name.equals("hasMember")) {
+          this.getHasMember().remove(value);
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("component")) {
+          this.getComponent().remove((ObservationComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3572,7 +3688,7 @@ Reflex | Repeat | Re-run.
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Observation.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Observation.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -3609,7 +3725,7 @@ Reflex | Repeat | Re-run.
           return this.effective;
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Observation.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property Observation.issued");
         }
         else if (name.equals("performer")) {
           return addPerformer();

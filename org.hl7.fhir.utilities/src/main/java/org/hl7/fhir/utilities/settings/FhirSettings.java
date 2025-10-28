@@ -1,14 +1,18 @@
 package org.hl7.fhir.utilities.settings;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import org.hl7.fhir.utilities.Utilities;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class FhirSettings {
@@ -74,6 +78,11 @@ public class FhirSettings {
     return instance.fhirSettings.getRubyPath();
   }
 
+  public static String getGemPath() {
+    getInstance();
+    return instance.fhirSettings.getGemPath();
+  }
+
   public static boolean hasFhirTestCasesPath() {
     getInstance();
     return instance.fhirSettings.getFhirTestCasesPath() != null;
@@ -131,11 +140,17 @@ public class FhirSettings {
       ? false
       : instance.fhirSettings.getProhibitNetworkAccess(); 
   }
-  
+
+
+  /**
+   * See ManagedWebAccess and use that to control network access
+   *
+   * @param value
+   */
+  @Deprecated
   public static void setProhibitNetworkAccess(boolean value) {
     prohibitNetworkAccess = value;
   }
-
 
   public static String getTxFhirProduction() {
     getInstance();
@@ -192,7 +207,7 @@ public class FhirSettings {
   }
 
   static FhirSettingsPOJO getFhirSettingsPOJO(String filePath) throws IOException {
-    final File file = new File(filePath);
+    final File file = ManagedFileAccess.file(filePath);
 
     if (!file.exists()) {
       return new FhirSettingsPOJO();
@@ -200,7 +215,7 @@ public class FhirSettings {
 
     final ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    final InputStream inputStream = new FileInputStream(file);
+    final InputStream inputStream = ManagedFileAccess.inStream(file);
     final FhirSettingsPOJO output = objectMapper.readValue(inputStream, FhirSettingsPOJO.class);
 
     return output;
@@ -210,4 +225,27 @@ public class FhirSettings {
     return Utilities.path(System.getProperty("user.home"), ".fhir", "fhir-settings.json");
   }
 
+  public static boolean isIgnoreDefaultPackageServers() {
+    getInstance();
+    if (instance.fhirSettings.getIgnoreDefaultPackageServers() == null) {
+      return false;
+    }
+    return instance.fhirSettings.getIgnoreDefaultPackageServers();
+  }
+
+  public static List<ServerDetailsPOJO> getServers() {
+    getInstance();
+    if (instance.fhirSettings.getServers() == null) {
+      return Collections.emptyList();
+    }
+    return Arrays.asList(instance.fhirSettings.getServers().toArray(new ServerDetailsPOJO[]{}));
+  }
+
+  public static List<String> getCertificateSources() {
+    getInstance();
+    if (instance.fhirSettings.getCertificateSources() == null) {
+      return Collections.emptyList();
+    }
+    return instance.fhirSettings.getCertificateSources();
+  }
 }

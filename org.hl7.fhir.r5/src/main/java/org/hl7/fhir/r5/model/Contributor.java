@@ -164,7 +164,9 @@ public class Contributor extends DataType implements ICompositeType {
         throw new FHIRException("Unknown ContributorType code '"+codeString+"'");
         }
     public String toCode(ContributorType code) {
-      if (code == ContributorType.AUTHOR)
+       if (code == ContributorType.NULL)
+           return null;
+       if (code == ContributorType.AUTHOR)
         return "author";
       if (code == ContributorType.EDITOR)
         return "editor";
@@ -173,7 +175,7 @@ public class Contributor extends DataType implements ICompositeType {
       if (code == ContributorType.ENDORSER)
         return "endorser";
       return "?";
-      }
+   }
     public String toSystem(ContributorType code) {
       return code.getSystem();
       }
@@ -423,6 +425,20 @@ public class Contributor extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new ContributorTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ContributorType>
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -448,10 +464,10 @@ public class Contributor extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contributor.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Contributor.type");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contributor.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Contributor.name");
         }
         else if (name.equals("contact")) {
           return addContact();

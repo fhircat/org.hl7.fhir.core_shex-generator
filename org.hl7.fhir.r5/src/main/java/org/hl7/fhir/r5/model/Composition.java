@@ -250,6 +250,19 @@ public class Composition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("mode")) {
+          this.mode = null;
+        } else if (name.equals("time")) {
+          this.time = null;
+        } else if (name.equals("party")) {
+          this.party = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -279,7 +292,7 @@ public class Composition extends DomainResource {
           return this.mode;
         }
         else if (name.equals("time")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.attester.time");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.attester.time");
         }
         else if (name.equals("party")) {
           this.party = new Reference();
@@ -486,6 +499,17 @@ public class Composition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("detail")) {
+          this.getDetail().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1080,6 +1104,31 @@ public class Composition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("focus")) {
+          this.focus = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("orderedBy")) {
+          this.orderedBy = null;
+        } else if (name.equals("entry")) {
+          this.getEntry().remove(value);
+        } else if (name.equals("emptyReason")) {
+          this.emptyReason = null;
+        } else if (name.equals("section")) {
+          this.getSection().remove((SectionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1117,7 +1166,7 @@ public class Composition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.section.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.section.title");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -2448,6 +2497,52 @@ public class Composition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("status")) {
+          value = new CompositionStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<CompositionStatus>
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("subject")) {
+          this.getSubject().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("attester")) {
+          this.getAttester().remove((CompositionAttesterComponent) value);
+        } else if (name.equals("custodian")) {
+          this.custodian = null;
+        } else if (name.equals("relatesTo")) {
+          this.getRelatesTo().remove(value);
+        } else if (name.equals("event")) {
+          this.getEvent().remove((CompositionEventComponent) value);
+        } else if (name.equals("section")) {
+          this.getSection().remove((SectionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2505,16 +2600,16 @@ public class Composition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.version");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.status");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -2531,7 +2626,7 @@ public class Composition extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.date");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -2540,10 +2635,10 @@ public class Composition extends DomainResource {
           return addAuthor();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Composition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Composition.title");
         }
         else if (name.equals("note")) {
           return addNote();

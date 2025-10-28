@@ -180,7 +180,9 @@ public class ImagingStudy extends DomainResource {
         throw new FHIRException("Unknown ImagingStudyStatus code '"+codeString+"'");
         }
     public String toCode(ImagingStudyStatus code) {
-      if (code == ImagingStudyStatus.REGISTERED)
+       if (code == ImagingStudyStatus.NULL)
+           return null;
+       if (code == ImagingStudyStatus.REGISTERED)
         return "registered";
       if (code == ImagingStudyStatus.AVAILABLE)
         return "available";
@@ -191,7 +193,7 @@ public class ImagingStudy extends DomainResource {
       if (code == ImagingStudyStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(ImagingStudyStatus code) {
       return code.getSystem();
       }
@@ -952,6 +954,37 @@ public class ImagingStudy extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("uid")) {
+          this.uid = null;
+        } else if (name.equals("number")) {
+          this.number = null;
+        } else if (name.equals("modality")) {
+          this.modality = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("numberOfInstances")) {
+          this.numberOfInstances = null;
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("laterality")) {
+          this.laterality = null;
+        } else if (name.equals("specimen")) {
+          this.getSpecimen().remove(value);
+        } else if (name.equals("started")) {
+          this.started = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((ImagingStudySeriesPerformerComponent) value);
+        } else if (name.equals("instance")) {
+          this.getInstance().remove((ImagingStudySeriesInstanceComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -995,20 +1028,20 @@ public class ImagingStudy extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("uid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.uid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.uid");
         }
         else if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.number");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.number");
         }
         else if (name.equals("modality")) {
           this.modality = new CodeableConcept();
           return this.modality;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.description");
         }
         else if (name.equals("numberOfInstances")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.numberOfInstances");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.numberOfInstances");
         }
         else if (name.equals("endpoint")) {
           return addEndpoint();
@@ -1025,7 +1058,7 @@ public class ImagingStudy extends DomainResource {
           return addSpecimen();
         }
         else if (name.equals("started")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.started");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.started");
         }
         else if (name.equals("performer")) {
           return addPerformer();
@@ -1245,6 +1278,17 @@ public class ImagingStudy extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1603,6 +1647,21 @@ public class ImagingStudy extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("uid")) {
+          this.uid = null;
+        } else if (name.equals("sopClass")) {
+          this.sopClass = null;
+        } else if (name.equals("number")) {
+          this.number = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1630,17 +1689,17 @@ public class ImagingStudy extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("uid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.instance.uid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.instance.uid");
         }
         else if (name.equals("sopClass")) {
           this.sopClass = new Coding();
           return this.sopClass;
         }
         else if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.instance.number");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.instance.number");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.series.instance.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.series.instance.title");
         }
         else
           return super.addChild(name);
@@ -2829,6 +2888,50 @@ public class ImagingStudy extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new ImagingStudyStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ImagingStudyStatus>
+        } else if (name.equals("modality")) {
+          this.getModality().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("started")) {
+          this.started = null;
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("referrer")) {
+          this.referrer = null;
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("numberOfSeries")) {
+          this.numberOfSeries = null;
+        } else if (name.equals("numberOfInstances")) {
+          this.numberOfInstances = null;
+        } else if (name.equals("procedure")) {
+          this.getProcedure().remove(value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("series")) {
+          this.getSeries().remove((ImagingStudySeriesComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2887,7 +2990,7 @@ public class ImagingStudy extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.status");
         }
         else if (name.equals("modality")) {
           return addModality();
@@ -2901,7 +3004,7 @@ public class ImagingStudy extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("started")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.started");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.started");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -2917,10 +3020,10 @@ public class ImagingStudy extends DomainResource {
           return addEndpoint();
         }
         else if (name.equals("numberOfSeries")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.numberOfSeries");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.numberOfSeries");
         }
         else if (name.equals("numberOfInstances")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.numberOfInstances");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.numberOfInstances");
         }
         else if (name.equals("procedure")) {
           return addProcedure();
@@ -2936,7 +3039,7 @@ public class ImagingStudy extends DomainResource {
           return addNote();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingStudy.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingStudy.description");
         }
         else if (name.equals("series")) {
           return addSeries();

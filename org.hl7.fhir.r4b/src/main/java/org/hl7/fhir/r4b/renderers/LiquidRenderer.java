@@ -18,6 +18,13 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.utilities.xhtml.XhtmlParser;
 
+/**
+ * Rendering framework:
+ * 
+ * See R5 rendering framework to render R4B resources
+ * 
+ */
+@Deprecated
 public class LiquidRenderer extends ResourceRenderer {
 
   private String liquidTemplate;
@@ -32,9 +39,10 @@ public class LiquidRenderer extends ResourceRenderer {
     this.rcontext = rcontext;
     this.liquidTemplate = liquidTemplate;
   }
-  
+
   @Override
-  public boolean render(XhtmlNode x, Resource r) throws FHIRFormatError, DefinitionException, IOException, FHIRException, EOperationOutcome {
+  public boolean render(XhtmlNode x, Resource r)
+      throws FHIRFormatError, DefinitionException, IOException, FHIRException, EOperationOutcome {
     LiquidEngine engine = new LiquidEngine(context.getWorker(), context.getServices());
     XhtmlNode xn;
     try {
@@ -45,9 +53,9 @@ public class LiquidRenderer extends ResourceRenderer {
         throw new FHIRException("Error in template: Root element is not 'div'");
     } catch (FHIRException | IOException e) {
       xn = new XhtmlNode(NodeType.Element, "div");
-      xn.para().b().style("color: maroon").tx("Exception generating Narrative: "+e.getMessage());
+      xn.para().b().style("color: maroon").tx("Exception generating Narrative: " + e.getMessage());
     }
-    x.getChildNodes().addAll(xn.getChildNodes());
+    x.addChildNodes(xn.getChildNodes());
     return true;
   }
 
@@ -67,7 +75,8 @@ public class LiquidRenderer extends ResourceRenderer {
   }
 
   @Override
-  public boolean render(XhtmlNode x, ResourceWrapper r) throws FHIRFormatError, DefinitionException, IOException, FHIRException, EOperationOutcome {
+  public boolean render(XhtmlNode x, ResourceWrapper r)
+      throws FHIRFormatError, DefinitionException, IOException, FHIRException, EOperationOutcome {
     LiquidEngine engine = new LiquidEngine(context.getWorker(), context.getServices());
     XhtmlNode xn;
     try {
@@ -78,9 +87,9 @@ public class LiquidRenderer extends ResourceRenderer {
         throw new FHIRException("Error in template: Root element is not 'div'");
     } catch (FHIRException | IOException e) {
       xn = new XhtmlNode(NodeType.Element, "div");
-      xn.para().b().style("color: maroon").tx("Exception generating Narrative: "+e.getMessage());
+      xn.para().b().style("color: maroon").tx("Exception generating Narrative: " + e.getMessage());
     }
-    x.getChildNodes().addAll(xn.getChildNodes());
+    x.addChildNodes(xn.getChildNodes());
     return true;
   }
 

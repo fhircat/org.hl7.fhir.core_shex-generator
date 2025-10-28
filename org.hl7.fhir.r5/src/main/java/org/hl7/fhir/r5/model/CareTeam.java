@@ -180,7 +180,9 @@ public class CareTeam extends DomainResource {
         throw new FHIRException("Unknown CareTeamStatus code '"+codeString+"'");
         }
     public String toCode(CareTeamStatus code) {
-      if (code == CareTeamStatus.PROPOSED)
+       if (code == CareTeamStatus.NULL)
+           return null;
+       if (code == CareTeamStatus.PROPOSED)
         return "proposed";
       if (code == CareTeamStatus.ACTIVE)
         return "active";
@@ -191,7 +193,7 @@ public class CareTeam extends DomainResource {
       if (code == CareTeamStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(CareTeamStatus code) {
       return code.getSystem();
       }
@@ -327,8 +329,8 @@ public class CareTeam extends DomainResource {
           return (Period) this.coverage;
         }
 
-        public boolean hasCoveragePeriod() { 
-          return this != null && this.coverage instanceof Period;
+        public boolean hasCoveragePeriod() {
+            return this.coverage instanceof Period;
         }
 
         /**
@@ -342,8 +344,8 @@ public class CareTeam extends DomainResource {
           return (Timing) this.coverage;
         }
 
-        public boolean hasCoverageTiming() { 
-          return this != null && this.coverage instanceof Timing;
+        public boolean hasCoverageTiming() {
+            return this.coverage instanceof Timing;
         }
 
         public boolean hasCoverage() { 
@@ -428,6 +430,21 @@ public class CareTeam extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("member")) {
+          this.member = null;
+        } else if (name.equals("onBehalfOf")) {
+          this.onBehalfOf = null;
+        } else if (name.equals("coverage[x]")) {
+          this.coverage = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1259,6 +1276,36 @@ public class CareTeam extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new CareTeamStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<CareTeamStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((CareTeamParticipantComponent) value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("managingOrganization")) {
+          this.getManagingOrganization().remove(value);
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1303,13 +1350,13 @@ public class CareTeam extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CareTeam.status");
+          throw new FHIRException("Cannot call addChild on a singleton property CareTeam.status");
         }
         else if (name.equals("category")) {
           return addCategory();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CareTeam.name");
+          throw new FHIRException("Cannot call addChild on a singleton property CareTeam.name");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();

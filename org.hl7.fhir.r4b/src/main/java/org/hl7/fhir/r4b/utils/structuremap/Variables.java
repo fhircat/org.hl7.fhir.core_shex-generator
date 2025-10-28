@@ -2,10 +2,12 @@ package org.hl7.fhir.r4b.utils.structuremap;
 
 import org.hl7.fhir.r4b.model.Base;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@MarkedToMoveToAdjunctPackage
 public class Variables {
   private List<Variable> list = new ArrayList<Variable>();
 
@@ -38,17 +40,18 @@ public class Variables {
     CommaSeparatedStringBuilder sh = new CommaSeparatedStringBuilder();
     for (Variable v : list)
       switch (v.getMode()) {
-        case INPUT:
-          s.append(v.summary());
-          break;
-        case OUTPUT:
-          t.append(v.summary());
-          break;
-        case SHARED:
-          sh.append(v.summary());
-          break;
+      case INPUT:
+        s.append(v.summary());
+        break;
+      case OUTPUT:
+        t.append(v.summary());
+        break;
+      case SHARED:
+        sh.append(v.summary());
+        break;
       }
-    return "source variables [" + s.toString() + "], target variables [" + t.toString() + "], shared variables [" + sh.toString() + "]";
+    return "source variables [" + s.toString() + "], target variables [" + t.toString() + "], shared variables ["
+        + sh.toString() + "]";
   }
 
 }

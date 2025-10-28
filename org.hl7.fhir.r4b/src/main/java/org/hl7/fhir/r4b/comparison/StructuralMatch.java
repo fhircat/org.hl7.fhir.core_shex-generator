@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.fhir.r4b.comparison.ResourceComparer.MessageCounts;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
 
+@MarkedToMoveToAdjunctPackage
 public class StructuralMatch<T> {
 
   private String name; // this is used in some contexts to carry name when T is a pretty abstract type
@@ -14,17 +16,17 @@ public class StructuralMatch<T> {
   private T right;
   private List<ValidationMessage> messages = new ArrayList<>();
   private List<StructuralMatch<T>> children = new ArrayList<>();
- 
+
   public StructuralMatch() {
     // root, just a place holder...
   }
- 
+
   public StructuralMatch(T left, T right) {
     super();
     this.left = left;
     this.right = right;
   }
- 
+
   public StructuralMatch(T left, T right, ValidationMessage msg) {
     super();
     this.left = left;
@@ -33,7 +35,7 @@ public class StructuralMatch<T> {
       this.messages.add(msg);
     }
   }
- 
+
   public StructuralMatch(ValidationMessage msg, T right) {
     super();
     this.messages.add(msg);
@@ -45,10 +47,11 @@ public class StructuralMatch<T> {
     this.left = left;
     this.messages.add(msg);
   }
-   
+
   public T getLeft() {
     return left;
   }
+
   public T getRight() {
     return right;
   }
@@ -71,7 +74,7 @@ public class StructuralMatch<T> {
   public boolean hasLeft() {
     return left != null;
   }
- 
+
   public boolean hasRight() {
     return right != null;
   }
@@ -97,7 +100,7 @@ public class StructuralMatch<T> {
         cnts.warning();
       } else if (vm.getLevel() == IssueSeverity.INFORMATION) {
         cnts.hint();
-      } 
+      }
     }
     for (StructuralMatch<T> c : children) {
       c.countMessages(cnts);
@@ -113,5 +116,4 @@ public class StructuralMatch<T> {
     return this;
   }
 
-  
 }

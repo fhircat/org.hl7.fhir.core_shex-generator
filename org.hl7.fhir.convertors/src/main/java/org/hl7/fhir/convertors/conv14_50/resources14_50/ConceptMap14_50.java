@@ -17,6 +17,7 @@ import org.hl7.fhir.convertors.conv14_50.datatypes14_50.primitivetypes14_50.Stri
 import org.hl7.fhir.convertors.conv14_50.datatypes14_50.primitivetypes14_50.Uri14_50;
 import org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.ConceptMap;
@@ -24,7 +25,6 @@ import org.hl7.fhir.r5.model.ConceptMap.ConceptMapGroupComponent;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.Enumerations;
 import org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
 
 public class ConceptMap14_50 {
 
@@ -151,74 +151,82 @@ public class ConceptMap14_50 {
     return tgt;
   }
 
-  public static org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence> convertConceptMapEquivalence(Enumeration<ConceptMapRelationship> src) throws FHIRException {
+  public static org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence> convertConceptMapEquivalence(Enumeration<ConceptMapRelationship> src, org.hl7.fhir.r5.model.ConceptMap.TargetElementComponent ccm) throws FHIRException {
     if (src == null || src.isEmpty())
       return null;
     org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence> tgt = new org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence>(new org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalenceEnumFactory());
-    ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyElement(src, tgt, VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE);
-    if (src.hasExtension(VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE)) {
-      tgt.setValueAsString(src.getExtensionString(VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE));
+    ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyElement(src, tgt);
+    if (ccm.hasExtension(VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE)) {
+      tgt.setValueAsString(ccm.getExtensionString(VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE));
     } else {
-      switch (src.getValue()) {
-        case EQUIVALENT:
-          tgt.setValue(org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence.EQUIVALENT);
-          break;
-        case SOURCEISNARROWERTHANTARGET:
-          tgt.setValue(org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence.WIDER);
-          break;
-        case SOURCEISBROADERTHANTARGET:
-          tgt.setValue(org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence.NARROWER);
-          break;
-        case NOTRELATEDTO:
-          tgt.setValue(org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence.DISJOINT);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.dstu2016may.model.Enumerations.ConceptMapEquivalence.NULL);
-          break;
-      }
+        if (src.getValue() == null) {
+            tgt.setValue(null);
+        } else {
+            switch (src.getValue()) {
+                case EQUIVALENT:
+                    tgt.setValue(ConceptMapEquivalence.EQUIVALENT);
+                    break;
+                case SOURCEISNARROWERTHANTARGET:
+                    tgt.setValue(ConceptMapEquivalence.WIDER);
+                    break;
+                case SOURCEISBROADERTHANTARGET:
+                    tgt.setValue(ConceptMapEquivalence.NARROWER);
+                    break;
+                case NOTRELATEDTO:
+                    tgt.setValue(ConceptMapEquivalence.DISJOINT);
+                    break;
+                default:
+                    tgt.setValue(ConceptMapEquivalence.NULL);
+                    break;
+            }
+        }
     }
     return tgt;
   }
 
-  public static Enumeration<ConceptMapRelationship> convertConceptMapRelationship(org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence> src) throws FHIRException {
-    if (src == null || src.isEmpty())
-      return null;
-    Enumeration<ConceptMapRelationship> tgt = new Enumeration<ConceptMapRelationship>(new Enumerations.ConceptMapRelationshipEnumFactory());
-    ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyElement(src, tgt);
-    ToolingExtensions.setCodeExtension(tgt, VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE, src.getValueAsString());
-    switch (src.getValue()) {
-      case EQUIVALENT:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.EQUIVALENT);
-        break;
-      case EQUAL:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.EQUIVALENT);
-        break;
-      case WIDER:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.SOURCEISNARROWERTHANTARGET);
-        break;
-      case SUBSUMES:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.SOURCEISNARROWERTHANTARGET);
-        break;
-      case NARROWER:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.SOURCEISBROADERTHANTARGET);
-        break;
-      case SPECIALIZES:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.SOURCEISBROADERTHANTARGET);
-        break;
-      case INEXACT:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.RELATEDTO);
-        break;
-      case UNMATCHED:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.NULL);
-        break;
-      case DISJOINT:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.NOTRELATEDTO);
-        break;
-      default:
-        tgt.setValue(org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship.NULL);
-        break;
-    }
-    return tgt;
+  public static Enumeration<ConceptMapRelationship> convertConceptMapRelationship(org.hl7.fhir.dstu2016may.model.Enumeration<ConceptMapEquivalence> src, org.hl7.fhir.r5.model.ConceptMap.TargetElementComponent tgtCtxt) throws FHIRException {
+      if (src == null || src.isEmpty())
+          return null;
+      Enumeration<ConceptMapRelationship> tgt = new Enumeration<ConceptMapRelationship>(new Enumerations.ConceptMapRelationshipEnumFactory());
+      ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyElement(src, tgt);
+      ExtensionUtilities.setCodeExtensionMod(tgtCtxt, VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE, src.getValueAsString());
+      if (src.getValue() == null) {
+          tgt.setValue(null);
+      } else {
+          switch (src.getValue()) {
+              case EQUIVALENT:
+                  tgt.setValue(ConceptMapRelationship.EQUIVALENT);
+                  break;
+              case EQUAL:
+                  tgt.setValue(ConceptMapRelationship.EQUIVALENT);
+                  break;
+              case WIDER:
+                  tgt.setValue(ConceptMapRelationship.SOURCEISNARROWERTHANTARGET);
+                  break;
+              case SUBSUMES:
+                  tgt.setValue(ConceptMapRelationship.SOURCEISNARROWERTHANTARGET);
+                  break;
+              case NARROWER:
+                  tgt.setValue(ConceptMapRelationship.SOURCEISBROADERTHANTARGET);
+                  break;
+              case SPECIALIZES:
+                  tgt.setValue(ConceptMapRelationship.SOURCEISBROADERTHANTARGET);
+                  break;
+              case INEXACT:
+                  tgt.setValue(ConceptMapRelationship.RELATEDTO);
+                  break;
+              case UNMATCHED:
+                  tgt.setValue(ConceptMapRelationship.NULL);
+                  break;
+              case DISJOINT:
+                  tgt.setValue(ConceptMapRelationship.NOTRELATEDTO);
+                  break;
+              default:
+                  tgt.setValue(ConceptMapRelationship.NULL);
+                  break;
+          }
+      }
+      return tgt;
   }
 
   public static org.hl7.fhir.dstu2016may.model.ConceptMap.OtherElementComponent convertOtherElementComponent(org.hl7.fhir.r5.model.ConceptMap.OtherElementComponent src, org.hl7.fhir.r5.model.ConceptMap srcMap) throws FHIRException {
@@ -293,13 +301,13 @@ public class ConceptMap14_50 {
     if (src == null || src.isEmpty())
       return null;
     org.hl7.fhir.dstu2016may.model.ConceptMap.TargetElementComponent tgt = new org.hl7.fhir.dstu2016may.model.ConceptMap.TargetElementComponent();
-    ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyBackboneElement(src,tgt);
+    ConversionContext14_50.INSTANCE.getVersionConvertor_14_50().copyBackboneElement(src,tgt, VersionConvertorConstants.EXT_OLD_CONCEPTMAP_EQUIVALENCE);
     if (g.hasTarget())
       tgt.setSystem(g.getTarget());
     if (src.hasCode())
       tgt.setCodeElement(Code14_50.convertCode(src.getCodeElement()));
     if (src.hasRelationship())
-      tgt.setEquivalenceElement(convertConceptMapEquivalence(src.getRelationshipElement()));
+      tgt.setEquivalenceElement(convertConceptMapEquivalence(src.getRelationshipElement(), src));
     if (src.hasComment())
       tgt.setCommentsElement(String14_50.convertString(src.getCommentElement()));
     for (org.hl7.fhir.r5.model.ConceptMap.OtherElementComponent t : src.getDependsOn())
@@ -317,7 +325,7 @@ public class ConceptMap14_50 {
     if (src.hasCode())
       tgt.setCodeElement(Code14_50.convertCode(src.getCodeElement()));
     if (src.hasEquivalence())
-      tgt.setRelationshipElement(convertConceptMapRelationship(src.getEquivalenceElement()));
+      tgt.setRelationshipElement(convertConceptMapRelationship(src.getEquivalenceElement(), tgt));
     if (src.hasComments())
       tgt.setCommentElement(String14_50.convertString(src.getCommentsElement()));
     for (org.hl7.fhir.dstu2016may.model.ConceptMap.OtherElementComponent t : src.getDependsOn())

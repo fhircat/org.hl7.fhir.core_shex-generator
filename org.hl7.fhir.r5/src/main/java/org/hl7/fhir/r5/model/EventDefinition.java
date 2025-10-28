@@ -455,8 +455,8 @@ public class EventDefinition extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -470,8 +470,8 @@ public class EventDefinition extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -743,8 +743,8 @@ public class EventDefinition extends MetadataResource {
       return (CodeableConcept) this.subject;
     }
 
-    public boolean hasSubjectCodeableConcept() { 
-      return this != null && this.subject instanceof CodeableConcept;
+    public boolean hasSubjectCodeableConcept() {
+        return this.subject instanceof CodeableConcept;
     }
 
     /**
@@ -758,8 +758,8 @@ public class EventDefinition extends MetadataResource {
       return (Reference) this.subject;
     }
 
-    public boolean hasSubjectReference() { 
-      return this != null && this.subject instanceof Reference;
+    public boolean hasSubjectReference() {
+        return this.subject instanceof Reference;
     }
 
     public boolean hasSubject() { 
@@ -2054,6 +2054,74 @@ public class EventDefinition extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("subtitle")) {
+          this.subtitle = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("usage")) {
+          this.usage = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("trigger")) {
+          this.getTrigger().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2135,13 +2203,13 @@ public class EventDefinition extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -2152,19 +2220,19 @@ public class EventDefinition extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.title");
         }
         else if (name.equals("subtitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.subtitle");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.subtitle");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.experimental");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -2175,16 +2243,16 @@ public class EventDefinition extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -2193,22 +2261,22 @@ public class EventDefinition extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.purpose");
         }
         else if (name.equals("usage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.usage");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.usage");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EventDefinition.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EventDefinition.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();

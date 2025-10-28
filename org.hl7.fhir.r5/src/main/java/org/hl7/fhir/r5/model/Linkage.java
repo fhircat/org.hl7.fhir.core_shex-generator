@@ -152,14 +152,16 @@ public class Linkage extends DomainResource {
         throw new FHIRException("Unknown LinkageType code '"+codeString+"'");
         }
     public String toCode(LinkageType code) {
-      if (code == LinkageType.SOURCE)
+       if (code == LinkageType.NULL)
+           return null;
+       if (code == LinkageType.SOURCE)
         return "source";
       if (code == LinkageType.ALTERNATE)
         return "alternate";
       if (code == LinkageType.HISTORICAL)
         return "historical";
       return "?";
-      }
+   }
     public String toSystem(LinkageType code) {
       return code.getSystem();
       }
@@ -322,6 +324,18 @@ public class Linkage extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new LinkageTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<LinkageType>
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -345,7 +359,7 @@ public class Linkage extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Linkage.item.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Linkage.item.type");
         }
         else if (name.equals("resource")) {
           this.resource = new Reference();
@@ -617,6 +631,19 @@ public class Linkage extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((LinkageItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -642,7 +669,7 @@ public class Linkage extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Linkage.active");
+          throw new FHIRException("Cannot call addChild on a singleton property Linkage.active");
         }
         else if (name.equals("author")) {
           this.author = new Reference();

@@ -39,7 +39,6 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities.SourcedChildDefinitions;
 import org.hl7.fhir.r5.context.IWorkerContext;
-import org.hl7.fhir.r5.elementmodel.ParserBase.NamedElement;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.CodeableConcept;
@@ -49,12 +48,16 @@ import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.Factory;
 import org.hl7.fhir.r5.model.Identifier;
 import org.hl7.fhir.r5.model.PrimitiveType;
+import org.hl7.fhir.r5.model.Quantity;
 import org.hl7.fhir.r5.model.Reference;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.r5.model.Enumerations.QuantityComparator;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 
 
+@MarkedToMoveToAdjunctPackage
 public class ObjectConverter  {
 
   private IWorkerContext context;
@@ -72,9 +75,9 @@ public class ObjectConverter  {
     org.hl7.fhir.r5.formats.JsonParser jp = new org.hl7.fhir.r5.formats.JsonParser();
     jp.compose(bs, ig);
     ByteArrayInputStream bi = new ByteArrayInputStream(bs.toByteArray());
-    List<NamedElement> list = new JsonParser(context).parse(bi);
+    List<ValidatedFragment> list = new JsonParser(context).parse(bi);
     if (list.size() != 1) {
-      throw new FHIRException("Unable to convert because the source contains multieple resources");
+      throw new FHIRException("Unable to convert because the source contains multiple resources");
     }
     return list.get(0).getElement();
   }
@@ -94,7 +97,7 @@ public class ObjectConverter  {
     if (sd.getKind() == StructureDefinitionKind.PRIMITIVETYPE) 
       res.setValue(((PrimitiveType) base).asStringValue());
 
-    SourcedChildDefinitions children = profileUtilities.getChildMap(sd, sd.getSnapshot().getElementFirstRep()); 
+    SourcedChildDefinitions children = profileUtilities.getChildMap(sd, sd.getSnapshot().getElementFirstRep(), true); 
     for (ElementDefinition child : children.getList()) {
       String n = tail(child.getPath());
       if (sd.getKind() != StructureDefinitionKind.PRIMITIVETYPE || !"value".equals(n)) {
@@ -159,6 +162,34 @@ public class ObjectConverter  {
     c.setCode(item.getNamedChildValue("code"));
     c.setDisplay(item.getNamedChildValue("display"));
     return c;
+  }
+
+  public static Quantity readAsQuantity(Element item) {
+    // Check the type of the item before trying to read it as a Quantity
+    if (item == null || !item.fhirType().equals("Quantity")) {
+      return null;
+    }
+    Quantity q = new Quantity();
+
+    var value = item.getNamedChildValue("value");
+    if (value != null) {
+      q.setValue(new java.math.BigDecimal(value));
+    }
+    var comparator = item.getNamedChildValue("comparator");
+    if (comparator != null) {
+      if (QuantityComparator.isValidCode(comparator))
+      {
+        q.setComparator(QuantityComparator.fromCode(comparator));
+      } else {
+        // should we throw an exception here?
+        // throw new FHIRException("Invalid comparator value: " + comparator);
+      }
+    }
+
+    q.setSystem(item.getNamedChildValue("system"));
+    q.setCode(item.getNamedChildValue("code"));
+    q.setUnit(item.getNamedChildValue("unit"));
+    return q;
   }
 
   public static Identifier readAsIdentifier(Element item) {

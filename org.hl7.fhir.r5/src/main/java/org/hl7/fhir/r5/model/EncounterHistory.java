@@ -186,6 +186,17 @@ public class EncounterHistory extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1017,6 +1028,40 @@ public class EncounterHistory extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new EncounterStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EncounterStatus>
+        } else if (name.equals("class")) {
+          this.class_ = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("serviceType")) {
+          this.getServiceType().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("subjectStatus")) {
+          this.subjectStatus = null;
+        } else if (name.equals("actualPeriod")) {
+          this.actualPeriod = null;
+        } else if (name.equals("plannedStartDate")) {
+          this.plannedStartDate = null;
+        } else if (name.equals("plannedEndDate")) {
+          this.plannedEndDate = null;
+        } else if (name.equals("length")) {
+          this.length = null;
+        } else if (name.equals("location")) {
+          this.getLocation().remove((EncounterHistoryLocationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1069,7 +1114,7 @@ public class EncounterHistory extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EncounterHistory.status");
+          throw new FHIRException("Cannot call addChild on a singleton property EncounterHistory.status");
         }
         else if (name.equals("class")) {
           this.class_ = new CodeableConcept();
@@ -1094,10 +1139,10 @@ public class EncounterHistory extends DomainResource {
           return this.actualPeriod;
         }
         else if (name.equals("plannedStartDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EncounterHistory.plannedStartDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EncounterHistory.plannedStartDate");
         }
         else if (name.equals("plannedEndDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EncounterHistory.plannedEndDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EncounterHistory.plannedEndDate");
         }
         else if (name.equals("length")) {
           this.length = new Duration();

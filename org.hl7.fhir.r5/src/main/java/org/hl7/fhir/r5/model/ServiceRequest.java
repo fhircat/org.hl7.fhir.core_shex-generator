@@ -214,6 +214,17 @@ public class ServiceRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("parameterFocus")) {
+          this.parameterFocus = null;
+        } else if (name.equals("parameter")) {
+          this.getParameter().remove((ServiceRequestOrderDetailParameterComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -373,8 +384,8 @@ public class ServiceRequest extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -388,8 +399,8 @@ public class ServiceRequest extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -403,8 +414,8 @@ public class ServiceRequest extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -418,8 +429,8 @@ public class ServiceRequest extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -433,8 +444,8 @@ public class ServiceRequest extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -448,8 +459,8 @@ public class ServiceRequest extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -463,8 +474,8 @@ public class ServiceRequest extends DomainResource {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         public boolean hasValue() { 
@@ -538,6 +549,17 @@ public class ServiceRequest extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -678,8 +700,8 @@ public class ServiceRequest extends DomainResource {
           return (MarkdownType) this.instruction;
         }
 
-        public boolean hasInstructionMarkdownType() { 
-          return this != null && this.instruction instanceof MarkdownType;
+        public boolean hasInstructionMarkdownType() {
+            return this.instruction instanceof MarkdownType;
         }
 
         /**
@@ -693,8 +715,8 @@ public class ServiceRequest extends DomainResource {
           return (Reference) this.instruction;
         }
 
-        public boolean hasInstructionReference() { 
-          return this != null && this.instruction instanceof Reference;
+        public boolean hasInstructionReference() {
+            return this.instruction instanceof Reference;
         }
 
         public boolean hasInstruction() { 
@@ -755,6 +777,15 @@ public class ServiceRequest extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("instruction[x]")) {
+          this.instruction = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1729,8 +1760,8 @@ public class ServiceRequest extends DomainResource {
       return (Quantity) this.quantity;
     }
 
-    public boolean hasQuantityQuantity() { 
-      return this != null && this.quantity instanceof Quantity;
+    public boolean hasQuantityQuantity() {
+        return this.quantity instanceof Quantity;
     }
 
     /**
@@ -1744,8 +1775,8 @@ public class ServiceRequest extends DomainResource {
       return (Ratio) this.quantity;
     }
 
-    public boolean hasQuantityRatio() { 
-      return this != null && this.quantity instanceof Ratio;
+    public boolean hasQuantityRatio() {
+        return this.quantity instanceof Ratio;
     }
 
     /**
@@ -1759,8 +1790,8 @@ public class ServiceRequest extends DomainResource {
       return (Range) this.quantity;
     }
 
-    public boolean hasQuantityRange() { 
-      return this != null && this.quantity instanceof Range;
+    public boolean hasQuantityRange() {
+        return this.quantity instanceof Range;
     }
 
     public boolean hasQuantity() { 
@@ -1896,8 +1927,8 @@ public class ServiceRequest extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -1911,8 +1942,8 @@ public class ServiceRequest extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     /**
@@ -1926,8 +1957,8 @@ public class ServiceRequest extends DomainResource {
       return (Timing) this.occurrence;
     }
 
-    public boolean hasOccurrenceTiming() { 
-      return this != null && this.occurrence instanceof Timing;
+    public boolean hasOccurrenceTiming() {
+        return this.occurrence instanceof Timing;
     }
 
     public boolean hasOccurrence() { 
@@ -1962,8 +1993,8 @@ public class ServiceRequest extends DomainResource {
       return (BooleanType) this.asNeeded;
     }
 
-    public boolean hasAsNeededBooleanType() { 
-      return this != null && this.asNeeded instanceof BooleanType;
+    public boolean hasAsNeededBooleanType() {
+        return this.asNeeded instanceof BooleanType;
     }
 
     /**
@@ -1977,8 +2008,8 @@ public class ServiceRequest extends DomainResource {
       return (CodeableConcept) this.asNeeded;
     }
 
-    public boolean hasAsNeededCodeableConcept() { 
-      return this != null && this.asNeeded instanceof CodeableConcept;
+    public boolean hasAsNeededCodeableConcept() {
+        return this.asNeeded instanceof CodeableConcept;
     }
 
     public boolean hasAsNeeded() { 
@@ -2962,6 +2993,82 @@ public class ServiceRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("replaces")) {
+          this.getReplaces().remove(value);
+        } else if (name.equals("requisition")) {
+          this.requisition = null;
+        } else if (name.equals("status")) {
+          value = new RequestStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<RequestStatus>
+        } else if (name.equals("intent")) {
+          value = new RequestIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<RequestIntent>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("doNotPerform")) {
+          this.doNotPerform = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("orderDetail")) {
+          this.getOrderDetail().remove((ServiceRequestOrderDetailComponent) value);
+        } else if (name.equals("quantity[x]")) {
+          this.quantity = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("focus")) {
+          this.getFocus().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("asNeeded[x]")) {
+          this.asNeeded = null;
+        } else if (name.equals("authoredOn")) {
+          this.authoredOn = null;
+        } else if (name.equals("requester")) {
+          this.requester = null;
+        } else if (name.equals("performerType")) {
+          this.performerType = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove(value);
+        } else if (name.equals("location")) {
+          this.getLocation().remove(value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("insurance")) {
+          this.getInsurance().remove(value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove(value);
+        } else if (name.equals("specimen")) {
+          this.getSpecimen().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove(value);
+        } else if (name.equals("bodyStructure")) {
+          this.bodyStructure = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("patientInstruction")) {
+          this.getPatientInstruction().remove((ServiceRequestPatientInstructionComponent) value);
+        } else if (name.equals("relevantHistory")) {
+          this.getRelevantHistory().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3053,10 +3160,10 @@ public class ServiceRequest extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -3069,19 +3176,19 @@ public class ServiceRequest extends DomainResource {
           return this.requisition;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.status");
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.intent");
         }
         else if (name.equals("category")) {
           return addCategory();
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.priority");
         }
         else if (name.equals("doNotPerform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.doNotPerform");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.doNotPerform");
         }
         else if (name.equals("code")) {
           this.code = new CodeableReference();
@@ -3134,7 +3241,7 @@ public class ServiceRequest extends DomainResource {
           return this.asNeeded;
         }
         else if (name.equals("authoredOn")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ServiceRequest.authoredOn");
+          throw new FHIRException("Cannot call addChild on a singleton property ServiceRequest.authoredOn");
         }
         else if (name.equals("requester")) {
           this.requester = new Reference();

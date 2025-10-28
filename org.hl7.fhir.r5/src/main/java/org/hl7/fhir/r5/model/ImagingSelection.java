@@ -181,7 +181,9 @@ public class ImagingSelection extends DomainResource {
         throw new FHIRException("Unknown ImagingSelection2DGraphicType code '"+codeString+"'");
         }
     public String toCode(ImagingSelection2DGraphicType code) {
-      if (code == ImagingSelection2DGraphicType.POINT)
+       if (code == ImagingSelection2DGraphicType.NULL)
+           return null;
+       if (code == ImagingSelection2DGraphicType.POINT)
         return "point";
       if (code == ImagingSelection2DGraphicType.POLYLINE)
         return "polyline";
@@ -192,7 +194,7 @@ public class ImagingSelection extends DomainResource {
       if (code == ImagingSelection2DGraphicType.ELLIPSE)
         return "ellipse";
       return "?";
-      }
+   }
     public String toSystem(ImagingSelection2DGraphicType code) {
       return code.getSystem();
       }
@@ -339,7 +341,9 @@ public class ImagingSelection extends DomainResource {
         throw new FHIRException("Unknown ImagingSelection3DGraphicType code '"+codeString+"'");
         }
     public String toCode(ImagingSelection3DGraphicType code) {
-      if (code == ImagingSelection3DGraphicType.POINT)
+       if (code == ImagingSelection3DGraphicType.NULL)
+           return null;
+       if (code == ImagingSelection3DGraphicType.POINT)
         return "point";
       if (code == ImagingSelection3DGraphicType.MULTIPOINT)
         return "multipoint";
@@ -352,7 +356,7 @@ public class ImagingSelection extends DomainResource {
       if (code == ImagingSelection3DGraphicType.ELLIPSOID)
         return "ellipsoid";
       return "?";
-      }
+   }
     public String toSystem(ImagingSelection3DGraphicType code) {
       return code.getSystem();
       }
@@ -457,14 +461,16 @@ public class ImagingSelection extends DomainResource {
         throw new FHIRException("Unknown ImagingSelectionStatus code '"+codeString+"'");
         }
     public String toCode(ImagingSelectionStatus code) {
-      if (code == ImagingSelectionStatus.AVAILABLE)
+       if (code == ImagingSelectionStatus.NULL)
+           return null;
+       if (code == ImagingSelectionStatus.AVAILABLE)
         return "available";
       if (code == ImagingSelectionStatus.ENTEREDINERROR)
         return "entered-in-error";
       if (code == ImagingSelectionStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(ImagingSelectionStatus code) {
       return code.getSystem();
       }
@@ -593,6 +599,17 @@ public class ImagingSelection extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1125,6 +1142,25 @@ public class ImagingSelection extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("uid")) {
+          this.uid = null;
+        } else if (name.equals("number")) {
+          this.number = null;
+        } else if (name.equals("sopClass")) {
+          this.sopClass = null;
+        } else if (name.equals("subset")) {
+          this.getSubset().remove(value);
+        } else if (name.equals("imageRegion2D")) {
+          this.getImageRegion2D().remove((ImageRegion2DComponent) value);
+        } else if (name.equals("imageRegion3D")) {
+          this.getImageRegion3D().remove((ImageRegion3DComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1156,17 +1192,17 @@ public class ImagingSelection extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("uid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.uid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.uid");
         }
         else if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.number");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.number");
         }
         else if (name.equals("sopClass")) {
           this.sopClass = new Coding();
           return this.sopClass;
         }
         else if (name.equals("subset")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.subset");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.subset");
         }
         else if (name.equals("imageRegion2D")) {
           return addImageRegion2D();
@@ -1440,6 +1476,18 @@ public class ImagingSelection extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("regionType")) {
+          value = new ImagingSelection2DGraphicTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.regionType = (Enumeration) value; // Enumeration<ImagingSelection2DGraphicType>
+        } else if (name.equals("coordinate")) {
+          this.getCoordinate().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1463,10 +1511,10 @@ public class ImagingSelection extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("regionType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.imageRegion2D.regionType");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.imageRegion2D.regionType");
         }
         else if (name.equals("coordinate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.imageRegion2D.coordinate");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.imageRegion2D.coordinate");
         }
         else
           return super.addChild(name);
@@ -1715,6 +1763,18 @@ public class ImagingSelection extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("regionType")) {
+          value = new ImagingSelection3DGraphicTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.regionType = (Enumeration) value; // Enumeration<ImagingSelection3DGraphicType>
+        } else if (name.equals("coordinate")) {
+          this.getCoordinate().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1738,10 +1798,10 @@ public class ImagingSelection extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("regionType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.imageRegion3D.regionType");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.imageRegion3D.regionType");
         }
         else if (name.equals("coordinate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.instance.imageRegion3D.coordinate");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.instance.imageRegion3D.coordinate");
         }
         else
           return super.addChild(name);
@@ -2892,6 +2952,48 @@ public class ImagingSelection extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new ImagingSelectionStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ImagingSelectionStatus>
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((ImagingSelectionPerformerComponent) value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("studyUid")) {
+          this.studyUid = null;
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("seriesUid")) {
+          this.seriesUid = null;
+        } else if (name.equals("seriesNumber")) {
+          this.seriesNumber = null;
+        } else if (name.equals("frameOfReferenceUid")) {
+          this.frameOfReferenceUid = null;
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("focus")) {
+          this.getFocus().remove(value);
+        } else if (name.equals("instance")) {
+          this.getInstance().remove((ImagingSelectionInstanceComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2948,14 +3050,14 @@ public class ImagingSelection extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.status");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
           return this.subject;
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.issued");
         }
         else if (name.equals("performer")) {
           return addPerformer();
@@ -2971,7 +3073,7 @@ public class ImagingSelection extends DomainResource {
           return this.code;
         }
         else if (name.equals("studyUid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.studyUid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.studyUid");
         }
         else if (name.equals("derivedFrom")) {
           return addDerivedFrom();
@@ -2980,13 +3082,13 @@ public class ImagingSelection extends DomainResource {
           return addEndpoint();
         }
         else if (name.equals("seriesUid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.seriesUid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.seriesUid");
         }
         else if (name.equals("seriesNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.seriesNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.seriesNumber");
         }
         else if (name.equals("frameOfReferenceUid")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImagingSelection.frameOfReferenceUid");
+          throw new FHIRException("Cannot call addChild on a singleton property ImagingSelection.frameOfReferenceUid");
         }
         else if (name.equals("bodySite")) {
           this.bodySite = new CodeableReference();

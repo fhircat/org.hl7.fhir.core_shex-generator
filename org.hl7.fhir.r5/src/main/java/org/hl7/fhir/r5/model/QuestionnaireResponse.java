@@ -180,7 +180,9 @@ public class QuestionnaireResponse extends DomainResource {
         throw new FHIRException("Unknown QuestionnaireResponseStatus code '"+codeString+"'");
         }
     public String toCode(QuestionnaireResponseStatus code) {
-      if (code == QuestionnaireResponseStatus.INPROGRESS)
+       if (code == QuestionnaireResponseStatus.NULL)
+           return null;
+       if (code == QuestionnaireResponseStatus.INPROGRESS)
         return "in-progress";
       if (code == QuestionnaireResponseStatus.COMPLETED)
         return "completed";
@@ -191,7 +193,7 @@ public class QuestionnaireResponse extends DomainResource {
       if (code == QuestionnaireResponseStatus.STOPPED)
         return "stopped";
       return "?";
-      }
+   }
     public String toSystem(QuestionnaireResponseStatus code) {
       return code.getSystem();
       }
@@ -575,6 +577,23 @@ public class QuestionnaireResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("answer")) {
+          this.getAnswer().remove((QuestionnaireResponseItemAnswerComponent) value);
+        } else if (name.equals("item")) {
+          this.getItem().remove((QuestionnaireResponseItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -604,13 +623,13 @@ public class QuestionnaireResponse extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.item.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.item.linkId");
         }
         else if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.item.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.item.definition");
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.item.text");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.item.text");
         }
         else if (name.equals("answer")) {
           return addAnswer();
@@ -731,8 +750,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -746,8 +765,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -761,8 +780,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -776,8 +795,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -791,8 +810,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -806,8 +825,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -821,8 +840,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -836,8 +855,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -851,8 +870,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -866,8 +885,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -881,8 +900,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -896,8 +915,8 @@ public class QuestionnaireResponse extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -1029,6 +1048,17 @@ public class QuestionnaireResponse extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((QuestionnaireResponseItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1824,6 +1854,36 @@ public class QuestionnaireResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("questionnaire")) {
+          this.questionnaire = null;
+        } else if (name.equals("status")) {
+          value = new QuestionnaireResponseStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<QuestionnaireResponseStatus>
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("authored")) {
+          this.authored = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((QuestionnaireResponseItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1874,10 +1934,10 @@ public class QuestionnaireResponse extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("questionnaire")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.questionnaire");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.questionnaire");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.status");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.status");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -1888,7 +1948,7 @@ public class QuestionnaireResponse extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("authored")) {
-          throw new FHIRException("Cannot call addChild on a primitive type QuestionnaireResponse.authored");
+          throw new FHIRException("Cannot call addChild on a singleton property QuestionnaireResponse.authored");
         }
         else if (name.equals("author")) {
           this.author = new Reference();

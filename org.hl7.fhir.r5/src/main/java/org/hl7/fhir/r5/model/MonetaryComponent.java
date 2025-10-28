@@ -193,7 +193,9 @@ public class MonetaryComponent extends DataType implements ICompositeType {
         throw new FHIRException("Unknown PriceComponentType code '"+codeString+"'");
         }
     public String toCode(PriceComponentType code) {
-      if (code == PriceComponentType.BASE)
+       if (code == PriceComponentType.NULL)
+           return null;
+       if (code == PriceComponentType.BASE)
         return "base";
       if (code == PriceComponentType.SURCHARGE)
         return "surcharge";
@@ -206,7 +208,7 @@ public class MonetaryComponent extends DataType implements ICompositeType {
       if (code == PriceComponentType.INFORMATIONAL)
         return "informational";
       return "?";
-      }
+   }
     public String toSystem(PriceComponentType code) {
       return code.getSystem();
       }
@@ -487,6 +489,22 @@ public class MonetaryComponent extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new PriceComponentTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<PriceComponentType>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -514,14 +532,14 @@ public class MonetaryComponent extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MonetaryComponent.type");
+          throw new FHIRException("Cannot call addChild on a singleton property MonetaryComponent.type");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MonetaryComponent.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property MonetaryComponent.factor");
         }
         else if (name.equals("amount")) {
           this.amount = new Money();

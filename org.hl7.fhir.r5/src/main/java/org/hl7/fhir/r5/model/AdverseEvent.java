@@ -138,12 +138,14 @@ public class AdverseEvent extends DomainResource {
         throw new FHIRException("Unknown AdverseEventActuality code '"+codeString+"'");
         }
     public String toCode(AdverseEventActuality code) {
-      if (code == AdverseEventActuality.ACTUAL)
+       if (code == AdverseEventActuality.NULL)
+           return null;
+       if (code == AdverseEventActuality.ACTUAL)
         return "actual";
       if (code == AdverseEventActuality.POTENTIAL)
         return "potential";
       return "?";
-      }
+   }
     public String toSystem(AdverseEventActuality code) {
       return code.getSystem();
       }
@@ -262,7 +264,9 @@ public class AdverseEvent extends DomainResource {
         throw new FHIRException("Unknown AdverseEventStatus code '"+codeString+"'");
         }
     public String toCode(AdverseEventStatus code) {
-      if (code == AdverseEventStatus.INPROGRESS)
+       if (code == AdverseEventStatus.NULL)
+           return null;
+       if (code == AdverseEventStatus.INPROGRESS)
         return "in-progress";
       if (code == AdverseEventStatus.COMPLETED)
         return "completed";
@@ -271,7 +275,7 @@ public class AdverseEvent extends DomainResource {
       if (code == AdverseEventStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(AdverseEventStatus code) {
       return code.getSystem();
       }
@@ -410,6 +414,17 @@ public class AdverseEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -538,8 +553,8 @@ public class AdverseEvent extends DomainResource {
           return (CodeableConcept) this.instance;
         }
 
-        public boolean hasInstanceCodeableConcept() { 
-          return this != null && this.instance instanceof CodeableConcept;
+        public boolean hasInstanceCodeableConcept() {
+            return this.instance instanceof CodeableConcept;
         }
 
         /**
@@ -553,8 +568,8 @@ public class AdverseEvent extends DomainResource {
           return (Reference) this.instance;
         }
 
-        public boolean hasInstanceReference() { 
-          return this != null && this.instance instanceof Reference;
+        public boolean hasInstanceReference() {
+            return this.instance instanceof Reference;
         }
 
         public boolean hasInstance() { 
@@ -647,6 +662,17 @@ public class AdverseEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("instance[x]")) {
+          this.instance = null;
+        } else if (name.equals("causality")) {
+          this.causality = (AdverseEventSuspectEntityCausalityComponent) value; // AdverseEventSuspectEntityCausalityComponent
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -896,6 +922,19 @@ public class AdverseEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("assessmentMethod")) {
+          this.assessmentMethod = null;
+        } else if (name.equals("entityRelatedness")) {
+          this.entityRelatedness = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1027,8 +1066,8 @@ public class AdverseEvent extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         /**
@@ -1042,8 +1081,8 @@ public class AdverseEvent extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         public boolean hasItem() { 
@@ -1104,6 +1143,15 @@ public class AdverseEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1226,8 +1274,8 @@ public class AdverseEvent extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         /**
@@ -1241,8 +1289,8 @@ public class AdverseEvent extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         public boolean hasItem() { 
@@ -1303,6 +1351,15 @@ public class AdverseEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1425,8 +1482,8 @@ public class AdverseEvent extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         /**
@@ -1440,8 +1497,8 @@ public class AdverseEvent extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         public boolean hasItem() { 
@@ -1502,6 +1559,15 @@ public class AdverseEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1624,8 +1690,8 @@ public class AdverseEvent extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         /**
@@ -1639,8 +1705,8 @@ public class AdverseEvent extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         public boolean hasItem() { 
@@ -1701,6 +1767,15 @@ public class AdverseEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2257,8 +2332,8 @@ public class AdverseEvent extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -2272,8 +2347,8 @@ public class AdverseEvent extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     /**
@@ -2287,8 +2362,8 @@ public class AdverseEvent extends DomainResource {
       return (Timing) this.occurrence;
     }
 
-    public boolean hasOccurrenceTiming() { 
-      return this != null && this.occurrence instanceof Timing;
+    public boolean hasOccurrenceTiming() {
+        return this.occurrence instanceof Timing;
     }
 
     public boolean hasOccurrence() { 
@@ -3285,6 +3360,63 @@ public class AdverseEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new AdverseEventStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<AdverseEventStatus>
+        } else if (name.equals("actuality")) {
+          value = new AdverseEventActualityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.actuality = (Enumeration) value; // Enumeration<AdverseEventActuality>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("detected")) {
+          this.detected = null;
+        } else if (name.equals("recordedDate")) {
+          this.recordedDate = null;
+        } else if (name.equals("resultingEffect")) {
+          this.getResultingEffect().remove(value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("seriousness")) {
+          this.seriousness = null;
+        } else if (name.equals("outcome")) {
+          this.getOutcome().remove(value);
+        } else if (name.equals("recorder")) {
+          this.recorder = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((AdverseEventParticipantComponent) value);
+        } else if (name.equals("study")) {
+          this.getStudy().remove(value);
+        } else if (name.equals("expectedInResearchStudy")) {
+          this.expectedInResearchStudy = null;
+        } else if (name.equals("suspectEntity")) {
+          this.getSuspectEntity().remove((AdverseEventSuspectEntityComponent) value);
+        } else if (name.equals("contributingFactor")) {
+          this.getContributingFactor().remove((AdverseEventContributingFactorComponent) value);
+        } else if (name.equals("preventiveAction")) {
+          this.getPreventiveAction().remove((AdverseEventPreventiveActionComponent) value);
+        } else if (name.equals("mitigatingAction")) {
+          this.getMitigatingAction().remove((AdverseEventMitigatingActionComponent) value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove((AdverseEventSupportingInfoComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3356,10 +3488,10 @@ public class AdverseEvent extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdverseEvent.status");
+          throw new FHIRException("Cannot call addChild on a singleton property AdverseEvent.status");
         }
         else if (name.equals("actuality")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdverseEvent.actuality");
+          throw new FHIRException("Cannot call addChild on a singleton property AdverseEvent.actuality");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -3389,10 +3521,10 @@ public class AdverseEvent extends DomainResource {
           return this.occurrence;
         }
         else if (name.equals("detected")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdverseEvent.detected");
+          throw new FHIRException("Cannot call addChild on a singleton property AdverseEvent.detected");
         }
         else if (name.equals("recordedDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdverseEvent.recordedDate");
+          throw new FHIRException("Cannot call addChild on a singleton property AdverseEvent.recordedDate");
         }
         else if (name.equals("resultingEffect")) {
           return addResultingEffect();
@@ -3419,7 +3551,7 @@ public class AdverseEvent extends DomainResource {
           return addStudy();
         }
         else if (name.equals("expectedInResearchStudy")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AdverseEvent.expectedInResearchStudy");
+          throw new FHIRException("Cannot call addChild on a singleton property AdverseEvent.expectedInResearchStudy");
         }
         else if (name.equals("suspectEntity")) {
           return addSuspectEntity();

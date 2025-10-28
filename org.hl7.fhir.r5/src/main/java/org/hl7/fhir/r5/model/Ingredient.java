@@ -152,14 +152,16 @@ public class Ingredient extends DomainResource {
         throw new FHIRException("Unknown IngredientManufacturerRole code '"+codeString+"'");
         }
     public String toCode(IngredientManufacturerRole code) {
-      if (code == IngredientManufacturerRole.ALLOWED)
+       if (code == IngredientManufacturerRole.NULL)
+           return null;
+       if (code == IngredientManufacturerRole.ALLOWED)
         return "allowed";
       if (code == IngredientManufacturerRole.POSSIBLE)
         return "possible";
       if (code == IngredientManufacturerRole.ACTUAL)
         return "actual";
       return "?";
-      }
+   }
     public String toSystem(IngredientManufacturerRole code) {
       return code.getSystem();
       }
@@ -325,6 +327,18 @@ public class Ingredient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          value = new IngredientManufacturerRoleEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.role = (Enumeration) value; // Enumeration<IngredientManufacturerRole>
+        } else if (name.equals("manufacturer")) {
+          this.manufacturer = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -348,7 +362,7 @@ public class Ingredient extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("role")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.manufacturer.role");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.manufacturer.role");
         }
         else if (name.equals("manufacturer")) {
           this.manufacturer = new Reference();
@@ -563,6 +577,17 @@ public class Ingredient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("strength")) {
+          this.getStrength().remove((IngredientSubstanceStrengthComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -729,8 +754,8 @@ public class Ingredient extends DomainResource {
           return (Ratio) this.presentation;
         }
 
-        public boolean hasPresentationRatio() { 
-          return this != null && this.presentation instanceof Ratio;
+        public boolean hasPresentationRatio() {
+            return this.presentation instanceof Ratio;
         }
 
         /**
@@ -744,8 +769,8 @@ public class Ingredient extends DomainResource {
           return (RatioRange) this.presentation;
         }
 
-        public boolean hasPresentationRatioRange() { 
-          return this != null && this.presentation instanceof RatioRange;
+        public boolean hasPresentationRatioRange() {
+            return this.presentation instanceof RatioRange;
         }
 
         /**
@@ -759,8 +784,8 @@ public class Ingredient extends DomainResource {
           return (CodeableConcept) this.presentation;
         }
 
-        public boolean hasPresentationCodeableConcept() { 
-          return this != null && this.presentation instanceof CodeableConcept;
+        public boolean hasPresentationCodeableConcept() {
+            return this.presentation instanceof CodeableConcept;
         }
 
         /**
@@ -774,8 +799,8 @@ public class Ingredient extends DomainResource {
           return (Quantity) this.presentation;
         }
 
-        public boolean hasPresentationQuantity() { 
-          return this != null && this.presentation instanceof Quantity;
+        public boolean hasPresentationQuantity() {
+            return this.presentation instanceof Quantity;
         }
 
         public boolean hasPresentation() { 
@@ -859,8 +884,8 @@ public class Ingredient extends DomainResource {
           return (Ratio) this.concentration;
         }
 
-        public boolean hasConcentrationRatio() { 
-          return this != null && this.concentration instanceof Ratio;
+        public boolean hasConcentrationRatio() {
+            return this.concentration instanceof Ratio;
         }
 
         /**
@@ -874,8 +899,8 @@ public class Ingredient extends DomainResource {
           return (RatioRange) this.concentration;
         }
 
-        public boolean hasConcentrationRatioRange() { 
-          return this != null && this.concentration instanceof RatioRange;
+        public boolean hasConcentrationRatioRange() {
+            return this.concentration instanceof RatioRange;
         }
 
         /**
@@ -889,8 +914,8 @@ public class Ingredient extends DomainResource {
           return (CodeableConcept) this.concentration;
         }
 
-        public boolean hasConcentrationCodeableConcept() { 
-          return this != null && this.concentration instanceof CodeableConcept;
+        public boolean hasConcentrationCodeableConcept() {
+            return this.concentration instanceof CodeableConcept;
         }
 
         /**
@@ -904,8 +929,8 @@ public class Ingredient extends DomainResource {
           return (Quantity) this.concentration;
         }
 
-        public boolean hasConcentrationQuantity() { 
-          return this != null && this.concentration instanceof Quantity;
+        public boolean hasConcentrationQuantity() {
+            return this.concentration instanceof Quantity;
         }
 
         public boolean hasConcentration() { 
@@ -1259,6 +1284,29 @@ public class Ingredient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("presentation[x]")) {
+          this.presentation = null;
+        } else if (name.equals("textPresentation")) {
+          this.textPresentation = null;
+        } else if (name.equals("concentration[x]")) {
+          this.concentration = null;
+        } else if (name.equals("textConcentration")) {
+          this.textConcentration = null;
+        } else if (name.equals("basis")) {
+          this.basis = null;
+        } else if (name.equals("measurementPoint")) {
+          this.measurementPoint = null;
+        } else if (name.equals("country")) {
+          this.getCountry().remove(value);
+        } else if (name.equals("referenceStrength")) {
+          this.getReferenceStrength().remove((IngredientSubstanceStrengthReferenceStrengthComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1312,7 +1360,7 @@ public class Ingredient extends DomainResource {
           return this.presentation;
         }
         else if (name.equals("textPresentation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.substance.strength.textPresentation");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.substance.strength.textPresentation");
         }
         else if (name.equals("concentrationRatio")) {
           this.concentration = new Ratio();
@@ -1331,14 +1379,14 @@ public class Ingredient extends DomainResource {
           return this.concentration;
         }
         else if (name.equals("textConcentration")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.substance.strength.textConcentration");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.substance.strength.textConcentration");
         }
         else if (name.equals("basis")) {
           this.basis = new CodeableConcept();
           return this.basis;
         }
         else if (name.equals("measurementPoint")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.substance.strength.measurementPoint");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.substance.strength.measurementPoint");
         }
         else if (name.equals("country")) {
           return addCountry();
@@ -1506,8 +1554,8 @@ public class Ingredient extends DomainResource {
           return (Ratio) this.strength;
         }
 
-        public boolean hasStrengthRatio() { 
-          return this != null && this.strength instanceof Ratio;
+        public boolean hasStrengthRatio() {
+            return this.strength instanceof Ratio;
         }
 
         /**
@@ -1521,8 +1569,8 @@ public class Ingredient extends DomainResource {
           return (RatioRange) this.strength;
         }
 
-        public boolean hasStrengthRatioRange() { 
-          return this != null && this.strength instanceof RatioRange;
+        public boolean hasStrengthRatioRange() {
+            return this.strength instanceof RatioRange;
         }
 
         /**
@@ -1536,8 +1584,8 @@ public class Ingredient extends DomainResource {
           return (Quantity) this.strength;
         }
 
-        public boolean hasStrengthQuantity() { 
-          return this != null && this.strength instanceof Quantity;
+        public boolean hasStrengthQuantity() {
+            return this.strength instanceof Quantity;
         }
 
         public boolean hasStrength() { 
@@ -1727,6 +1775,21 @@ public class Ingredient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("substance")) {
+          this.substance = null;
+        } else if (name.equals("strength[x]")) {
+          this.strength = null;
+        } else if (name.equals("measurementPoint")) {
+          this.measurementPoint = null;
+        } else if (name.equals("country")) {
+          this.getCountry().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1771,7 +1834,7 @@ public class Ingredient extends DomainResource {
           return this.strength;
         }
         else if (name.equals("measurementPoint")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.substance.strength.referenceStrength.measurementPoint");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.substance.strength.referenceStrength.measurementPoint");
         }
         else if (name.equals("country")) {
           return addCountry();
@@ -2434,6 +2497,34 @@ public class Ingredient extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("for")) {
+          this.getFor().remove(value);
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("function")) {
+          this.getFunction().remove(value);
+        } else if (name.equals("group")) {
+          this.group = null;
+        } else if (name.equals("allergenicIndicator")) {
+          this.allergenicIndicator = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove((IngredientManufacturerComponent) value);
+        } else if (name.equals("substance")) {
+          this.substance = (IngredientSubstanceComponent) value; // IngredientSubstanceComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2477,7 +2568,7 @@ public class Ingredient extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.status");
         }
         else if (name.equals("for")) {
           return addFor();
@@ -2494,10 +2585,10 @@ public class Ingredient extends DomainResource {
           return this.group;
         }
         else if (name.equals("allergenicIndicator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.allergenicIndicator");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.allergenicIndicator");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Ingredient.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property Ingredient.comment");
         }
         else if (name.equals("manufacturer")) {
           return addManufacturer();

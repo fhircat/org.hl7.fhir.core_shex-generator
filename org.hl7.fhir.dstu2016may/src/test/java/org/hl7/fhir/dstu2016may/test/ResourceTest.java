@@ -40,7 +40,9 @@ import org.hl7.fhir.dstu2016may.formats.JsonParser;
 import org.hl7.fhir.dstu2016may.formats.XmlParser;
 import org.hl7.fhir.dstu2016may.model.Resource;
 import org.hl7.fhir.exceptions.FHIRFormatError;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 
+@Deprecated
 public class ResourceTest {
 
   private File source;
@@ -53,31 +55,31 @@ public class ResourceTest {
   public void setSource(File source) {
     this.source = source;
   }
-  
+
   public void test() throws FHIRFormatError, FileNotFoundException, IOException {
-    
+
     IParser p;
     if (isJson())
       p = new JsonParser();
     else
       p = new XmlParser(false);
-    Resource rf = p.parse(new FileInputStream(source));
+    Resource rf = p.parse(ManagedFileAccess.inStream(source));
 
-    FileOutputStream out = new FileOutputStream(source.getAbsoluteFile()+".out.json");
+    FileOutputStream out = ManagedFileAccess.outStream(source.getAbsoluteFile() + ".out.json");
     JsonParser json1 = new JsonParser();
     json1.setOutputStyle(OutputStyle.PRETTY);
     json1.compose(out, rf);
     out.close();
 
     JsonParser json = new JsonParser();
-    rf = json.parse(new FileInputStream(source.getAbsoluteFile()+".out.json"));
-    
-    out = new FileOutputStream(source.getAbsoluteFile()+".out.xml");
-    XmlParser atom = new XmlParser(); 
+    rf = json.parse(ManagedFileAccess.inStream(source.getAbsoluteFile() + ".out.json"));
+
+    out = ManagedFileAccess.outStream(source.getAbsoluteFile() + ".out.xml");
+    XmlParser atom = new XmlParser();
     atom.setOutputStyle(OutputStyle.PRETTY);
     atom.compose(out, rf, true);
     out.close();
-    
+
   }
 
   public boolean isJson() {
@@ -87,5 +89,5 @@ public class ResourceTest {
   public void setJson(boolean json) {
     this.json = json;
   }
-  
+
 }

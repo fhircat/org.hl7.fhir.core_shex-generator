@@ -166,7 +166,9 @@ public class AllergyIntolerance extends DomainResource {
         throw new FHIRException("Unknown AllergyIntoleranceCategory code '"+codeString+"'");
         }
     public String toCode(AllergyIntoleranceCategory code) {
-      if (code == AllergyIntoleranceCategory.FOOD)
+       if (code == AllergyIntoleranceCategory.NULL)
+           return null;
+       if (code == AllergyIntoleranceCategory.FOOD)
         return "food";
       if (code == AllergyIntoleranceCategory.MEDICATION)
         return "medication";
@@ -175,7 +177,7 @@ public class AllergyIntolerance extends DomainResource {
       if (code == AllergyIntoleranceCategory.BIOLOGIC)
         return "biologic";
       return "?";
-      }
+   }
     public String toSystem(AllergyIntoleranceCategory code) {
       return code.getSystem();
       }
@@ -280,14 +282,16 @@ public class AllergyIntolerance extends DomainResource {
         throw new FHIRException("Unknown AllergyIntoleranceCriticality code '"+codeString+"'");
         }
     public String toCode(AllergyIntoleranceCriticality code) {
-      if (code == AllergyIntoleranceCriticality.LOW)
+       if (code == AllergyIntoleranceCriticality.NULL)
+           return null;
+       if (code == AllergyIntoleranceCriticality.LOW)
         return "low";
       if (code == AllergyIntoleranceCriticality.HIGH)
         return "high";
       if (code == AllergyIntoleranceCriticality.UNABLETOASSESS)
         return "unable-to-assess";
       return "?";
-      }
+   }
     public String toSystem(AllergyIntoleranceCriticality code) {
       return code.getSystem();
       }
@@ -392,14 +396,16 @@ public class AllergyIntolerance extends DomainResource {
         throw new FHIRException("Unknown AllergyIntoleranceSeverity code '"+codeString+"'");
         }
     public String toCode(AllergyIntoleranceSeverity code) {
-      if (code == AllergyIntoleranceSeverity.MILD)
+       if (code == AllergyIntoleranceSeverity.NULL)
+           return null;
+       if (code == AllergyIntoleranceSeverity.MILD)
         return "mild";
       if (code == AllergyIntoleranceSeverity.MODERATE)
         return "moderate";
       if (code == AllergyIntoleranceSeverity.SEVERE)
         return "severe";
       return "?";
-      }
+   }
     public String toSystem(AllergyIntoleranceSeverity code) {
       return code.getSystem();
       }
@@ -536,6 +542,17 @@ public class AllergyIntolerance extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1081,6 +1098,28 @@ public class AllergyIntolerance extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("substance")) {
+          this.substance = null;
+        } else if (name.equals("manifestation")) {
+          this.getManifestation().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("onset")) {
+          this.onset = null;
+        } else if (name.equals("severity")) {
+          value = new AllergyIntoleranceSeverityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.severity = (Enumeration) value; // Enumeration<AllergyIntoleranceSeverity>
+        } else if (name.equals("exposureRoute")) {
+          this.exposureRoute = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1121,13 +1160,13 @@ public class AllergyIntolerance extends DomainResource {
           return addManifestation();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.reaction.description");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.reaction.description");
         }
         else if (name.equals("onset")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.reaction.onset");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.reaction.onset");
         }
         else if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.reaction.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.reaction.severity");
         }
         else if (name.equals("exposureRoute")) {
           this.exposureRoute = new CodeableConcept();
@@ -1653,8 +1692,8 @@ public class AllergyIntolerance extends DomainResource {
       return (DateTimeType) this.onset;
     }
 
-    public boolean hasOnsetDateTimeType() { 
-      return this != null && this.onset instanceof DateTimeType;
+    public boolean hasOnsetDateTimeType() {
+      return this.onset instanceof DateTimeType;
     }
 
     /**
@@ -1668,8 +1707,8 @@ public class AllergyIntolerance extends DomainResource {
       return (Age) this.onset;
     }
 
-    public boolean hasOnsetAge() { 
-      return this != null && this.onset instanceof Age;
+    public boolean hasOnsetAge() {
+      return this.onset instanceof Age;
     }
 
     /**
@@ -1683,8 +1722,8 @@ public class AllergyIntolerance extends DomainResource {
       return (Period) this.onset;
     }
 
-    public boolean hasOnsetPeriod() { 
-      return this != null && this.onset instanceof Period;
+    public boolean hasOnsetPeriod() {
+      return this.onset instanceof Period;
     }
 
     /**
@@ -1698,8 +1737,8 @@ public class AllergyIntolerance extends DomainResource {
       return (Range) this.onset;
     }
 
-    public boolean hasOnsetRange() { 
-      return this != null && this.onset instanceof Range;
+    public boolean hasOnsetRange() {
+      return this.onset instanceof Range;
     }
 
     /**
@@ -1713,8 +1752,8 @@ public class AllergyIntolerance extends DomainResource {
       return (StringType) this.onset;
     }
 
-    public boolean hasOnsetStringType() { 
-      return this != null && this.onset instanceof StringType;
+    public boolean hasOnsetStringType() {
+      return this.onset instanceof StringType;
     }
 
     public boolean hasOnset() { 
@@ -2153,6 +2192,45 @@ public class AllergyIntolerance extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("clinicalStatus")) {
+          this.clinicalStatus = null;
+        } else if (name.equals("verificationStatus")) {
+          this.verificationStatus = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("category")) {
+          value = new AllergyIntoleranceCategoryEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getCategory().remove((Enumeration) value);
+        } else if (name.equals("criticality")) {
+          value = new AllergyIntoleranceCriticalityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.criticality = (Enumeration) value; // Enumeration<AllergyIntoleranceCriticality>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("onset[x]")) {
+          this.onset = null;
+        } else if (name.equals("recordedDate")) {
+          this.recordedDate = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((AllergyIntoleranceParticipantComponent) value);
+        } else if (name.equals("lastOccurrence")) {
+          this.lastOccurrence = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("reaction")) {
+          this.getReaction().remove((AllergyIntoleranceReactionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2218,10 +2296,10 @@ public class AllergyIntolerance extends DomainResource {
           return this.type;
         }
         else if (name.equals("category")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.category");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.category");
         }
         else if (name.equals("criticality")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.criticality");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.criticality");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -2256,13 +2334,13 @@ public class AllergyIntolerance extends DomainResource {
           return this.onset;
         }
         else if (name.equals("recordedDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.recordedDate");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.recordedDate");
         }
         else if (name.equals("participant")) {
           return addParticipant();
         }
         else if (name.equals("lastOccurrence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AllergyIntolerance.lastOccurrence");
+          throw new FHIRException("Cannot call addChild on a singleton property AllergyIntolerance.lastOccurrence");
         }
         else if (name.equals("note")) {
           return addNote();

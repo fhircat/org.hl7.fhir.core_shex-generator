@@ -222,7 +222,9 @@ public class MedicationRequest extends DomainResource {
         throw new FHIRException("Unknown MedicationRequestIntent code '"+codeString+"'");
         }
     public String toCode(MedicationRequestIntent code) {
-      if (code == MedicationRequestIntent.PROPOSAL)
+       if (code == MedicationRequestIntent.NULL)
+           return null;
+       if (code == MedicationRequestIntent.PROPOSAL)
         return "proposal";
       if (code == MedicationRequestIntent.PLAN)
         return "plan";
@@ -239,7 +241,7 @@ public class MedicationRequest extends DomainResource {
       if (code == MedicationRequestIntent.OPTION)
         return "option";
       return "?";
-      }
+   }
     public String toSystem(MedicationRequestIntent code) {
       return code.getSystem();
       }
@@ -428,7 +430,9 @@ public class MedicationRequest extends DomainResource {
         throw new FHIRException("Unknown MedicationrequestStatus code '"+codeString+"'");
         }
     public String toCode(MedicationrequestStatus code) {
-      if (code == MedicationrequestStatus.ACTIVE)
+       if (code == MedicationrequestStatus.NULL)
+           return null;
+       if (code == MedicationrequestStatus.ACTIVE)
         return "active";
       if (code == MedicationrequestStatus.ONHOLD)
         return "on-hold";
@@ -447,7 +451,7 @@ public class MedicationRequest extends DomainResource {
       if (code == MedicationrequestStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(MedicationrequestStatus code) {
       return code.getSystem();
       }
@@ -901,6 +905,31 @@ public class MedicationRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("initialFill")) {
+          this.initialFill = (MedicationRequestDispenseRequestInitialFillComponent) value; // MedicationRequestDispenseRequestInitialFillComponent
+        } else if (name.equals("dispenseInterval")) {
+          this.dispenseInterval = null;
+        } else if (name.equals("validityPeriod")) {
+          this.validityPeriod = null;
+        } else if (name.equals("numberOfRepeatsAllowed")) {
+          this.numberOfRepeatsAllowed = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("expectedSupplyDuration")) {
+          this.expectedSupplyDuration = null;
+        } else if (name.equals("dispenser")) {
+          this.dispenser = null;
+        } else if (name.equals("dispenserInstruction")) {
+          this.getDispenserInstruction().remove(value);
+        } else if (name.equals("doseAdministrationAid")) {
+          this.doseAdministrationAid = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -950,7 +979,7 @@ public class MedicationRequest extends DomainResource {
           return this.validityPeriod;
         }
         else if (name.equals("numberOfRepeatsAllowed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.dispenseRequest.numberOfRepeatsAllowed");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.dispenseRequest.numberOfRepeatsAllowed");
         }
         else if (name.equals("quantity")) {
           this.quantity = new Quantity();
@@ -1159,6 +1188,17 @@ public class MedicationRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("duration")) {
+          this.duration = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1289,8 +1329,8 @@ public class MedicationRequest extends DomainResource {
           return (BooleanType) this.allowed;
         }
 
-        public boolean hasAllowedBooleanType() { 
-          return this != null && this.allowed instanceof BooleanType;
+        public boolean hasAllowedBooleanType() {
+            return this.allowed instanceof BooleanType;
         }
 
         /**
@@ -1304,8 +1344,8 @@ public class MedicationRequest extends DomainResource {
           return (CodeableConcept) this.allowed;
         }
 
-        public boolean hasAllowedCodeableConcept() { 
-          return this != null && this.allowed instanceof CodeableConcept;
+        public boolean hasAllowedCodeableConcept() {
+            return this.allowed instanceof CodeableConcept;
         }
 
         public boolean hasAllowed() { 
@@ -1398,6 +1438,17 @@ public class MedicationRequest extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("allowed[x]")) {
+          this.allowed = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3371,6 +3422,82 @@ public class MedicationRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("priorPrescription")) {
+          this.priorPrescription = null;
+        } else if (name.equals("groupIdentifier")) {
+          this.groupIdentifier = null;
+        } else if (name.equals("status")) {
+          value = new MedicationrequestStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MedicationrequestStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("statusChanged")) {
+          this.statusChanged = null;
+        } else if (name.equals("intent")) {
+          value = new MedicationRequestIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<MedicationRequestIntent>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("doNotPerform")) {
+          this.doNotPerform = null;
+        } else if (name.equals("medication")) {
+          this.medication = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("informationSource")) {
+          this.getInformationSource().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("authoredOn")) {
+          this.authoredOn = null;
+        } else if (name.equals("requester")) {
+          this.requester = null;
+        } else if (name.equals("reported")) {
+          this.reported = null;
+        } else if (name.equals("performerType")) {
+          this.performerType = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove(value);
+        } else if (name.equals("device")) {
+          this.getDevice().remove(value);
+        } else if (name.equals("recorder")) {
+          this.recorder = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("courseOfTherapyType")) {
+          this.courseOfTherapyType = null;
+        } else if (name.equals("insurance")) {
+          this.getInsurance().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("renderedDosageInstruction")) {
+          this.renderedDosageInstruction = null;
+        } else if (name.equals("effectiveDosePeriod")) {
+          this.effectiveDosePeriod = null;
+        } else if (name.equals("dosageInstruction")) {
+          this.getDosageInstruction().remove(value);
+        } else if (name.equals("dispenseRequest")) {
+          this.dispenseRequest = (MedicationRequestDispenseRequestComponent) value; // MedicationRequestDispenseRequestComponent
+        } else if (name.equals("substitution")) {
+          this.substitution = (MedicationRequestSubstitutionComponent) value; // MedicationRequestSubstitutionComponent
+        } else if (name.equals("eventHistory")) {
+          this.getEventHistory().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3470,26 +3597,26 @@ public class MedicationRequest extends DomainResource {
           return this.groupIdentifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
           return this.statusReason;
         }
         else if (name.equals("statusChanged")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.statusChanged");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.statusChanged");
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.intent");
         }
         else if (name.equals("category")) {
           return addCategory();
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.priority");
         }
         else if (name.equals("doNotPerform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.doNotPerform");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.doNotPerform");
         }
         else if (name.equals("medication")) {
           this.medication = new CodeableReference();
@@ -3510,14 +3637,14 @@ public class MedicationRequest extends DomainResource {
           return addSupportingInformation();
         }
         else if (name.equals("authoredOn")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.authoredOn");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.authoredOn");
         }
         else if (name.equals("requester")) {
           this.requester = new Reference();
           return this.requester;
         }
         else if (name.equals("reported")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.reported");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.reported");
         }
         else if (name.equals("performerType")) {
           this.performerType = new CodeableConcept();
@@ -3547,7 +3674,7 @@ public class MedicationRequest extends DomainResource {
           return addNote();
         }
         else if (name.equals("renderedDosageInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationRequest.renderedDosageInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationRequest.renderedDosageInstruction");
         }
         else if (name.equals("effectiveDosePeriod")) {
           this.effectiveDosePeriod = new Period();

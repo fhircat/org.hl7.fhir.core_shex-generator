@@ -642,7 +642,9 @@ public class Citation extends MetadataResource {
         throw new FHIRException("Unknown RelatedArtifactTypeExpanded code '"+codeString+"'");
         }
     public String toCode(RelatedArtifactTypeExpanded code) {
-      if (code == RelatedArtifactTypeExpanded.DOCUMENTATION)
+       if (code == RelatedArtifactTypeExpanded.NULL)
+           return null;
+       if (code == RelatedArtifactTypeExpanded.DOCUMENTATION)
         return "documentation";
       if (code == RelatedArtifactTypeExpanded.JUSTIFICATION)
         return "justification";
@@ -719,7 +721,7 @@ public class Citation extends MetadataResource {
       if (code == RelatedArtifactTypeExpanded.REPRINTOF)
         return "reprint-of";
       return "?";
-      }
+   }
     public String toSystem(RelatedArtifactTypeExpanded code) {
       return code.getSystem();
       }
@@ -879,6 +881,17 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("style")) {
+          this.style = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -906,7 +919,7 @@ public class Citation extends MetadataResource {
           return this.style;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.summary.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.summary.text");
         }
         else
           return super.addChild(name);
@@ -1108,6 +1121,17 @@ public class Citation extends MetadataResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1384,6 +1408,19 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("activity")) {
+          this.activity = null;
+        } else if (name.equals("actual")) {
+          this.actual = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1413,7 +1450,7 @@ public class Citation extends MetadataResource {
           return this.activity;
         }
         else if (name.equals("actual")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.statusDate.actual");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.statusDate.actual");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -2445,6 +2482,43 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("relatedIdentifier")) {
+          this.getRelatedIdentifier().remove(value);
+        } else if (name.equals("dateAccessed")) {
+          this.dateAccessed = null;
+        } else if (name.equals("version")) {
+          this.version = (CitationCitedArtifactVersionComponent) value; // CitationCitedArtifactVersionComponent
+        } else if (name.equals("currentState")) {
+          this.getCurrentState().remove(value);
+        } else if (name.equals("statusDate")) {
+          this.getStatusDate().remove((CitationCitedArtifactStatusDateComponent) value);
+        } else if (name.equals("title")) {
+          this.getTitle().remove((CitationCitedArtifactTitleComponent) value);
+        } else if (name.equals("abstract")) {
+          this.getAbstract().remove((CitationCitedArtifactAbstractComponent) value);
+        } else if (name.equals("part")) {
+          this.part = (CitationCitedArtifactPartComponent) value; // CitationCitedArtifactPartComponent
+        } else if (name.equals("relatesTo")) {
+          this.getRelatesTo().remove((CitationCitedArtifactRelatesToComponent) value);
+        } else if (name.equals("publicationForm")) {
+          this.getPublicationForm().remove((CitationCitedArtifactPublicationFormComponent) value);
+        } else if (name.equals("webLocation")) {
+          this.getWebLocation().remove((CitationCitedArtifactWebLocationComponent) value);
+        } else if (name.equals("classification")) {
+          this.getClassification().remove((CitationCitedArtifactClassificationComponent) value);
+        } else if (name.equals("contributorship")) {
+          this.contributorship = (CitationCitedArtifactContributorshipComponent) value; // CitationCitedArtifactContributorshipComponent
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2500,7 +2574,7 @@ public class Citation extends MetadataResource {
           return addRelatedIdentifier();
         }
         else if (name.equals("dateAccessed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.dateAccessed");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.dateAccessed");
         }
         else if (name.equals("version")) {
           this.version = new CitationCitedArtifactVersionComponent();
@@ -2805,6 +2879,17 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("baseCitation")) {
+          this.baseCitation = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2828,7 +2913,7 @@ public class Citation extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.version.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.version.value");
         }
         else if (name.equals("baseCitation")) {
           this.baseCitation = new Reference();
@@ -3075,6 +3160,19 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("activity")) {
+          this.activity = null;
+        } else if (name.equals("actual")) {
+          this.actual = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3104,7 +3202,7 @@ public class Citation extends MetadataResource {
           return this.activity;
         }
         else if (name.equals("actual")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.statusDate.actual");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.statusDate.actual");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -3383,6 +3481,19 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3415,7 +3526,7 @@ public class Citation extends MetadataResource {
           return this.language;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.title.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.title.text");
         }
         else
           return super.addChild(name);
@@ -3728,6 +3839,21 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3763,10 +3889,10 @@ public class Citation extends MetadataResource {
           return this.language;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.abstract.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.abstract.text");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.abstract.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.abstract.copyright");
         }
         else
           return super.addChild(name);
@@ -4008,6 +4134,19 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("baseCitation")) {
+          this.baseCitation = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4037,7 +4176,7 @@ public class Citation extends MetadataResource {
           return this.type;
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.part.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.part.value");
         }
         else if (name.equals("baseCitation")) {
           this.baseCitation = new Reference();
@@ -4613,6 +4752,30 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new RelatedArtifactTypeExpandedEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<RelatedArtifactTypeExpanded>
+        } else if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else if (name.equals("label")) {
+          this.label = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("citation")) {
+          this.citation = null;
+        } else if (name.equals("document")) {
+          this.document = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("resourceReference")) {
+          this.resourceReference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4648,26 +4811,26 @@ public class Citation extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.relatesTo.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.relatesTo.type");
         }
         else if (name.equals("classifier")) {
           return addClassifier();
         }
         else if (name.equals("label")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.relatesTo.label");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.relatesTo.label");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.relatesTo.display");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.relatesTo.display");
         }
         else if (name.equals("citation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.relatesTo.citation");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.relatesTo.citation");
         }
         else if (name.equals("document")) {
           this.document = new Attachment();
           return this.document;
         }
         else if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.relatesTo.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.relatesTo.resource");
         }
         else if (name.equals("resourceReference")) {
           this.resourceReference = new Reference();
@@ -5697,6 +5860,43 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("publishedIn")) {
+          this.publishedIn = (CitationCitedArtifactPublicationFormPublishedInComponent) value; // CitationCitedArtifactPublicationFormPublishedInComponent
+        } else if (name.equals("citedMedium")) {
+          this.citedMedium = null;
+        } else if (name.equals("volume")) {
+          this.volume = null;
+        } else if (name.equals("issue")) {
+          this.issue = null;
+        } else if (name.equals("articleDate")) {
+          this.articleDate = null;
+        } else if (name.equals("publicationDateText")) {
+          this.publicationDateText = null;
+        } else if (name.equals("publicationDateSeason")) {
+          this.publicationDateSeason = null;
+        } else if (name.equals("lastRevisionDate")) {
+          this.lastRevisionDate = null;
+        } else if (name.equals("language")) {
+          this.getLanguage().remove(value);
+        } else if (name.equals("accessionNumber")) {
+          this.accessionNumber = null;
+        } else if (name.equals("pageString")) {
+          this.pageString = null;
+        } else if (name.equals("firstPage")) {
+          this.firstPage = null;
+        } else if (name.equals("lastPage")) {
+          this.lastPage = null;
+        } else if (name.equals("pageCount")) {
+          this.pageCount = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5754,43 +5954,43 @@ public class Citation extends MetadataResource {
           return this.citedMedium;
         }
         else if (name.equals("volume")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.volume");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.volume");
         }
         else if (name.equals("issue")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.issue");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.issue");
         }
         else if (name.equals("articleDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.articleDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.articleDate");
         }
         else if (name.equals("publicationDateText")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.publicationDateText");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.publicationDateText");
         }
         else if (name.equals("publicationDateSeason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.publicationDateSeason");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.publicationDateSeason");
         }
         else if (name.equals("lastRevisionDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.lastRevisionDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.lastRevisionDate");
         }
         else if (name.equals("language")) {
           return addLanguage();
         }
         else if (name.equals("accessionNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.accessionNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.accessionNumber");
         }
         else if (name.equals("pageString")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.pageString");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.pageString");
         }
         else if (name.equals("firstPage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.firstPage");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.firstPage");
         }
         else if (name.equals("lastPage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.lastPage");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.lastPage");
         }
         else if (name.equals("pageCount")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.pageCount");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.pageCount");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.copyright");
         }
         else
           return super.addChild(name);
@@ -6190,6 +6390,23 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("publisherLocation")) {
+          this.publisherLocation = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6226,14 +6443,14 @@ public class Citation extends MetadataResource {
           return addIdentifier();
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.publishedIn.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.publishedIn.title");
         }
         else if (name.equals("publisher")) {
           this.publisher = new Reference();
           return this.publisher;
         }
         else if (name.equals("publisherLocation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.publicationForm.publishedIn.publisherLocation");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.publicationForm.publishedIn.publisherLocation");
         }
         else
           return super.addChild(name);
@@ -6472,6 +6689,17 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6498,7 +6726,7 @@ public class Citation extends MetadataResource {
           return addClassifier();
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.webLocation.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.webLocation.url");
         }
         else
           return super.addChild(name);
@@ -6772,6 +7000,19 @@ public class Citation extends MetadataResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else if (name.equals("artifactAssessment")) {
+          this.getArtifactAssessment().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -7108,6 +7349,19 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("complete")) {
+          this.complete = null;
+        } else if (name.equals("entry")) {
+          this.getEntry().remove((CitationCitedArtifactContributorshipEntryComponent) value);
+        } else if (name.equals("summary")) {
+          this.getSummary().remove((ContributorshipSummaryComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -7133,7 +7387,7 @@ public class Citation extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("complete")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.complete");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.complete");
         }
         else if (name.equals("entry")) {
           return addEntry();
@@ -7721,6 +7975,29 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("contributor")) {
+          this.contributor = null;
+        } else if (name.equals("forenameInitials")) {
+          this.forenameInitials = null;
+        } else if (name.equals("affiliation")) {
+          this.getAffiliation().remove(value);
+        } else if (name.equals("contributionType")) {
+          this.getContributionType().remove(value);
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("contributionInstance")) {
+          this.getContributionInstance().remove((CitationCitedArtifactContributorshipEntryContributionInstanceComponent) value);
+        } else if (name.equals("correspondingContact")) {
+          this.correspondingContact = null;
+        } else if (name.equals("rankingOrder")) {
+          this.rankingOrder = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -7760,7 +8037,7 @@ public class Citation extends MetadataResource {
           return this.contributor;
         }
         else if (name.equals("forenameInitials")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.entry.forenameInitials");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.entry.forenameInitials");
         }
         else if (name.equals("affiliation")) {
           return addAffiliation();
@@ -7776,10 +8053,10 @@ public class Citation extends MetadataResource {
           return addContributionInstance();
         }
         else if (name.equals("correspondingContact")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.entry.correspondingContact");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.entry.correspondingContact");
         }
         else if (name.equals("rankingOrder")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.entry.rankingOrder");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.entry.rankingOrder");
         }
         else
           return super.addChild(name);
@@ -8011,6 +8288,17 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("time")) {
+          this.time = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -8038,7 +8326,7 @@ public class Citation extends MetadataResource {
           return this.type;
         }
         else if (name.equals("time")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.entry.contributionInstance.time");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.entry.contributionInstance.time");
         }
         else
           return super.addChild(name);
@@ -8321,6 +8609,21 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("style")) {
+          this.style = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -8360,7 +8663,7 @@ public class Citation extends MetadataResource {
           return this.source;
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.citedArtifact.contributorship.summary.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.citedArtifact.contributorship.summary.value");
         }
         else
           return super.addChild(name);
@@ -8820,8 +9123,8 @@ public class Citation extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -8835,8 +9138,8 @@ public class Citation extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -10493,6 +10796,76 @@ public class Citation extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("summary")) {
+          this.getSummary().remove((CitationSummaryComponent) value);
+        } else if (name.equals("classification")) {
+          this.getClassification().remove((CitationClassificationComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("currentState")) {
+          this.getCurrentState().remove(value);
+        } else if (name.equals("statusDate")) {
+          this.getStatusDate().remove((CitationStatusDateComponent) value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("citedArtifact")) {
+          this.citedArtifact = (CitationCitedArtifactComponent) value; // CitationCitedArtifactComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -10575,13 +10948,13 @@ public class Citation extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -10592,28 +10965,28 @@ public class Citation extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -10622,19 +10995,19 @@ public class Citation extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Citation.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Citation.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();

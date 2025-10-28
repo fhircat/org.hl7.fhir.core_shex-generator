@@ -1,5 +1,6 @@
 package org.hl7.fhir.r5.elementmodel;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,40 +14,50 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
+import org.hl7.fhir.r5.fhirpath.ExpressionNode;
+import org.hl7.fhir.r5.fhirpath.FHIRLexer;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r5.fhirpath.FHIRLexer.FHIRLexerException;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
-import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.ConceptMap.ConceptMapGroupUnmappedMode;
 import org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship;
 import org.hl7.fhir.r5.model.Enumerations.PublicationStatus;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapGroupTypeMode;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapTransform;
-import org.hl7.fhir.r5.utils.FHIRLexer;
-import org.hl7.fhir.r5.utils.FHIRLexer.FHIRLexerException;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.utilities.SourceLocation;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueType;
 import org.hl7.fhir.utilities.validation.ValidationMessage.Source;
 
+@MarkedToMoveToAdjunctPackage
 public class FmlParser extends ParserBase {
 
   private FHIRPathEngine fpe;
 
-  public FmlParser(IWorkerContext context) {
+  public FmlParser(IWorkerContext context, FHIRPathEngine fpe) {
     super(context);
-    fpe = new FHIRPathEngine(context);
+    this.fpe = fpe;
+    if (this.fpe == null) {
+      this.fpe = new FHIRPathEngine(context);
+    }
   }
 
   @Override
-  public List<NamedElement> parse(InputStream stream) throws IOException, FHIRFormatError, DefinitionException, FHIRException {
-    String text = TextFile.streamToString(stream);
-    List<NamedElement> result = new ArrayList<>();
-    result.add(new NamedElement(null, parse(text)));
+  public List<ValidatedFragment> parse(InputStream inStream) throws IOException, FHIRFormatError, DefinitionException, FHIRException {
+    byte[] content = FileUtilities.streamToBytes(inStream);
+    ByteArrayInputStream stream = new ByteArrayInputStream(content);
+    String text = FileUtilities.streamToString(stream);
+    List<ValidatedFragment> result = new ArrayList<>();
+    ValidatedFragment focusFragment = new ValidatedFragment(ValidatedFragment.FOCUS_NAME, "fml", content, false);
+    focusFragment.setElement(parse(focusFragment.getErrors(), text));
+    result.add(focusFragment);
     return result;
   }
 
@@ -56,7 +67,7 @@ public class FmlParser extends ParserBase {
     throw new Error("Not done yet");
   }
 
-  public Element parse(String text) throws FHIRException {
+  public Element parse(List<ValidationMessage> errors, String text) throws FHIRException {
     FHIRLexer lexer = new FHIRLexer(text, "source", true, true);
     if (lexer.done())
       throw lexer.error("Map Input cannot be empty");
@@ -70,14 +81,13 @@ public class FmlParser extends ParserBase {
         if (lexer.hasComments()) {
           result.makeElement("description").markLocation(lexer.getCurrentLocation()).setValue(lexer.getAllComments());
         }
-      } else {
-        while (lexer.hasToken("///")) {
-          lexer.next();
-          String fid = lexer.takeDottedToken();
-          Element e = result.makeElement(fid).markLocation(lexer.getCurrentLocation());
-          lexer.token("=");
-          e.setValue(lexer.readConstant("meta value"));
-        }
+      }
+      while (lexer.hasToken("///")) {
+        lexer.next();
+        String fid = lexer.takeDottedToken();
+        Element e = result.makeElement(fid).markLocation(lexer.getCurrentLocation());
+        lexer.token("=");
+        e.setValue(lexer.readConstant("meta value"));
       }
       lexer.setMetadataFormat(false);
       if (!result.hasChild("status")) {
@@ -111,13 +121,13 @@ public class FmlParser extends ParserBase {
       if (policy == ValidationPolicy.NONE) {
         throw e;
       } else {
-        logError("2023-02-24", e.getLocation().getLine(), e.getLocation().getColumn(), "??", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
+        logError(errors, "2023-02-24", e.getLocation().getLine(), e.getLocation().getColumn(), "??", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
       }
     } catch (Exception e) {
       if (policy == ValidationPolicy.NONE) {
         throw e;
       } else {
-        logError("2023-02-24", -1, -1, "?", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
+        logError(errors, "2023-02-24", -1, -1, "?", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
       }
     }
     result.setIgnorePropertyOrder(true);
@@ -128,7 +138,7 @@ public class FmlParser extends ParserBase {
     lexer.token("conceptmap");
     Element map = structureMap.makeElement("contained");
     StructureDefinition sd = context.fetchTypeDefinition("ConceptMap");
-    map.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd), SpecialElement.fromProperty(map.getElementProperty() != null ? map.getElementProperty() : map.getProperty()), map.getProperty());
+    map.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd, getProfileUtilities(), getContextUtilities()), SpecialElement.fromProperty(map.getElementProperty() != null ? map.getElementProperty() : map.getProperty()), map.getProperty());
     map.setType("ConceptMap");
     Element eid = map.makeElement("id").markLocation(lexer.getCurrentLocation());
     String id = lexer.readConstant("map id");
@@ -218,6 +228,8 @@ public class FmlParser extends ParserBase {
   private ConceptMapRelationship readRelationship(FHIRLexer lexer) throws FHIRLexerException {
     String token = lexer.take();
     if (token.equals("-"))
+      return ConceptMapRelationship.RELATEDTO;
+    if (token.equals("=")) // temporary
       return ConceptMapRelationship.RELATEDTO;
     if (token.equals("=="))
       return ConceptMapRelationship.EQUIVALENT;
@@ -394,7 +406,7 @@ public class FmlParser extends ParserBase {
     if (newFmt) {
       if (lexer.isConstant()) {
         if (lexer.isStringConstant()) {
-          rule.makeElement("name").markLocation(lexer.getCurrentLocation()).setValue(lexer.readConstant("ruleName"));
+          rule.makeElement("name").markLocation(lexer.getCurrentLocation()).setValue(fixName(lexer.readConstant("ruleName")));
         } else {
           rule.makeElement("name").markLocation(lexer.getCurrentLocation()).setValue(lexer.take());
         }
@@ -410,13 +422,17 @@ public class FmlParser extends ParserBase {
     }
   }
 
+  private String fixName(String c) {
+    return c.replace("-", "");
+  }
+
   private void parseRuleReference(Element rule, FHIRLexer lexer) throws FHIRLexerException {
     Element ref = rule.addElement("dependent").markLocation(lexer.getCurrentLocation());
     ref.makeElement("name").markLocation(lexer.getCurrentLocation()).setValue(lexer.take());
     lexer.token("(");
     boolean done = false;
     while (!done) {
-      parseParameter(ref, lexer);
+      parseParameter(ref, lexer, false);
       done = !lexer.hasToken(",");
       if (!done)
         lexer.next();
@@ -521,7 +537,7 @@ public class FmlParser extends ParserBase {
       target.makeElement("transform").markLocation(loc).setValue(name);
       lexer.token("(");
       if (target.getChildValue("transform").equals(StructureMapTransform.EVALUATE.toCode())) {
-        parseParameter(target, lexer);
+        parseParameter(target, lexer, true);
         lexer.token(",");
         loc = lexer.getCurrentLocation();
         ExpressionNode node = fpe.parse(lexer);
@@ -529,7 +545,7 @@ public class FmlParser extends ParserBase {
         target.addElement("parameter").markLocation(loc).makeElement("valueString").setValue(node.toString());
       } else {
         while (!lexer.hasToken(")")) {
-          parseParameter(target, lexer);
+          parseParameter(target, lexer, true);
           if (!lexer.hasToken(")"))
             lexer.token(",");
         }
@@ -562,13 +578,17 @@ public class FmlParser extends ParserBase {
     }
   }
 
-  private void parseParameter(Element ref, FHIRLexer lexer) throws FHIRLexerException, FHIRFormatError {
-    if (!lexer.isConstant()) {
-      ref.addElement("parameter").markLocation(lexer.getCurrentLocation()).makeElement("valueId").setValue(lexer.take());
+  private void parseParameter(Element ref, FHIRLexer lexer, boolean isTarget) throws FHIRLexerException, FHIRFormatError {
+    boolean r5 = VersionUtilities.isR5Plus(context.getVersion());
+    String name = r5 || isTarget ? "parameter" : "variable";
+    if (ref.hasChildren(name) && !ref.getChildByName(name).isList()) {
+      throw lexer.error("variable on target is not a list, so can't add an element");
+    } else if (!lexer.isConstant()) {
+      ref.addElement(name).markLocation(lexer.getCurrentLocation()).makeElement(r5 ? "valueId" : "value").setValue(lexer.take());
     } else if (lexer.isStringConstant())
-      ref.addElement("parameter").markLocation(lexer.getCurrentLocation()).makeElement("valueString").setValue(lexer.readConstant("??"));
+      ref.addElement(name).markLocation(lexer.getCurrentLocation()).makeElement(r5 ? "valueString" : "value").setValue(lexer.readConstant("??"));
     else {
-      ref.addElement("parameter").markLocation(lexer.getCurrentLocation()).makeElement("valueString").setValue(readConstant(lexer.take(), lexer));
+      ref.addElement(name).markLocation(lexer.getCurrentLocation()).makeElement(r5 ? "valueString" : "value").setValue(readConstant(lexer.take(), lexer));
     }
   }
  

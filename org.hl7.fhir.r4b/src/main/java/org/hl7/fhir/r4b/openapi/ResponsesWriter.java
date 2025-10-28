@@ -1,5 +1,7 @@
 package org.hl7.fhir.r4b.openapi;
 
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
@@ -29,10 +31,9 @@ package org.hl7.fhir.r4b.openapi;
   
  */
 
-
-
 import com.google.gson.JsonObject;
 
+@MarkedToMoveToAdjunctPackage
 public class ResponsesWriter extends BaseWriter {
 
   public ResponsesWriter(JsonObject object) {
@@ -42,9 +43,9 @@ public class ResponsesWriter extends BaseWriter {
   public ResponseObjectWriter defaultResponse() {
     return new ResponseObjectWriter(ensureObject("default"));
   }
-  
+
   public ResponseObjectWriter httpResponse(String code) {
     return new ResponseObjectWriter(ensureMapObject(code));
   }
-  
+
 }

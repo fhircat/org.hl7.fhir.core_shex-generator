@@ -29,8 +29,6 @@ package org.hl7.fhir.r4b.model;
   
  */
 
-
-
 import java.io.IOException;
 import java.util.List;
 
@@ -39,11 +37,10 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
-
 public class XhtmlType extends PrimitiveType<String> {
 
   private Narrative place;
-  
+
   public XhtmlType(Narrative place) {
     super();
     this.place = place;
@@ -101,24 +98,20 @@ public class XhtmlType extends PrimitiveType<String> {
   @Override
   public Base[] getProperty(int hash, String name, boolean checkValid) throws FHIRException {
     if ("value".equals(name))
-      return new Base[] {this};
+      return new Base[] { this };
     return super.getProperty(hash, name, checkValid);
   }
 
   @Override
   public String primitiveValue() {
-    try {
-      return new XhtmlComposer(false).compose(getXhtml());
-    } catch (IOException e) {
-    }
-    return null;
-  }  
-  
+    return new XhtmlComposer(false).compose(getXhtml());
+  }
+
   @Override
   public boolean isPrimitive() {
     return true;
   }
-  
+
   @Override
   public boolean hasPrimitiveValue() {
     return true;
@@ -133,6 +126,5 @@ public class XhtmlType extends PrimitiveType<String> {
   protected String parse(String theValue) {
     return theValue;
   }
-  
 
 }

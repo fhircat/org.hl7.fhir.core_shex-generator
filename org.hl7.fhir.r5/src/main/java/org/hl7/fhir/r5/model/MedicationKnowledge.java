@@ -152,14 +152,16 @@ public class MedicationKnowledge extends DomainResource {
         throw new FHIRException("Unknown MedicationKnowledgeStatusCodes code '"+codeString+"'");
         }
     public String toCode(MedicationKnowledgeStatusCodes code) {
-      if (code == MedicationKnowledgeStatusCodes.ACTIVE)
+       if (code == MedicationKnowledgeStatusCodes.NULL)
+           return null;
+       if (code == MedicationKnowledgeStatusCodes.ACTIVE)
         return "active";
       if (code == MedicationKnowledgeStatusCodes.ENTEREDINERROR)
         return "entered-in-error";
       if (code == MedicationKnowledgeStatusCodes.INACTIVE)
         return "inactive";
       return "?";
-      }
+   }
     public String toSystem(MedicationKnowledgeStatusCodes code) {
       return code.getSystem();
       }
@@ -325,6 +327,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("reference")) {
+          this.getReference().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -529,6 +542,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -801,8 +825,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Money) this.cost;
         }
 
-        public boolean hasCostMoney() { 
-          return this != null && this.cost instanceof Money;
+        public boolean hasCostMoney() {
+          return this.cost instanceof Money;
         }
 
         /**
@@ -816,8 +840,8 @@ public class MedicationKnowledge extends DomainResource {
           return (CodeableConcept) this.cost;
         }
 
-        public boolean hasCostCodeableConcept() { 
-          return this != null && this.cost instanceof CodeableConcept;
+        public boolean hasCostCodeableConcept() {
+          return this.cost instanceof CodeableConcept;
         }
 
         public boolean hasCost() { 
@@ -904,6 +928,21 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("effectiveDate")) {
+          this.getEffectiveDate().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("cost[x]")) {
+          this.cost = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -939,7 +978,7 @@ public class MedicationKnowledge extends DomainResource {
           return this.type;
         }
         else if (name.equals("source")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.cost.source");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.cost.source");
         }
         else if (name.equals("costMoney")) {
           this.cost = new Money();
@@ -1153,6 +1192,17 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1180,7 +1230,7 @@ public class MedicationKnowledge extends DomainResource {
           return this.type;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.monitoringProgram.name");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.monitoringProgram.name");
         }
         else
           return super.addChild(name);
@@ -1409,6 +1459,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("indication")) {
+          this.getIndication().remove(value);
+        } else if (name.equals("dosingGuideline")) {
+          this.getDosingGuideline().remove((MedicationKnowledgeIndicationGuidelineDosingGuidelineComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1756,6 +1817,21 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("treatmentIntent")) {
+          this.treatmentIntent = null;
+        } else if (name.equals("dosage")) {
+          this.getDosage().remove((MedicationKnowledgeIndicationGuidelineDosingGuidelineDosageComponent) value);
+        } else if (name.equals("administrationTreatment")) {
+          this.administrationTreatment = null;
+        } else if (name.equals("patientCharacteristic")) {
+          this.getPatientCharacteristic().remove((MedicationKnowledgeIndicationGuidelineDosingGuidelinePatientCharacteristicComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2018,6 +2094,17 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("dosage")) {
+          this.getDosage().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2173,8 +2260,8 @@ public class MedicationKnowledge extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+          return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -2188,8 +2275,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+          return this.value instanceof Quantity;
         }
 
         /**
@@ -2203,8 +2290,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+          return this.value instanceof Range;
         }
 
         public boolean hasValue() { 
@@ -2274,6 +2361,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2444,8 +2542,8 @@ public class MedicationKnowledge extends DomainResource {
           return (StringType) this.source;
         }
 
-        public boolean hasSourceStringType() { 
-          return this != null && this.source instanceof StringType;
+        public boolean hasSourceStringType() {
+          return this.source instanceof StringType;
         }
 
         /**
@@ -2459,8 +2557,8 @@ public class MedicationKnowledge extends DomainResource {
           return (UriType) this.source;
         }
 
-        public boolean hasSourceUriType() { 
-          return this != null && this.source instanceof UriType;
+        public boolean hasSourceUriType() {
+          return this.source instanceof UriType;
         }
 
         public boolean hasSource() { 
@@ -2590,6 +2688,19 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("source[x]")) {
+          this.source = null;
+        } else if (name.equals("classification")) {
+          this.getClassification().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2837,6 +2948,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("cost")) {
+          this.getCost().remove((MedicationKnowledgeCostComponent) value);
+        } else if (name.equals("packagedProduct")) {
+          this.packagedProduct = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3205,6 +3327,21 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.reference = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("stabilityDuration")) {
+          this.stabilityDuration = null;
+        } else if (name.equals("environmentalSetting")) {
+          this.getEnvironmentalSetting().remove((MedicationKnowledgeStorageGuidelineEnvironmentalSettingComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3232,7 +3369,7 @@ public class MedicationKnowledge extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("reference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.storageGuideline.reference");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.storageGuideline.reference");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -3379,8 +3516,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+          return this.value instanceof Quantity;
         }
 
         /**
@@ -3394,8 +3531,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+          return this.value instanceof Range;
         }
 
         /**
@@ -3409,8 +3546,8 @@ public class MedicationKnowledge extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+          return this.value instanceof CodeableConcept;
         }
 
         public boolean hasValue() { 
@@ -3480,6 +3617,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3836,6 +3984,21 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("regulatoryAuthority")) {
+          this.regulatoryAuthority = null;
+        } else if (name.equals("substitution")) {
+          this.getSubstitution().remove((MedicationKnowledgeRegulatorySubstitutionComponent) value);
+        } else if (name.equals("schedule")) {
+          this.getSchedule().remove(value);
+        } else if (name.equals("maxDispense")) {
+          this.maxDispense = (MedicationKnowledgeRegulatoryMaxDispenseComponent) value; // MedicationKnowledgeRegulatoryMaxDispenseComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4089,6 +4252,17 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("allowed")) {
+          this.allowed = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4116,7 +4290,7 @@ public class MedicationKnowledge extends DomainResource {
           return this.type;
         }
         else if (name.equals("allowed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.regulatory.substitution.allowed");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.regulatory.substitution.allowed");
         }
         else
           return super.addChild(name);
@@ -4295,6 +4469,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -4733,6 +4918,23 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("definition")) {
+          this.getDefinition().remove(value);
+        } else if (name.equals("doseForm")) {
+          this.doseForm = null;
+        } else if (name.equals("intendedRoute")) {
+          this.getIntendedRoute().remove(value);
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove((MedicationKnowledgeDefinitionalIngredientComponent) value);
+        } else if (name.equals("drugCharacteristic")) {
+          this.getDrugCharacteristic().remove((MedicationKnowledgeDefinitionalDrugCharacteristicComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4954,8 +5156,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Ratio) this.strength;
         }
 
-        public boolean hasStrengthRatio() { 
-          return this != null && this.strength instanceof Ratio;
+        public boolean hasStrengthRatio() {
+          return this.strength instanceof Ratio;
         }
 
         /**
@@ -4969,8 +5171,8 @@ public class MedicationKnowledge extends DomainResource {
           return (CodeableConcept) this.strength;
         }
 
-        public boolean hasStrengthCodeableConcept() { 
-          return this != null && this.strength instanceof CodeableConcept;
+        public boolean hasStrengthCodeableConcept() {
+          return this.strength instanceof CodeableConcept;
         }
 
         /**
@@ -4984,8 +5186,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Quantity) this.strength;
         }
 
-        public boolean hasStrengthQuantity() { 
-          return this != null && this.strength instanceof Quantity;
+        public boolean hasStrengthQuantity() {
+          return this.strength instanceof Quantity;
         }
 
         public boolean hasStrength() { 
@@ -5063,6 +5265,19 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item")) {
+          this.item = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("strength[x]")) {
+          this.strength = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -5227,8 +5442,8 @@ public class MedicationKnowledge extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+          return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -5242,8 +5457,8 @@ public class MedicationKnowledge extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+          return this.value instanceof StringType;
         }
 
         /**
@@ -5257,8 +5472,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+          return this.value instanceof Quantity;
         }
 
         /**
@@ -5272,8 +5487,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+          return this.value instanceof Base64BinaryType;
         }
 
         /**
@@ -5287,8 +5502,8 @@ public class MedicationKnowledge extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+          return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -5360,6 +5575,17 @@ public class MedicationKnowledge extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -6777,6 +7003,54 @@ public class MedicationKnowledge extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("status")) {
+          value = new MedicationKnowledgeStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MedicationKnowledgeStatusCodes>
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("intendedJurisdiction")) {
+          this.getIntendedJurisdiction().remove(value);
+        } else if (name.equals("name")) {
+          this.getName().remove(value);
+        } else if (name.equals("relatedMedicationKnowledge")) {
+          this.getRelatedMedicationKnowledge().remove((MedicationKnowledgeRelatedMedicationKnowledgeComponent) value);
+        } else if (name.equals("associatedMedication")) {
+          this.getAssociatedMedication().remove(value);
+        } else if (name.equals("productType")) {
+          this.getProductType().remove(value);
+        } else if (name.equals("monograph")) {
+          this.getMonograph().remove((MedicationKnowledgeMonographComponent) value);
+        } else if (name.equals("preparationInstruction")) {
+          this.preparationInstruction = null;
+        } else if (name.equals("cost")) {
+          this.getCost().remove((MedicationKnowledgeCostComponent) value);
+        } else if (name.equals("monitoringProgram")) {
+          this.getMonitoringProgram().remove((MedicationKnowledgeMonitoringProgramComponent) value);
+        } else if (name.equals("indicationGuideline")) {
+          this.getIndicationGuideline().remove((MedicationKnowledgeIndicationGuidelineComponent) value);
+        } else if (name.equals("medicineClassification")) {
+          this.getMedicineClassification().remove((MedicationKnowledgeMedicineClassificationComponent) value);
+        } else if (name.equals("packaging")) {
+          this.getPackaging().remove((MedicationKnowledgePackagingComponent) value);
+        } else if (name.equals("clinicalUseIssue")) {
+          this.getClinicalUseIssue().remove(value);
+        } else if (name.equals("storageGuideline")) {
+          this.getStorageGuideline().remove((MedicationKnowledgeStorageGuidelineComponent) value);
+        } else if (name.equals("regulatory")) {
+          this.getRegulatory().remove((MedicationKnowledgeRegulatoryComponent) value);
+        } else if (name.equals("definitional")) {
+          this.definitional = (MedicationKnowledgeDefinitionalComponent) value; // MedicationKnowledgeDefinitionalComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6843,7 +7117,7 @@ public class MedicationKnowledge extends DomainResource {
           return this.code;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.status");
         }
         else if (name.equals("author")) {
           this.author = new Reference();
@@ -6853,7 +7127,7 @@ public class MedicationKnowledge extends DomainResource {
           return addIntendedJurisdiction();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.name");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.name");
         }
         else if (name.equals("relatedMedicationKnowledge")) {
           return addRelatedMedicationKnowledge();
@@ -6868,7 +7142,7 @@ public class MedicationKnowledge extends DomainResource {
           return addMonograph();
         }
         else if (name.equals("preparationInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationKnowledge.preparationInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationKnowledge.preparationInstruction");
         }
         else if (name.equals("cost")) {
           return addCost();

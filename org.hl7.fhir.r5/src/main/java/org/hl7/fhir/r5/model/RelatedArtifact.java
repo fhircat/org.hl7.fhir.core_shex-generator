@@ -612,7 +612,9 @@ public class RelatedArtifact extends DataType implements ICompositeType {
         throw new FHIRException("Unknown RelatedArtifactType code '"+codeString+"'");
         }
     public String toCode(RelatedArtifactType code) {
-      if (code == RelatedArtifactType.DOCUMENTATION)
+       if (code == RelatedArtifactType.NULL)
+           return null;
+       if (code == RelatedArtifactType.DOCUMENTATION)
         return "documentation";
       if (code == RelatedArtifactType.JUSTIFICATION)
         return "justification";
@@ -685,7 +687,7 @@ public class RelatedArtifact extends DataType implements ICompositeType {
       if (code == RelatedArtifactType.CITEAS)
         return "cite-as";
       return "?";
-      }
+   }
     public String toSystem(RelatedArtifactType code) {
       return code.getSystem();
       }
@@ -1340,6 +1342,35 @@ public class RelatedArtifact extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new RelatedArtifactTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<RelatedArtifactType>
+        } else if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else if (name.equals("label")) {
+          this.label = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("citation")) {
+          this.citation = null;
+        } else if (name.equals("document")) {
+          this.document = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("resourceReference")) {
+          this.resourceReference = null;
+        } else if (name.equals("publicationStatus")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.publicationStatus = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("publicationDate")) {
+          this.publicationDate = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1379,36 +1410,36 @@ public class RelatedArtifact extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.type");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.type");
         }
         else if (name.equals("classifier")) {
           return addClassifier();
         }
         else if (name.equals("label")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.label");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.label");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.display");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.display");
         }
         else if (name.equals("citation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.citation");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.citation");
         }
         else if (name.equals("document")) {
           this.document = new Attachment();
           return this.document;
         }
         else if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.resource");
         }
         else if (name.equals("resourceReference")) {
           this.resourceReference = new Reference();
           return this.resourceReference;
         }
         else if (name.equals("publicationStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.publicationStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.publicationStatus");
         }
         else if (name.equals("publicationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type RelatedArtifact.publicationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property RelatedArtifact.publicationDate");
         }
         else
           return super.addChild(name);

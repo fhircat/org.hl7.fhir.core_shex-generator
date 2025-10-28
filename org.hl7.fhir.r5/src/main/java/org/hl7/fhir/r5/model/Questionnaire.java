@@ -138,12 +138,14 @@ public class Questionnaire extends MetadataResource {
         throw new FHIRException("Unknown EnableWhenBehavior code '"+codeString+"'");
         }
     public String toCode(EnableWhenBehavior code) {
-      if (code == EnableWhenBehavior.ALL)
+       if (code == EnableWhenBehavior.NULL)
+           return null;
+       if (code == EnableWhenBehavior.ALL)
         return "all";
       if (code == EnableWhenBehavior.ANY)
         return "any";
       return "?";
-      }
+   }
     public String toSystem(EnableWhenBehavior code) {
       return code.getSystem();
       }
@@ -248,14 +250,16 @@ public class Questionnaire extends MetadataResource {
         throw new FHIRException("Unknown QuestionnaireAnswerConstraint code '"+codeString+"'");
         }
     public String toCode(QuestionnaireAnswerConstraint code) {
-      if (code == QuestionnaireAnswerConstraint.OPTIONSONLY)
+       if (code == QuestionnaireAnswerConstraint.NULL)
+           return null;
+       if (code == QuestionnaireAnswerConstraint.OPTIONSONLY)
         return "optionsOnly";
       if (code == QuestionnaireAnswerConstraint.OPTIONSORTYPE)
         return "optionsOrType";
       if (code == QuestionnaireAnswerConstraint.OPTIONSORSTRING)
         return "optionsOrString";
       return "?";
-      }
+   }
     public String toSystem(QuestionnaireAnswerConstraint code) {
       return code.getSystem();
       }
@@ -346,12 +350,14 @@ public class Questionnaire extends MetadataResource {
         throw new FHIRException("Unknown QuestionnaireItemDisabledDisplay code '"+codeString+"'");
         }
     public String toCode(QuestionnaireItemDisabledDisplay code) {
-      if (code == QuestionnaireItemDisabledDisplay.HIDDEN)
+       if (code == QuestionnaireItemDisabledDisplay.NULL)
+           return null;
+       if (code == QuestionnaireItemDisabledDisplay.HIDDEN)
         return "hidden";
       if (code == QuestionnaireItemDisabledDisplay.PROTECTED)
         return "protected";
       return "?";
-      }
+   }
     public String toSystem(QuestionnaireItemDisabledDisplay code) {
       return code.getSystem();
       }
@@ -512,7 +518,9 @@ public class Questionnaire extends MetadataResource {
         throw new FHIRException("Unknown QuestionnaireItemOperator code '"+codeString+"'");
         }
     public String toCode(QuestionnaireItemOperator code) {
-      if (code == QuestionnaireItemOperator.EXISTS)
+       if (code == QuestionnaireItemOperator.NULL)
+           return null;
+       if (code == QuestionnaireItemOperator.EXISTS)
         return "exists";
       if (code == QuestionnaireItemOperator.EQUAL)
         return "=";
@@ -527,7 +535,7 @@ public class Questionnaire extends MetadataResource {
       if (code == QuestionnaireItemOperator.LESS_OR_EQUAL)
         return "<=";
       return "?";
-      }
+   }
     public String toSystem(QuestionnaireItemOperator code) {
       return code.getSystem();
       }
@@ -814,7 +822,9 @@ public class Questionnaire extends MetadataResource {
         throw new FHIRException("Unknown QuestionnaireItemType code '"+codeString+"'");
         }
     public String toCode(QuestionnaireItemType code) {
-      if (code == QuestionnaireItemType.GROUP)
+       if (code == QuestionnaireItemType.NULL)
+           return null;
+       if (code == QuestionnaireItemType.GROUP)
         return "group";
       if (code == QuestionnaireItemType.DISPLAY)
         return "display";
@@ -847,7 +857,7 @@ public class Questionnaire extends MetadataResource {
       if (code == QuestionnaireItemType.QUANTITY)
         return "quantity";
       return "?";
-      }
+   }
     public String toSystem(QuestionnaireItemType code) {
       return code.getSystem();
       }
@@ -2069,6 +2079,53 @@ public class Questionnaire extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("prefix")) {
+          this.prefix = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("type")) {
+          value = new QuestionnaireItemTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<QuestionnaireItemType>
+        } else if (name.equals("enableWhen")) {
+          this.getEnableWhen().remove((QuestionnaireItemEnableWhenComponent) value);
+        } else if (name.equals("enableBehavior")) {
+          value = new EnableWhenBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.enableBehavior = (Enumeration) value; // Enumeration<EnableWhenBehavior>
+        } else if (name.equals("disabledDisplay")) {
+          value = new QuestionnaireItemDisabledDisplayEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.disabledDisplay = (Enumeration) value; // Enumeration<QuestionnaireItemDisabledDisplay>
+        } else if (name.equals("required")) {
+          this.required = null;
+        } else if (name.equals("repeats")) {
+          this.repeats = null;
+        } else if (name.equals("readOnly")) {
+          this.readOnly = null;
+        } else if (name.equals("maxLength")) {
+          this.maxLength = null;
+        } else if (name.equals("answerConstraint")) {
+          value = new QuestionnaireAnswerConstraintEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.answerConstraint = (Enumeration) value; // Enumeration<QuestionnaireAnswerConstraint>
+        } else if (name.equals("answerValueSet")) {
+          this.answerValueSet = null;
+        } else if (name.equals("answerOption")) {
+          this.getAnswerOption().remove((QuestionnaireItemAnswerOptionComponent) value);
+        } else if (name.equals("initial")) {
+          this.getInitial().remove((QuestionnaireItemInitialComponent) value);
+        } else if (name.equals("item")) {
+          this.getItem().remove((QuestionnaireItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2124,49 +2181,49 @@ public class Questionnaire extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.linkId");
         }
         else if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.definition");
         }
         else if (name.equals("code")) {
           return addCode();
         }
         else if (name.equals("prefix")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.prefix");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.prefix");
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.text");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.type");
         }
         else if (name.equals("enableWhen")) {
           return addEnableWhen();
         }
         else if (name.equals("enableBehavior")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.enableBehavior");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.enableBehavior");
         }
         else if (name.equals("disabledDisplay")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.disabledDisplay");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.disabledDisplay");
         }
         else if (name.equals("required")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.required");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.required");
         }
         else if (name.equals("repeats")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.repeats");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.repeats");
         }
         else if (name.equals("readOnly")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.readOnly");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.readOnly");
         }
         else if (name.equals("maxLength")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.maxLength");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.maxLength");
         }
         else if (name.equals("answerConstraint")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.answerConstraint");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.answerConstraint");
         }
         else if (name.equals("answerValueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.answerValueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.answerValueSet");
         }
         else if (name.equals("answerOption")) {
           return addAnswerOption();
@@ -2464,8 +2521,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (BooleanType) this.answer;
         }
 
-        public boolean hasAnswerBooleanType() { 
-          return this != null && this.answer instanceof BooleanType;
+        public boolean hasAnswerBooleanType() {
+            return this.answer instanceof BooleanType;
         }
 
         /**
@@ -2479,8 +2536,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DecimalType) this.answer;
         }
 
-        public boolean hasAnswerDecimalType() { 
-          return this != null && this.answer instanceof DecimalType;
+        public boolean hasAnswerDecimalType() {
+            return this.answer instanceof DecimalType;
         }
 
         /**
@@ -2494,8 +2551,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (IntegerType) this.answer;
         }
 
-        public boolean hasAnswerIntegerType() { 
-          return this != null && this.answer instanceof IntegerType;
+        public boolean hasAnswerIntegerType() {
+            return this.answer instanceof IntegerType;
         }
 
         /**
@@ -2509,8 +2566,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DateType) this.answer;
         }
 
-        public boolean hasAnswerDateType() { 
-          return this != null && this.answer instanceof DateType;
+        public boolean hasAnswerDateType() {
+            return this.answer instanceof DateType;
         }
 
         /**
@@ -2524,8 +2581,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DateTimeType) this.answer;
         }
 
-        public boolean hasAnswerDateTimeType() { 
-          return this != null && this.answer instanceof DateTimeType;
+        public boolean hasAnswerDateTimeType() {
+            return this.answer instanceof DateTimeType;
         }
 
         /**
@@ -2539,8 +2596,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (TimeType) this.answer;
         }
 
-        public boolean hasAnswerTimeType() { 
-          return this != null && this.answer instanceof TimeType;
+        public boolean hasAnswerTimeType() {
+            return this.answer instanceof TimeType;
         }
 
         /**
@@ -2554,8 +2611,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (StringType) this.answer;
         }
 
-        public boolean hasAnswerStringType() { 
-          return this != null && this.answer instanceof StringType;
+        public boolean hasAnswerStringType() {
+            return this.answer instanceof StringType;
         }
 
         /**
@@ -2569,8 +2626,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Coding) this.answer;
         }
 
-        public boolean hasAnswerCoding() { 
-          return this != null && this.answer instanceof Coding;
+        public boolean hasAnswerCoding() {
+            return this.answer instanceof Coding;
         }
 
         /**
@@ -2584,8 +2641,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Quantity) this.answer;
         }
 
-        public boolean hasAnswerQuantity() { 
-          return this != null && this.answer instanceof Quantity;
+        public boolean hasAnswerQuantity() {
+            return this.answer instanceof Quantity;
         }
 
         /**
@@ -2599,8 +2656,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Reference) this.answer;
         }
 
-        public boolean hasAnswerReference() { 
-          return this != null && this.answer instanceof Reference;
+        public boolean hasAnswerReference() {
+            return this.answer instanceof Reference;
         }
 
         public boolean hasAnswer() { 
@@ -2689,6 +2746,20 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("question")) {
+          this.question = null;
+        } else if (name.equals("operator")) {
+          value = new QuestionnaireItemOperatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.operator = (Enumeration) value; // Enumeration<QuestionnaireItemOperator>
+        } else if (name.equals("answer[x]")) {
+          this.answer = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2715,10 +2786,10 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("question")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.enableWhen.question");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.enableWhen.question");
         }
         else if (name.equals("operator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.enableWhen.operator");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.enableWhen.operator");
         }
         else if (name.equals("answerBoolean")) {
           this.answer = new BooleanType();
@@ -2862,8 +2933,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -2877,8 +2948,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -2892,8 +2963,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -2907,8 +2978,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -2922,8 +2993,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -2937,8 +3008,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -3058,6 +3129,17 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("initialSelected")) {
+          this.initialSelected = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3106,7 +3188,7 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return this.value;
         }
         else if (name.equals("initialSelected")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.item.answerOption.initialSelected");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.item.answerOption.initialSelected");
         }
         else
           return super.addChild(name);
@@ -3201,8 +3283,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -3216,8 +3298,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -3231,8 +3313,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -3246,8 +3328,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -3261,8 +3343,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -3276,8 +3358,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -3291,8 +3373,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -3306,8 +3388,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -3321,8 +3403,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -3336,8 +3418,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -3351,8 +3433,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -3366,8 +3448,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -3438,6 +3520,15 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3914,8 +4005,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -3929,8 +4020,8 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -5380,6 +5471,62 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("subjectType")) {
+          this.getSubjectType().remove(value);
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("item")) {
+          this.getItem().remove((QuestionnaireItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5448,13 +5595,13 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -5465,34 +5612,34 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.title");
         }
         else if (name.equals("derivedFrom")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.derivedFrom");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.derivedFrom");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.experimental");
         }
         else if (name.equals("subjectType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.subjectType");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.subjectType");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -5501,19 +5648,19 @@ public QuestionnaireItemComponent getQuestion(String linkId) {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Questionnaire.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Questionnaire.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();

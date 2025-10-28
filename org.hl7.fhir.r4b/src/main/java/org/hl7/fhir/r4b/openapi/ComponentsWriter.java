@@ -1,5 +1,7 @@
 package org.hl7.fhir.r4b.openapi;
 
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
@@ -29,10 +31,9 @@ package org.hl7.fhir.r4b.openapi;
   
  */
 
-
-
 import com.google.gson.JsonObject;
 
+@MarkedToMoveToAdjunctPackage
 public class ComponentsWriter extends BaseWriter {
 
   public ComponentsWriter(JsonObject object) {
@@ -43,7 +44,7 @@ public class ComponentsWriter extends BaseWriter {
     ensureMapObject("schemas", name).add("$ref", jsonSchema);
     return this;
   }
-  
+
   public ComponentsWriter schemaRef(String name, String uri) {
     ensureMapObject("schemas", name).addProperty("$ref", uri);
     return this;

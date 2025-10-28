@@ -44,11 +44,13 @@ public class MimeType {
 
   public MimeType(String s) {
     source = s;
-    for (String p : s.split("\\;"))
+    for (String ss : s.split("\\;")) {
+      String p = ss.trim();
       if (base == null)
         base = p;
       else
         params.put(p.substring(0, p.indexOf("=")), p.substring(p.indexOf("=")+1));
+    }
     if ("xml".equals(base))
       base = "application/fhir+xml";
     if ("json".equals(base))
@@ -69,6 +71,18 @@ public class MimeType {
       return base.substring(base.indexOf("/")+1);
     else
       return null;
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public String getBase() {
+    return base;
+  }
+
+  public Map<String, String> getParams() {
+    return params;
   }
 
   public boolean hasParam(String name) {
@@ -134,5 +148,6 @@ public class MimeType {
     }
     return null;
   }
+
 
 }

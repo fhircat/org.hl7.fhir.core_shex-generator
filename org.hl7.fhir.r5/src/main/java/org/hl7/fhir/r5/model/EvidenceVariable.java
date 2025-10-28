@@ -208,7 +208,9 @@ public class EvidenceVariable extends MetadataResource {
         throw new FHIRException("Unknown CharacteristicCombination code '"+codeString+"'");
         }
     public String toCode(CharacteristicCombination code) {
-      if (code == CharacteristicCombination.ALLOF)
+       if (code == CharacteristicCombination.NULL)
+           return null;
+       if (code == CharacteristicCombination.ALLOF)
         return "all-of";
       if (code == CharacteristicCombination.ANYOF)
         return "any-of";
@@ -223,7 +225,7 @@ public class EvidenceVariable extends MetadataResource {
       if (code == CharacteristicCombination.DATASET)
         return "dataset";
       return "?";
-      }
+   }
     public String toSystem(CharacteristicCombination code) {
       return code.getSystem();
       }
@@ -770,8 +772,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Quantity) this.instances;
         }
 
-        public boolean hasInstancesQuantity() { 
-          return this != null && this.instances instanceof Quantity;
+        public boolean hasInstancesQuantity() {
+            return this.instances instanceof Quantity;
         }
 
         /**
@@ -785,8 +787,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Range) this.instances;
         }
 
-        public boolean hasInstancesRange() { 
-          return this != null && this.instances instanceof Range;
+        public boolean hasInstancesRange() {
+            return this.instances instanceof Range;
         }
 
         public boolean hasInstances() { 
@@ -821,8 +823,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Quantity) this.duration;
         }
 
-        public boolean hasDurationQuantity() { 
-          return this != null && this.duration instanceof Quantity;
+        public boolean hasDurationQuantity() {
+            return this.duration instanceof Quantity;
         }
 
         /**
@@ -836,8 +838,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Range) this.duration;
         }
 
-        public boolean hasDurationRange() { 
-          return this != null && this.duration instanceof Range;
+        public boolean hasDurationRange() {
+            return this.duration instanceof Range;
         }
 
         public boolean hasDuration() { 
@@ -1060,6 +1062,41 @@ public class EvidenceVariable extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("exclude")) {
+          this.exclude = null;
+        } else if (name.equals("definitionReference")) {
+          this.definitionReference = null;
+        } else if (name.equals("definitionCanonical")) {
+          this.definitionCanonical = null;
+        } else if (name.equals("definitionCodeableConcept")) {
+          this.definitionCodeableConcept = null;
+        } else if (name.equals("definitionExpression")) {
+          this.definitionExpression = null;
+        } else if (name.equals("definitionId")) {
+          this.definitionId = null;
+        } else if (name.equals("definitionByTypeAndValue")) {
+          this.definitionByTypeAndValue = (EvidenceVariableCharacteristicDefinitionByTypeAndValueComponent) value; // EvidenceVariableCharacteristicDefinitionByTypeAndValueComponent
+        } else if (name.equals("definitionByCombination")) {
+          this.definitionByCombination = (EvidenceVariableCharacteristicDefinitionByCombinationComponent) value; // EvidenceVariableCharacteristicDefinitionByCombinationComponent
+        } else if (name.equals("instances[x]")) {
+          this.instances = null;
+        } else if (name.equals("duration[x]")) {
+          this.duration = null;
+        } else if (name.equals("timeFromEvent")) {
+          this.getTimeFromEvent().remove((EvidenceVariableCharacteristicTimeFromEventComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1109,23 +1146,23 @@ public class EvidenceVariable extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.linkId");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.description");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.description");
         }
         else if (name.equals("note")) {
           return addNote();
         }
         else if (name.equals("exclude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.exclude");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.exclude");
         }
         else if (name.equals("definitionReference")) {
           this.definitionReference = new Reference();
           return this.definitionReference;
         }
         else if (name.equals("definitionCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.definitionCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.definitionCanonical");
         }
         else if (name.equals("definitionCodeableConcept")) {
           this.definitionCodeableConcept = new CodeableConcept();
@@ -1136,7 +1173,7 @@ public class EvidenceVariable extends MetadataResource {
           return this.definitionExpression;
         }
         else if (name.equals("definitionId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.definitionId");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.definitionId");
         }
         else if (name.equals("definitionByTypeAndValue")) {
           this.definitionByTypeAndValue = new EvidenceVariableCharacteristicDefinitionByTypeAndValueComponent();
@@ -1420,8 +1457,8 @@ public class EvidenceVariable extends MetadataResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1435,8 +1472,8 @@ public class EvidenceVariable extends MetadataResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1450,8 +1487,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1465,8 +1502,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -1480,8 +1517,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -1495,8 +1532,8 @@ public class EvidenceVariable extends MetadataResource {
           return (IdType) this.value;
         }
 
-        public boolean hasValueIdType() { 
-          return this != null && this.value instanceof IdType;
+        public boolean hasValueIdType() {
+            return this.value instanceof IdType;
         }
 
         public boolean hasValue() { 
@@ -1617,6 +1654,23 @@ public class EvidenceVariable extends MetadataResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("method")) {
+          this.getMethod().remove(value);
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("offset")) {
+          this.offset = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1989,6 +2043,20 @@ public class EvidenceVariable extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          value = new CharacteristicCombinationEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<CharacteristicCombination>
+        } else if (name.equals("threshold")) {
+          this.threshold = null;
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((EvidenceVariableCharacteristicComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2014,10 +2082,10 @@ public class EvidenceVariable extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.definitionByCombination.code");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.definitionByCombination.code");
         }
         else if (name.equals("threshold")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.definitionByCombination.threshold");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.definitionByCombination.threshold");
         }
         else if (name.equals("characteristic")) {
           return addCharacteristic();
@@ -2243,8 +2311,8 @@ public class EvidenceVariable extends MetadataResource {
           return (CodeableConcept) this.event;
         }
 
-        public boolean hasEventCodeableConcept() { 
-          return this != null && this.event instanceof CodeableConcept;
+        public boolean hasEventCodeableConcept() {
+            return this.event instanceof CodeableConcept;
         }
 
         /**
@@ -2258,8 +2326,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Reference) this.event;
         }
 
-        public boolean hasEventReference() { 
-          return this != null && this.event instanceof Reference;
+        public boolean hasEventReference() {
+            return this.event instanceof Reference;
         }
 
         /**
@@ -2273,8 +2341,8 @@ public class EvidenceVariable extends MetadataResource {
           return (DateTimeType) this.event;
         }
 
-        public boolean hasEventDateTimeType() { 
-          return this != null && this.event instanceof DateTimeType;
+        public boolean hasEventDateTimeType() {
+            return this.event instanceof DateTimeType;
         }
 
         /**
@@ -2288,8 +2356,8 @@ public class EvidenceVariable extends MetadataResource {
           return (IdType) this.event;
         }
 
-        public boolean hasEventIdType() { 
-          return this != null && this.event instanceof IdType;
+        public boolean hasEventIdType() {
+            return this.event instanceof IdType;
         }
 
         public boolean hasEvent() { 
@@ -2434,6 +2502,23 @@ public class EvidenceVariable extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("event[x]")) {
+          this.event = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("range")) {
+          this.range = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2464,7 +2549,7 @@ public class EvidenceVariable extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.characteristic.timeFromEvent.description");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.characteristic.timeFromEvent.description");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -2641,8 +2726,8 @@ public class EvidenceVariable extends MetadataResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -2656,8 +2741,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -2671,8 +2756,8 @@ public class EvidenceVariable extends MetadataResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         public boolean hasValue() { 
@@ -2744,6 +2829,17 @@ public class EvidenceVariable extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2768,7 +2864,7 @@ public class EvidenceVariable extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.category.name");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.category.name");
         }
         else if (name.equals("valueCodeableConcept")) {
           this.value = new CodeableConcept();
@@ -3230,8 +3326,8 @@ See guidance around (not) making local changes to elements [here](canonicalresou
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -3245,8 +3341,8 @@ See guidance around (not) making local changes to elements [here](canonicalresou
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -4900,6 +4996,75 @@ See guidance around (not) making local changes to elements [here](canonicalresou
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("shortTitle")) {
+          this.shortTitle = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("actual")) {
+          this.actual = null;
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((EvidenceVariableCharacteristicComponent) value);
+        } else if (name.equals("handling")) {
+          value = new EvidenceVariableHandlingEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.handling = (Enumeration) value; // Enumeration<EvidenceVariableHandling>
+        } else if (name.equals("category")) {
+          this.getCategory().remove((EvidenceVariableCategoryComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4980,13 +5145,13 @@ See guidance around (not) making local changes to elements [here](canonicalresou
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.url");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.version");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -4997,31 +5162,31 @@ See guidance around (not) making local changes to elements [here](canonicalresou
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.name");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.title");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.title");
         }
         else if (name.equals("shortTitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.shortTitle");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.shortTitle");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.status");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.date");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.description");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.description");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -5030,19 +5195,19 @@ See guidance around (not) making local changes to elements [here](canonicalresou
           return addUseContext();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -5064,13 +5229,13 @@ See guidance around (not) making local changes to elements [here](canonicalresou
           return addRelatedArtifact();
         }
         else if (name.equals("actual")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.actual");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.actual");
         }
         else if (name.equals("characteristic")) {
           return addCharacteristic();
         }
         else if (name.equals("handling")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceVariable.handling");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceVariable.handling");
         }
         else if (name.equals("category")) {
           return addCategory();

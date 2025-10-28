@@ -236,7 +236,9 @@ public class Transport extends DomainResource {
         throw new FHIRException("Unknown TransportIntent code '"+codeString+"'");
         }
     public String toCode(TransportIntent code) {
-      if (code == TransportIntent.UNKNOWN)
+       if (code == TransportIntent.NULL)
+           return null;
+       if (code == TransportIntent.UNKNOWN)
         return "unknown";
       if (code == TransportIntent.PROPOSAL)
         return "proposal";
@@ -255,7 +257,7 @@ public class Transport extends DomainResource {
       if (code == TransportIntent.OPTION)
         return "option";
       return "?";
-      }
+   }
     public String toSystem(TransportIntent code) {
       return code.getSystem();
       }
@@ -402,7 +404,9 @@ public class Transport extends DomainResource {
         throw new FHIRException("Unknown TransportStatus code '"+codeString+"'");
         }
     public String toCode(TransportStatus code) {
-      if (code == TransportStatus.INPROGRESS)
+       if (code == TransportStatus.NULL)
+           return null;
+       if (code == TransportStatus.INPROGRESS)
         return "in-progress";
       if (code == TransportStatus.COMPLETED)
         return "completed";
@@ -415,7 +419,7 @@ public class Transport extends DomainResource {
       if (code == TransportStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(TransportStatus code) {
       return code.getSystem();
       }
@@ -634,6 +638,19 @@ public class Transport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("repetitions")) {
+          this.repetitions = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("recipient")) {
+          this.getRecipient().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -659,7 +676,7 @@ public class Transport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("repetitions")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.restriction.repetitions");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.restriction.repetitions");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -798,8 +815,8 @@ public class Transport extends DomainResource {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+            return this.value instanceof Base64BinaryType;
         }
 
         /**
@@ -813,8 +830,8 @@ public class Transport extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -828,8 +845,8 @@ public class Transport extends DomainResource {
           return (CanonicalType) this.value;
         }
 
-        public boolean hasValueCanonicalType() { 
-          return this != null && this.value instanceof CanonicalType;
+        public boolean hasValueCanonicalType() {
+            return this.value instanceof CanonicalType;
         }
 
         /**
@@ -843,8 +860,8 @@ public class Transport extends DomainResource {
           return (CodeType) this.value;
         }
 
-        public boolean hasValueCodeType() { 
-          return this != null && this.value instanceof CodeType;
+        public boolean hasValueCodeType() {
+            return this.value instanceof CodeType;
         }
 
         /**
@@ -858,8 +875,8 @@ public class Transport extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -873,8 +890,8 @@ public class Transport extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -888,8 +905,8 @@ public class Transport extends DomainResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -903,8 +920,8 @@ public class Transport extends DomainResource {
           return (IdType) this.value;
         }
 
-        public boolean hasValueIdType() { 
-          return this != null && this.value instanceof IdType;
+        public boolean hasValueIdType() {
+            return this.value instanceof IdType;
         }
 
         /**
@@ -918,8 +935,8 @@ public class Transport extends DomainResource {
           return (InstantType) this.value;
         }
 
-        public boolean hasValueInstantType() { 
-          return this != null && this.value instanceof InstantType;
+        public boolean hasValueInstantType() {
+            return this.value instanceof InstantType;
         }
 
         /**
@@ -933,8 +950,8 @@ public class Transport extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -948,8 +965,8 @@ public class Transport extends DomainResource {
           return (Integer64Type) this.value;
         }
 
-        public boolean hasValueInteger64Type() { 
-          return this != null && this.value instanceof Integer64Type;
+        public boolean hasValueInteger64Type() {
+            return this.value instanceof Integer64Type;
         }
 
         /**
@@ -963,8 +980,8 @@ public class Transport extends DomainResource {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -978,8 +995,8 @@ public class Transport extends DomainResource {
           return (OidType) this.value;
         }
 
-        public boolean hasValueOidType() { 
-          return this != null && this.value instanceof OidType;
+        public boolean hasValueOidType() {
+            return this.value instanceof OidType;
         }
 
         /**
@@ -993,8 +1010,8 @@ public class Transport extends DomainResource {
           return (PositiveIntType) this.value;
         }
 
-        public boolean hasValuePositiveIntType() { 
-          return this != null && this.value instanceof PositiveIntType;
+        public boolean hasValuePositiveIntType() {
+            return this.value instanceof PositiveIntType;
         }
 
         /**
@@ -1008,8 +1025,8 @@ public class Transport extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -1023,8 +1040,8 @@ public class Transport extends DomainResource {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -1038,8 +1055,8 @@ public class Transport extends DomainResource {
           return (UnsignedIntType) this.value;
         }
 
-        public boolean hasValueUnsignedIntType() { 
-          return this != null && this.value instanceof UnsignedIntType;
+        public boolean hasValueUnsignedIntType() {
+            return this.value instanceof UnsignedIntType;
         }
 
         /**
@@ -1053,8 +1070,8 @@ public class Transport extends DomainResource {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -1068,8 +1085,8 @@ public class Transport extends DomainResource {
           return (UrlType) this.value;
         }
 
-        public boolean hasValueUrlType() { 
-          return this != null && this.value instanceof UrlType;
+        public boolean hasValueUrlType() {
+            return this.value instanceof UrlType;
         }
 
         /**
@@ -1083,8 +1100,8 @@ public class Transport extends DomainResource {
           return (UuidType) this.value;
         }
 
-        public boolean hasValueUuidType() { 
-          return this != null && this.value instanceof UuidType;
+        public boolean hasValueUuidType() {
+            return this.value instanceof UuidType;
         }
 
         /**
@@ -1098,8 +1115,8 @@ public class Transport extends DomainResource {
           return (Address) this.value;
         }
 
-        public boolean hasValueAddress() { 
-          return this != null && this.value instanceof Address;
+        public boolean hasValueAddress() {
+            return this.value instanceof Address;
         }
 
         /**
@@ -1113,8 +1130,8 @@ public class Transport extends DomainResource {
           return (Age) this.value;
         }
 
-        public boolean hasValueAge() { 
-          return this != null && this.value instanceof Age;
+        public boolean hasValueAge() {
+            return this.value instanceof Age;
         }
 
         /**
@@ -1128,8 +1145,8 @@ public class Transport extends DomainResource {
           return (Annotation) this.value;
         }
 
-        public boolean hasValueAnnotation() { 
-          return this != null && this.value instanceof Annotation;
+        public boolean hasValueAnnotation() {
+            return this.value instanceof Annotation;
         }
 
         /**
@@ -1143,8 +1160,8 @@ public class Transport extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -1158,8 +1175,8 @@ public class Transport extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1173,8 +1190,8 @@ public class Transport extends DomainResource {
           return (CodeableReference) this.value;
         }
 
-        public boolean hasValueCodeableReference() { 
-          return this != null && this.value instanceof CodeableReference;
+        public boolean hasValueCodeableReference() {
+            return this.value instanceof CodeableReference;
         }
 
         /**
@@ -1188,8 +1205,8 @@ public class Transport extends DomainResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -1203,8 +1220,8 @@ public class Transport extends DomainResource {
           return (ContactPoint) this.value;
         }
 
-        public boolean hasValueContactPoint() { 
-          return this != null && this.value instanceof ContactPoint;
+        public boolean hasValueContactPoint() {
+            return this.value instanceof ContactPoint;
         }
 
         /**
@@ -1218,8 +1235,8 @@ public class Transport extends DomainResource {
           return (Count) this.value;
         }
 
-        public boolean hasValueCount() { 
-          return this != null && this.value instanceof Count;
+        public boolean hasValueCount() {
+            return this.value instanceof Count;
         }
 
         /**
@@ -1233,8 +1250,8 @@ public class Transport extends DomainResource {
           return (Distance) this.value;
         }
 
-        public boolean hasValueDistance() { 
-          return this != null && this.value instanceof Distance;
+        public boolean hasValueDistance() {
+            return this.value instanceof Distance;
         }
 
         /**
@@ -1248,8 +1265,8 @@ public class Transport extends DomainResource {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         /**
@@ -1263,8 +1280,8 @@ public class Transport extends DomainResource {
           return (HumanName) this.value;
         }
 
-        public boolean hasValueHumanName() { 
-          return this != null && this.value instanceof HumanName;
+        public boolean hasValueHumanName() {
+            return this.value instanceof HumanName;
         }
 
         /**
@@ -1278,8 +1295,8 @@ public class Transport extends DomainResource {
           return (Identifier) this.value;
         }
 
-        public boolean hasValueIdentifier() { 
-          return this != null && this.value instanceof Identifier;
+        public boolean hasValueIdentifier() {
+            return this.value instanceof Identifier;
         }
 
         /**
@@ -1293,8 +1310,8 @@ public class Transport extends DomainResource {
           return (Money) this.value;
         }
 
-        public boolean hasValueMoney() { 
-          return this != null && this.value instanceof Money;
+        public boolean hasValueMoney() {
+            return this.value instanceof Money;
         }
 
         /**
@@ -1308,8 +1325,8 @@ public class Transport extends DomainResource {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -1323,8 +1340,8 @@ public class Transport extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1338,8 +1355,8 @@ public class Transport extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -1353,8 +1370,8 @@ public class Transport extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -1368,8 +1385,8 @@ public class Transport extends DomainResource {
           return (RatioRange) this.value;
         }
 
-        public boolean hasValueRatioRange() { 
-          return this != null && this.value instanceof RatioRange;
+        public boolean hasValueRatioRange() {
+            return this.value instanceof RatioRange;
         }
 
         /**
@@ -1383,8 +1400,8 @@ public class Transport extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -1398,8 +1415,8 @@ public class Transport extends DomainResource {
           return (SampledData) this.value;
         }
 
-        public boolean hasValueSampledData() { 
-          return this != null && this.value instanceof SampledData;
+        public boolean hasValueSampledData() {
+            return this.value instanceof SampledData;
         }
 
         /**
@@ -1413,8 +1430,8 @@ public class Transport extends DomainResource {
           return (Signature) this.value;
         }
 
-        public boolean hasValueSignature() { 
-          return this != null && this.value instanceof Signature;
+        public boolean hasValueSignature() {
+            return this.value instanceof Signature;
         }
 
         /**
@@ -1428,8 +1445,8 @@ public class Transport extends DomainResource {
           return (Timing) this.value;
         }
 
-        public boolean hasValueTiming() { 
-          return this != null && this.value instanceof Timing;
+        public boolean hasValueTiming() {
+            return this.value instanceof Timing;
         }
 
         /**
@@ -1443,8 +1460,8 @@ public class Transport extends DomainResource {
           return (ContactDetail) this.value;
         }
 
-        public boolean hasValueContactDetail() { 
-          return this != null && this.value instanceof ContactDetail;
+        public boolean hasValueContactDetail() {
+            return this.value instanceof ContactDetail;
         }
 
         /**
@@ -1458,8 +1475,8 @@ public class Transport extends DomainResource {
           return (DataRequirement) this.value;
         }
 
-        public boolean hasValueDataRequirement() { 
-          return this != null && this.value instanceof DataRequirement;
+        public boolean hasValueDataRequirement() {
+            return this.value instanceof DataRequirement;
         }
 
         /**
@@ -1473,8 +1490,8 @@ public class Transport extends DomainResource {
           return (Expression) this.value;
         }
 
-        public boolean hasValueExpression() { 
-          return this != null && this.value instanceof Expression;
+        public boolean hasValueExpression() {
+            return this.value instanceof Expression;
         }
 
         /**
@@ -1488,8 +1505,8 @@ public class Transport extends DomainResource {
           return (ParameterDefinition) this.value;
         }
 
-        public boolean hasValueParameterDefinition() { 
-          return this != null && this.value instanceof ParameterDefinition;
+        public boolean hasValueParameterDefinition() {
+            return this.value instanceof ParameterDefinition;
         }
 
         /**
@@ -1503,8 +1520,8 @@ public class Transport extends DomainResource {
           return (RelatedArtifact) this.value;
         }
 
-        public boolean hasValueRelatedArtifact() { 
-          return this != null && this.value instanceof RelatedArtifact;
+        public boolean hasValueRelatedArtifact() {
+            return this.value instanceof RelatedArtifact;
         }
 
         /**
@@ -1518,8 +1535,8 @@ public class Transport extends DomainResource {
           return (TriggerDefinition) this.value;
         }
 
-        public boolean hasValueTriggerDefinition() { 
-          return this != null && this.value instanceof TriggerDefinition;
+        public boolean hasValueTriggerDefinition() {
+            return this.value instanceof TriggerDefinition;
         }
 
         /**
@@ -1533,8 +1550,8 @@ public class Transport extends DomainResource {
           return (UsageContext) this.value;
         }
 
-        public boolean hasValueUsageContext() { 
-          return this != null && this.value instanceof UsageContext;
+        public boolean hasValueUsageContext() {
+            return this.value instanceof UsageContext;
         }
 
         /**
@@ -1548,8 +1565,8 @@ public class Transport extends DomainResource {
           return (Availability) this.value;
         }
 
-        public boolean hasValueAvailability() { 
-          return this != null && this.value instanceof Availability;
+        public boolean hasValueAvailability() {
+            return this.value instanceof Availability;
         }
 
         /**
@@ -1563,8 +1580,8 @@ public class Transport extends DomainResource {
           return (ExtendedContactDetail) this.value;
         }
 
-        public boolean hasValueExtendedContactDetail() { 
-          return this != null && this.value instanceof ExtendedContactDetail;
+        public boolean hasValueExtendedContactDetail() {
+            return this.value instanceof ExtendedContactDetail;
         }
 
         /**
@@ -1578,8 +1595,8 @@ public class Transport extends DomainResource {
           return (Dosage) this.value;
         }
 
-        public boolean hasValueDosage() { 
-          return this != null && this.value instanceof Dosage;
+        public boolean hasValueDosage() {
+            return this.value instanceof Dosage;
         }
 
         /**
@@ -1593,8 +1610,8 @@ public class Transport extends DomainResource {
           return (Meta) this.value;
         }
 
-        public boolean hasValueMeta() { 
-          return this != null && this.value instanceof Meta;
+        public boolean hasValueMeta() {
+            return this.value instanceof Meta;
         }
 
         public boolean hasValue() { 
@@ -1715,6 +1732,17 @@ public class Transport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2083,8 +2111,8 @@ public class Transport extends DomainResource {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+            return this.value instanceof Base64BinaryType;
         }
 
         /**
@@ -2098,8 +2126,8 @@ public class Transport extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -2113,8 +2141,8 @@ public class Transport extends DomainResource {
           return (CanonicalType) this.value;
         }
 
-        public boolean hasValueCanonicalType() { 
-          return this != null && this.value instanceof CanonicalType;
+        public boolean hasValueCanonicalType() {
+            return this.value instanceof CanonicalType;
         }
 
         /**
@@ -2128,8 +2156,8 @@ public class Transport extends DomainResource {
           return (CodeType) this.value;
         }
 
-        public boolean hasValueCodeType() { 
-          return this != null && this.value instanceof CodeType;
+        public boolean hasValueCodeType() {
+            return this.value instanceof CodeType;
         }
 
         /**
@@ -2143,8 +2171,8 @@ public class Transport extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -2158,8 +2186,8 @@ public class Transport extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -2173,8 +2201,8 @@ public class Transport extends DomainResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -2188,8 +2216,8 @@ public class Transport extends DomainResource {
           return (IdType) this.value;
         }
 
-        public boolean hasValueIdType() { 
-          return this != null && this.value instanceof IdType;
+        public boolean hasValueIdType() {
+            return this.value instanceof IdType;
         }
 
         /**
@@ -2203,8 +2231,8 @@ public class Transport extends DomainResource {
           return (InstantType) this.value;
         }
 
-        public boolean hasValueInstantType() { 
-          return this != null && this.value instanceof InstantType;
+        public boolean hasValueInstantType() {
+            return this.value instanceof InstantType;
         }
 
         /**
@@ -2218,8 +2246,8 @@ public class Transport extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -2233,8 +2261,8 @@ public class Transport extends DomainResource {
           return (Integer64Type) this.value;
         }
 
-        public boolean hasValueInteger64Type() { 
-          return this != null && this.value instanceof Integer64Type;
+        public boolean hasValueInteger64Type() {
+            return this.value instanceof Integer64Type;
         }
 
         /**
@@ -2248,8 +2276,8 @@ public class Transport extends DomainResource {
           return (MarkdownType) this.value;
         }
 
-        public boolean hasValueMarkdownType() { 
-          return this != null && this.value instanceof MarkdownType;
+        public boolean hasValueMarkdownType() {
+            return this.value instanceof MarkdownType;
         }
 
         /**
@@ -2263,8 +2291,8 @@ public class Transport extends DomainResource {
           return (OidType) this.value;
         }
 
-        public boolean hasValueOidType() { 
-          return this != null && this.value instanceof OidType;
+        public boolean hasValueOidType() {
+            return this.value instanceof OidType;
         }
 
         /**
@@ -2278,8 +2306,8 @@ public class Transport extends DomainResource {
           return (PositiveIntType) this.value;
         }
 
-        public boolean hasValuePositiveIntType() { 
-          return this != null && this.value instanceof PositiveIntType;
+        public boolean hasValuePositiveIntType() {
+            return this.value instanceof PositiveIntType;
         }
 
         /**
@@ -2293,8 +2321,8 @@ public class Transport extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -2308,8 +2336,8 @@ public class Transport extends DomainResource {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -2323,8 +2351,8 @@ public class Transport extends DomainResource {
           return (UnsignedIntType) this.value;
         }
 
-        public boolean hasValueUnsignedIntType() { 
-          return this != null && this.value instanceof UnsignedIntType;
+        public boolean hasValueUnsignedIntType() {
+            return this.value instanceof UnsignedIntType;
         }
 
         /**
@@ -2338,8 +2366,8 @@ public class Transport extends DomainResource {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+            return this.value instanceof UriType;
         }
 
         /**
@@ -2353,8 +2381,8 @@ public class Transport extends DomainResource {
           return (UrlType) this.value;
         }
 
-        public boolean hasValueUrlType() { 
-          return this != null && this.value instanceof UrlType;
+        public boolean hasValueUrlType() {
+            return this.value instanceof UrlType;
         }
 
         /**
@@ -2368,8 +2396,8 @@ public class Transport extends DomainResource {
           return (UuidType) this.value;
         }
 
-        public boolean hasValueUuidType() { 
-          return this != null && this.value instanceof UuidType;
+        public boolean hasValueUuidType() {
+            return this.value instanceof UuidType;
         }
 
         /**
@@ -2383,8 +2411,8 @@ public class Transport extends DomainResource {
           return (Address) this.value;
         }
 
-        public boolean hasValueAddress() { 
-          return this != null && this.value instanceof Address;
+        public boolean hasValueAddress() {
+            return this.value instanceof Address;
         }
 
         /**
@@ -2398,8 +2426,8 @@ public class Transport extends DomainResource {
           return (Age) this.value;
         }
 
-        public boolean hasValueAge() { 
-          return this != null && this.value instanceof Age;
+        public boolean hasValueAge() {
+            return this.value instanceof Age;
         }
 
         /**
@@ -2413,8 +2441,8 @@ public class Transport extends DomainResource {
           return (Annotation) this.value;
         }
 
-        public boolean hasValueAnnotation() { 
-          return this != null && this.value instanceof Annotation;
+        public boolean hasValueAnnotation() {
+            return this.value instanceof Annotation;
         }
 
         /**
@@ -2428,8 +2456,8 @@ public class Transport extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -2443,8 +2471,8 @@ public class Transport extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -2458,8 +2486,8 @@ public class Transport extends DomainResource {
           return (CodeableReference) this.value;
         }
 
-        public boolean hasValueCodeableReference() { 
-          return this != null && this.value instanceof CodeableReference;
+        public boolean hasValueCodeableReference() {
+            return this.value instanceof CodeableReference;
         }
 
         /**
@@ -2473,8 +2501,8 @@ public class Transport extends DomainResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -2488,8 +2516,8 @@ public class Transport extends DomainResource {
           return (ContactPoint) this.value;
         }
 
-        public boolean hasValueContactPoint() { 
-          return this != null && this.value instanceof ContactPoint;
+        public boolean hasValueContactPoint() {
+            return this.value instanceof ContactPoint;
         }
 
         /**
@@ -2503,8 +2531,8 @@ public class Transport extends DomainResource {
           return (Count) this.value;
         }
 
-        public boolean hasValueCount() { 
-          return this != null && this.value instanceof Count;
+        public boolean hasValueCount() {
+            return this.value instanceof Count;
         }
 
         /**
@@ -2518,8 +2546,8 @@ public class Transport extends DomainResource {
           return (Distance) this.value;
         }
 
-        public boolean hasValueDistance() { 
-          return this != null && this.value instanceof Distance;
+        public boolean hasValueDistance() {
+            return this.value instanceof Distance;
         }
 
         /**
@@ -2533,8 +2561,8 @@ public class Transport extends DomainResource {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         /**
@@ -2548,8 +2576,8 @@ public class Transport extends DomainResource {
           return (HumanName) this.value;
         }
 
-        public boolean hasValueHumanName() { 
-          return this != null && this.value instanceof HumanName;
+        public boolean hasValueHumanName() {
+            return this.value instanceof HumanName;
         }
 
         /**
@@ -2563,8 +2591,8 @@ public class Transport extends DomainResource {
           return (Identifier) this.value;
         }
 
-        public boolean hasValueIdentifier() { 
-          return this != null && this.value instanceof Identifier;
+        public boolean hasValueIdentifier() {
+            return this.value instanceof Identifier;
         }
 
         /**
@@ -2578,8 +2606,8 @@ public class Transport extends DomainResource {
           return (Money) this.value;
         }
 
-        public boolean hasValueMoney() { 
-          return this != null && this.value instanceof Money;
+        public boolean hasValueMoney() {
+            return this.value instanceof Money;
         }
 
         /**
@@ -2593,8 +2621,8 @@ public class Transport extends DomainResource {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -2608,8 +2636,8 @@ public class Transport extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -2623,8 +2651,8 @@ public class Transport extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -2638,8 +2666,8 @@ public class Transport extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -2653,8 +2681,8 @@ public class Transport extends DomainResource {
           return (RatioRange) this.value;
         }
 
-        public boolean hasValueRatioRange() { 
-          return this != null && this.value instanceof RatioRange;
+        public boolean hasValueRatioRange() {
+            return this.value instanceof RatioRange;
         }
 
         /**
@@ -2668,8 +2696,8 @@ public class Transport extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -2683,8 +2711,8 @@ public class Transport extends DomainResource {
           return (SampledData) this.value;
         }
 
-        public boolean hasValueSampledData() { 
-          return this != null && this.value instanceof SampledData;
+        public boolean hasValueSampledData() {
+            return this.value instanceof SampledData;
         }
 
         /**
@@ -2698,8 +2726,8 @@ public class Transport extends DomainResource {
           return (Signature) this.value;
         }
 
-        public boolean hasValueSignature() { 
-          return this != null && this.value instanceof Signature;
+        public boolean hasValueSignature() {
+            return this.value instanceof Signature;
         }
 
         /**
@@ -2713,8 +2741,8 @@ public class Transport extends DomainResource {
           return (Timing) this.value;
         }
 
-        public boolean hasValueTiming() { 
-          return this != null && this.value instanceof Timing;
+        public boolean hasValueTiming() {
+            return this.value instanceof Timing;
         }
 
         /**
@@ -2728,8 +2756,8 @@ public class Transport extends DomainResource {
           return (ContactDetail) this.value;
         }
 
-        public boolean hasValueContactDetail() { 
-          return this != null && this.value instanceof ContactDetail;
+        public boolean hasValueContactDetail() {
+            return this.value instanceof ContactDetail;
         }
 
         /**
@@ -2743,8 +2771,8 @@ public class Transport extends DomainResource {
           return (DataRequirement) this.value;
         }
 
-        public boolean hasValueDataRequirement() { 
-          return this != null && this.value instanceof DataRequirement;
+        public boolean hasValueDataRequirement() {
+            return this.value instanceof DataRequirement;
         }
 
         /**
@@ -2758,8 +2786,8 @@ public class Transport extends DomainResource {
           return (Expression) this.value;
         }
 
-        public boolean hasValueExpression() { 
-          return this != null && this.value instanceof Expression;
+        public boolean hasValueExpression() {
+            return this.value instanceof Expression;
         }
 
         /**
@@ -2773,8 +2801,8 @@ public class Transport extends DomainResource {
           return (ParameterDefinition) this.value;
         }
 
-        public boolean hasValueParameterDefinition() { 
-          return this != null && this.value instanceof ParameterDefinition;
+        public boolean hasValueParameterDefinition() {
+            return this.value instanceof ParameterDefinition;
         }
 
         /**
@@ -2788,8 +2816,8 @@ public class Transport extends DomainResource {
           return (RelatedArtifact) this.value;
         }
 
-        public boolean hasValueRelatedArtifact() { 
-          return this != null && this.value instanceof RelatedArtifact;
+        public boolean hasValueRelatedArtifact() {
+            return this.value instanceof RelatedArtifact;
         }
 
         /**
@@ -2803,8 +2831,8 @@ public class Transport extends DomainResource {
           return (TriggerDefinition) this.value;
         }
 
-        public boolean hasValueTriggerDefinition() { 
-          return this != null && this.value instanceof TriggerDefinition;
+        public boolean hasValueTriggerDefinition() {
+            return this.value instanceof TriggerDefinition;
         }
 
         /**
@@ -2818,8 +2846,8 @@ public class Transport extends DomainResource {
           return (UsageContext) this.value;
         }
 
-        public boolean hasValueUsageContext() { 
-          return this != null && this.value instanceof UsageContext;
+        public boolean hasValueUsageContext() {
+            return this.value instanceof UsageContext;
         }
 
         /**
@@ -2833,8 +2861,8 @@ public class Transport extends DomainResource {
           return (Availability) this.value;
         }
 
-        public boolean hasValueAvailability() { 
-          return this != null && this.value instanceof Availability;
+        public boolean hasValueAvailability() {
+            return this.value instanceof Availability;
         }
 
         /**
@@ -2848,8 +2876,8 @@ public class Transport extends DomainResource {
           return (ExtendedContactDetail) this.value;
         }
 
-        public boolean hasValueExtendedContactDetail() { 
-          return this != null && this.value instanceof ExtendedContactDetail;
+        public boolean hasValueExtendedContactDetail() {
+            return this.value instanceof ExtendedContactDetail;
         }
 
         /**
@@ -2863,8 +2891,8 @@ public class Transport extends DomainResource {
           return (Dosage) this.value;
         }
 
-        public boolean hasValueDosage() { 
-          return this != null && this.value instanceof Dosage;
+        public boolean hasValueDosage() {
+            return this.value instanceof Dosage;
         }
 
         /**
@@ -2878,8 +2906,8 @@ public class Transport extends DomainResource {
           return (Meta) this.value;
         }
 
-        public boolean hasValueMeta() { 
-          return this != null && this.value instanceof Meta;
+        public boolean hasValueMeta() {
+            return this.value instanceof Meta;
         }
 
         public boolean hasValue() { 
@@ -3000,6 +3028,17 @@ public class Transport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -5088,6 +5127,80 @@ public class Transport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.instantiatesCanonical = null;
+        } else if (name.equals("instantiatesUri")) {
+          this.instantiatesUri = null;
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("groupIdentifier")) {
+          this.groupIdentifier = null;
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new TransportStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<TransportStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("intent")) {
+          value = new TransportIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<TransportIntent>
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("focus")) {
+          this.focus = null;
+        } else if (name.equals("for")) {
+          this.for_ = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("completionTime")) {
+          this.completionTime = null;
+        } else if (name.equals("authoredOn")) {
+          this.authoredOn = null;
+        } else if (name.equals("lastModified")) {
+          this.lastModified = null;
+        } else if (name.equals("requester")) {
+          this.requester = null;
+        } else if (name.equals("performerType")) {
+          this.getPerformerType().remove(value);
+        } else if (name.equals("owner")) {
+          this.owner = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("insurance")) {
+          this.getInsurance().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("relevantHistory")) {
+          this.getRelevantHistory().remove(value);
+        } else if (name.equals("restriction")) {
+          this.restriction = (TransportRestrictionComponent) value; // TransportRestrictionComponent
+        } else if (name.equals("input")) {
+          this.getInput().remove((ParameterComponent) value);
+        } else if (name.equals("output")) {
+          this.getOutput().remove((TransportOutputComponent) value);
+        } else if (name.equals("requestedLocation")) {
+          this.requestedLocation = null;
+        } else if (name.equals("currentLocation")) {
+          this.currentLocation = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else if (name.equals("history")) {
+          this.history = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5174,10 +5287,10 @@ public class Transport extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -5190,24 +5303,24 @@ public class Transport extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
           return this.statusReason;
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.intent");
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.priority");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.description");
         }
         else if (name.equals("focus")) {
           this.focus = new Reference();
@@ -5222,13 +5335,13 @@ public class Transport extends DomainResource {
           return this.encounter;
         }
         else if (name.equals("completionTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.completionTime");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.completionTime");
         }
         else if (name.equals("authoredOn")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.authoredOn");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.authoredOn");
         }
         else if (name.equals("lastModified")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Transport.lastModified");
+          throw new FHIRException("Cannot call addChild on a singleton property Transport.lastModified");
         }
         else if (name.equals("requester")) {
           this.requester = new Reference();

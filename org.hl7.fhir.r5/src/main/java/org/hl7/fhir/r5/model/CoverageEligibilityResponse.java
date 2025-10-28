@@ -166,7 +166,9 @@ public class CoverageEligibilityResponse extends DomainResource {
         throw new FHIRException("Unknown EligibilityOutcome code '"+codeString+"'");
         }
     public String toCode(EligibilityOutcome code) {
-      if (code == EligibilityOutcome.QUEUED)
+       if (code == EligibilityOutcome.NULL)
+           return null;
+       if (code == EligibilityOutcome.QUEUED)
         return "queued";
       if (code == EligibilityOutcome.COMPLETE)
         return "complete";
@@ -175,7 +177,7 @@ public class CoverageEligibilityResponse extends DomainResource {
       if (code == EligibilityOutcome.PARTIAL)
         return "partial";
       return "?";
-      }
+   }
     public String toSystem(EligibilityOutcome code) {
       return code.getSystem();
       }
@@ -294,7 +296,9 @@ public class CoverageEligibilityResponse extends DomainResource {
         throw new FHIRException("Unknown EligibilityResponsePurpose code '"+codeString+"'");
         }
     public String toCode(EligibilityResponsePurpose code) {
-      if (code == EligibilityResponsePurpose.AUTHREQUIREMENTS)
+       if (code == EligibilityResponsePurpose.NULL)
+           return null;
+       if (code == EligibilityResponsePurpose.AUTHREQUIREMENTS)
         return "auth-requirements";
       if (code == EligibilityResponsePurpose.BENEFITS)
         return "benefits";
@@ -303,7 +307,7 @@ public class CoverageEligibilityResponse extends DomainResource {
       if (code == EligibilityResponsePurpose.VALIDATION)
         return "validation";
       return "?";
-      }
+   }
     public String toSystem(EligibilityResponsePurpose code) {
       return code.getSystem();
       }
@@ -386,8 +390,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (DateTimeType) this.when;
         }
 
-        public boolean hasWhenDateTimeType() { 
-          return this != null && this.when instanceof DateTimeType;
+        public boolean hasWhenDateTimeType() {
+          return this.when instanceof DateTimeType;
         }
 
         /**
@@ -401,8 +405,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (Period) this.when;
         }
 
-        public boolean hasWhenPeriod() { 
-          return this != null && this.when instanceof Period;
+        public boolean hasWhenPeriod() {
+          return this.when instanceof Period;
         }
 
         public boolean hasWhen() { 
@@ -471,6 +475,17 @@ public class CoverageEligibilityResponse extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("when[x]")) {
+          this.when = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -815,6 +830,21 @@ public class CoverageEligibilityResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("coverage")) {
+          this.coverage = null;
+        } else if (name.equals("inforce")) {
+          this.inforce = null;
+        } else if (name.equals("benefitPeriod")) {
+          this.benefitPeriod = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((ItemsComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -846,7 +876,7 @@ public class CoverageEligibilityResponse extends DomainResource {
           return this.coverage;
         }
         else if (name.equals("inforce")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.inforce");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.inforce");
         }
         else if (name.equals("benefitPeriod")) {
           this.benefitPeriod = new Period();
@@ -1713,6 +1743,41 @@ public class CoverageEligibilityResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("productOrService")) {
+          this.productOrService = null;
+        } else if (name.equals("modifier")) {
+          this.getModifier().remove(value);
+        } else if (name.equals("provider")) {
+          this.provider = null;
+        } else if (name.equals("excluded")) {
+          this.excluded = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("network")) {
+          this.network = null;
+        } else if (name.equals("unit")) {
+          this.unit = null;
+        } else if (name.equals("term")) {
+          this.term = null;
+        } else if (name.equals("benefit")) {
+          this.getBenefit().remove((BenefitComponent) value);
+        } else if (name.equals("authorizationRequired")) {
+          this.authorizationRequired = null;
+        } else if (name.equals("authorizationSupporting")) {
+          this.getAuthorizationSupporting().remove(value);
+        } else if (name.equals("authorizationUrl")) {
+          this.authorizationUrl = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1775,13 +1840,13 @@ public class CoverageEligibilityResponse extends DomainResource {
           return this.provider;
         }
         else if (name.equals("excluded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.item.excluded");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.item.excluded");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.item.name");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.item.name");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.item.description");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.item.description");
         }
         else if (name.equals("network")) {
           this.network = new CodeableConcept();
@@ -1799,13 +1864,13 @@ public class CoverageEligibilityResponse extends DomainResource {
           return addBenefit();
         }
         else if (name.equals("authorizationRequired")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.item.authorizationRequired");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.item.authorizationRequired");
         }
         else if (name.equals("authorizationSupporting")) {
           return addAuthorizationSupporting();
         }
         else if (name.equals("authorizationUrl")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.insurance.item.authorizationUrl");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.insurance.item.authorizationUrl");
         }
         else
           return super.addChild(name);
@@ -1970,8 +2035,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (UnsignedIntType) this.allowed;
         }
 
-        public boolean hasAllowedUnsignedIntType() { 
-          return this != null && this.allowed instanceof UnsignedIntType;
+        public boolean hasAllowedUnsignedIntType() {
+          return this.allowed instanceof UnsignedIntType;
         }
 
         /**
@@ -1985,8 +2050,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (StringType) this.allowed;
         }
 
-        public boolean hasAllowedStringType() { 
-          return this != null && this.allowed instanceof StringType;
+        public boolean hasAllowedStringType() {
+          return this.allowed instanceof StringType;
         }
 
         /**
@@ -2000,8 +2065,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (Money) this.allowed;
         }
 
-        public boolean hasAllowedMoney() { 
-          return this != null && this.allowed instanceof Money;
+        public boolean hasAllowedMoney() {
+          return this.allowed instanceof Money;
         }
 
         public boolean hasAllowed() { 
@@ -2036,8 +2101,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (UnsignedIntType) this.used;
         }
 
-        public boolean hasUsedUnsignedIntType() { 
-          return this != null && this.used instanceof UnsignedIntType;
+        public boolean hasUsedUnsignedIntType() {
+          return this.used instanceof UnsignedIntType;
         }
 
         /**
@@ -2051,8 +2116,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (StringType) this.used;
         }
 
-        public boolean hasUsedStringType() { 
-          return this != null && this.used instanceof StringType;
+        public boolean hasUsedStringType() {
+          return this.used instanceof StringType;
         }
 
         /**
@@ -2066,8 +2131,8 @@ public class CoverageEligibilityResponse extends DomainResource {
           return (Money) this.used;
         }
 
-        public boolean hasUsedMoney() { 
-          return this != null && this.used instanceof Money;
+        public boolean hasUsedMoney() {
+          return this.used instanceof Money;
         }
 
         public boolean hasUsed() { 
@@ -2149,6 +2214,19 @@ public class CoverageEligibilityResponse extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("allowed[x]")) {
+          this.allowed = null;
+        } else if (name.equals("used[x]")) {
+          this.used = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2424,6 +2502,17 @@ public class CoverageEligibilityResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("expression")) {
+          this.getExpression().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2451,7 +2540,7 @@ public class CoverageEligibilityResponse extends DomainResource {
           return this.code;
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.error.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.error.expression");
         }
         else
           return super.addChild(name);
@@ -2897,8 +2986,8 @@ public class CoverageEligibilityResponse extends DomainResource {
       return (DateType) this.serviced;
     }
 
-    public boolean hasServicedDateType() { 
-      return this != null && this.serviced instanceof DateType;
+    public boolean hasServicedDateType() {
+      return this.serviced instanceof DateType;
     }
 
     /**
@@ -2912,8 +3001,8 @@ public class CoverageEligibilityResponse extends DomainResource {
       return (Period) this.serviced;
     }
 
-    public boolean hasServicedPeriod() { 
-      return this != null && this.serviced instanceof Period;
+    public boolean hasServicedPeriod() {
+      return this.serviced instanceof Period;
     }
 
     public boolean hasServiced() { 
@@ -3492,6 +3581,48 @@ public class CoverageEligibilityResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new FinancialResourceStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FinancialResourceStatusCodes>
+        } else if (name.equals("purpose")) {
+          value = new EligibilityResponsePurposeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getPurpose().remove((Enumeration) value);
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("event")) {
+          this.getEvent().remove((CoverageEligibilityResponseEventComponent) value);
+        } else if (name.equals("serviced[x]")) {
+          this.serviced = null;
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("requestor")) {
+          this.requestor = null;
+        } else if (name.equals("request")) {
+          this.request = null;
+        } else if (name.equals("outcome")) {
+          value = new EligibilityOutcomeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.outcome = (Enumeration) value; // Enumeration<EligibilityOutcome>
+        } else if (name.equals("disposition")) {
+          this.disposition = null;
+        } else if (name.equals("insurer")) {
+          this.insurer = null;
+        } else if (name.equals("insurance")) {
+          this.getInsurance().remove((InsuranceComponent) value);
+        } else if (name.equals("preAuthRef")) {
+          this.preAuthRef = null;
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else if (name.equals("error")) {
+          this.getError().remove((ErrorsComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3547,10 +3678,10 @@ public class CoverageEligibilityResponse extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.status");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.status");
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.purpose");
         }
         else if (name.equals("patient")) {
           this.patient = new Reference();
@@ -3568,7 +3699,7 @@ public class CoverageEligibilityResponse extends DomainResource {
           return this.serviced;
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.created");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.created");
         }
         else if (name.equals("requestor")) {
           this.requestor = new Reference();
@@ -3579,10 +3710,10 @@ public class CoverageEligibilityResponse extends DomainResource {
           return this.request;
         }
         else if (name.equals("outcome")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.outcome");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.outcome");
         }
         else if (name.equals("disposition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.disposition");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.disposition");
         }
         else if (name.equals("insurer")) {
           this.insurer = new Reference();
@@ -3592,7 +3723,7 @@ public class CoverageEligibilityResponse extends DomainResource {
           return addInsurance();
         }
         else if (name.equals("preAuthRef")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CoverageEligibilityResponse.preAuthRef");
+          throw new FHIRException("Cannot call addChild on a singleton property CoverageEligibilityResponse.preAuthRef");
         }
         else if (name.equals("form")) {
           this.form = new CodeableConcept();

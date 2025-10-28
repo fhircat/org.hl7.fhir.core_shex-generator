@@ -18,6 +18,8 @@ parameters:
         - org.hl7.fhir.r4
         - org.hl7.fhir.r4b
         - org.hl7.fhir.r5
+        - org.hl7.fhir.model
+        - org.hl7.fhir.support
         - org.hl7.fhir.convertors
         - org.hl7.fhir.validation
         - org.hl7.fhir.validation.cli
@@ -34,12 +36,14 @@ parameters:
         - r4
         - r4b
         - r5
+        - model
+        - support
         - convertors
         - validation
 
 variables:
   - group: PGP_VAR_GROUP
-  - group: SONATYPE_VAR_GROUP
+  - group: MAVEN_CENTRAL_VAR_GROUP
   - group: GIT_VAR_GROUP
   - name: MAVEN_CACHE_FOLDER
     value: $(Pipeline.Workspace)/.m2/repository
@@ -53,10 +57,10 @@ jobs:
   - template: test-unit-jobs-template.yml
     parameters:
       testUnits:
-        - name: ubuntu_java_11
+        - name: ubuntu_java_17
           vmImage: "ubuntu-latest"
           javaToolOptions:
-          jdkVersion: 1.11
+          jdkVersion: 1.17
           skipJaCoCo: true
           modules:
             ${{ parameters.modulesToTest.modules }}
@@ -64,7 +68,7 @@ jobs:
   - job: deploy_to_sonatype
     dependsOn:
       - ${{ each module in parameters.modulesToTest.modules }}:
-          - ubuntu_java_11_${{ module }}
+          - ubuntu_java_17_${{ module }}
     pool:
       vmImage: "ubuntu-latest"
     steps:
@@ -82,22 +86,22 @@ jobs:
 
       # Deploy the SNAPSHOT artifact to sonatype nexus.
       # This is done for the master branch merges only.
-      - task: Maven@3
-        displayName: 'Deploy to Sonatype staging'
+      - task: Maven@4
+        displayName: 'Deploy to Maven Central'
         inputs:
           mavenPomFile: '$(System.DefaultWorkingDirectory)/pom.xml'
-          goals: jar:jar deploy:deploy
+          goals: jar:jar jar:test-jar deploy
           javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.11'
+          jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
-          options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) --settings $(Agent.TempDirectory)/settings.xml -pl "!org.hl7.fhir.report, !org.hl7.fhir.validation.cli" -Dmaven.test.skip -DdeployToSonatype'
+          options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) --settings $(Agent.TempDirectory)/settings.xml -pl "!org.hl7.fhir.report" -DskipTests -DdeployToMavenCentral'
           mavenOptions: '-Xmx768m -Dmaven.resolver.transport=wagon'
           publishJUnitResults: false
 
   - job: deploy_to_github
     dependsOn:
       - ${{ each module in parameters.modulesToTest.modules }}:
-          - ubuntu_java_11_${{ module }}
+          - ubuntu_java_17_${{ module }}
     pool:
       vmImage: "ubuntu-latest"
     steps:
@@ -115,14 +119,86 @@ jobs:
 
       # Deploy the SNAPSHOT artifact to GitHub packages.
       # This is done for the master branch merges only.
-      - task: Maven@3
+      - task: Maven@4
         displayName: 'Deploy to GitHub packages'
+        enabled: false
         inputs:
           mavenPomFile: '$(System.DefaultWorkingDirectory)/pom.xml'
-          goals: jar:jar deploy:deploy
+          goals: jar:jar deploy
           javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.11'
+          jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
-          options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) --settings $(Agent.TempDirectory)/settings.xml -pl "!org.hl7.fhir.report, !org.hl7.fhir.validation.cli" -Dmaven.test.skip -DdeployToGitHub'
+          options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) --settings $(Agent.TempDirectory)/settings.xml -pl "!org.hl7.fhir.report" -DskipTests -DdeployToGitHub'
           mavenOptions: '-Xmx768m  -Dmaven.resolver.transport=wagon'
           publishJUnitResults: false
+
+  - job: generate_i8n_csv_png_and_commit
+    dependsOn: setup
+      #- ${{ each module in parameters.modulesToTest.modules }}:
+      #    - ubuntu_java_17_${{ module }}
+    variables:
+      # Normally this test outputs to console. This variable appears as env param
+      # I18N_COVERAGE_FILE, which tells the test to write the output to a file
+      # instead.
+      - name: i18n.coverage.file
+        value: ../i18n-coverage.csv
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      # For creating the snapshot release with maven, we need to build a fake settings.xml for it to read from.
+      # This is done for the master branch merges only.
+      - task: Cache@2
+        displayName: Cache maven artifacts
+        inputs:
+          key: maven | $(Build.BuildId) | artifacts
+          path: $(MAVEN_CACHE_FOLDER)
+      - template: cache-target-tasks-template.yml
+        parameters:
+          modules:
+            ${{ parameters.modulesToCache.modules }}
+
+      - bash: |
+          git config --global user.email $(GIT_USER_EMAIL)
+          git config --global user.name $(GIT_USER_NAME)
+        displayName: 'Set up git'
+
+      # Install pip packages
+      - bash: |
+          pip3 install matplotlib
+          pip3 install numpy
+          pip3 install pandas
+        displayName: 'Set up python packages'
+
+      - task: Maven@4
+        inputs:
+          mavenPomFile: '$(System.DefaultWorkingDirectory)/pom.xml'
+          options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -pl org.hl7.fhir.utilities '
+          mavenOptions: '-Dtest=I18nCoverageTest#testPhraseCoverage'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          goals: 'surefire:test'
+        displayName: 'Run i18n coverage test to generate csv'
+
+      - task: PythonScript@0
+        inputs:
+          scriptSource: 'filePath'
+          scriptPath: .azure/i18n-coverage-table/generate-i18n-coverage-table.py
+          arguments:
+        displayName: 'Make png table from coverage test csv'
+
+      # Verify png file generation
+      - bash: |
+          ls -l ./i18n-coverage-table.png
+
+      - bash: |
+          git fetch
+          git checkout master
+          git status
+          git add ./i18n-coverage.csv
+          git add ./i18n-coverage-table.png
+          git commit . -m "Updating i18n-coverage csv and png table ***NO_CI***"
+
+          git push https://$(GIT_PAT)@github.com/hapifhir/org.hl7.fhir.core.git
+
+        displayName: 'Push updated csv and plot to git.'

@@ -1,18 +1,45 @@
 package org.hl7.fhir.r5.profilemodel;
 
+/*
+  Copyright (c) 2011+, HL7, Inc.
+  All rights reserved.
+  
+  Redistribution and use in source and binary forms, with or without modification, \
+  are permitted provided that the following conditions are met:
+  
+   * Redistributions of source code must retain the above copyright notice, this \
+     list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright notice, \
+     this list of conditions and the following disclaimer in the documentation \
+     and/or other materials provided with the distribution.
+   * Neither the name of HL7 nor the names of its contributors may be used to 
+     endorse or promote products derived from this software without specific 
+     prior written permission.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND \
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED \
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. \
+  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, \
+  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT \
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR \
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, \
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) \
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE \
+  POSSIBILITY OF SUCH DAMAGE.
+  */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.All;
 import org.hl7.fhir.exceptions.DefinitionException;
-import org.hl7.fhir.r5.context.ContextUtilities;
-import org.hl7.fhir.r5.model.Base;
+import org.hl7.fhir.r5.model.DataType;
 import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.r5.profilemodel.PEDefinition.PEDefinitionElementMode;
+import org.hl7.fhir.r5.model.ValueSet;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.Utilities;
 
 public abstract class PEDefinition {
@@ -31,6 +58,8 @@ public abstract class PEDefinition {
   private boolean recursing;
   private boolean mustHaveValue;
   private boolean inFixedValue;
+  private boolean isSlicer;
+  private List<PEDefinition> slices; // if there are some...
   
 //  /**
 //   * Don't create one of these directly - always use the public methods on ProfiledElementBuilder
@@ -54,7 +83,7 @@ public abstract class PEDefinition {
     this.name = name;
     this.profile = profile;
     this.definition = definition;
-    this.path = path == null ? name : ppath+"."+name;
+    this.path = ppath == null ? name : ppath+"."+name;
   }
 
 
@@ -76,7 +105,19 @@ public abstract class PEDefinition {
    * @return The name of the element in the resource (may be different to the slice name)
    */
   public String schemaName() {
-    return definition.getName();
+    String n = definition.getName();
+    return n;
+  }
+  
+  /**
+   * @return The name of the element in the resource (may be different to the slice name)
+   */
+  public String schemaNameWithType() {
+    String n = definition.getName();
+    if (n.endsWith("[x]") && types().size() == 1) {
+      n = n.replace("[x]", Utilities.capitalize(types.get(0).getType()));
+    }
+    return n;
   }
   
   /**
@@ -179,7 +220,7 @@ public abstract class PEDefinition {
     if (types().size() == 1) {
       return children(types.get(0).getUrl(), false);
     } else {
-      throw new DefinitionException("Attempt to get children for an element that doesn't have a single type (types = "+types()+")");
+      throw new DefinitionException("Attempt to get children for an element that doesn't have a single type (element = "+path+", types = "+types()+")");
     }
   }
   
@@ -187,17 +228,22 @@ public abstract class PEDefinition {
     if (types().size() == 1) {
       return children(types.get(0).getUrl(), allFixed);
     } else {
-      throw new DefinitionException("Attempt to get children for an element that doesn't have a single type (types = "+types()+")");
+      throw new DefinitionException("Attempt to get children for an element that doesn't have a single type (element = "+path+", types = "+types()+")");
     }
   }
   
   /**
    * @return True if the element has a fixed value. This will always be false if fixedProps = false when the builder is created
    */
-  public boolean fixedValue() {
+  public boolean hasFixedValue() {
     return definition.hasFixed() || definition.hasPattern();
   }
+
+  public DataType getFixedValue() {
+    return definition.hasFixed() ? definition.getFixed() : definition.getPattern();
+  }
   
+
   protected abstract void makeChildren(String typeUrl, List<PEDefinition> children, boolean allFixed);
 
   @Override
@@ -248,7 +294,7 @@ public abstract class PEDefinition {
 
 
   public boolean isList() {
-    return "*".equals(definition.getBase().getMax());
+    return "*".equals(definition.getMax()) || (Utilities.parseInt(definition.getMax(), 2) > 1);
   }
 
 
@@ -276,6 +322,102 @@ public abstract class PEDefinition {
    */
   public boolean isProfiled() {
     return !profile.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition");
+  }
+
+
+  public boolean isSlicer() {
+    return isSlicer;
+  }
+
+
+  public void setSlicer(boolean isSlicer) {
+    this.isSlicer = isSlicer;
+  }
+
+
+  public boolean isBaseList() {
+    return !"1".equals(definition.getBase().getMax());
+  }
+
+
+  public StructureDefinition getProfile() {
+    return profile;
+  }
+
+
+  public boolean isKeyElement() {
+    boolean selfKey = definition.getMustSupport() || definition.getMustHaveValue() || min() > 0 || definition.hasCondition();
+    if (isProfiled() && !selfKey) {
+      if (types() != null && types().size() > 0) {
+        for (PEDefinition child : children()) {
+          if (child.isKeyElement()) {
+            return true;
+          }
+        }
+      }
+    }
+    return selfKey;
+  }
+
+
+  public boolean isPrimitive() {
+    return types().size() == 1 && builder.getContext().isPrimitiveType(types.get(0).getName());
+  }
+
+
+  public boolean isBasePrimitive() {
+    ElementDefinition ed = baseDefinition();
+    return ed != null && ed.getType().size() == 1 && builder.getContext().isPrimitiveType(ed.getType().get(0).getWorkingCode());
+  }
+
+
+  // extensions do something different here 
+  public List<PEDefinition> directChildren(boolean allFixed) {
+    return children(allFixed);
+  }
+
+
+  public List<PEDefinition> getSlices() {
+    return slices;
+  }
+
+
+  public void setSlices(List<PEDefinition> slices) {
+    this.slices = slices;
+  }
+
+
+  public boolean isExtension() {
+    return false;
+  }
+
+  public String getExtensionUrl() {
+    return null;
+  }
+
+  public ValueSet valueSet() {
+    if (definition.getBinding().hasValueSet()) {
+      return builder.getContext().fetchResource(ValueSet.class, definition.getBinding().getValueSet());
+    }
+    return null;
+  }
+
+
+  public PEBuilder getBuilder() {
+    return builder;
+  }
+
+  public String typeSummary() {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
+    for (PEType t : types()) {
+      b.append(t.getName());
+    }       
+    return b.toString();
+  }
+
+
+  public boolean isSlice() {
+    return definition.hasSliceName();
   }
 
 }

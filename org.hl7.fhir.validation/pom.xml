@@ -1,20 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>org.hl7.fhir.core</artifactId>
-        <version>6.0.17-SNAPSHOT</version>
+        <version>6.7.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.hl7.fhir.validation</artifactId>
     <packaging>bundle</packaging>
 
+    <name>HL7 Core Artifact - Validation</name>
+
     <properties>
         <checkstyle_config_location>${project.parent.basedir}</checkstyle_config_location>
-        <info_cqframework_version>1.5.12</info_cqframework_version>
+        <info_cqframework_version>2.11.0</info_cqframework_version>
     </properties>
 
     <dependencies>
@@ -28,6 +30,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>org.hl7.fhir.utilities</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
 
@@ -50,12 +53,27 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.dstu3.support</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>org.hl7.fhir.r4</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>org.hl7.fhir.r5</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.support</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -82,12 +100,8 @@
             <artifactId>Saxon-HE</artifactId>
         </dependency>
         <dependency>
-            <groupId>xpp3</groupId>
+            <groupId>org.ogce</groupId>
             <artifactId>xpp3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
         </dependency>
 
         <!-- JSON Utilities -->
@@ -104,6 +118,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
@@ -115,61 +135,29 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
         </dependency>
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
-            <version>1.0.3</version>
+            <optional>true</optional>
         </dependency>
 
-        <!-- CQL-to-ELM -->
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>cql</artifactId>
-            <version>${info_cqframework_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>model</artifactId>
-            <version>${info_cqframework_version}</version>
-            <exclusions>
-                <!-- exclude this in favor of 1.9.4 for security reasons -->
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>elm</artifactId>
-            <version>${info_cqframework_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>cql-to-elm</artifactId>
-            <version>${info_cqframework_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>quick</artifactId>
-            <version>${info_cqframework_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>qdm</artifactId>
-            <version>${info_cqframework_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
-        </dependency>
         <!-- OkHttpDependency -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio-jvm</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -189,18 +177,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
+            <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <optional>true</optional>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin</artifactId>
-            <version>3.8.0</version>
-				<optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -216,11 +200,21 @@
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
-            <version>3.0.9.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-full</artifactId>
+            <scope>test</scope>
         </dependency>
         <!-- JUnit Jupiter -->
         <dependency>
@@ -255,24 +249,23 @@
         </dependency>
 
         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>4.0.4</version>
+        </dependency>
         <!-- End to end -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-            <version>3.141.59</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>3.6.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>

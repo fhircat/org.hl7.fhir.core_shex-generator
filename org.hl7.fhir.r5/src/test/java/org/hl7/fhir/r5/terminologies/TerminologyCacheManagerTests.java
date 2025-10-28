@@ -1,5 +1,6 @@
 package org.hl7.fhir.r5.terminologies;
 
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.tests.ResourceLoaderTests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -27,13 +27,13 @@ public class TerminologyCacheManagerTests implements ResourceLoaderTests {
   @BeforeAll
   public void beforeAll() throws IOException {
     tempDir = Files.createTempDirectory("terminology-cache-manager");
-    tempDir.resolve("child").toFile().mkdir();
+    ManagedFileAccess.fromPath(tempDir.resolve("child")).mkdir();
   }
 
   @Test
   public void testNormalZip() throws IOException {
     InputStream normalInputStream = getResourceAsInputStream( "zip-slip", "zip-normal.zip");
-    TerminologyCacheManager.unzip( normalInputStream, tempDir.toFile().getAbsolutePath());
+    TerminologyCacheManager.unzip( normalInputStream, ManagedFileAccess.fromPath(tempDir).getAbsolutePath());
 
     Path expectedFilePath = tempDir.resolve("zip-normal").resolve("depth1").resolve("test.txt");
     String actualContent = Files.readString(expectedFilePath);
@@ -55,7 +55,7 @@ public class TerminologyCacheManagerTests implements ResourceLoaderTests {
   public void testLoadFromClasspathZipSlip(String fileName, String expectedMessage) {
     RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
       InputStream slipInputStream = getResourceAsInputStream( "zip-slip", fileName);
-      TerminologyCacheManager.unzip( slipInputStream, tempDir.toFile().getAbsolutePath());
+      TerminologyCacheManager.unzip( slipInputStream, ManagedFileAccess.fromPath(tempDir).getAbsolutePath());
       //Code under test
     });
     assertNotNull(thrown);

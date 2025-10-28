@@ -1,7 +1,6 @@
 package org.hl7.fhir.r4b.comparison;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.PathEngineException;
 import org.hl7.fhir.r4b.comparison.CodeSystemComparer.CodeSystemComparison;
@@ -22,22 +22,28 @@ import org.hl7.fhir.r4b.comparison.ValueSetComparer.ValueSetComparison;
 
 import org.hl7.fhir.r4b.conformance.ProfileUtilities;
 import org.hl7.fhir.r4b.context.IWorkerContext;
+import org.hl7.fhir.r4b.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r4b.fhirpath.TypeDetails;
+import org.hl7.fhir.r4b.fhirpath.ExpressionNode.CollectionStatus;
+import org.hl7.fhir.r4b.fhirpath.IHostApplicationServices;
+import org.hl7.fhir.r4b.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
 import org.hl7.fhir.r4b.formats.IParser.OutputStyle;
 import org.hl7.fhir.r4b.model.Base;
-import org.hl7.fhir.r4b.model.ExpressionNode.CollectionStatus;
 import org.hl7.fhir.r4b.model.StringType;
 import org.hl7.fhir.r4b.model.Tuple;
-
-import org.hl7.fhir.r4b.model.TypeDetails;
 import org.hl7.fhir.r4b.model.ValueSet;
-import org.hl7.fhir.r4b.utils.FHIRPathEngine.IEvaluationContext;
 import org.hl7.fhir.r4b.utils.LiquidEngine;
 import org.hl7.fhir.r4b.utils.LiquidEngine.LiquidDocument;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.fhirpath.FHIRPathConstantEvaluationMode;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 
-public class ComparisonRenderer implements IEvaluationContext {
+@MarkedToMoveToAdjunctPackage
+@Slf4j
+public class ComparisonRenderer implements IHostApplicationServices {
 
   private IWorkerContext contextLeft;
   private IWorkerContext contextRight;
@@ -45,10 +51,11 @@ public class ComparisonRenderer implements IEvaluationContext {
   private Map<String, String> templates = new HashMap<>();
   private String folder;
 
-  public ComparisonRenderer(IWorkerContext contextLeft, IWorkerContext contextRight, String folder, ComparisonSession session) {
+  public ComparisonRenderer(IWorkerContext contextLeft, IWorkerContext contextRight, String folder,
+      ComparisonSession session) {
     super();
-    this.contextLeft = contextLeft;       
-    this.contextRight = contextRight;       
+    this.contextLeft = contextLeft;
+    this.contextRight = contextRight;
     this.folder = folder;
     this.session = session;
   }
@@ -56,18 +63,18 @@ public class ComparisonRenderer implements IEvaluationContext {
   public Map<String, String> getTemplates() {
     return templates;
   }
-  
+
   public File render(String leftName, String rightName) throws IOException {
     dumpBinaries();
     StringBuilder b = new StringBuilder();
     b.append("<table class=\"grid\">\r\n");
     b.append(" <tr>\r\n");
-    b.append("  <td width=\"260\"><b>"+Utilities.escapeXml(leftName)+"</b></td>\r\n");
-    b.append("  <td width=\"260\"><b>"+Utilities.escapeXml(rightName)+"</b></td>\r\n");
+    b.append("  <td width=\"260\"><b>" + Utilities.escapeXml(leftName) + "</b></td>\r\n");
+    b.append("  <td width=\"260\"><b>" + Utilities.escapeXml(rightName) + "</b></td>\r\n");
     b.append("  <td width=\"100\"><b>Difference</b></td>\r\n");
     b.append("  <td width=\"260\"><b>Notes</b></td>\r\n");
     b.append(" </tr>\r\n");
-    
+
     List<String> list = sorted(session.getCompares().keySet());
     processList(list, b, "CodeSystem");
     processList(list, b, "ValueSet");
@@ -80,8 +87,8 @@ public class ComparisonRenderer implements IEvaluationContext {
     vars.put("list", new StringType(b.toString()));
     String template = templates.get("Index");
     String cnt = processTemplate(template, "CodeSystem", vars);
-    TextFile.stringToFile(cnt, file("index.html"));
-    return new File(file("index.html"));
+    FileUtilities.stringToFile(cnt, file("index.html"));
+    return ManagedFileAccess.file(file("index.html"));
   }
 
   private void processList(List<String> list, StringBuilder b, String name) throws IOException {
@@ -92,16 +99,16 @@ public class ComparisonRenderer implements IEvaluationContext {
       if (comp.fhirType().equals(name)) {
         if (first) {
           first = false;
-          b.append("<tr><td colspan=\"4\"><b>"+Utilities.pluralize(name, 2)+"</b></td></tr>\r\n");
+          b.append("<tr><td colspan=\"4\"><b>" + Utilities.pluralize(name, 2) + "</b></td></tr>\r\n");
         }
         try {
           renderComparison(id, comp);
         } catch (Exception e) {
-          System.out.println("Exception rendering "+id+": "+e.getMessage());          
-          e.printStackTrace();
+          log.error("Exception rendering " + id + ": " + e.getMessage(), e);
         }
         b.append(comp.toTable());
-        //"<li><a href=\""+comp.getId()+".html\">"+Utilities.escapeXml(comp.summary())+"</a></li>\r\n"
+        // "<li><a
+        // href=\""+comp.getId()+".html\">"+Utilities.escapeXml(comp.summary())+"</a></li>\r\n"
       }
     }
   }
@@ -116,17 +123,17 @@ public class ComparisonRenderer implements IEvaluationContext {
   private void dumpBinaries() throws IOException {
     if (contextLeft != null && contextLeft.getBinaries() != null) {
       for (String k : contextLeft.getBinaries().keySet()) {
-        TextFile.bytesToFile(contextLeft.getBinaries().get(k), Utilities.path(folder, k));
+        FileUtilities.bytesToFile(contextLeft.getBinaries().get(k), Utilities.path(folder, k));
       }
     }
     if (contextRight != null && contextRight.getBinaries() != null) {
       for (String k : contextRight.getBinaries().keySet()) {
-        TextFile.bytesToFile(contextRight.getBinaries().get(k), Utilities.path(folder, k));
+        FileUtilities.bytesToFile(contextRight.getBinaries().get(k), Utilities.path(folder, k));
       }
     }
   }
 
-  private void renderComparison(String id, ResourceComparison comp) throws IOException {    
+  private void renderComparison(String id, ResourceComparison comp) throws IOException {
     if (comp instanceof ProfileComparison) {
       renderProfile(id, (ProfileComparison) comp);
     } else if (comp instanceof ValueSetComparison) {
@@ -135,22 +142,22 @@ public class ComparisonRenderer implements IEvaluationContext {
       renderCodeSystem(id, (CodeSystemComparison) comp);
     } else if (comp instanceof PlaceHolderComparison) {
       renderPlaceHolder(id, (PlaceHolderComparison) comp);
-    }   
+    }
   }
 
-  private void renderPlaceHolder(String id, PlaceHolderComparison comp) throws IOException {  
+  private void renderPlaceHolder(String id, PlaceHolderComparison comp) throws IOException {
     String cnt = "";
     if (comp.getE() != null) {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
       comp.getE().printStackTrace(pw);
       cnt = sw.toString();
-    }    
-    cnt = "<html><body><pre>"+cnt+"</pre></body></html>\r\n";
-    TextFile.stringToFile(cnt, file(comp.getId()+".html"));
+    }
+    cnt = "<html><body><pre>" + cnt + "</pre></body></html>\r\n";
+    FileUtilities.stringToFile(cnt, file(comp.getId() + ".html"));
   }
 
-  private void renderCodeSystem(String id, CodeSystemComparison comp) throws IOException {  
+  private void renderCodeSystem(String id, CodeSystemComparison comp) throws IOException {
     String template = templates.get("CodeSystem");
     Map<String, Base> vars = new HashMap<>();
     CodeSystemComparer cs = new CodeSystemComparer(session);
@@ -164,9 +171,11 @@ public class ComparisonRenderer implements IEvaluationContext {
     vars.put("metadata", new StringType(new XhtmlComposer(true).compose(cs.renderMetadata(comp, "", ""))));
     vars.put("concepts", new StringType(new XhtmlComposer(true).compose(cs.renderConcepts(comp, "", ""))));
     String cnt = processTemplate(template, "CodeSystem", vars);
-    TextFile.stringToFile(cnt, file(comp.getId()+".html"));
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
+    FileUtilities.stringToFile(cnt, file(comp.getId() + ".html"));
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY)
+        .compose(ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(
+        ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
   }
 
   private String file(String name) throws IOException {
@@ -188,15 +197,19 @@ public class ComparisonRenderer implements IEvaluationContext {
     vars.put("compose", new StringType(new XhtmlComposer(true).compose(cs.renderCompose(comp, "", ""))));
     vars.put("expansion", new StringType(new XhtmlComposer(true).compose(cs.renderExpansion(comp, "", ""))));
     String cnt = processTemplate(template, "ValueSet", vars);
-    TextFile.stringToFile(cnt, file(comp.getId()+".html"));
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
+    FileUtilities.stringToFile(cnt, file(comp.getId() + ".html"));
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY)
+        .compose(ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(
+        ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
   }
 
   private void renderProfile(String id, ProfileComparison comp) throws IOException {
     String template = templates.get("Profile");
     Map<String, Base> vars = new HashMap<>();
-    ProfileComparer cs = new ProfileComparer(session, new ProfileUtilities(session.getContextLeft(), null, session.getPkp()), new ProfileUtilities(session.getContextRight(), null, session.getPkp()));
+    ProfileComparer cs = new ProfileComparer(session,
+        new ProfileUtilities(session.getContextLeft(), null, session.getPkp()),
+        new ProfileUtilities(session.getContextRight(), null, session.getPkp()));
     vars.put("left", new StringType(comp.getLeft().present()));
     vars.put("right", new StringType(comp.getRight().present()));
     vars.put("leftId", new StringType(comp.getLeft().getId()));
@@ -205,21 +218,24 @@ public class ComparisonRenderer implements IEvaluationContext {
     vars.put("rightUrl", new StringType(comp.getRight().getUrl()));
     vars.put("errors", new StringType(new XhtmlComposer(true).compose(cs.renderErrors(comp))));
     vars.put("metadata", new StringType(new XhtmlComposer(true).compose(cs.renderMetadata(comp, "", ""))));
-    vars.put("structure", new StringType(new XhtmlComposer(true).compose(cs.renderStructure(comp, "", "", "http://hl7.org/fhir"))));
+    vars.put("structure",
+        new StringType(new XhtmlComposer(true).compose(cs.renderStructure(comp, "", "", "http://hl7.org/fhir"))));
     String cnt = processTemplate(template, "CodeSystem", vars);
-    TextFile.stringToFile(cnt, file(comp.getId()+".html"));
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
-    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
+    FileUtilities.stringToFile(cnt, file(comp.getId() + ".html"));
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY)
+        .compose(ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-union.json")), comp.getUnion());
+    new org.hl7.fhir.r4b.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(
+        ManagedFileAccess.outStream(Utilities.path(folder, comp.getId() + "-intersection.json")), comp.getIntersection());
   }
 
   private String processTemplate(String template, String name, Map<String, Base> vars) {
     LiquidEngine engine = new LiquidEngine(contextRight, this);
-    LiquidDocument doc = engine.parse(template, name+".template");
+    LiquidDocument doc = engine.parse(template, name + ".template");
     return engine.evaluate(doc, Tuple.fromMap(vars), vars);
   }
 
   @Override
-  public List<Base> resolveConstant(Object appContext, String name, boolean beforeContext) throws PathEngineException {
+  public List<Base> resolveConstant(FHIRPathEngine engine, Object appContext, String name, FHIRPathConstantEvaluationMode mode) throws PathEngineException {
     @SuppressWarnings("unchecked")
     Map<String, Base> vars = (Map<String, Base>) appContext;
     List<Base> res = new ArrayList<>();
@@ -230,7 +246,7 @@ public class ComparisonRenderer implements IEvaluationContext {
   }
 
   @Override
-  public TypeDetails resolveConstantType(Object appContext, String name) throws PathEngineException {
+  public TypeDetails resolveConstantType(FHIRPathEngine engine, Object appContext, String name, FHIRPathConstantEvaluationMode mode) throws PathEngineException {
     @SuppressWarnings("unchecked")
     Map<String, Base> vars = (Map<String, Base>) appContext;
     Base b = vars.get(name);
@@ -243,33 +259,40 @@ public class ComparisonRenderer implements IEvaluationContext {
   }
 
   @Override
-  public FunctionDetails resolveFunction(String functionName) {
+  public FunctionDetails resolveFunction(FHIRPathEngine engine, String functionName) {
     return null;
   }
 
   @Override
-  public TypeDetails checkFunction(Object appContext, String functionName, List<TypeDetails> parameters) throws PathEngineException {
+  public TypeDetails checkFunction(FHIRPathEngine engine, Object appContext, String functionName, TypeDetails focus, List<TypeDetails> parameters)
+      throws PathEngineException {
     return null;
   }
 
   @Override
-  public List<Base> executeFunction(Object appContext, List<Base> focus, String functionName, List<List<Base>> parameters) {
+  public List<Base> executeFunction(FHIRPathEngine engine, Object appContext, List<Base> focus, String functionName,
+      List<List<Base>> parameters) {
     return null;
   }
 
   @Override
-  public Base resolveReference(Object appContext, String url, Base refContext) throws FHIRException {
+  public Base resolveReference(FHIRPathEngine engine, Object appContext, String url, Base refContext) throws FHIRException {
     return null;
   }
 
   @Override
-  public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
+  public boolean conformsToProfile(FHIRPathEngine engine, Object appContext, Base item, String url) throws FHIRException {
     return false;
   }
 
   @Override
-  public ValueSet resolveValueSet(Object appContext, String url) {
+  public ValueSet resolveValueSet(FHIRPathEngine engine, Object appContext, String url) {
     return null;
+  }
+
+  @Override
+  public boolean paramIsType(String name, int index) {
+    return false;
   }
 
 }

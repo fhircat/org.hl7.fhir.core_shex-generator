@@ -151,8 +151,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (DateTimeType) this.collected;
         }
 
-        public boolean hasCollectedDateTimeType() { 
-          return this != null && this.collected instanceof DateTimeType;
+        public boolean hasCollectedDateTimeType() {
+            return this.collected instanceof DateTimeType;
         }
 
         /**
@@ -166,8 +166,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Period) this.collected;
         }
 
-        public boolean hasCollectedPeriod() { 
-          return this != null && this.collected instanceof Period;
+        public boolean hasCollectedPeriod() {
+            return this.collected instanceof Period;
         }
 
         public boolean hasCollected() { 
@@ -244,6 +244,19 @@ public class BiologicallyDerivedProduct extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("collector")) {
+          this.collector = null;
+        } else if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("collected[x]")) {
+          this.collected = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -414,8 +427,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -429,8 +442,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -444,8 +457,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -459,8 +472,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -474,8 +487,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -489,8 +502,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -504,8 +517,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -519,8 +532,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -534,8 +547,8 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -611,6 +624,17 @@ public class BiologicallyDerivedProduct extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1472,6 +1496,39 @@ public class BiologicallyDerivedProduct extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("productCategory")) {
+          this.productCategory = null;
+        } else if (name.equals("productCode")) {
+          this.productCode = null;
+        } else if (name.equals("parent")) {
+          this.getParent().remove(value);
+        } else if (name.equals("request")) {
+          this.getRequest().remove(value);
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("biologicalSourceEvent")) {
+          this.biologicalSourceEvent = null;
+        } else if (name.equals("processingFacility")) {
+          this.getProcessingFacility().remove(value);
+        } else if (name.equals("division")) {
+          this.division = null;
+        } else if (name.equals("productStatus")) {
+          this.productStatus = null;
+        } else if (name.equals("expirationDate")) {
+          this.expirationDate = null;
+        } else if (name.equals("collection")) {
+          this.collection = (BiologicallyDerivedProductCollectionComponent) value; // BiologicallyDerivedProductCollectionComponent
+        } else if (name.equals("storageTempRequirements")) {
+          this.storageTempRequirements = null;
+        } else if (name.equals("property")) {
+          this.getProperty().remove((BiologicallyDerivedProductPropertyComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1541,14 +1598,14 @@ public class BiologicallyDerivedProduct extends DomainResource {
           return addProcessingFacility();
         }
         else if (name.equals("division")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProduct.division");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProduct.division");
         }
         else if (name.equals("productStatus")) {
           this.productStatus = new Coding();
           return this.productStatus;
         }
         else if (name.equals("expirationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProduct.expirationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProduct.expirationDate");
         }
         else if (name.equals("collection")) {
           this.collection = new BiologicallyDerivedProductCollectionComponent();

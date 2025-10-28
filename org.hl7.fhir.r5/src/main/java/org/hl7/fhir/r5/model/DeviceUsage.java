@@ -208,7 +208,9 @@ public class DeviceUsage extends DomainResource {
         throw new FHIRException("Unknown DeviceUsageStatus code '"+codeString+"'");
         }
     public String toCode(DeviceUsageStatus code) {
-      if (code == DeviceUsageStatus.ACTIVE)
+       if (code == DeviceUsageStatus.NULL)
+           return null;
+       if (code == DeviceUsageStatus.ACTIVE)
         return "active";
       if (code == DeviceUsageStatus.COMPLETED)
         return "completed";
@@ -223,7 +225,7 @@ public class DeviceUsage extends DomainResource {
       if (code == DeviceUsageStatus.ONHOLD)
         return "on-hold";
       return "?";
-      }
+   }
     public String toSystem(DeviceUsageStatus code) {
       return code.getSystem();
       }
@@ -391,6 +393,17 @@ public class DeviceUsage extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -937,8 +950,8 @@ public class DeviceUsage extends DomainResource {
       return (Timing) this.timing;
     }
 
-    public boolean hasTimingTiming() { 
-      return this != null && this.timing instanceof Timing;
+    public boolean hasTimingTiming() {
+        return this.timing instanceof Timing;
     }
 
     /**
@@ -952,8 +965,8 @@ public class DeviceUsage extends DomainResource {
       return (Period) this.timing;
     }
 
-    public boolean hasTimingPeriod() { 
-      return this != null && this.timing instanceof Period;
+    public boolean hasTimingPeriod() {
+        return this.timing instanceof Period;
     }
 
     /**
@@ -967,8 +980,8 @@ public class DeviceUsage extends DomainResource {
       return (DateTimeType) this.timing;
     }
 
-    public boolean hasTimingDateTimeType() { 
-      return this != null && this.timing instanceof DateTimeType;
+    public boolean hasTimingDateTimeType() {
+        return this.timing instanceof DateTimeType;
     }
 
     public boolean hasTiming() { 
@@ -1490,6 +1503,48 @@ public class DeviceUsage extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("status")) {
+          value = new DeviceUsageStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<DeviceUsageStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("context")) {
+          this.context = null;
+        } else if (name.equals("timing[x]")) {
+          this.timing = null;
+        } else if (name.equals("dateAsserted")) {
+          this.dateAsserted = null;
+        } else if (name.equals("usageStatus")) {
+          this.usageStatus = null;
+        } else if (name.equals("usageReason")) {
+          this.getUsageReason().remove(value);
+        } else if (name.equals("adherence")) {
+          this.adherence = (DeviceUsageAdherenceComponent) value; // DeviceUsageAdherenceComponent
+        } else if (name.equals("informationSource")) {
+          this.informationSource = null;
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1550,7 +1605,7 @@ public class DeviceUsage extends DomainResource {
           return addBasedOn();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceUsage.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceUsage.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -1579,7 +1634,7 @@ public class DeviceUsage extends DomainResource {
           return this.timing;
         }
         else if (name.equals("dateAsserted")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DeviceUsage.dateAsserted");
+          throw new FHIRException("Cannot call addChild on a singleton property DeviceUsage.dateAsserted");
         }
         else if (name.equals("usageStatus")) {
           this.usageStatus = new CodeableConcept();

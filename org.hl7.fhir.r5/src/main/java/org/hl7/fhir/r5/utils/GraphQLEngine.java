@@ -41,6 +41,8 @@ import java.util.Map;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.fhirpath.ExpressionNode;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.model.BackboneElement;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Bundle;
@@ -50,13 +52,14 @@ import org.hl7.fhir.r5.model.Bundle.LinkRelationTypes;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.DomainResource;
 import org.hl7.fhir.r5.model.Element;
-import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.IdType;
 import org.hl7.fhir.r5.model.IntegerType;
 import org.hl7.fhir.r5.model.Property;
 import org.hl7.fhir.r5.model.Reference;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StringType;
+import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.graphql.Argument;
 import org.hl7.fhir.utilities.graphql.Argument.ArgumentListStatus;
@@ -81,6 +84,7 @@ import org.hl7.fhir.utilities.graphql.Value;
 import org.hl7.fhir.utilities.graphql.Variable;
 import org.hl7.fhir.utilities.graphql.VariableValue;
 
+@MarkedToMoveToAdjunctPackage
 public class GraphQLEngine implements IGraphQLEngine {
   
   public static class SearchEdge extends Base {
@@ -125,6 +129,10 @@ public class GraphQLEngine implements IGraphQLEngine {
     @Override
     public Base copy() {
       throw new Error("Not Implemented");
+    }
+
+    public FhirPublication getFHIRPublicationVersion() {
+      return FhirPublication.R5; 
     }
   }
 
@@ -220,6 +228,9 @@ public class GraphQLEngine implements IGraphQLEngine {
       throw new Error("Not Implemented");
     }
 
+    public FhirPublication getFHIRPublicationVersion() {
+      return FhirPublication.R5; 
+    }
   }
   
   private IWorkerContext context;

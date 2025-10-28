@@ -9,6 +9,7 @@ import org.hl7.fhir.r4b.model.CanonicalResource;
 import org.hl7.fhir.r4b.model.CodeSystem;
 import org.hl7.fhir.r4b.model.StructureDefinition;
 import org.hl7.fhir.r4b.model.ValueSet;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
@@ -20,44 +21,50 @@ import org.hl7.fhir.utilities.xhtml.HierarchicalTableGenerator.Piece;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+@MarkedToMoveToAdjunctPackage
 public class ResourceComparer {
- 
+
   public static class MessageCounts {
     private int errors;
     private int warnings;
     private int hints;
+
     public int getErrors() {
       return errors;
     }
+
     public int getWarnings() {
       return warnings;
     }
+
     public int getHints() {
       return hints;
     }
+
     public void error() {
       errors++;
     }
+
     public void warning() {
       warnings++;
     }
+
     public void hint() {
       hints++;
     }
   }
-
 
   public static abstract class ResourceComparison {
     private String id;
     private String leftId;
     private String rightId;
     private MessageCounts cnts;
-    
+
     public ResourceComparison(String leftId, String rightId) {
       super();
       this.leftId = leftId;
       this.rightId = rightId;
-      id = abbreviation()+"-"+leftId + "-" + rightId;
+      id = abbreviation() + "-" + leftId + "-" + rightId;
     }
 
     protected String refCell(CanonicalResource cr) {
@@ -70,12 +77,13 @@ public class ResourceComparer {
       }
       if (cr.hasUserData("path")) {
         String p = cr.getUserString("path");
-        return "<td><a href=\""+(Utilities.isAbsoluteUrl(p) ? "" : "../")+p+"\">"+Utilities.escapeXml(t)+"</td>";
-      } else 
-        return "<td>"+Utilities.escapeXml(t)+"</td>";
+        return "<td><a href=\"" + (Utilities.isAbsoluteUrl(p) ? "" : "../") + p + "\">" + Utilities.escapeXml(t)
+            + "</td>";
+      } else
+        return "<td>" + Utilities.escapeXml(t) + "</td>";
     }
-    
-    protected abstract String abbreviation(); 
+
+    protected abstract String abbreviation();
 
     public String getLeftId() {
       return leftId;
@@ -86,7 +94,7 @@ public class ResourceComparer {
     }
 
     protected List<ValidationMessage> messages = new ArrayList<>();
-    
+
     public List<ValidationMessage> getMessages() {
       return messages;
     }
@@ -100,13 +108,13 @@ public class ResourceComparer {
     protected abstract String fhirType();
 
     protected abstract String toTable();
-    
+
     protected String color() {
       if (hasErrors()) {
         return COLOR_DIFFERENT;
       } else if (noChange()) {
         return COLOR_NO_CHANGE;
-      } else { 
+      } else {
         return COLOR_DIFFERENT_LESS;
       }
     }
@@ -123,14 +131,13 @@ public class ResourceComparer {
 
     protected String outcomeSummary() {
       MessageCounts cnts = getCounts();
-      return 
-          Integer.toString(cnts.getErrors())+" "+Utilities.pluralize("Breaking Change", cnts.getErrors())+", "+
-          Integer.toString(cnts.getWarnings())+" "+Utilities.pluralize("Change", cnts.getWarnings())+", "+
-          Integer.toString(cnts.getHints())+" "+Utilities.pluralize("Note", cnts.getHints());
+      return Integer.toString(cnts.getErrors()) + " " + Utilities.pluralize("Breaking Change", cnts.getErrors()) + ", "
+          + Integer.toString(cnts.getWarnings()) + " " + Utilities.pluralize("Change", cnts.getWarnings()) + ", "
+          + Integer.toString(cnts.getHints()) + " " + Utilities.pluralize("Note", cnts.getHints());
     }
 
     public MessageCounts getCounts() {
-      if (cnts == null) { 
+      if (cnts == null) {
         cnts = new MessageCounts();
         countMessages(cnts);
       }
@@ -139,8 +146,7 @@ public class ResourceComparer {
 
     protected abstract void countMessages(MessageCounts cnts);
   }
-  
-  
+
   public static class PlaceHolderComparison extends ResourceComparison {
     private CanonicalResource left;
     private CanonicalResource right;
@@ -179,7 +185,7 @@ public class ResourceComparer {
         return e.getMessage();
       }
       CanonicalResource cr = left == null ? right : left;
-      return cr.fhirType()+(left == null ? " Added" : " Removed");
+      return cr.fhirType() + (left == null ? " Added" : " Removed");
     }
 
     @Override
@@ -198,17 +204,15 @@ public class ResourceComparer {
         s = s + "<td>Added</td>";
         color = COLOR_NO_ROW_LEFT;
       } else if (right == null) {
-        s = s + "<td>Removed</td>";        
+        s = s + "<td>Removed</td>";
         color = COLOR_NO_ROW_RIGHT;
       } else {
-        s = s + "<td><a href=\""+getId()+".html\">Failed<a></td>";
+        s = s + "<td><a href=\"" + getId() + ".html\">Failed<a></td>";
         color = COLOR_ISSUE;
       }
-      s = s + "<td>"+(e != null ? Utilities.escapeXml(e.getMessage()) : "")+"</td>";
-      return "<tr style=\"background-color: "+color+"\">"+s+"</tr>\r\n";
+      s = s + "<td>" + (e != null ? Utilities.escapeXml(e.getMessage()) : "") + "</td>";
+      return "<tr style=\"background-color: " + color + "\">" + s + "</tr>\r\n";
     }
-
-   
 
     public Throwable getE() {
       return e;
@@ -219,21 +223,21 @@ public class ResourceComparer {
       if (e != null) {
         cnts.error();
       }
-    }    
-    
+    }
+
   }
 
   public final static String COLOR_NO_ROW_LEFT = "#ffffb3";
   public final static String COLOR_NO_CELL_LEFT = "#ffff4d";
   public final static String COLOR_NO_ROW_RIGHT = "#ffecb3";
-  public final static String COLOR_NO_CELL_RIGHT = "#ffcc33";  
+  public final static String COLOR_NO_CELL_RIGHT = "#ffcc33";
   public final static String COLOR_DIFFERENT = "#f0b3ff";
   public final static String COLOR_DIFFERENT_LESS = "#f8e6ff";
   public final static String COLOR_ISSUE = "#ffad99";
   public final static String COLOR_NO_CHANGE = "#ffffff";
 
   protected ComparisonSession session;
-  
+
   public ResourceComparer(ComparisonSession session) {
     super();
     this.session = session;
@@ -247,7 +251,7 @@ public class ResourceComparer {
   public Cell missingCell(HierarchicalTableGenerator gen, String color) {
     Cell c = gen.new Cell(null, null, "", null, null);
     if (color != null) {
-      c.setStyle("background-color: "+color);
+      c.setStyle("background-color: " + color);
     }
     return c;
   }
@@ -257,7 +261,7 @@ public class ResourceComparer {
     XhtmlNode tbl = div.table("grid");
     for (ValidationMessage vm : csc.messages) {
       XhtmlNode tr = tbl.tr();
-      tr.style("background-color: "+colorForLevel(vm.getLevel()));
+      tr.style("background-color: " + colorForLevel(vm.getLevel()));
       tr.td().tx(vm.getLevel().getDisplay());
       tr.td().tx(vm.getLocation());
       tr.td().tx(vm.getMessage().replace("\"", "'"));
@@ -265,26 +269,30 @@ public class ResourceComparer {
     return div;
   }
 
-
   protected ValidationMessage vmI(IssueSeverity level, String message, String path) {
-    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message, level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
-    return vm;    
+    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message,
+        level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
+    return vm;
   }
-  
-  protected void vm(IssueSeverity level, String message, String path, List<ValidationMessage> genMessages, List<ValidationMessage> specMessages) {
-    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message, level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
+
+  protected void vm(IssueSeverity level, String message, String path, List<ValidationMessage> genMessages,
+      List<ValidationMessage> specMessages) {
+    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message,
+        level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
     genMessages.add(vm);
     if (specMessages != null) {
       specMessages.add(vm);
     }
   }
 
-  protected ValidationMessage vm(IssueSeverity level, String message, String path, List<ValidationMessage> genMessages) {
-    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message, level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
+  protected ValidationMessage vm(IssueSeverity level, String message, String path,
+      List<ValidationMessage> genMessages) {
+    ValidationMessage vm = new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path, message,
+        level == IssueSeverity.NULL ? IssueSeverity.INFORMATION : level);
     genMessages.add(vm);
     return vm;
   }
-  
+
   private String colorForLevel(IssueSeverity level) {
     switch (level) {
     case ERROR:
@@ -318,10 +326,10 @@ public class ResourceComparer {
     for (ValidationMessage msg : messages) {
       XhtmlNode li = new XhtmlNode(NodeType.Element, "li");
       piece.getChildren().add(li);
-      li.style("background-color: "+halfColorForLevel(msg.getLevel()));
+      li.style("background-color: " + halfColorForLevel(msg.getLevel()));
       li.tx(msg.getMessage());
     }
     return cell;
   }
-  
+
 }

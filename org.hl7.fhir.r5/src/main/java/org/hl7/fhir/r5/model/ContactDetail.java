@@ -228,6 +228,17 @@ public class ContactDetail extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("telecom")) {
+          this.getTelecom().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -251,7 +262,7 @@ public class ContactDetail extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ContactDetail.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ContactDetail.name");
         }
         else if (name.equals("telecom")) {
           return addTelecom();

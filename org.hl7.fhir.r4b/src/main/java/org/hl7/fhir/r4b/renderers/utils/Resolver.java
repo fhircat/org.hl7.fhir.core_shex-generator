@@ -10,6 +10,7 @@ import org.hl7.fhir.r4b.renderers.utils.BaseWrappers.ResourceWrapper;
 import org.hl7.fhir.r4b.renderers.utils.Resolver.ResourceContextType;
 import org.w3c.dom.Element;
 
+@Deprecated
 public class Resolver {
 
   public enum ResourceContextType {
@@ -18,9 +19,10 @@ public class Resolver {
 
   public interface IReferenceResolver {
     ResourceWithReference resolve(RenderingContext context, String url);
-    
-    // returns null if contained resource is inlined 
-    String urlForContained(RenderingContext context, String containingType, String containingId, String containedType, String containedId);
+
+    // returns null if contained resource is inlined
+    String urlForContained(RenderingContext context, String containingType, String containingId, String containedType,
+        String containedId);
   }
 
   public static class ResourceContext {
@@ -38,7 +40,8 @@ public class Resolver {
       this.resourceResource = dr;
     }
 
-    public ResourceContext(ResourceContextType type, org.hl7.fhir.r4b.elementmodel.Element bundle, org.hl7.fhir.r4b.elementmodel.Element dr) {
+    public ResourceContext(ResourceContextType type, org.hl7.fhir.r4b.elementmodel.Element bundle,
+        org.hl7.fhir.r4b.elementmodel.Element dr) {
       super();
       this.type = type;
       this.containerElement = bundle;
@@ -53,8 +56,7 @@ public class Resolver {
 //      return containerResource;
 //    }
 
-
-    //    public org.hl7.fhir.r4b.elementmodel.Element getBundleElement() {
+    // public org.hl7.fhir.r4b.elementmodel.Element getBundleElement() {
 //      return containerElement;
 //    }
 //
@@ -84,22 +86,22 @@ public class Resolver {
           for (BundleEntryComponent be : ((Bundle) containerResource).getEntry()) {
             if (be.getFullUrl().equals(value))
               return be;
-            if (value.equals(be.getResource().fhirType()+"/"+be.getResource().getId()))
+            if (value.equals(be.getResource().fhirType() + "/" + be.getResource().getId()))
               return be;
           }
-        } 
+        }
       }
       if (type == ResourceContextType.PARAMETERS) {
         if (containerResource != null) {
           for (ParametersParameterComponent p : ((Parameters) containerResource).getParameter()) {
-            if (p.getResource() != null && value.equals(p.getResource().fhirType()+"/"+p.getResource().getId())) {
+            if (p.getResource() != null && value.equals(p.getResource().fhirType() + "/" + p.getResource().getId())) {
               BundleEntryComponent be = new BundleEntryComponent();
               be.setResource(p.getResource());
               return be;
-              
+
             }
           }
-        } 
+        }
       }
       return null;
     }
@@ -110,7 +112,7 @@ public class Resolver {
           for (org.hl7.fhir.r4b.elementmodel.Element r : resourceElement.getChildrenByName("contained")) {
             if (r.getChildValue("id").equals(value.substring(1)))
               return r;
-          }          
+          }
         }
         return null;
       }
@@ -118,13 +120,13 @@ public class Resolver {
         if (containerElement != null) {
           for (org.hl7.fhir.r4b.elementmodel.Element be : containerElement.getChildren("entry")) {
             org.hl7.fhir.r4b.elementmodel.Element res = be.getNamedChild("resource");
-            if (res != null) { 
+            if (res != null) {
               if (value.equals(be.getChildValue("fullUrl"))) {
                 if (checkVersion(version, res)) {
                   return be;
                 }
               }
-              if (value.equals(res.fhirType()+"/"+res.getChildValue("id"))) {
+              if (value.equals(res.fhirType() + "/" + res.getChildValue("id"))) {
                 if (checkVersion(version, res)) {
                   return be;
                 }
@@ -137,7 +139,7 @@ public class Resolver {
         if (containerElement != null) {
           for (org.hl7.fhir.r4b.elementmodel.Element p : containerElement.getChildren("parameter")) {
             org.hl7.fhir.r4b.elementmodel.Element res = p.getNamedChild("resource");
-            if (res != null && value.equals(res.fhirType()+"/"+res.getChildValue("id"))) {
+            if (res != null && value.equals(res.fhirType() + "/" + res.getChildValue("id"))) {
               if (checkVersion(version, res)) {
                 return p;
               }
@@ -178,7 +180,5 @@ public class Resolver {
       return resource;
     }
   }
-
-
 
 }

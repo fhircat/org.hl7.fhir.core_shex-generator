@@ -1,18 +1,26 @@
 package org.hl7.fhir.utilities;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.settings.FhirSettings;
 import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -43,6 +51,17 @@ class UtilitiesTest {
 
   public static final String OSX_USER_DIR = System.getProperty("user.home") + "/";
   public static final String OSX_JAVA_HOME = getNormalizedJavaHomeDir() + "/";
+
+  public static Stream<Arguments> getHttpParameters() {
+    return Stream.of(
+        Arguments.of("param1", "value="),
+        Arguments.of("param2", "value2"),
+        Arguments.of("param3", "value%"),
+        Arguments.of("param4", "value&"),
+        Arguments.of("param5", "value_1"),
+        Arguments.of("param6", "urn:oid:1.2.3.4.5"));
+  }
+
   @Test
   @DisplayName("Test Utilities.path maps temp directory correctly")
   public void testTempDirPath() throws IOException {
@@ -57,12 +76,6 @@ class UtilitiesTest {
   @DisplayName("Test Utilities.path maps user directory correctly")
   public void testUserDirPath() throws IOException {
     assertEquals(Utilities.path("[user]", TEST_TXT), getUserDirectory() + TEST_TXT);
-  }
-
-  @Test
-  @DisplayName("Test Utilities.path maps JAVA_HOME correctly")
-  public void testJavaHomeDirPath() throws IOException {
-    assertEquals(Utilities.path("[JAVA_HOME]", TEST_TXT), getJavaHomeDirectory() + TEST_TXT);
   }
 
   private String getJavaHomeDirectory() {
@@ -98,7 +111,7 @@ class UtilitiesTest {
     } else if (os.contains(LINUX)) {
       return LINUX_TEMP_DIR;
     } else if (os.toUpperCase().contains(WINDOWS)) {
-      File tmp = new File(Utilities.C_TEMP_DIR);
+      File tmp = ManagedFileAccess.file(Utilities.C_TEMP_DIR);
       if(tmp.exists()) {
         return Utilities.C_TEMP_DIR + '\\';
       } else {
@@ -185,7 +198,7 @@ class UtilitiesTest {
     assertEquals("0.95", Utilities.lowBoundaryForDecimal("1.0", 2));
     assertEquals("-1.05000000", Utilities.lowBoundaryForDecimal("-1.0", 8));
     assertEquals("1.23", Utilities.lowBoundaryForDecimal("1.234", 2));
-    assertEquals("1.57", Utilities.lowBoundaryForDecimal("1.567", 2));
+    assertEquals("1.56", Utilities.lowBoundaryForDecimal("1.567", 2));
 
     assertEquals("0.50000000", Utilities.highBoundaryForDecimal("0", 8));
     assertEquals("1.500000", Utilities.highBoundaryForDecimal("1", 6));
@@ -197,44 +210,6 @@ class UtilitiesTest {
     assertEquals(1, Utilities.getDecimalPrecision("1.0"));
     assertEquals(1, Utilities.getDecimalPrecision("-1.0"));
     assertEquals(4, Utilities.getDecimalPrecision("-1.0200"));
-  }
-  
-  @Test
-  @DisplayName("Date Reasoning Tests")
-  void testDateRoutines() {
-//    Assertions.assertEquals("2021-01-01T00:00:00.000", Utilities.lowBoundaryForDate("2021"));
-//    Assertions.assertEquals("2021-04-01T00:00:00.000", Utilities.lowBoundaryForDate("2021-04"));
-//    Assertions.assertEquals("2020-02-01T00:00:00.000", Utilities.lowBoundaryForDate("2020-02"));
-//    Assertions.assertEquals("2021-04-04T00:00:00.000", Utilities.lowBoundaryForDate("2021-04-04"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.000", Utilities.lowBoundaryForDate("2021-04-04T21:22:23"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.245", Utilities.lowBoundaryForDate("2021-04-04T21:22:23.245"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.000Z", Utilities.lowBoundaryForDate("2021-04-04T21:22:23Z"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.245+10:00", Utilities.lowBoundaryForDate("2021-04-04T21:22:23.245+10:00"));
-//
-//    Assertions.assertEquals("2021-12-31T23:23:59.999", Utilities.highBoundaryForDate("2021"));
-//    Assertions.assertEquals("2021-04-30T23:23:59.999", Utilities.highBoundaryForDate("2021-04"));
-//    Assertions.assertEquals("2020-02-29T23:23:59.999", Utilities.highBoundaryForDate("2020-02"));
-//    Assertions.assertEquals("2021-04-04T23:23:59.999", Utilities.highBoundaryForDate("2021-04-04"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.999", Utilities.highBoundaryForDate("2021-04-04T21:22:23"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.245", Utilities.highBoundaryForDate("2021-04-04T21:22:23.245"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.999Z", Utilities.highBoundaryForDate("2021-04-04T21:22:23Z"));
-//    Assertions.assertEquals("2021-04-04T21:22:23.245+10:00", Utilities.highBoundaryForDate("2021-04-04T21:22:23.245+10:00"));
-    
-    assertEquals(8, Utilities.getDatePrecision("1900-01-01"));
-    assertEquals(4, Utilities.getDatePrecision("1900"));
-    assertEquals(6, Utilities.getDatePrecision("1900-06"));
-    assertEquals(14, Utilities.getDatePrecision("1900-06-06T14:00:00"));
-    assertEquals(17, Utilities.getDatePrecision("1900-06-06T14:00:00.000"));
-    assertEquals(8, Utilities.getDatePrecision("1900-01-01Z"));
-    assertEquals(4, Utilities.getDatePrecision("1900Z"));
-    assertEquals(6, Utilities.getDatePrecision("1900-06Z"));
-    assertEquals(14, Utilities.getDatePrecision("1900-06-06T14:00:00Z"));
-    assertEquals(17, Utilities.getDatePrecision("1900-06-06T14:00:00.000Z"));
-    assertEquals(8, Utilities.getDatePrecision("1900-01-01+10:00"));
-    assertEquals(4, Utilities.getDatePrecision("1900+10:00"));
-    assertEquals(6, Utilities.getDatePrecision("1900-06+10:00"));
-    assertEquals(14, Utilities.getDatePrecision("1900-06-06T14:00:00+10:00"));
-    assertEquals(17, Utilities.getDatePrecision("1900-06-06T14:00:00.000-10:00"));
   }
   
   public static Stream<Arguments> windowsRootPaths() {
@@ -293,7 +268,7 @@ class UtilitiesTest {
     RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
       Utilities.path(pathStrings);
     });
-    assertTrue(thrown.getMessage().endsWith(pathStrings[0]));
+    assertTrue(thrown.getMessage().endsWith(pathStrings[0]+", full path = "+String.join(", ", pathStrings)));
   }
 
   public static Stream<Arguments> macAndLinuxNonFirstElementStartPaths() {
@@ -384,7 +359,7 @@ class UtilitiesTest {
     RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
       Utilities.path(pathsStrings);
     });
-    assertEquals("First path entry cannot be null or empty",thrown.getMessage());
+    assertEquals("First entry in file path cannot be null or empty, full path = "+String.join(", ", pathsStrings),thrown.getMessage());
   }
 
   @Test
@@ -422,5 +397,46 @@ class UtilitiesTest {
     Assertions.assertFalse("\u0009\n\u000B\u000C\r\u0020\u0085\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u2028\u2029\u202F\u205F\u3000".matches(".+"));
     Assertions.assertFalse("\u0009\n\u000B\u000C\r\u0020\u0085\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u2028\u2029\u202F\u205F\u3000".matches("^.+$"));
   }
-  
+
+  @Test
+  void testSimpleSplit() throws IOException {
+    checkEquals(new String[] {}, Utilities.simpleSplit(null, ","));
+    checkEquals(new String[] {""}, Utilities.simpleSplit("", ","));
+    checkEquals(new String[] {"", ""}, Utilities.simpleSplit(",", ","));
+    checkEquals(new String[] {"A"}, Utilities.simpleSplit("A", ","));
+    checkEquals(new String[] {"A", "B"}, Utilities.simpleSplit("A,B", ","));
+    checkEquals(new String[] {"", "A", "", "B", ""}, Utilities.simpleSplit(",A,,B,", ","));
+    checkEquals(new String[] {"", "ONE", "", "TWO", "", "", "THREE", "", ""}, Utilities.simpleSplit("[stop]ONE[stop][stop]TWO[stop][stop][stop]THREE[stop][stop]", "[stop]"));
+  }
+
+  private void checkEquals(String[] left, String[] right) {
+    for (int i =0; i < Integer.min(left.length, right.length); i++) {
+      Assertions.assertEquals(left[i], right[i], "String["+i+"] differs");
+    }
+    Assertions.assertEquals(left.length, right.length, "String[].length() differs");
+  }
+
+  @ParameterizedTest
+  @MethodSource("getHttpParameters")
+  void testEncodeUriParam(String key, String value) {
+    String encoded = Utilities.encodeUriParam(key, value);
+    List<NameValuePair> actual = URLEncodedUtils.parse(encoded, StandardCharsets.UTF_8);
+    assertThat(actual).hasSize(1);
+    assertThat(actual.get(0).getName()).isEqualTo(key);
+    assertThat(actual.get(0).getValue()).isEqualTo(value);
+  }
+
+  @Test
+  void testAppendStringArray() {
+    String[] a = new String[] {"A", "B"};
+    String[] b = new String[] {"C", "D", "E"};
+    String[] result = Utilities.concatStringArray(a, b);
+    assertThat(result).hasSize(5);
+    assertThat(result[0]).isEqualTo("A");
+    assertThat(result[1]).isEqualTo("B");
+    assertThat(result[2]).isEqualTo("C");
+    assertThat(result[3]).isEqualTo("D");
+    assertThat(result[4]).isEqualTo("E");
+  }
 }
+

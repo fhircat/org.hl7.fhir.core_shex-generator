@@ -180,7 +180,9 @@ public class AuditEvent extends DomainResource {
         throw new FHIRException("Unknown AuditEventAction code '"+codeString+"'");
         }
     public String toCode(AuditEventAction code) {
-      if (code == AuditEventAction.C)
+       if (code == AuditEventAction.NULL)
+           return null;
+       if (code == AuditEventAction.C)
         return "C";
       if (code == AuditEventAction.R)
         return "R";
@@ -191,7 +193,7 @@ public class AuditEvent extends DomainResource {
       if (code == AuditEventAction.E)
         return "E";
       return "?";
-      }
+   }
     public String toSystem(AuditEventAction code) {
       return code.getSystem();
       }
@@ -366,7 +368,9 @@ public class AuditEvent extends DomainResource {
         throw new FHIRException("Unknown AuditEventSeverity code '"+codeString+"'");
         }
     public String toCode(AuditEventSeverity code) {
-      if (code == AuditEventSeverity.EMERGENCY)
+       if (code == AuditEventSeverity.NULL)
+           return null;
+       if (code == AuditEventSeverity.EMERGENCY)
         return "emergency";
       if (code == AuditEventSeverity.ALERT)
         return "alert";
@@ -383,7 +387,7 @@ public class AuditEvent extends DomainResource {
       if (code == AuditEventSeverity.DEBUG)
         return "debug";
       return "?";
-      }
+   }
     public String toSystem(AuditEventSeverity code) {
       return code.getSystem();
       }
@@ -550,6 +554,17 @@ public class AuditEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("detail")) {
+          this.getDetail().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -959,8 +974,8 @@ public class AuditEvent extends DomainResource {
           return (Reference) this.network;
         }
 
-        public boolean hasNetworkReference() { 
-          return this != null && this.network instanceof Reference;
+        public boolean hasNetworkReference() {
+            return this.network instanceof Reference;
         }
 
         /**
@@ -974,8 +989,8 @@ public class AuditEvent extends DomainResource {
           return (UriType) this.network;
         }
 
-        public boolean hasNetworkUriType() { 
-          return this != null && this.network instanceof UriType;
+        public boolean hasNetworkUriType() {
+            return this.network instanceof UriType;
         }
 
         /**
@@ -989,8 +1004,8 @@ public class AuditEvent extends DomainResource {
           return (StringType) this.network;
         }
 
-        public boolean hasNetworkStringType() { 
-          return this != null && this.network instanceof StringType;
+        public boolean hasNetworkStringType() {
+            return this.network instanceof StringType;
         }
 
         public boolean hasNetwork() { 
@@ -1163,6 +1178,29 @@ public class AuditEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("role")) {
+          this.getRole().remove(value);
+        } else if (name.equals("who")) {
+          this.who = null;
+        } else if (name.equals("requestor")) {
+          this.requestor = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("policy")) {
+          this.getPolicy().remove(value);
+        } else if (name.equals("network[x]")) {
+          this.network = null;
+        } else if (name.equals("authorization")) {
+          this.getAuthorization().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1210,14 +1248,14 @@ public class AuditEvent extends DomainResource {
           return this.who;
         }
         else if (name.equals("requestor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.agent.requestor");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.agent.requestor");
         }
         else if (name.equals("location")) {
           this.location = new Reference();
           return this.location;
         }
         else if (name.equals("policy")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.agent.policy");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.agent.policy");
         }
         else if (name.equals("networkReference")) {
           this.network = new Reference();
@@ -1501,6 +1539,19 @@ public class AuditEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("site")) {
+          this.site = null;
+        } else if (name.equals("observer")) {
+          this.observer = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1985,6 +2036,25 @@ public class AuditEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("what")) {
+          this.what = null;
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("securityLabel")) {
+          this.getSecurityLabel().remove(value);
+        } else if (name.equals("query")) {
+          this.query = null;
+        } else if (name.equals("detail")) {
+          this.getDetail().remove((AuditEventEntityDetailComponent) value);
+        } else if (name.equals("agent")) {
+          this.getAgent().remove((AuditEventAgentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2027,7 +2097,7 @@ public class AuditEvent extends DomainResource {
           return addSecurityLabel();
         }
         else if (name.equals("query")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.entity.query");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.entity.query");
         }
         else if (name.equals("detail")) {
           return addDetail();
@@ -2178,8 +2248,8 @@ public class AuditEvent extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -2193,8 +2263,8 @@ public class AuditEvent extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -2208,8 +2278,8 @@ public class AuditEvent extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -2223,8 +2293,8 @@ public class AuditEvent extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -2238,8 +2308,8 @@ public class AuditEvent extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -2253,8 +2323,8 @@ public class AuditEvent extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -2268,8 +2338,8 @@ public class AuditEvent extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -2283,8 +2353,8 @@ public class AuditEvent extends DomainResource {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+            return this.value instanceof TimeType;
         }
 
         /**
@@ -2298,8 +2368,8 @@ public class AuditEvent extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -2313,8 +2383,8 @@ public class AuditEvent extends DomainResource {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -2328,8 +2398,8 @@ public class AuditEvent extends DomainResource {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+            return this.value instanceof Base64BinaryType;
         }
 
         public boolean hasValue() { 
@@ -2407,6 +2477,17 @@ public class AuditEvent extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2843,8 +2924,8 @@ public class AuditEvent extends DomainResource {
       return (Period) this.occurred;
     }
 
-    public boolean hasOccurredPeriod() { 
-      return this != null && this.occurred instanceof Period;
+    public boolean hasOccurredPeriod() {
+        return this.occurred instanceof Period;
     }
 
     /**
@@ -2858,8 +2939,8 @@ public class AuditEvent extends DomainResource {
       return (DateTimeType) this.occurred;
     }
 
-    public boolean hasOccurredDateTimeType() { 
-      return this != null && this.occurred instanceof DateTimeType;
+    public boolean hasOccurredDateTimeType() {
+        return this.occurred instanceof DateTimeType;
     }
 
     public boolean hasOccurred() { 
@@ -3383,6 +3464,43 @@ public class AuditEvent extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("action")) {
+          value = new AuditEventActionEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.action = (Enumeration) value; // Enumeration<AuditEventAction>
+        } else if (name.equals("severity")) {
+          value = new AuditEventSeverityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.severity = (Enumeration) value; // Enumeration<AuditEventSeverity>
+        } else if (name.equals("occurred[x]")) {
+          this.occurred = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("outcome")) {
+          this.outcome = (AuditEventOutcomeComponent) value; // AuditEventOutcomeComponent
+        } else if (name.equals("authorization")) {
+          this.getAuthorization().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("agent")) {
+          this.getAgent().remove((AuditEventAgentComponent) value);
+        } else if (name.equals("source")) {
+          this.source = (AuditEventSourceComponent) value; // AuditEventSourceComponent
+        } else if (name.equals("entity")) {
+          this.getEntity().remove((AuditEventEntityComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3438,10 +3556,10 @@ public class AuditEvent extends DomainResource {
           return this.code;
         }
         else if (name.equals("action")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.action");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.action");
         }
         else if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.severity");
         }
         else if (name.equals("occurredPeriod")) {
           this.occurred = new Period();
@@ -3452,7 +3570,7 @@ public class AuditEvent extends DomainResource {
           return this.occurred;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AuditEvent.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property AuditEvent.recorded");
         }
         else if (name.equals("outcome")) {
           this.outcome = new AuditEventOutcomeComponent();

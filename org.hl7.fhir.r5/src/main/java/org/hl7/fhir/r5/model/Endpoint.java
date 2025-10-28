@@ -180,7 +180,9 @@ public class Endpoint extends DomainResource {
         throw new FHIRException("Unknown EndpointStatus code '"+codeString+"'");
         }
     public String toCode(EndpointStatus code) {
-      if (code == EndpointStatus.ACTIVE)
+       if (code == EndpointStatus.NULL)
+           return null;
+       if (code == EndpointStatus.ACTIVE)
         return "active";
       if (code == EndpointStatus.SUSPENDED)
         return "suspended";
@@ -191,7 +193,7 @@ public class Endpoint extends DomainResource {
       if (code == EndpointStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(EndpointStatus code) {
       return code.getSystem();
       }
@@ -389,6 +391,17 @@ public class Endpoint extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("mimeType")) {
+          this.getMimeType().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -415,7 +428,7 @@ public class Endpoint extends DomainResource {
           return addType();
         }
         else if (name.equals("mimeType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.payload.mimeType");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.payload.mimeType");
         }
         else
           return super.addChild(name);
@@ -1273,6 +1286,38 @@ public class Endpoint extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new EndpointStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EndpointStatus>
+        } else if (name.equals("connectionType")) {
+          this.getConnectionType().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("environmentType")) {
+          this.getEnvironmentType().remove(value);
+        } else if (name.equals("managingOrganization")) {
+          this.managingOrganization = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("payload")) {
+          this.getPayload().remove((EndpointPayloadComponent) value);
+        } else if (name.equals("address")) {
+          this.address = null;
+        } else if (name.equals("header")) {
+          this.getHeader().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1319,16 +1364,16 @@ public class Endpoint extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.status");
         }
         else if (name.equals("connectionType")) {
           return addConnectionType();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.name");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.description");
         }
         else if (name.equals("environmentType")) {
           return addEnvironmentType();
@@ -1348,10 +1393,10 @@ public class Endpoint extends DomainResource {
           return addPayload();
         }
         else if (name.equals("address")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.address");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.address");
         }
         else if (name.equals("header")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Endpoint.header");
+          throw new FHIRException("Cannot call addChild on a singleton property Endpoint.header");
         }
         else
           return super.addChild(name);

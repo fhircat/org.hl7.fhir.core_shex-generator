@@ -178,7 +178,9 @@ public class Identifier extends DataType implements ICompositeType {
         throw new FHIRException("Unknown IdentifierUse code '"+codeString+"'");
         }
     public String toCode(IdentifierUse code) {
-      if (code == IdentifierUse.USUAL)
+       if (code == IdentifierUse.NULL)
+           return null;
+       if (code == IdentifierUse.USUAL)
         return "usual";
       if (code == IdentifierUse.OFFICIAL)
         return "official";
@@ -189,7 +191,7 @@ public class Identifier extends DataType implements ICompositeType {
       if (code == IdentifierUse.OLD)
         return "old";
       return "?";
-      }
+   }
     public String toSystem(IdentifierUse code) {
       return code.getSystem();
       }
@@ -552,6 +554,26 @@ public class Identifier extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("use")) {
+          value = new IdentifierUseEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.use = (Enumeration) value; // Enumeration<IdentifierUse>
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("system")) {
+          this.system = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("assigner")) {
+          this.assigner = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -583,17 +605,17 @@ public class Identifier extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Identifier.use");
+          throw new FHIRException("Cannot call addChild on a singleton property Identifier.use");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
           return this.type;
         }
         else if (name.equals("system")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Identifier.system");
+          throw new FHIRException("Cannot call addChild on a singleton property Identifier.system");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Identifier.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Identifier.value");
         }
         else if (name.equals("period")) {
           this.period = new Period();

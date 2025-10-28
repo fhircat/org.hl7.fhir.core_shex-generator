@@ -166,7 +166,9 @@ public class FamilyMemberHistory extends DomainResource {
         throw new FHIRException("Unknown FamilyHistoryStatus code '"+codeString+"'");
         }
     public String toCode(FamilyHistoryStatus code) {
-      if (code == FamilyHistoryStatus.PARTIAL)
+       if (code == FamilyHistoryStatus.NULL)
+           return null;
+       if (code == FamilyHistoryStatus.PARTIAL)
         return "partial";
       if (code == FamilyHistoryStatus.COMPLETED)
         return "completed";
@@ -175,7 +177,7 @@ public class FamilyMemberHistory extends DomainResource {
       if (code == FamilyHistoryStatus.HEALTHUNKNOWN)
         return "health-unknown";
       return "?";
-      }
+   }
     public String toSystem(FamilyHistoryStatus code) {
       return code.getSystem();
       }
@@ -312,6 +314,17 @@ public class FamilyMemberHistory extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -558,8 +571,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Age) this.onset;
         }
 
-        public boolean hasOnsetAge() { 
-          return this != null && this.onset instanceof Age;
+        public boolean hasOnsetAge() {
+            return this.onset instanceof Age;
         }
 
         /**
@@ -573,8 +586,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Range) this.onset;
         }
 
-        public boolean hasOnsetRange() { 
-          return this != null && this.onset instanceof Range;
+        public boolean hasOnsetRange() {
+            return this.onset instanceof Range;
         }
 
         /**
@@ -588,8 +601,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Period) this.onset;
         }
 
-        public boolean hasOnsetPeriod() { 
-          return this != null && this.onset instanceof Period;
+        public boolean hasOnsetPeriod() {
+            return this.onset instanceof Period;
         }
 
         /**
@@ -603,8 +616,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (StringType) this.onset;
         }
 
-        public boolean hasOnsetStringType() { 
-          return this != null && this.onset instanceof StringType;
+        public boolean hasOnsetStringType() {
+            return this.onset instanceof StringType;
         }
 
         public boolean hasOnset() { 
@@ -754,6 +767,23 @@ public class FamilyMemberHistory extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("outcome")) {
+          this.outcome = null;
+        } else if (name.equals("contributedToDeath")) {
+          this.contributedToDeath = null;
+        } else if (name.equals("onset[x]")) {
+          this.onset = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -792,7 +822,7 @@ public class FamilyMemberHistory extends DomainResource {
           return this.outcome;
         }
         else if (name.equals("contributedToDeath")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.condition.contributedToDeath");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.condition.contributedToDeath");
         }
         else if (name.equals("onsetAge")) {
           this.onset = new Age();
@@ -1036,8 +1066,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Age) this.performed;
         }
 
-        public boolean hasPerformedAge() { 
-          return this != null && this.performed instanceof Age;
+        public boolean hasPerformedAge() {
+            return this.performed instanceof Age;
         }
 
         /**
@@ -1051,8 +1081,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Range) this.performed;
         }
 
-        public boolean hasPerformedRange() { 
-          return this != null && this.performed instanceof Range;
+        public boolean hasPerformedRange() {
+            return this.performed instanceof Range;
         }
 
         /**
@@ -1066,8 +1096,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (Period) this.performed;
         }
 
-        public boolean hasPerformedPeriod() { 
-          return this != null && this.performed instanceof Period;
+        public boolean hasPerformedPeriod() {
+            return this.performed instanceof Period;
         }
 
         /**
@@ -1081,8 +1111,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (StringType) this.performed;
         }
 
-        public boolean hasPerformedStringType() { 
-          return this != null && this.performed instanceof StringType;
+        public boolean hasPerformedStringType() {
+            return this.performed instanceof StringType;
         }
 
         /**
@@ -1096,8 +1126,8 @@ public class FamilyMemberHistory extends DomainResource {
           return (DateTimeType) this.performed;
         }
 
-        public boolean hasPerformedDateTimeType() { 
-          return this != null && this.performed instanceof DateTimeType;
+        public boolean hasPerformedDateTimeType() {
+            return this.performed instanceof DateTimeType;
         }
 
         public boolean hasPerformed() { 
@@ -1248,6 +1278,23 @@ public class FamilyMemberHistory extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("outcome")) {
+          this.outcome = null;
+        } else if (name.equals("contributedToDeath")) {
+          this.contributedToDeath = null;
+        } else if (name.equals("performed[x]")) {
+          this.performed = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1286,7 +1333,7 @@ public class FamilyMemberHistory extends DomainResource {
           return this.outcome;
         }
         else if (name.equals("contributedToDeath")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.procedure.contributedToDeath");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.procedure.contributedToDeath");
         }
         else if (name.equals("performedAge")) {
           this.performed = new Age();
@@ -2009,8 +2056,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (Period) this.born;
     }
 
-    public boolean hasBornPeriod() { 
-      return this != null && this.born instanceof Period;
+    public boolean hasBornPeriod() {
+        return this.born instanceof Period;
     }
 
     /**
@@ -2024,8 +2071,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (DateType) this.born;
     }
 
-    public boolean hasBornDateType() { 
-      return this != null && this.born instanceof DateType;
+    public boolean hasBornDateType() {
+        return this.born instanceof DateType;
     }
 
     /**
@@ -2039,8 +2086,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (StringType) this.born;
     }
 
-    public boolean hasBornStringType() { 
-      return this != null && this.born instanceof StringType;
+    public boolean hasBornStringType() {
+        return this.born instanceof StringType;
     }
 
     public boolean hasBorn() { 
@@ -2075,8 +2122,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (Age) this.age;
     }
 
-    public boolean hasAgeAge() { 
-      return this != null && this.age instanceof Age;
+    public boolean hasAgeAge() {
+        return this.age instanceof Age;
     }
 
     /**
@@ -2090,8 +2137,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (Range) this.age;
     }
 
-    public boolean hasAgeRange() { 
-      return this != null && this.age instanceof Range;
+    public boolean hasAgeRange() {
+        return this.age instanceof Range;
     }
 
     /**
@@ -2105,8 +2152,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (StringType) this.age;
     }
 
-    public boolean hasAgeStringType() { 
-      return this != null && this.age instanceof StringType;
+    public boolean hasAgeStringType() {
+        return this.age instanceof StringType;
     }
 
     public boolean hasAge() { 
@@ -2186,8 +2233,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (BooleanType) this.deceased;
     }
 
-    public boolean hasDeceasedBooleanType() { 
-      return this != null && this.deceased instanceof BooleanType;
+    public boolean hasDeceasedBooleanType() {
+        return this.deceased instanceof BooleanType;
     }
 
     /**
@@ -2201,8 +2248,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (Age) this.deceased;
     }
 
-    public boolean hasDeceasedAge() { 
-      return this != null && this.deceased instanceof Age;
+    public boolean hasDeceasedAge() {
+        return this.deceased instanceof Age;
     }
 
     /**
@@ -2216,8 +2263,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (Range) this.deceased;
     }
 
-    public boolean hasDeceasedRange() { 
-      return this != null && this.deceased instanceof Range;
+    public boolean hasDeceasedRange() {
+        return this.deceased instanceof Range;
     }
 
     /**
@@ -2231,8 +2278,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (DateType) this.deceased;
     }
 
-    public boolean hasDeceasedDateType() { 
-      return this != null && this.deceased instanceof DateType;
+    public boolean hasDeceasedDateType() {
+        return this.deceased instanceof DateType;
     }
 
     /**
@@ -2246,8 +2293,8 @@ public class FamilyMemberHistory extends DomainResource {
       return (StringType) this.deceased;
     }
 
-    public boolean hasDeceasedStringType() { 
-      return this != null && this.deceased instanceof StringType;
+    public boolean hasDeceasedStringType() {
+        return this.deceased instanceof StringType;
     }
 
     public boolean hasDeceased() { 
@@ -2679,6 +2726,52 @@ public class FamilyMemberHistory extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("status")) {
+          value = new FamilyHistoryStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FamilyHistoryStatus>
+        } else if (name.equals("dataAbsentReason")) {
+          this.dataAbsentReason = null;
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((FamilyMemberHistoryParticipantComponent) value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("relationship")) {
+          this.relationship = null;
+        } else if (name.equals("sex")) {
+          this.sex = null;
+        } else if (name.equals("born[x]")) {
+          this.born = null;
+        } else if (name.equals("age[x]")) {
+          this.age = null;
+        } else if (name.equals("estimatedAge")) {
+          this.estimatedAge = null;
+        } else if (name.equals("deceased[x]")) {
+          this.deceased = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("condition")) {
+          this.getCondition().remove((FamilyMemberHistoryConditionComponent) value);
+        } else if (name.equals("procedure")) {
+          this.getProcedure().remove((FamilyMemberHistoryProcedureComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2742,13 +2835,13 @@ public class FamilyMemberHistory extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.instantiatesUri");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.status");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.status");
         }
         else if (name.equals("dataAbsentReason")) {
           this.dataAbsentReason = new CodeableConcept();
@@ -2759,13 +2852,13 @@ public class FamilyMemberHistory extends DomainResource {
           return this.patient;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.date");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.date");
         }
         else if (name.equals("participant")) {
           return addParticipant();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.name");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.name");
         }
         else if (name.equals("relationship")) {
           this.relationship = new CodeableConcept();
@@ -2800,7 +2893,7 @@ public class FamilyMemberHistory extends DomainResource {
           return this.age;
         }
         else if (name.equals("estimatedAge")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FamilyMemberHistory.estimatedAge");
+          throw new FHIRException("Cannot call addChild on a singleton property FamilyMemberHistory.estimatedAge");
         }
         else if (name.equals("deceasedBoolean")) {
           this.deceased = new BooleanType();

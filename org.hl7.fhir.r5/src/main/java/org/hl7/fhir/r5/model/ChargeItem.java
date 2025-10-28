@@ -208,7 +208,9 @@ public class ChargeItem extends DomainResource {
         throw new FHIRException("Unknown ChargeItemStatus code '"+codeString+"'");
         }
     public String toCode(ChargeItemStatus code) {
-      if (code == ChargeItemStatus.PLANNED)
+       if (code == ChargeItemStatus.NULL)
+           return null;
+       if (code == ChargeItemStatus.PLANNED)
         return "planned";
       if (code == ChargeItemStatus.BILLABLE)
         return "billable";
@@ -223,7 +225,7 @@ public class ChargeItem extends DomainResource {
       if (code == ChargeItemStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(ChargeItemStatus code) {
       return code.getSystem();
       }
@@ -360,6 +362,17 @@ public class ChargeItem extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1008,8 +1021,8 @@ public class ChargeItem extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -1023,8 +1036,8 @@ public class ChargeItem extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     /**
@@ -1038,8 +1051,8 @@ public class ChargeItem extends DomainResource {
       return (Timing) this.occurrence;
     }
 
-    public boolean hasOccurrenceTiming() { 
-      return this != null && this.occurrence instanceof Timing;
+    public boolean hasOccurrenceTiming() {
+        return this.occurrence instanceof Timing;
     }
 
     public boolean hasOccurrence() { 
@@ -1970,6 +1983,66 @@ public class ChargeItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("definitionUri")) {
+          this.getDefinitionUri().remove(value);
+        } else if (name.equals("definitionCanonical")) {
+          this.getDefinitionCanonical().remove(value);
+        } else if (name.equals("status")) {
+          value = new ChargeItemStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ChargeItemStatus>
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((ChargeItemPerformerComponent) value);
+        } else if (name.equals("performingOrganization")) {
+          this.performingOrganization = null;
+        } else if (name.equals("requestingOrganization")) {
+          this.requestingOrganization = null;
+        } else if (name.equals("costCenter")) {
+          this.costCenter = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("bodysite")) {
+          this.getBodysite().remove(value);
+        } else if (name.equals("unitPriceComponent")) {
+          this.unitPriceComponent = null;
+        } else if (name.equals("totalPriceComponent")) {
+          this.totalPriceComponent = null;
+        } else if (name.equals("overrideReason")) {
+          this.overrideReason = null;
+        } else if (name.equals("enterer")) {
+          this.enterer = null;
+        } else if (name.equals("enteredDate")) {
+          this.enteredDate = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("service")) {
+          this.getService().remove(value);
+        } else if (name.equals("product")) {
+          this.getProduct().remove(value);
+        } else if (name.equals("account")) {
+          this.getAccount().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2045,13 +2118,13 @@ public class ChargeItem extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("definitionUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ChargeItem.definitionUri");
+          throw new FHIRException("Cannot call addChild on a singleton property ChargeItem.definitionUri");
         }
         else if (name.equals("definitionCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ChargeItem.definitionCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property ChargeItem.definitionCanonical");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ChargeItem.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ChargeItem.status");
         }
         else if (name.equals("partOf")) {
           return addPartOf();
@@ -2119,7 +2192,7 @@ public class ChargeItem extends DomainResource {
           return this.enterer;
         }
         else if (name.equals("enteredDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ChargeItem.enteredDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ChargeItem.enteredDate");
         }
         else if (name.equals("reason")) {
           return addReason();

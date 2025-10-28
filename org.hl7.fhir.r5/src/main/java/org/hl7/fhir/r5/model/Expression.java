@@ -416,6 +416,23 @@ public class Expression extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -445,19 +462,19 @@ public class Expression extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Expression.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Expression.description");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Expression.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Expression.name");
         }
         else if (name.equals("language")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Expression.language");
+          throw new FHIRException("Cannot call addChild on a singleton property Expression.language");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Expression.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property Expression.expression");
         }
         else if (name.equals("reference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Expression.reference");
+          throw new FHIRException("Cannot call addChild on a singleton property Expression.reference");
         }
         else
           return super.addChild(name);

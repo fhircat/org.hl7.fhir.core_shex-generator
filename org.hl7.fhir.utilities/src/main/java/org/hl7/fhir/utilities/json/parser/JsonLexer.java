@@ -49,13 +49,16 @@ public class JsonLexer {
   private boolean allowUnquotedStrings;
   private List<JsonComment> comments = new ArrayList<>();
   private boolean isUnquoted;
+  private String sourceName;
 
-  public JsonLexer(String source, boolean allowComments, boolean allowUnquotedStrings) throws IOException {
+  private final Stack<String> parenthesis = new Stack<>();
+
+  public JsonLexer(String source, boolean allowComments, boolean allowUnquotedStrings, int line) throws IOException {
     this.source = source;
     this.allowComments = allowComments;
     this.allowUnquotedStrings = allowUnquotedStrings;
     cursor = -1;
-    location = new JsonLocationData(1, 1);  
+    location = new JsonLocationData(line+1, 1);  
     start();
   }
 
@@ -116,7 +119,7 @@ public class JsonLexer {
   }
 
   public IOException error(String msg) {
-    return new IOException("Error parsing JSON source: "+msg+" at Line "+Integer.toString(location.getLine())+" (path=["+path()+"])");
+    return new IOException("Error parsing JSON source: "+msg+" at Line "+Integer.toString(location.getLine())+" (path=["+path()+"])"+(sourceName == null ? "" : " from '"+sourceName+"'"));
   }
 
   private String path() {
@@ -161,6 +164,7 @@ public class JsonLexer {
     return lastLocationAWS;
   }
 
+
   public void next() throws IOException {
     lastLocationBWS = location.copy();
     char ch;
@@ -184,15 +188,25 @@ public class JsonLexer {
     } while (more() && Utilities.charInSet(ch, ' ', '\r', '\n', '\t'));
     lastLocationAWS = location.copy().prev();
     isUnquoted = false;
-    
     if (!more()) {
       type = TokenType.Eof;
+      if(!parenthesis.empty()) {
+        throw error("One or more parenthesis were not closed: " + parenthesis);
+      }
     } else {
       switch (ch) {
       case '{' : 
         type = TokenType.Open;
+        parenthesis.push("{");
         break;
-      case '}' : 
+      case '}' :
+        if(parenthesis.empty()) {
+          throw error("Unexpected close marker '}' at end of JSON");
+        }
+        String par = parenthesis.pop();
+        if(!par.equals("{")) {
+          throw error("Unexpected close marker '}'. Expected ']'");
+        }
         type = TokenType.Close;
         break;
       case '"' :
@@ -219,7 +233,7 @@ public class JsonLexer {
             b.append(ch);
         } while (more() && (ch != '"'));
         if (!more())
-          throw error("premature termination of json stream during a string");
+          throw error("Unclosed string");
         value = b.toString();
         break;
       case ':' : 
@@ -228,10 +242,18 @@ public class JsonLexer {
       case ',' : 
         type = TokenType.Comma;
         break;
-      case '[' : 
+      case '[' :
+        parenthesis.push("[");
         type = TokenType.OpenArray;
         break;
-      case ']' : 
+      case ']' :
+        if(parenthesis.empty()) {
+          throw error("Unexpected close marker ']' at end of JSON");
+        }
+        par = parenthesis.pop();
+        if(!par.equals("[")) {
+          throw error("Unexpected close marker ']'. Expected '}'");
+        }
         type = TokenType.CloseArray;
         break;
       default:
@@ -261,8 +283,10 @@ public class JsonLexer {
             this.type = TokenType.Null;
             isUnquoted = false;
           } else if (!allowUnquotedStrings) {
-            throw error("Unexpected token '"+value+"' in json stream");
+            throw error("Unexpected content '"+value+"' in json format");
           } 
+        } else {
+          throw error("Unexpected content '"+ch+"' in json format");
         }
       }
     }
@@ -298,6 +322,14 @@ public class JsonLexer {
   @Override
   public String toString() {
     return "JsonLexer [cursor=" + cursor + ", peek=" + peek + ", type=" + type + ", location=" + location.toString() + "]";
+  }
+
+  public String getSourceName() {
+    return sourceName;
+  }
+
+  public void setSourceName(String sourceName) {
+    this.sourceName = sourceName;
   }
 
 

@@ -180,7 +180,9 @@ public class ConceptMap extends MetadataResource {
         throw new FHIRException("Unknown ConceptMapAttributeType code '"+codeString+"'");
         }
     public String toCode(ConceptMapAttributeType code) {
-      if (code == ConceptMapAttributeType.CODE)
+       if (code == ConceptMapAttributeType.NULL)
+           return null;
+       if (code == ConceptMapAttributeType.CODE)
         return "code";
       if (code == ConceptMapAttributeType.CODING)
         return "Coding";
@@ -191,7 +193,7 @@ public class ConceptMap extends MetadataResource {
       if (code == ConceptMapAttributeType.QUANTITY)
         return "Quantity";
       return "?";
-      }
+   }
     public String toSystem(ConceptMapAttributeType code) {
       return code.getSystem();
       }
@@ -296,14 +298,16 @@ public class ConceptMap extends MetadataResource {
         throw new FHIRException("Unknown ConceptMapGroupUnmappedMode code '"+codeString+"'");
         }
     public String toCode(ConceptMapGroupUnmappedMode code) {
-      if (code == ConceptMapGroupUnmappedMode.USESOURCECODE)
+       if (code == ConceptMapGroupUnmappedMode.NULL)
+           return null;
+       if (code == ConceptMapGroupUnmappedMode.USESOURCECODE)
         return "use-source-code";
       if (code == ConceptMapGroupUnmappedMode.FIXED)
         return "fixed";
       if (code == ConceptMapGroupUnmappedMode.OTHERMAP)
         return "other-map";
       return "?";
-      }
+   }
     public String toSystem(ConceptMapGroupUnmappedMode code) {
       return code.getSystem();
       }
@@ -464,7 +468,9 @@ public class ConceptMap extends MetadataResource {
         throw new FHIRException("Unknown ConceptMapPropertyType code '"+codeString+"'");
         }
     public String toCode(ConceptMapPropertyType code) {
-      if (code == ConceptMapPropertyType.CODING)
+       if (code == ConceptMapPropertyType.NULL)
+           return null;
+       if (code == ConceptMapPropertyType.CODING)
         return "Coding";
       if (code == ConceptMapPropertyType.STRING)
         return "string";
@@ -479,7 +485,7 @@ public class ConceptMap extends MetadataResource {
       if (code == ConceptMapPropertyType.CODE)
         return "code";
       return "?";
-      }
+   }
     public String toSystem(ConceptMapPropertyType code) {
       return code.getSystem();
       }
@@ -855,6 +861,24 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("uri")) {
+          this.uri = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("type")) {
+          value = new ConceptMapPropertyTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ConceptMapPropertyType>
+        } else if (name.equals("system")) {
+          this.system = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -884,19 +908,19 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.property.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.property.code");
         }
         else if (name.equals("uri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.property.uri");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.property.uri");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.property.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.property.description");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.property.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.property.type");
         }
         else if (name.equals("system")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.property.system");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.property.system");
         }
         else
           return super.addChild(name);
@@ -1257,6 +1281,22 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("uri")) {
+          this.uri = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("type")) {
+          value = new ConceptMapAttributeTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ConceptMapAttributeType>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1284,16 +1324,16 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.additionalAttribute.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.additionalAttribute.code");
         }
         else if (name.equals("uri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.additionalAttribute.uri");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.additionalAttribute.uri");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.additionalAttribute.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.additionalAttribute.description");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.additionalAttribute.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.additionalAttribute.type");
         }
         else
           return super.addChild(name);
@@ -1636,6 +1676,21 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("source")) {
+          this.source = null;
+        } else if (name.equals("target")) {
+          this.target = null;
+        } else if (name.equals("element")) {
+          this.getElement().remove((SourceElementComponent) value);
+        } else if (name.equals("unmapped")) {
+          this.unmapped = (ConceptMapGroupUnmappedComponent) value; // ConceptMapGroupUnmappedComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1663,10 +1718,10 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("source")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.source");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.source");
         }
         else if (name.equals("target")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.target");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.target");
         }
         else if (name.equals("element")) {
           return addElement();
@@ -1728,10 +1783,24 @@ public class ConceptMap extends MetadataResource {
 
   }
 
+  public SourceElementComponent getOrAddElement(String code) {
+    for (SourceElementComponent e : getElement()) {
+      if (code.equals(e.getCode())) {
+        return e;  
+      }
+    }
+    return addElement().setCode(code);
+  }
+
   }
 
     @Block()
     public static class SourceElementComponent extends BackboneElement implements IBaseBackboneElement {
+        @Override
+      public String toString() {
+        return "SourceElementComponent [code=" + code + ", display=" + display + ", noMap=" + noMap + "]";
+      }
+
         /**
          * Identity (code or path) or the element/item being mapped.
          */
@@ -2096,6 +2165,23 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("noMap")) {
+          this.noMap = null;
+        } else if (name.equals("target")) {
+          this.getTarget().remove((TargetElementComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2125,16 +2211,16 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.code");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.display");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.display");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.valueSet");
         }
         else if (name.equals("noMap")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.noMap");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.noMap");
         }
         else if (name.equals("target")) {
           return addTarget();
@@ -2194,10 +2280,30 @@ public class ConceptMap extends MetadataResource {
 
   }
 
+  public boolean hasTargetCode(String code) {
+    for (TargetElementComponent tgt : getTarget()) {
+      if (code.equals(tgt.getCode())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public TargetElementComponent addTarget(String code, ConceptMapRelationship relationship) {
+    TargetElementComponent tgt = addTarget();
+    tgt.setCode(code);
+    tgt.setRelationship(relationship);
+    return tgt;
+  }
   }
 
     @Block()
     public static class TargetElementComponent extends BackboneElement implements IBaseBackboneElement {
+        @Override
+      public String toString() {
+        return "TargetElementComponent [code=" + code + ", relationship=" + relationship + "]";
+      }
+
         /**
          * Identity (code or path) or the element/item that the map refers to.
          */
@@ -2773,6 +2879,30 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("relationship")) {
+          value = new ConceptMapRelationshipEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.relationship = (Enumeration) value; // Enumeration<ConceptMapRelationship>
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("property")) {
+          this.getProperty().remove((MappingPropertyComponent) value);
+        } else if (name.equals("dependsOn")) {
+          this.getDependsOn().remove((OtherElementComponent) value);
+        } else if (name.equals("product")) {
+          this.getProduct().remove((OtherElementComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2808,19 +2938,19 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.code");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.display");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.display");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.valueSet");
         }
         else if (name.equals("relationship")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.relationship");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.relationship");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.comment");
         }
         else if (name.equals("property")) {
           return addProperty();
@@ -2997,8 +3127,8 @@ public class ConceptMap extends MetadataResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -3012,8 +3142,8 @@ public class ConceptMap extends MetadataResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -3027,8 +3157,8 @@ public class ConceptMap extends MetadataResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -3042,8 +3172,8 @@ public class ConceptMap extends MetadataResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -3057,8 +3187,8 @@ public class ConceptMap extends MetadataResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -3072,8 +3202,8 @@ public class ConceptMap extends MetadataResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -3087,8 +3217,8 @@ public class ConceptMap extends MetadataResource {
           return (CodeType) this.value;
         }
 
-        public boolean hasValueCodeType() { 
-          return this != null && this.value instanceof CodeType;
+        public boolean hasValueCodeType() {
+            return this.value instanceof CodeType;
         }
 
         public boolean hasValue() { 
@@ -3164,6 +3294,17 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3188,7 +3329,7 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.property.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.property.code");
         }
         else if (name.equals("valueCoding")) {
           this.value = new Coding();
@@ -3368,8 +3509,8 @@ public class ConceptMap extends MetadataResource {
           return (CodeType) this.value;
         }
 
-        public boolean hasValueCodeType() { 
-          return this != null && this.value instanceof CodeType;
+        public boolean hasValueCodeType() {
+            return this.value instanceof CodeType;
         }
 
         /**
@@ -3383,8 +3524,8 @@ public class ConceptMap extends MetadataResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+            return this.value instanceof Coding;
         }
 
         /**
@@ -3398,8 +3539,8 @@ public class ConceptMap extends MetadataResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -3413,8 +3554,8 @@ public class ConceptMap extends MetadataResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -3428,8 +3569,8 @@ public class ConceptMap extends MetadataResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         public boolean hasValue() { 
@@ -3560,6 +3701,19 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("attribute")) {
+          this.attribute = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3586,7 +3740,7 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("attribute")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.dependsOn.attribute");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.dependsOn.attribute");
         }
         else if (name.equals("valueCode")) {
           this.value = new CodeType();
@@ -3609,7 +3763,7 @@ public class ConceptMap extends MetadataResource {
           return this.value;
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.element.target.dependsOn.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.element.target.dependsOn.valueSet");
         }
         else
           return super.addChild(name);
@@ -4101,6 +4255,27 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("mode")) {
+          value = new ConceptMapGroupUnmappedModeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.mode = (Enumeration) value; // Enumeration<ConceptMapGroupUnmappedMode>
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("relationship")) {
+          value = new ConceptMapRelationshipEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.relationship = (Enumeration) value; // Enumeration<ConceptMapRelationship>
+        } else if (name.equals("otherMap")) {
+          this.otherMap = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4132,22 +4307,22 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("mode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.mode");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.mode");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.code");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.code");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.display");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.display");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.valueSet");
         }
         else if (name.equals("relationship")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.relationship");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.relationship");
         }
         else if (name.equals("otherMap")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.group.unmapped.otherMap");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.group.unmapped.otherMap");
         }
         else
           return super.addChild(name);
@@ -4612,8 +4787,8 @@ public class ConceptMap extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -4627,8 +4802,8 @@ public class ConceptMap extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -5850,8 +6025,8 @@ public class ConceptMap extends MetadataResource {
       return (UriType) this.sourceScope;
     }
 
-    public boolean hasSourceScopeUriType() { 
-      return this != null && this.sourceScope instanceof UriType;
+    public boolean hasSourceScopeUriType() {
+        return this.sourceScope instanceof UriType;
     }
 
     /**
@@ -5865,8 +6040,8 @@ public class ConceptMap extends MetadataResource {
       return (CanonicalType) this.sourceScope;
     }
 
-    public boolean hasSourceScopeCanonicalType() { 
-      return this != null && this.sourceScope instanceof CanonicalType;
+    public boolean hasSourceScopeCanonicalType() {
+        return this.sourceScope instanceof CanonicalType;
     }
 
     public boolean hasSourceScope() { 
@@ -5901,8 +6076,8 @@ public class ConceptMap extends MetadataResource {
       return (UriType) this.targetScope;
     }
 
-    public boolean hasTargetScopeUriType() { 
-      return this != null && this.targetScope instanceof UriType;
+    public boolean hasTargetScopeUriType() {
+        return this.targetScope instanceof UriType;
     }
 
     /**
@@ -5916,8 +6091,8 @@ public class ConceptMap extends MetadataResource {
       return (CanonicalType) this.targetScope;
     }
 
-    public boolean hasTargetScopeCanonicalType() { 
-      return this != null && this.targetScope instanceof CanonicalType;
+    public boolean hasTargetScopeCanonicalType() {
+        return this.targetScope instanceof CanonicalType;
     }
 
     public boolean hasTargetScope() { 
@@ -6281,6 +6456,76 @@ public class ConceptMap extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((PropertyComponent) value);
+        } else if (name.equals("additionalAttribute")) {
+          this.getAdditionalAttribute().remove((AdditionalAttributeComponent) value);
+        } else if (name.equals("sourceScope[x]")) {
+          this.sourceScope = null;
+        } else if (name.equals("targetScope[x]")) {
+          this.targetScope = null;
+        } else if (name.equals("group")) {
+          this.getGroup().remove((ConceptMapGroupComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6365,13 +6610,13 @@ public class ConceptMap extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.url");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.version");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -6382,28 +6627,28 @@ public class ConceptMap extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.name");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -6412,19 +6657,19 @@ public class ConceptMap extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ConceptMap.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ConceptMap.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -8367,7 +8612,42 @@ public class ConceptMap extends MetadataResource {
   private String tail(String uri) {
     return uri.contains("/") ? uri.substring(uri.lastIndexOf("/")+1) : uri;
   }
+
+  public ConceptMapGroupComponent getGroup(String su, String tu) {
+    for (ConceptMapGroupComponent g : getGroup()) {
+      if (su.equals(g.getSource()) && tu.equals(g.getTarget())) {
+        return g;
+      }      
+    }
+    return null;
+  }
+
+  public ConceptMapGroupComponent forceGroup(String su, String tu) {
+    for (ConceptMapGroupComponent g : getGroup()) {
+      if (su.equals(g.getSource()) && tu.equals(g.getTarget())) {
+        return g;
+      }      
+    }
+    ConceptMapGroupComponent g = addGroup();
+    g.setSource(su);
+    g.setTarget(tu);
+    return g;
+    
+  }
+
+  public List<ConceptMapGroupComponent> getGroups(String su) {
+    List<ConceptMapGroupComponent> res = new ArrayList<>();
+
+    for (ConceptMapGroupComponent g : getGroup()) {
+      if (su.equals(g.getSource())) {
+        res.add(g);
+      }      
+    }
+    return res;
+  }
+  
 // end addition
+
 
 }
 

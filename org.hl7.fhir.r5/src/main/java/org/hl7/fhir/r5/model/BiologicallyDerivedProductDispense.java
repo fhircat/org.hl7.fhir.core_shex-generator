@@ -222,7 +222,9 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
         throw new FHIRException("Unknown BiologicallyDerivedProductDispenseCodes code '"+codeString+"'");
         }
     public String toCode(BiologicallyDerivedProductDispenseCodes code) {
-      if (code == BiologicallyDerivedProductDispenseCodes.PREPARATION)
+       if (code == BiologicallyDerivedProductDispenseCodes.NULL)
+           return null;
+       if (code == BiologicallyDerivedProductDispenseCodes.PREPARATION)
         return "preparation";
       if (code == BiologicallyDerivedProductDispenseCodes.INPROGRESS)
         return "in-progress";
@@ -239,7 +241,7 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
       if (code == BiologicallyDerivedProductDispenseCodes.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(BiologicallyDerivedProductDispenseCodes code) {
       return code.getSystem();
       }
@@ -376,6 +378,17 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1379,6 +1392,46 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new BiologicallyDerivedProductDispenseCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<BiologicallyDerivedProductDispenseCodes>
+        } else if (name.equals("originRelationshipType")) {
+          this.originRelationshipType = null;
+        } else if (name.equals("product")) {
+          this.product = null;
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("matchStatus")) {
+          this.matchStatus = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((BiologicallyDerivedProductDispensePerformerComponent) value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("preparedDate")) {
+          this.preparedDate = null;
+        } else if (name.equals("whenHandedOver")) {
+          this.whenHandedOver = null;
+        } else if (name.equals("destination")) {
+          this.destination = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("usageInstruction")) {
+          this.usageInstruction = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1439,7 +1492,7 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProductDispense.status");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProductDispense.status");
         }
         else if (name.equals("originRelationshipType")) {
           this.originRelationshipType = new CodeableConcept();
@@ -1469,10 +1522,10 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
           return this.quantity;
         }
         else if (name.equals("preparedDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProductDispense.preparedDate");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProductDispense.preparedDate");
         }
         else if (name.equals("whenHandedOver")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProductDispense.whenHandedOver");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProductDispense.whenHandedOver");
         }
         else if (name.equals("destination")) {
           this.destination = new Reference();
@@ -1482,7 +1535,7 @@ public class BiologicallyDerivedProductDispense extends DomainResource {
           return addNote();
         }
         else if (name.equals("usageInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type BiologicallyDerivedProductDispense.usageInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property BiologicallyDerivedProductDispense.usageInstruction");
         }
         else
           return super.addChild(name);

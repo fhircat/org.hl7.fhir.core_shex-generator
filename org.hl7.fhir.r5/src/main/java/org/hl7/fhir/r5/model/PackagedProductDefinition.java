@@ -179,6 +179,17 @@ public class PackagedProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("jurisdiction")) {
+          this.jurisdiction = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1008,6 +1019,35 @@ public class PackagedProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("componentPart")) {
+          this.componentPart = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("material")) {
+          this.getMaterial().remove(value);
+        } else if (name.equals("alternateMaterial")) {
+          this.getAlternateMaterial().remove(value);
+        } else if (name.equals("shelfLifeStorage")) {
+          this.getShelfLifeStorage().remove(value);
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove(value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((PackagedProductDefinitionPackagingPropertyComponent) value);
+        } else if (name.equals("containedItem")) {
+          this.getContainedItem().remove((PackagedProductDefinitionPackagingContainedItemComponent) value);
+        } else if (name.equals("packaging")) {
+          this.getPackaging().remove((PackagedProductDefinitionPackagingComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1056,10 +1096,10 @@ public class PackagedProductDefinition extends DomainResource {
           return this.type;
         }
         else if (name.equals("componentPart")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.packaging.componentPart");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.packaging.componentPart");
         }
         else if (name.equals("quantity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.packaging.quantity");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.packaging.quantity");
         }
         else if (name.equals("material")) {
           return addMaterial();
@@ -1253,8 +1293,8 @@ public class PackagedProductDefinition extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1268,8 +1308,8 @@ public class PackagedProductDefinition extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1283,8 +1323,8 @@ public class PackagedProductDefinition extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -1298,8 +1338,8 @@ public class PackagedProductDefinition extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1313,8 +1353,8 @@ public class PackagedProductDefinition extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -1386,6 +1426,17 @@ public class PackagedProductDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1612,6 +1663,17 @@ public class PackagedProductDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item")) {
+          this.item = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2650,6 +2712,43 @@ public class PackagedProductDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("packageFor")) {
+          this.getPackageFor().remove(value);
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("statusDate")) {
+          this.statusDate = null;
+        } else if (name.equals("containedItemQuantity")) {
+          this.getContainedItemQuantity().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("legalStatusOfSupply")) {
+          this.getLegalStatusOfSupply().remove((PackagedProductDefinitionLegalStatusOfSupplyComponent) value);
+        } else if (name.equals("marketingStatus")) {
+          this.getMarketingStatus().remove(value);
+        } else if (name.equals("copackagedIndicator")) {
+          this.copackagedIndicator = null;
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove(value);
+        } else if (name.equals("attachedDocument")) {
+          this.getAttachedDocument().remove(value);
+        } else if (name.equals("packaging")) {
+          this.packaging = (PackagedProductDefinitionPackagingComponent) value; // PackagedProductDefinitionPackagingComponent
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((PackagedProductDefinitionPackagingPropertyComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2702,7 +2801,7 @@ public class PackagedProductDefinition extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.name");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -2716,13 +2815,13 @@ public class PackagedProductDefinition extends DomainResource {
           return this.status;
         }
         else if (name.equals("statusDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.statusDate");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.statusDate");
         }
         else if (name.equals("containedItemQuantity")) {
           return addContainedItemQuantity();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.description");
         }
         else if (name.equals("legalStatusOfSupply")) {
           return addLegalStatusOfSupply();
@@ -2731,7 +2830,7 @@ public class PackagedProductDefinition extends DomainResource {
           return addMarketingStatus();
         }
         else if (name.equals("copackagedIndicator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PackagedProductDefinition.copackagedIndicator");
+          throw new FHIRException("Cannot call addChild on a singleton property PackagedProductDefinition.copackagedIndicator");
         }
         else if (name.equals("manufacturer")) {
           return addManufacturer();

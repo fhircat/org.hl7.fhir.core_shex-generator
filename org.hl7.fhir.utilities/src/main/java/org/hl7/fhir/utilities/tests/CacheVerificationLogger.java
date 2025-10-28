@@ -1,10 +1,11 @@
 package org.hl7.fhir.utilities.tests;
 
-import lombok.Getter;
-import org.hl7.fhir.utilities.ToolingClientLogger;
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import org.hl7.fhir.utilities.ToolingClientLogger;
+
+import lombok.Getter;
 
 public class CacheVerificationLogger implements ToolingClientLogger {
 
@@ -22,15 +23,17 @@ public class CacheVerificationLogger implements ToolingClientLogger {
           System.err.println("Header: " + header);
         }
       }
-      System.err.println("Body");
-      System.err.println("----");
-      System.err.println(new String(body, StandardCharsets.UTF_8));
+      if (body != null) {
+        System.err.println("Body");
+        System.err.println("----");
+        System.err.println(new String(body, StandardCharsets.UTF_8));
+      }
     }
     requests++;
   }
 
   @Override
-  public void logResponse(String outcome, List<String> headers, byte[] body) {
+  public void logResponse(String outcome, List<String> headers, byte[] body, long start) {
 
   }
 

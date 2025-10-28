@@ -152,14 +152,16 @@ public class SearchParameter extends CanonicalResource {
         throw new FHIRException("Unknown SearchProcessingModeType code '"+codeString+"'");
         }
     public String toCode(SearchProcessingModeType code) {
-      if (code == SearchProcessingModeType.NORMAL)
+       if (code == SearchProcessingModeType.NULL)
+           return null;
+       if (code == SearchProcessingModeType.NORMAL)
         return "normal";
       if (code == SearchProcessingModeType.PHONETIC)
         return "phonetic";
       if (code == SearchProcessingModeType.OTHER)
         return "other";
       return "?";
-      }
+   }
     public String toSystem(SearchProcessingModeType code) {
       return code.getSystem();
       }
@@ -340,6 +342,17 @@ public class SearchParameter extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("definition")) {
+          this.definition = null;
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -363,10 +376,10 @@ public class SearchParameter extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.component.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.component.definition");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.component.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.component.expression");
         }
         else
           return super.addChild(name);
@@ -831,8 +844,8 @@ public class SearchParameter extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -846,8 +859,8 @@ public class SearchParameter extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -2531,6 +2544,82 @@ public class SearchParameter extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("derivedFrom")) {
+          this.derivedFrom = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("base")) {
+          value = new VersionIndependentResourceTypesAllEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getBase().remove((Enumeration) value);
+        } else if (name.equals("type")) {
+          value = new SearchParamTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<SearchParamType>
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else if (name.equals("processingMode")) {
+          value = new SearchProcessingModeTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.processingMode = (Enumeration) value; // Enumeration<SearchProcessingModeType>
+        } else if (name.equals("constraint")) {
+          this.constraint = null;
+        } else if (name.equals("target")) {
+          value = new VersionIndependentResourceTypesAllEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getTarget().remove((Enumeration) value);
+        } else if (name.equals("multipleOr")) {
+          this.multipleOr = null;
+        } else if (name.equals("multipleAnd")) {
+          this.multipleAnd = null;
+        } else if (name.equals("comparator")) {
+          value = new SearchComparatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getComparator().remove((Enumeration) value);
+        } else if (name.equals("modifier")) {
+          value = new SearchModifierCodeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getModifier().remove((Enumeration) value);
+        } else if (name.equals("chain")) {
+          this.getChain().remove(value);
+        } else if (name.equals("component")) {
+          this.getComponent().remove((SearchParameterComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2613,13 +2702,13 @@ public class SearchParameter extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.url");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.version");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -2630,31 +2719,31 @@ public class SearchParameter extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.name");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.title");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.title");
         }
         else if (name.equals("derivedFrom")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.derivedFrom");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.derivedFrom");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.status");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.date");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -2663,49 +2752,49 @@ public class SearchParameter extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.copyrightLabel");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.code");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.code");
         }
         else if (name.equals("base")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.base");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.base");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.type");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.type");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.expression");
         }
         else if (name.equals("processingMode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.processingMode");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.processingMode");
         }
         else if (name.equals("constraint")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.constraint");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.constraint");
         }
         else if (name.equals("target")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.target");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.target");
         }
         else if (name.equals("multipleOr")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.multipleOr");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.multipleOr");
         }
         else if (name.equals("multipleAnd")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.multipleAnd");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.multipleAnd");
         }
         else if (name.equals("comparator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.comparator");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.comparator");
         }
         else if (name.equals("modifier")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.modifier");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.modifier");
         }
         else if (name.equals("chain")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SearchParameter.chain");
+          throw new FHIRException("Cannot call addChild on a singleton property SearchParameter.chain");
         }
         else if (name.equals("component")) {
           return addComponent();

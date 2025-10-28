@@ -180,7 +180,9 @@ public class ClinicalUseDefinition extends DomainResource {
         throw new FHIRException("Unknown ClinicalUseDefinitionType code '"+codeString+"'");
         }
     public String toCode(ClinicalUseDefinitionType code) {
-      if (code == ClinicalUseDefinitionType.INDICATION)
+       if (code == ClinicalUseDefinitionType.NULL)
+           return null;
+       if (code == ClinicalUseDefinitionType.INDICATION)
         return "indication";
       if (code == ClinicalUseDefinitionType.CONTRAINDICATION)
         return "contraindication";
@@ -191,7 +193,7 @@ public class ClinicalUseDefinition extends DomainResource {
       if (code == ClinicalUseDefinitionType.WARNING)
         return "warning";
       return "?";
-      }
+   }
     public String toSystem(ClinicalUseDefinitionType code) {
       return code.getSystem();
       }
@@ -567,6 +569,25 @@ public class ClinicalUseDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("diseaseSymptomProcedure")) {
+          this.diseaseSymptomProcedure = null;
+        } else if (name.equals("diseaseStatus")) {
+          this.diseaseStatus = null;
+        } else if (name.equals("comorbidity")) {
+          this.getComorbidity().remove(value);
+        } else if (name.equals("indication")) {
+          this.getIndication().remove(value);
+        } else if (name.equals("applicability")) {
+          this.applicability = null;
+        } else if (name.equals("otherTherapy")) {
+          this.getOtherTherapy().remove((ClinicalUseDefinitionContraindicationOtherTherapyComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -818,6 +839,17 @@ public class ClinicalUseDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("relationshipType")) {
+          this.relationshipType = null;
+        } else if (name.equals("treatment")) {
+          this.treatment = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1113,8 +1145,8 @@ public class ClinicalUseDefinition extends DomainResource {
           return (Range) this.duration;
         }
 
-        public boolean hasDurationRange() { 
-          return this != null && this.duration instanceof Range;
+        public boolean hasDurationRange() {
+            return this.duration instanceof Range;
         }
 
         /**
@@ -1128,8 +1160,8 @@ public class ClinicalUseDefinition extends DomainResource {
           return (StringType) this.duration;
         }
 
-        public boolean hasDurationStringType() { 
-          return this != null && this.duration instanceof StringType;
+        public boolean hasDurationStringType() {
+            return this.duration instanceof StringType;
         }
 
         public boolean hasDuration() { 
@@ -1376,6 +1408,29 @@ public class ClinicalUseDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("diseaseSymptomProcedure")) {
+          this.diseaseSymptomProcedure = null;
+        } else if (name.equals("diseaseStatus")) {
+          this.diseaseStatus = null;
+        } else if (name.equals("comorbidity")) {
+          this.getComorbidity().remove(value);
+        } else if (name.equals("intendedEffect")) {
+          this.intendedEffect = null;
+        } else if (name.equals("duration[x]")) {
+          this.duration = null;
+        } else if (name.equals("undesirableEffect")) {
+          this.getUndesirableEffect().remove(value);
+        } else if (name.equals("applicability")) {
+          this.applicability = null;
+        } else if (name.equals("otherTherapy")) {
+          this.getOtherTherapy().remove((ClinicalUseDefinitionContraindicationOtherTherapyComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1820,6 +1875,23 @@ public class ClinicalUseDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("interactant")) {
+          this.getInteractant().remove((ClinicalUseDefinitionInteractionInteractantComponent) value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("effect")) {
+          this.effect = null;
+        } else if (name.equals("incidence")) {
+          this.incidence = null;
+        } else if (name.equals("management")) {
+          this.getManagement().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1971,8 +2043,8 @@ public class ClinicalUseDefinition extends DomainResource {
           return (Reference) this.item;
         }
 
-        public boolean hasItemReference() { 
-          return this != null && this.item instanceof Reference;
+        public boolean hasItemReference() {
+            return this.item instanceof Reference;
         }
 
         /**
@@ -1986,8 +2058,8 @@ public class ClinicalUseDefinition extends DomainResource {
           return (CodeableConcept) this.item;
         }
 
-        public boolean hasItemCodeableConcept() { 
-          return this != null && this.item instanceof CodeableConcept;
+        public boolean hasItemCodeableConcept() {
+            return this.item instanceof CodeableConcept;
         }
 
         public boolean hasItem() { 
@@ -2048,6 +2120,15 @@ public class ClinicalUseDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item[x]")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2291,6 +2372,19 @@ public class ClinicalUseDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("symptomConditionEffect")) {
+          this.symptomConditionEffect = null;
+        } else if (name.equals("classification")) {
+          this.classification = null;
+        } else if (name.equals("frequencyOfOccurrence")) {
+          this.frequencyOfOccurrence = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2527,6 +2621,17 @@ public class ClinicalUseDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2550,7 +2655,7 @@ public class ClinicalUseDefinition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalUseDefinition.warning.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalUseDefinition.warning.description");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -3302,6 +3407,38 @@ public class ClinicalUseDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          value = new ClinicalUseDefinitionTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ClinicalUseDefinitionType>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("subject")) {
+          this.getSubject().remove(value);
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("contraindication")) {
+          this.contraindication = (ClinicalUseDefinitionContraindicationComponent) value; // ClinicalUseDefinitionContraindicationComponent
+        } else if (name.equals("indication")) {
+          this.indication = (ClinicalUseDefinitionIndicationComponent) value; // ClinicalUseDefinitionIndicationComponent
+        } else if (name.equals("interaction")) {
+          this.interaction = (ClinicalUseDefinitionInteractionComponent) value; // ClinicalUseDefinitionInteractionComponent
+        } else if (name.equals("population")) {
+          this.getPopulation().remove(value);
+        } else if (name.equals("library")) {
+          this.getLibrary().remove(value);
+        } else if (name.equals("undesirableEffect")) {
+          this.undesirableEffect = (ClinicalUseDefinitionUndesirableEffectComponent) value; // ClinicalUseDefinitionUndesirableEffectComponent
+        } else if (name.equals("warning")) {
+          this.warning = (ClinicalUseDefinitionWarningComponent) value; // ClinicalUseDefinitionWarningComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3348,7 +3485,7 @@ public class ClinicalUseDefinition extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalUseDefinition.type");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalUseDefinition.type");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -3376,7 +3513,7 @@ public class ClinicalUseDefinition extends DomainResource {
           return addPopulation();
         }
         else if (name.equals("library")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ClinicalUseDefinition.library");
+          throw new FHIRException("Cannot call addChild on a singleton property ClinicalUseDefinition.library");
         }
         else if (name.equals("undesirableEffect")) {
           this.undesirableEffect = new ClinicalUseDefinitionUndesirableEffectComponent();

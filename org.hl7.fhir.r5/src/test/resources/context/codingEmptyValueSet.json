@@ -5,11 +5,12 @@
   "valueSet": {
     "resourceType": "ValueSet"
   },
-  "langs": "[]",
+  "langs": "",
   "useServer": "true",
   "useClient": "true",
   "guessSystem": "true",
-  "valueSetMode": "ALL_CHECKS",
+  "activeOnly": "false",
+  "membershipOnly": "false",
   "displayWarningMode":"false",
   "versionFlexible": "false",
   "profile":{

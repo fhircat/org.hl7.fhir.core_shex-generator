@@ -138,12 +138,14 @@ public class Specimen extends DomainResource {
         throw new FHIRException("Unknown SpecimenCombined code '"+codeString+"'");
         }
     public String toCode(SpecimenCombined code) {
-      if (code == SpecimenCombined.GROUPED)
+       if (code == SpecimenCombined.NULL)
+           return null;
+       if (code == SpecimenCombined.GROUPED)
         return "grouped";
       if (code == SpecimenCombined.POOLED)
         return "pooled";
       return "?";
-      }
+   }
     public String toSystem(SpecimenCombined code) {
       return code.getSystem();
       }
@@ -262,7 +264,9 @@ public class Specimen extends DomainResource {
         throw new FHIRException("Unknown SpecimenStatus code '"+codeString+"'");
         }
     public String toCode(SpecimenStatus code) {
-      if (code == SpecimenStatus.AVAILABLE)
+       if (code == SpecimenStatus.NULL)
+           return null;
+       if (code == SpecimenStatus.AVAILABLE)
         return "available";
       if (code == SpecimenStatus.UNAVAILABLE)
         return "unavailable";
@@ -271,7 +275,7 @@ public class Specimen extends DomainResource {
       if (code == SpecimenStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(SpecimenStatus code) {
       return code.getSystem();
       }
@@ -432,6 +436,17 @@ public class Specimen extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -459,7 +474,7 @@ public class Specimen extends DomainResource {
           return this.type;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Specimen.feature.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Specimen.feature.description");
         }
         else
           return super.addChild(name);
@@ -627,8 +642,8 @@ public class Specimen extends DomainResource {
           return (DateTimeType) this.collected;
         }
 
-        public boolean hasCollectedDateTimeType() { 
-          return this != null && this.collected instanceof DateTimeType;
+        public boolean hasCollectedDateTimeType() {
+            return this.collected instanceof DateTimeType;
         }
 
         /**
@@ -642,8 +657,8 @@ public class Specimen extends DomainResource {
           return (Period) this.collected;
         }
 
-        public boolean hasCollectedPeriod() { 
-          return this != null && this.collected instanceof Period;
+        public boolean hasCollectedPeriod() {
+            return this.collected instanceof Period;
         }
 
         public boolean hasCollected() { 
@@ -822,8 +837,8 @@ public class Specimen extends DomainResource {
           return (CodeableConcept) this.fastingStatus;
         }
 
-        public boolean hasFastingStatusCodeableConcept() { 
-          return this != null && this.fastingStatus instanceof CodeableConcept;
+        public boolean hasFastingStatusCodeableConcept() {
+            return this.fastingStatus instanceof CodeableConcept;
         }
 
         /**
@@ -837,8 +852,8 @@ public class Specimen extends DomainResource {
           return (Duration) this.fastingStatus;
         }
 
-        public boolean hasFastingStatusDuration() { 
-          return this != null && this.fastingStatus instanceof Duration;
+        public boolean hasFastingStatusDuration() {
+            return this.fastingStatus instanceof Duration;
         }
 
         public boolean hasFastingStatus() { 
@@ -966,6 +981,31 @@ public class Specimen extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("collector")) {
+          this.collector = null;
+        } else if (name.equals("collected[x]")) {
+          this.collected = null;
+        } else if (name.equals("duration")) {
+          this.duration = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("procedure")) {
+          this.procedure = null;
+        } else if (name.equals("bodySite")) {
+          this.bodySite = null;
+        } else if (name.equals("fastingStatus[x]")) {
+          this.fastingStatus = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1292,8 +1332,8 @@ public class Specimen extends DomainResource {
           return (DateTimeType) this.time;
         }
 
-        public boolean hasTimeDateTimeType() { 
-          return this != null && this.time instanceof DateTimeType;
+        public boolean hasTimeDateTimeType() {
+            return this.time instanceof DateTimeType;
         }
 
         /**
@@ -1307,8 +1347,8 @@ public class Specimen extends DomainResource {
           return (Period) this.time;
         }
 
-        public boolean hasTimePeriod() { 
-          return this != null && this.time instanceof Period;
+        public boolean hasTimePeriod() {
+            return this.time instanceof Period;
         }
 
         public boolean hasTime() { 
@@ -1395,6 +1435,21 @@ public class Specimen extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("additive")) {
+          this.getAdditive().remove(value);
+        } else if (name.equals("time[x]")) {
+          this.time = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1423,7 +1478,7 @@ public class Specimen extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Specimen.processing.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Specimen.processing.description");
         }
         else if (name.equals("method")) {
           this.method = new CodeableConcept();
@@ -1664,6 +1719,19 @@ public class Specimen extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("device")) {
+          this.device = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("specimenQuantity")) {
+          this.specimenQuantity = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2765,6 +2833,47 @@ public class Specimen extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("accessionIdentifier")) {
+          this.accessionIdentifier = null;
+        } else if (name.equals("status")) {
+          value = new SpecimenStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<SpecimenStatus>
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("receivedTime")) {
+          this.receivedTime = null;
+        } else if (name.equals("parent")) {
+          this.getParent().remove(value);
+        } else if (name.equals("request")) {
+          this.getRequest().remove(value);
+        } else if (name.equals("combined")) {
+          value = new SpecimenCombinedEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.combined = (Enumeration) value; // Enumeration<SpecimenCombined>
+        } else if (name.equals("role")) {
+          this.getRole().remove(value);
+        } else if (name.equals("feature")) {
+          this.getFeature().remove((SpecimenFeatureComponent) value);
+        } else if (name.equals("collection")) {
+          this.collection = (SpecimenCollectionComponent) value; // SpecimenCollectionComponent
+        } else if (name.equals("processing")) {
+          this.getProcessing().remove((SpecimenProcessingComponent) value);
+        } else if (name.equals("container")) {
+          this.getContainer().remove((SpecimenContainerComponent) value);
+        } else if (name.equals("condition")) {
+          this.getCondition().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2823,7 +2932,7 @@ public class Specimen extends DomainResource {
           return this.accessionIdentifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Specimen.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Specimen.status");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -2834,7 +2943,7 @@ public class Specimen extends DomainResource {
           return this.subject;
         }
         else if (name.equals("receivedTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Specimen.receivedTime");
+          throw new FHIRException("Cannot call addChild on a singleton property Specimen.receivedTime");
         }
         else if (name.equals("parent")) {
           return addParent();
@@ -2843,7 +2952,7 @@ public class Specimen extends DomainResource {
           return addRequest();
         }
         else if (name.equals("combined")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Specimen.combined");
+          throw new FHIRException("Cannot call addChild on a singleton property Specimen.combined");
         }
         else if (name.equals("role")) {
           return addRole();

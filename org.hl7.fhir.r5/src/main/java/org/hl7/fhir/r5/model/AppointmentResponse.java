@@ -180,7 +180,9 @@ public class AppointmentResponse extends DomainResource {
         throw new FHIRException("Unknown AppointmentResponseStatus code '"+codeString+"'");
         }
     public String toCode(AppointmentResponseStatus code) {
-      if (code == AppointmentResponseStatus.ACCEPTED)
+       if (code == AppointmentResponseStatus.NULL)
+           return null;
+       if (code == AppointmentResponseStatus.ACCEPTED)
         return "accepted";
       if (code == AppointmentResponseStatus.DECLINED)
         return "declined";
@@ -191,7 +193,7 @@ public class AppointmentResponse extends DomainResource {
       if (code == AppointmentResponseStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(AppointmentResponseStatus code) {
       return code.getSystem();
       }
@@ -964,6 +966,38 @@ public class AppointmentResponse extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("appointment")) {
+          this.appointment = null;
+        } else if (name.equals("proposedNewTime")) {
+          this.proposedNewTime = null;
+        } else if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("end")) {
+          this.end = null;
+        } else if (name.equals("participantType")) {
+          this.getParticipantType().remove(value);
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else if (name.equals("participantStatus")) {
+          value = new AppointmentResponseStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.participantStatus = (Enumeration) value; // Enumeration<AppointmentResponseStatus>
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("recurring")) {
+          this.recurring = null;
+        } else if (name.equals("occurrenceDate")) {
+          this.occurrenceDate = null;
+        } else if (name.equals("recurrenceId")) {
+          this.recurrenceId = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1014,13 +1048,13 @@ public class AppointmentResponse extends DomainResource {
           return this.appointment;
         }
         else if (name.equals("proposedNewTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.proposedNewTime");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.proposedNewTime");
         }
         else if (name.equals("start")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.start");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.start");
         }
         else if (name.equals("end")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.end");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.end");
         }
         else if (name.equals("participantType")) {
           return addParticipantType();
@@ -1030,19 +1064,19 @@ public class AppointmentResponse extends DomainResource {
           return this.actor;
         }
         else if (name.equals("participantStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.participantStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.participantStatus");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.comment");
         }
         else if (name.equals("recurring")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.recurring");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.recurring");
         }
         else if (name.equals("occurrenceDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.occurrenceDate");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.occurrenceDate");
         }
         else if (name.equals("recurrenceId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type AppointmentResponse.recurrenceId");
+          throw new FHIRException("Cannot call addChild on a singleton property AppointmentResponse.recurrenceId");
         }
         else
           return super.addChild(name);

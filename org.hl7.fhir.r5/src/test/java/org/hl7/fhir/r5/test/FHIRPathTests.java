@@ -11,16 +11,24 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.fhir.ucum.UcumException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.PathEngineException;
+import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
-import org.hl7.fhir.r5.elementmodel.ParserBase.NamedElement;
+import org.hl7.fhir.r5.fhirpath.BaseHostServices;
+import org.hl7.fhir.r5.fhirpath.ExpressionNode;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r5.fhirpath.TypeDetails;
+import org.hl7.fhir.r5.elementmodel.ValidatedFragment;
 import org.hl7.fhir.r5.formats.JsonParser;
 import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.*;
+import org.hl7.fhir.r5.terminologies.TerminologyFunctions;
 import org.hl7.fhir.r5.test.utils.TestingUtilities;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
-import org.hl7.fhir.r5.utils.FHIRPathEngine.IEvaluationContext;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.fhirpath.FHIRPathConstantEvaluationMode;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
+import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,22 +44,29 @@ import org.xml.sax.SAXException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class FHIRPathTests {
 
   public enum TestResultType {OK, SYNTAX, SEMANTICS, EXECUTION}
 
-  public class FHIRPathTestEvaluationServices implements IEvaluationContext {
+  public class FHIRPathTestEvaluationServices extends BaseHostServices {
 
-    @Override
-    public List<Base> resolveConstant(Object appContext, String name, boolean beforeContext) throws PathEngineException {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.resolveConstant), when item is element");
+    public FHIRPathTestEvaluationServices(IWorkerContext context) throws IOException {
+      super(context);
+
+      registerFunction(new TerminologyFunctions.ExpandFunction());
+      registerFunction(new TerminologyFunctions.ValidateVSFunction());
+      registerFunction(new TerminologyFunctions.TranslateFunction());
     }
 
     @Override
-    public TypeDetails resolveConstantType(Object appContext, String name) throws PathEngineException {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.resolveConstantType), when item is element");
+    public List<Base> resolveConstant(FHIRPathEngine engine, Object appContext, String name, FHIRPathConstantEvaluationMode mode) throws PathEngineException {
+      return super.resolveConstant(engine, appContext, name, mode);
+    }
+
+    @Override
+    public TypeDetails resolveConstantType(FHIRPathEngine engine, Object appContext, String name, FHIRPathConstantEvaluationMode mode) throws PathEngineException {
+      return super.resolveConstantType(engine, appContext, name, mode);
     }
 
     @Override
@@ -60,27 +75,12 @@ public class FHIRPathTests {
     }
 
     @Override
-    public FunctionDetails resolveFunction(String functionName) {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.resolveFunction), when item is element (for " + functionName + ")");
+    public Base resolveReference(FHIRPathEngine engine, Object appContext, String url, Base refContext) throws FHIRException {
+      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.resolveReference)");
     }
 
     @Override
-    public TypeDetails checkFunction(Object appContext, String functionName, List<TypeDetails> parameters) throws PathEngineException {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.checkFunction), when item is element");
-    }
-
-    @Override
-    public List<Base> executeFunction(Object appContext, List<Base> focus, String functionName, List<List<Base>> parameters) {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.executeFunction), when item is element");
-    }
-
-    @Override
-    public Base resolveReference(Object appContext, String url, Base refContext) throws FHIRException {
-      throw new NotImplementedException("Not done yet (FHIRPathTestEvaluationServices.resolveReference), when item is element");
-    }
-
-    @Override
-    public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
+    public boolean conformsToProfile(FHIRPathEngine engine, Object appContext, Base item, String url) throws FHIRException {
       if (url.equals("http://hl7.org/fhir/StructureDefinition/Patient"))
         return true;
       if (url.equals("http://hl7.org/fhir/StructureDefinition/Person"))
@@ -90,18 +90,33 @@ public class FHIRPathTests {
     }
 
     @Override
-    public ValueSet resolveValueSet(Object appContext, String url) {
-      return TestingUtilities.getSharedWorkerContext().fetchResource(ValueSet.class, url);
+    public ValueSet resolveValueSet(FHIRPathEngine engine, Object appContext, String url) {
+      return context.fetchResource(ValueSet.class, url);
     }
 
+    @Override
+    public boolean paramIsType(String name, int index) {
+      return false;
+    }
   }
 
   private static FHIRPathEngine fp;
-  private final Map<String, Resource> resources = new HashMap<String, Resource>();
+  private final Map<String, Base> resources = new HashMap<String, Base>();
+  private static SimpleWorkerContext context;
 
   @BeforeAll
-  public static void setUp() {
-    fp = new FHIRPathEngine(TestingUtilities.getSharedWorkerContext());
+  public static void setUp() throws FileNotFoundException, FHIRException, IOException {
+    context = new SimpleWorkerContext(TestingUtilities.getSharedWorkerContext());
+    if (!context.hasPackage("hl7.cda.us.ccda", null)) {
+      FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager.Builder().build();
+      NpmPackage npm = pcm.loadPackage("hl7.cda.uv.core", "2.0?");
+      context.loadFromPackage(npm, null);
+      npm = pcm.loadPackage("hl7.cda.us.ccda", "current");
+      context.loadFromPackage(npm, null);
+    }
+    if (fp == null) {
+      fp = new FHIRPathEngine(context);
+    }
   }
 
   public static Stream<Arguments> data() throws ParserConfigurationException, SAXException, IOException {
@@ -151,7 +166,7 @@ public class FHIRPathTests {
     // all my time based tests failing locally...
     TimeZone.setDefault(TimeZone.getTimeZone("UTC+1100"));
 
-    fp.setHostServices(new FHIRPathTestEvaluationServices());
+    fp.setHostServices(new FHIRPathTestEvaluationServices(this.context));
     String input = test.getAttribute("inputfile");
     String expression = XMLUtil.getNamedChild(test, "expression").getTextContent();
     TestResultType fail = TestResultType.OK;
@@ -163,7 +178,10 @@ public class FHIRPathTests {
       fail = TestResultType.EXECUTION;      
     };
     fp.setAllowPolymorphicNames("lenient/polymorphics".equals(test.getAttribute("mode")));
-    Resource res = null;
+    boolean skipStaticCheck = false;
+    if ("true".equals(test.getAttribute("skipStaticCheck")))
+      skipStaticCheck = true;
+    Base res = null;
 
     List<Base> outcome = new ArrayList<Base>();
 
@@ -182,7 +200,9 @@ public class FHIRPathTests {
       if (!Utilities.noString(input)) {
         res = resources.get(input);
         if (res == null) {
-          if (input.endsWith(".json")) {
+          if ("cda".equals(test.getAttribute("mode"))) {
+            res = Manager.makeParser(fp.getWorker(), FhirFormat.XML).parseSingle(TestingUtilities.loadTestResourceStream("r5", input), null);            
+          } else if (input.endsWith(".json")) {
             res = new JsonParser().parse(TestingUtilities.loadTestResourceStream("r5", input));              
           } else {
             res = new XmlParser().parse(TestingUtilities.loadTestResourceStream("r5", input));
@@ -191,24 +211,26 @@ public class FHIRPathTests {
         }        
       }
       
-      try {
-        if (Utilities.noString(input)) {
-          fp.check(null, null, node);
-        } else {
-          fp.check(res, res.getResourceType().toString(), res.getResourceType().toString(), node);
+      if (!skipStaticCheck) {
+        try {
+          if (Utilities.noString(input)) {
+            fp.check(null, null, null, node);
+          } else {
+            fp.check(res, res.fhirType(), res.fhirType(), res.fhirType(), node);
+          }
+          Assertions.assertTrue(fail != TestResultType.SEMANTICS, String.format("Expected exception didn't occur checking %s", expression));
+        } catch (Exception e) {
+          System.out.println("Checking Error: "+e.getMessage());
+          Assertions.assertTrue(fail == TestResultType.SEMANTICS, "Unexpected exception checking '"+expression+"': " + e.getMessage());
+          node = null;
         }
-        Assertions.assertTrue(fail != TestResultType.SEMANTICS, String.format("Expected exception didn't occur checking %s", expression));
-      } catch (Exception e) {
-        System.out.println("Checking Error: "+e.getMessage());
-        Assertions.assertTrue(fail == TestResultType.SEMANTICS, String.format("Unexpected exception checking %s: " + e.getMessage(), expression));
-        node = null;
       }
     }
     
     if (node != null) {
       try {
         if ("element".equals(test.getAttribute("mode"))) {
-          List<NamedElement> e = Manager.parse(fp.getWorker(), TestingUtilities.loadTestResourceStream("r5", input), input.endsWith(".json") ? FhirFormat.JSON : FhirFormat.XML);                        
+          List<ValidatedFragment> e = Manager.parse(fp.getWorker(), TestingUtilities.loadTestResourceStream("r5", input), input.endsWith(".json") ? FhirFormat.JSON : FhirFormat.XML);                        
           outcome = fp.evaluate(e.get(0).getElement(), node);
         } else {
           outcome = fp.evaluate(res, node);
@@ -235,7 +257,7 @@ public class FHIRPathTests {
 
       List<Element> expected = new ArrayList<Element>();
       XMLUtil.getNamedChildren(test, "output", expected);
-      assertEquals(outcome.size(), expected.size(), String.format("Expected %d objects but found %d for expression %s", expected.size(), outcome.size(), expression));
+      assertEquals(expected.size(), outcome.size(), String.format("Expected %d objects but found %d for expression %s", expected.size(), outcome.size(), expression));
       if ("false".equals(test.getAttribute("ordered"))) {
         for (int i = 0; i < Math.min(outcome.size(), expected.size()); i++) {
           String tn = outcome.get(i).fhirType();
@@ -281,12 +303,12 @@ public class FHIRPathTests {
 
   @Test
   @DisplayName("resolveConstant returns a list of Base")
-  public void resolveConstantReturnsList() {
+  public void resolveConstantReturnsList() throws IOException {
     final String DUMMY_CONSTANT_1 = "dummyConstant1";
     final String DUMMY_CONSTANT_2 = "dummyConstant2";
-    fp.setHostServices(new FHIRPathTestEvaluationServices() {
+    fp.setHostServices(new FHIRPathTestEvaluationServices(context) {
       @Override
-      public List<Base> resolveConstant(Object appContext, String name, boolean beforeContext) throws PathEngineException {
+      public List<Base> resolveConstant(FHIRPathEngine engine, Object appContext, String name, FHIRPathConstantEvaluationMode mode) throws PathEngineException {
 
         return Arrays.asList(
           new StringType(DUMMY_CONSTANT_1).noExtensions(),
@@ -300,5 +322,33 @@ public class FHIRPathTests {
     assertEquals(2, result.size());
     assertEquals(DUMMY_CONSTANT_1, result.get(0).primitiveValue());
     assertEquals(DUMMY_CONSTANT_2, result.get(1).primitiveValue());
+  }
+
+  @Test
+  public void testEvaluate_Id() {
+    Patient input = new Patient();
+    input.setId(new IdType("http://base/Patient/123/_history/222"));
+    List<Base> results = fp.evaluate(input, "Patient.id");
+    assertEquals(1, results.size());
+    assertEquals("123", results.get(0).toString());
+  }
+
+  @Test
+  public void testEvaluate_ToStringOnDateValue() {
+    Patient input = new Patient();
+    var dtv = new DateType("2024");
+    input.setBirthDateElement(dtv);
+    List<Base> results = fp.evaluate(input, "Patient.birthDate.toString()");
+    assertEquals(1, results.size());
+    assertEquals("2024", results.get(0).toString());
+  }
+
+  @Test
+  public void testEvaluate_ToStringOnExtensionOnlyValue() {
+    Patient input = new Patient();
+    var dtv = new DateType();
+    input.setBirthDateElement(dtv);
+    List<Base> results = fp.evaluate(input, "Patient.birthDate.toString()");
+    assertEquals(0, results.size());
   }
 }

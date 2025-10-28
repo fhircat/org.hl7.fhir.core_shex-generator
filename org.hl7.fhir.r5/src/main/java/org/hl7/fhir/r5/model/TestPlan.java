@@ -202,6 +202,17 @@ public class TestPlan extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("predecessor")) {
+          this.predecessor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -225,7 +236,7 @@ public class TestPlan extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.dependency.description");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.dependency.description");
         }
         else if (name.equals("predecessor")) {
           this.predecessor = new Reference();
@@ -725,6 +736,25 @@ public class TestPlan extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("scope")) {
+          this.getScope().remove(value);
+        } else if (name.equals("dependency")) {
+          this.getDependency().remove((TestCaseDependencyComponent) value);
+        } else if (name.equals("testRun")) {
+          this.getTestRun().remove((TestPlanTestCaseTestRunComponent) value);
+        } else if (name.equals("testData")) {
+          this.getTestData().remove((TestPlanTestCaseTestDataComponent) value);
+        } else if (name.equals("assertion")) {
+          this.getAssertion().remove((TestPlanTestCaseAssertionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -756,7 +786,7 @@ public class TestPlan extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.testCase.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.testCase.sequence");
         }
         else if (name.equals("scope")) {
           return addScope();
@@ -996,6 +1026,17 @@ public class TestPlan extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("predecessor")) {
+          this.predecessor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1019,7 +1060,7 @@ public class TestPlan extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.testCase.dependency.description");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.testCase.dependency.description");
         }
         else if (name.equals("predecessor")) {
           this.predecessor = new Reference();
@@ -1222,6 +1263,17 @@ public class TestPlan extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("narrative")) {
+          this.narrative = null;
+        } else if (name.equals("script")) {
+          this.script = (TestPlanTestCaseTestRunScriptComponent) value; // TestPlanTestCaseTestRunScriptComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1245,7 +1297,7 @@ public class TestPlan extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("narrative")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.testCase.testRun.narrative");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.testCase.testRun.narrative");
         }
         else if (name.equals("script")) {
           this.script = new TestPlanTestCaseTestRunScriptComponent();
@@ -1365,8 +1417,8 @@ public class TestPlan extends CanonicalResource {
           return (StringType) this.source;
         }
 
-        public boolean hasSourceStringType() { 
-          return this != null && this.source instanceof StringType;
+        public boolean hasSourceStringType() {
+            return this.source instanceof StringType;
         }
 
         /**
@@ -1380,8 +1432,8 @@ public class TestPlan extends CanonicalResource {
           return (Reference) this.source;
         }
 
-        public boolean hasSourceReference() { 
-          return this != null && this.source instanceof Reference;
+        public boolean hasSourceReference() {
+            return this.source instanceof Reference;
         }
 
         public boolean hasSource() { 
@@ -1450,6 +1502,17 @@ public class TestPlan extends CanonicalResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("language")) {
+          this.language = null;
+        } else if (name.equals("source[x]")) {
+          this.source = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1640,8 +1703,8 @@ public class TestPlan extends CanonicalResource {
           return (StringType) this.source;
         }
 
-        public boolean hasSourceStringType() { 
-          return this != null && this.source instanceof StringType;
+        public boolean hasSourceStringType() {
+            return this.source instanceof StringType;
         }
 
         /**
@@ -1655,8 +1718,8 @@ public class TestPlan extends CanonicalResource {
           return (Reference) this.source;
         }
 
-        public boolean hasSourceReference() { 
-          return this != null && this.source instanceof Reference;
+        public boolean hasSourceReference() {
+            return this.source instanceof Reference;
         }
 
         public boolean hasSource() { 
@@ -1733,6 +1796,19 @@ public class TestPlan extends CanonicalResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("content")) {
+          this.content = null;
+        } else if (name.equals("source[x]")) {
+          this.source = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2073,6 +2149,19 @@ public class TestPlan extends CanonicalResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("object")) {
+          this.getObject().remove(value);
+        } else if (name.equals("result")) {
+          this.getResult().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2520,8 +2609,8 @@ public class TestPlan extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -2535,8 +2624,8 @@ public class TestPlan extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -3728,6 +3817,60 @@ public class TestPlan extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("scope")) {
+          this.getScope().remove(value);
+        } else if (name.equals("testTools")) {
+          this.testTools = null;
+        } else if (name.equals("dependency")) {
+          this.getDependency().remove((TestPlanDependencyComponent) value);
+        } else if (name.equals("exitCriteria")) {
+          this.exitCriteria = null;
+        } else if (name.equals("testCase")) {
+          this.getTestCase().remove((TestPlanTestCaseComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3794,13 +3937,13 @@ public class TestPlan extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.url");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.version");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -3811,28 +3954,28 @@ public class TestPlan extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.name");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.title");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.status");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.date");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.description");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -3841,13 +3984,13 @@ public class TestPlan extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.copyrightLabel");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -3856,13 +3999,13 @@ public class TestPlan extends CanonicalResource {
           return addScope();
         }
         else if (name.equals("testTools")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.testTools");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.testTools");
         }
         else if (name.equals("dependency")) {
           return addDependency();
         }
         else if (name.equals("exitCriteria")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestPlan.exitCriteria");
+          throw new FHIRException("Cannot call addChild on a singleton property TestPlan.exitCriteria");
         }
         else if (name.equals("testCase")) {
           return addTestCase();

@@ -139,12 +139,14 @@ public class Location extends DomainResource {
         throw new FHIRException("Unknown LocationMode code '"+codeString+"'");
         }
     public String toCode(LocationMode code) {
-      if (code == LocationMode.INSTANCE)
+       if (code == LocationMode.NULL)
+           return null;
+       if (code == LocationMode.INSTANCE)
         return "instance";
       if (code == LocationMode.KIND)
         return "kind";
       return "?";
-      }
+   }
     public String toSystem(LocationMode code) {
       return code.getSystem();
       }
@@ -249,14 +251,16 @@ public class Location extends DomainResource {
         throw new FHIRException("Unknown LocationStatus code '"+codeString+"'");
         }
     public String toCode(LocationStatus code) {
-      if (code == LocationStatus.ACTIVE)
+       if (code == LocationStatus.NULL)
+           return null;
+       if (code == LocationStatus.ACTIVE)
         return "active";
       if (code == LocationStatus.SUSPENDED)
         return "suspended";
       if (code == LocationStatus.INACTIVE)
         return "inactive";
       return "?";
-      }
+   }
     public String toSystem(LocationStatus code) {
       return code.getSystem();
       }
@@ -555,6 +559,19 @@ public class Location extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("longitude")) {
+          this.longitude = null;
+        } else if (name.equals("latitude")) {
+          this.latitude = null;
+        } else if (name.equals("altitude")) {
+          this.altitude = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -580,13 +597,13 @@ public class Location extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("longitude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.position.longitude");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.position.longitude");
         }
         else if (name.equals("latitude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.position.latitude");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.position.latitude");
         }
         else if (name.equals("altitude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.position.altitude");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.position.altitude");
         }
         else
           return super.addChild(name);
@@ -1735,6 +1752,51 @@ public class Location extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new LocationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<LocationStatus>
+        } else if (name.equals("operationalStatus")) {
+          this.operationalStatus = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("alias")) {
+          this.getAlias().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("mode")) {
+          value = new LocationModeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.mode = (Enumeration) value; // Enumeration<LocationMode>
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("address")) {
+          this.address = null;
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else if (name.equals("position")) {
+          this.position = (LocationPositionComponent) value; // LocationPositionComponent
+        } else if (name.equals("managingOrganization")) {
+          this.managingOrganization = null;
+        } else if (name.equals("partOf")) {
+          this.partOf = null;
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove(value);
+        } else if (name.equals("hoursOfOperation")) {
+          this.getHoursOfOperation().remove(value);
+        } else if (name.equals("virtualService")) {
+          this.getVirtualService().remove(value);
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1793,23 +1855,23 @@ public class Location extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.status");
         }
         else if (name.equals("operationalStatus")) {
           this.operationalStatus = new Coding();
           return this.operationalStatus;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.name");
         }
         else if (name.equals("alias")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.alias");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.alias");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.description");
         }
         else if (name.equals("mode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Location.mode");
+          throw new FHIRException("Cannot call addChild on a singleton property Location.mode");
         }
         else if (name.equals("type")) {
           return addType();
@@ -2192,7 +2254,9 @@ public class Location extends DomainResource {
    * <p>
    * Description: <b>Search for locations where the location.position is near to, or within a specified distance of, the provided coordinates expressed as [latitude]|[longitude]|[distance]|[units] (using the WGS84 datum, see notes).
 
-Servers which support the near parameter SHALL support the unit string 'km' for kilometers and SHOULD support '[mi_us]' for miles, support for other units is optional. If the units are omitted, then kms should be assumed. If the distance is omitted, then the server can use its own discretion as to what distances should be considered near (and units are irrelevant).If the server is unable to understand the units (and does support the near search parameter), it MIGHT return an OperationOutcome and fail the search with a http status 400 BadRequest. If the server does not support the near parameter, the parameter MIGHT report the unused parameter in a bundled OperationOutcome and still perform the search ignoring the near parameter.
+Servers which support the near parameter SHALL support the unit string 'km' for kilometers and SHOULD support '[mi_us]' for miles, support for other units is optional. If the units are omitted, then kms should be assumed. If the distance is omitted, then the server can use its own discretion as to what distances should be considered near (and units are irrelevant).
+
+If the server is unable to understand the units (and does support the near search parameter), it MIGHT return an OperationOutcome and fail the search with a http status 400 BadRequest. If the server does not support the near parameter, the parameter MIGHT report the unused parameter in a bundled OperationOutcome and still perform the search ignoring the near parameter.
 
 Note: The algorithm to determine the distance is not defined by the specification, and systems might have different engines that calculate things differently. They could consider geographic point to point, or path via road, or including current traffic conditions, or just simple neighboring postcodes/localities if that's all it had access to.</b><br>
    * Type: <b>special</b><br>
@@ -2206,7 +2270,9 @@ Note: The algorithm to determine the distance is not defined by the specificatio
    * <p>
    * Description: <b>Search for locations where the location.position is near to, or within a specified distance of, the provided coordinates expressed as [latitude]|[longitude]|[distance]|[units] (using the WGS84 datum, see notes).
 
-Servers which support the near parameter SHALL support the unit string 'km' for kilometers and SHOULD support '[mi_us]' for miles, support for other units is optional. If the units are omitted, then kms should be assumed. If the distance is omitted, then the server can use its own discretion as to what distances should be considered near (and units are irrelevant).If the server is unable to understand the units (and does support the near search parameter), it MIGHT return an OperationOutcome and fail the search with a http status 400 BadRequest. If the server does not support the near parameter, the parameter MIGHT report the unused parameter in a bundled OperationOutcome and still perform the search ignoring the near parameter.
+Servers which support the near parameter SHALL support the unit string 'km' for kilometers and SHOULD support '[mi_us]' for miles, support for other units is optional. If the units are omitted, then kms should be assumed. If the distance is omitted, then the server can use its own discretion as to what distances should be considered near (and units are irrelevant).
+
+If the server is unable to understand the units (and does support the near search parameter), it MIGHT return an OperationOutcome and fail the search with a http status 400 BadRequest. If the server does not support the near parameter, the parameter MIGHT report the unused parameter in a bundled OperationOutcome and still perform the search ignoring the near parameter.
 
 Note: The algorithm to determine the distance is not defined by the specification, and systems might have different engines that calculate things differently. They could consider geographic point to point, or path via road, or including current traffic conditions, or just simple neighboring postcodes/localities if that's all it had access to.</b><br>
    * Type: <b>special</b><br>

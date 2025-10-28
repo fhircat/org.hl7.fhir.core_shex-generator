@@ -30924,7 +30924,12 @@ public class XmlParser extends XmlParserBase {
       return parseVisionPrescription(xpp);
 
     } else {
-      throw new FHIRFormatError("Unknown resource type "+xpp.getName()+"");
+      Resource resource = parseCustomResource(xpp);
+      if (resource != null) {
+        return resource;
+      } else {
+        throw new FHIRFormatError("Unknown resource type "+xpp.getName()+"");
+      }
     }
   }
 
@@ -33827,7 +33832,7 @@ public class XmlParser extends XmlParserBase {
   protected void composeReferenceElements(Reference element) throws IOException {
     composeDataTypeElements(element);
     if (element.hasReferenceElement()) {
-      composeString("reference", element.getReferenceElement());
+      composeString("reference", element.getReferenceElement_());
     }
     if (element.hasTypeElement()) {
       composeUri("type", element.getTypeElement());
@@ -63528,11 +63533,11 @@ public class XmlParser extends XmlParserBase {
       composeVerificationResult("VerificationResult", (VerificationResult)resource);
     } else if (resource instanceof VisionPrescription) {
       composeVisionPrescription("VisionPrescription", (VisionPrescription)resource);
-      
-    } else {
+    } else if (!composeCustomResource(resource)) {
       throw new Error("Unhandled resource type "+resource.getClass().getName());
     }
   }
+
 
   protected void composeResource(String name, Resource resource) throws IOException {
     if (name == null) {

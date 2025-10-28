@@ -335,8 +335,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Quantity) this.amount;
         }
 
-        public boolean hasAmountQuantity() { 
-          return this != null && this.amount instanceof Quantity;
+        public boolean hasAmountQuantity() {
+            return this.amount instanceof Quantity;
         }
 
         /**
@@ -350,8 +350,8 @@ public class SubstanceDefinition extends DomainResource {
           return (StringType) this.amount;
         }
 
-        public boolean hasAmountStringType() { 
-          return this != null && this.amount instanceof StringType;
+        public boolean hasAmountStringType() {
+            return this.amount instanceof StringType;
         }
 
         public boolean hasAmount() { 
@@ -494,6 +494,29 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("stereochemistry")) {
+          this.stereochemistry = null;
+        } else if (name.equals("opticalActivity")) {
+          this.opticalActivity = null;
+        } else if (name.equals("molecularFormula")) {
+          this.molecularFormula = null;
+        } else if (name.equals("amount[x]")) {
+          this.amount = null;
+        } else if (name.equals("measurementType")) {
+          this.measurementType = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -538,7 +561,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.moiety.name");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.moiety.name");
         }
         else if (name.equals("stereochemistry")) {
           this.stereochemistry = new CodeableConcept();
@@ -549,7 +572,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.opticalActivity;
         }
         else if (name.equals("molecularFormula")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.moiety.molecularFormula");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.moiety.molecularFormula");
         }
         else if (name.equals("amountQuantity")) {
           this.amount = new Quantity();
@@ -879,6 +902,21 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("technique")) {
+          this.technique = null;
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("file")) {
+          this.getFile().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -914,7 +952,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.form;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.characterization.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.characterization.description");
         }
         else if (name.equals("file")) {
           return addFile();
@@ -1050,8 +1088,8 @@ public class SubstanceDefinition extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1065,8 +1103,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1080,8 +1118,8 @@ public class SubstanceDefinition extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+            return this.value instanceof DateType;
         }
 
         /**
@@ -1095,8 +1133,8 @@ public class SubstanceDefinition extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1110,8 +1148,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -1183,6 +1221,17 @@ public class SubstanceDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1450,6 +1499,19 @@ public class SubstanceDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2035,6 +2097,29 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("stereochemistry")) {
+          this.stereochemistry = null;
+        } else if (name.equals("opticalActivity")) {
+          this.opticalActivity = null;
+        } else if (name.equals("molecularFormula")) {
+          this.molecularFormula = null;
+        } else if (name.equals("molecularFormulaByMoiety")) {
+          this.molecularFormulaByMoiety = null;
+        } else if (name.equals("molecularWeight")) {
+          this.molecularWeight = (SubstanceDefinitionMolecularWeightComponent) value; // SubstanceDefinitionMolecularWeightComponent
+        } else if (name.equals("technique")) {
+          this.getTechnique().remove(value);
+        } else if (name.equals("sourceDocument")) {
+          this.getSourceDocument().remove(value);
+        } else if (name.equals("representation")) {
+          this.getRepresentation().remove((SubstanceDefinitionStructureRepresentationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2078,10 +2163,10 @@ public class SubstanceDefinition extends DomainResource {
           return this.opticalActivity;
         }
         else if (name.equals("molecularFormula")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.structure.molecularFormula");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.structure.molecularFormula");
         }
         else if (name.equals("molecularFormulaByMoiety")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.structure.molecularFormulaByMoiety");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.structure.molecularFormulaByMoiety");
         }
         else if (name.equals("molecularWeight")) {
           this.molecularWeight = new SubstanceDefinitionMolecularWeightComponent();
@@ -2397,6 +2482,21 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("representation")) {
+          this.representation = null;
+        } else if (name.equals("format")) {
+          this.format = null;
+        } else if (name.equals("document")) {
+          this.document = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2428,7 +2528,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.type;
         }
         else if (name.equals("representation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.structure.representation.representation");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.structure.representation.representation");
         }
         else if (name.equals("format")) {
           this.format = new CodeableConcept();
@@ -2814,6 +2914,23 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("statusDate")) {
+          this.statusDate = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("source")) {
+          this.getSource().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2851,7 +2968,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.status;
         }
         else if (name.equals("statusDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.code.statusDate");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.code.statusDate");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -3652,6 +3769,35 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("preferred")) {
+          this.preferred = null;
+        } else if (name.equals("language")) {
+          this.getLanguage().remove(value);
+        } else if (name.equals("domain")) {
+          this.getDomain().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("synonym")) {
+          this.getSynonym().remove((SubstanceDefinitionNameComponent) value);
+        } else if (name.equals("translation")) {
+          this.getTranslation().remove((SubstanceDefinitionNameComponent) value);
+        } else if (name.equals("official")) {
+          this.getOfficial().remove((SubstanceDefinitionNameOfficialComponent) value);
+        } else if (name.equals("source")) {
+          this.getSource().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3693,7 +3839,7 @@ public class SubstanceDefinition extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.name.name");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.name.name");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -3704,7 +3850,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.status;
         }
         else if (name.equals("preferred")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.name.preferred");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.name.preferred");
         }
         else if (name.equals("language")) {
           return addLanguage();
@@ -4005,6 +4151,19 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("authority")) {
+          this.authority = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4038,7 +4197,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.status;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.name.official.date");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.name.official.date");
         }
         else
           return super.addChild(name);
@@ -4178,8 +4337,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Reference) this.substanceDefinition;
         }
 
-        public boolean hasSubstanceDefinitionReference() { 
-          return this != null && this.substanceDefinition instanceof Reference;
+        public boolean hasSubstanceDefinitionReference() {
+            return this.substanceDefinition instanceof Reference;
         }
 
         /**
@@ -4193,8 +4352,8 @@ public class SubstanceDefinition extends DomainResource {
           return (CodeableConcept) this.substanceDefinition;
         }
 
-        public boolean hasSubstanceDefinitionCodeableConcept() { 
-          return this != null && this.substanceDefinition instanceof CodeableConcept;
+        public boolean hasSubstanceDefinitionCodeableConcept() {
+            return this.substanceDefinition instanceof CodeableConcept;
         }
 
         public boolean hasSubstanceDefinition() { 
@@ -4298,8 +4457,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Quantity) this.amount;
         }
 
-        public boolean hasAmountQuantity() { 
-          return this != null && this.amount instanceof Quantity;
+        public boolean hasAmountQuantity() {
+            return this.amount instanceof Quantity;
         }
 
         /**
@@ -4313,8 +4472,8 @@ public class SubstanceDefinition extends DomainResource {
           return (Ratio) this.amount;
         }
 
-        public boolean hasAmountRatio() { 
-          return this != null && this.amount instanceof Ratio;
+        public boolean hasAmountRatio() {
+            return this.amount instanceof Ratio;
         }
 
         /**
@@ -4328,8 +4487,8 @@ public class SubstanceDefinition extends DomainResource {
           return (StringType) this.amount;
         }
 
-        public boolean hasAmountStringType() { 
-          return this != null && this.amount instanceof StringType;
+        public boolean hasAmountStringType() {
+            return this.amount instanceof StringType;
         }
 
         public boolean hasAmount() { 
@@ -4545,6 +4704,27 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("substanceDefinition[x]")) {
+          this.substanceDefinition = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("isDefining")) {
+          this.isDefining = null;
+        } else if (name.equals("amount[x]")) {
+          this.amount = null;
+        } else if (name.equals("ratioHighLimitAmount")) {
+          this.ratioHighLimitAmount = null;
+        } else if (name.equals("comparator")) {
+          this.comparator = null;
+        } else if (name.equals("source")) {
+          this.getSource().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4592,7 +4772,7 @@ public class SubstanceDefinition extends DomainResource {
           return this.type;
         }
         else if (name.equals("isDefining")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.relationship.isDefining");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.relationship.isDefining");
         }
         else if (name.equals("amountQuantity")) {
           this.amount = new Quantity();
@@ -4949,6 +5129,23 @@ public class SubstanceDefinition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("genus")) {
+          this.genus = null;
+        } else if (name.equals("species")) {
+          this.species = null;
+        } else if (name.equals("part")) {
+          this.part = null;
+        } else if (name.equals("countryOfOrigin")) {
+          this.getCountryOfOrigin().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -6493,6 +6690,61 @@ public class SubstanceDefinition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("classification")) {
+          this.getClassification().remove(value);
+        } else if (name.equals("domain")) {
+          this.domain = null;
+        } else if (name.equals("grade")) {
+          this.getGrade().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("informationSource")) {
+          this.getInformationSource().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove(value);
+        } else if (name.equals("supplier")) {
+          this.getSupplier().remove(value);
+        } else if (name.equals("moiety")) {
+          this.getMoiety().remove((SubstanceDefinitionMoietyComponent) value);
+        } else if (name.equals("characterization")) {
+          this.getCharacterization().remove((SubstanceDefinitionCharacterizationComponent) value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((SubstanceDefinitionPropertyComponent) value);
+        } else if (name.equals("referenceInformation")) {
+          this.referenceInformation = null;
+        } else if (name.equals("molecularWeight")) {
+          this.getMolecularWeight().remove((SubstanceDefinitionMolecularWeightComponent) value);
+        } else if (name.equals("structure")) {
+          this.structure = (SubstanceDefinitionStructureComponent) value; // SubstanceDefinitionStructureComponent
+        } else if (name.equals("code")) {
+          this.getCode().remove((SubstanceDefinitionCodeComponent) value);
+        } else if (name.equals("name")) {
+          this.getName().remove((SubstanceDefinitionNameComponent) value);
+        } else if (name.equals("relationship")) {
+          this.getRelationship().remove((SubstanceDefinitionRelationshipComponent) value);
+        } else if (name.equals("nucleicAcid")) {
+          this.nucleicAcid = null;
+        } else if (name.equals("polymer")) {
+          this.polymer = null;
+        } else if (name.equals("protein")) {
+          this.protein = null;
+        } else if (name.equals("sourceMaterial")) {
+          this.sourceMaterial = (SubstanceDefinitionSourceMaterialComponent) value; // SubstanceDefinitionSourceMaterialComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6563,7 +6815,7 @@ public class SubstanceDefinition extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.version");
         }
         else if (name.equals("status")) {
           this.status = new CodeableConcept();
@@ -6580,7 +6832,7 @@ public class SubstanceDefinition extends DomainResource {
           return addGrade();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubstanceDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubstanceDefinition.description");
         }
         else if (name.equals("informationSource")) {
           return addInformationSource();

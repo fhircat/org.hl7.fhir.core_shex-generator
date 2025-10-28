@@ -202,6 +202,17 @@ public class HealthcareService extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -229,7 +240,7 @@ public class HealthcareService extends DomainResource {
           return this.code;
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.eligibility.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.eligibility.comment");
         }
         else
           return super.addChild(name);
@@ -1808,6 +1819,59 @@ public class HealthcareService extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("active")) {
+          this.active = null;
+        } else if (name.equals("providedBy")) {
+          this.providedBy = null;
+        } else if (name.equals("offeredIn")) {
+          this.getOfferedIn().remove(value);
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("specialty")) {
+          this.getSpecialty().remove(value);
+        } else if (name.equals("location")) {
+          this.getLocation().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("extraDetails")) {
+          this.extraDetails = null;
+        } else if (name.equals("photo")) {
+          this.photo = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("coverageArea")) {
+          this.getCoverageArea().remove(value);
+        } else if (name.equals("serviceProvisionCode")) {
+          this.getServiceProvisionCode().remove(value);
+        } else if (name.equals("eligibility")) {
+          this.getEligibility().remove((HealthcareServiceEligibilityComponent) value);
+        } else if (name.equals("program")) {
+          this.getProgram().remove(value);
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove(value);
+        } else if (name.equals("communication")) {
+          this.getCommunication().remove(value);
+        } else if (name.equals("referralMethod")) {
+          this.getReferralMethod().remove(value);
+        } else if (name.equals("appointmentRequired")) {
+          this.appointmentRequired = null;
+        } else if (name.equals("availability")) {
+          this.getAvailability().remove(value);
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1876,7 +1940,7 @@ public class HealthcareService extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("active")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.active");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.active");
         }
         else if (name.equals("providedBy")) {
           this.providedBy = new Reference();
@@ -1898,13 +1962,13 @@ public class HealthcareService extends DomainResource {
           return addLocation();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.name");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.name");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.comment");
         }
         else if (name.equals("extraDetails")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.extraDetails");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.extraDetails");
         }
         else if (name.equals("photo")) {
           this.photo = new Attachment();
@@ -1935,7 +1999,7 @@ public class HealthcareService extends DomainResource {
           return addReferralMethod();
         }
         else if (name.equals("appointmentRequired")) {
-          throw new FHIRException("Cannot call addChild on a primitive type HealthcareService.appointmentRequired");
+          throw new FHIRException("Cannot call addChild on a singleton property HealthcareService.appointmentRequired");
         }
         else if (name.equals("availability")) {
           return addAvailability();

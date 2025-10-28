@@ -270,6 +270,19 @@ public class Binary extends BaseBinary implements IBaseBinary {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("contentType")) {
+          this.contentType = null;
+        } else if (name.equals("securityContext")) {
+          this.securityContext = null;
+        } else if (name.equals("data")) {
+          this.data = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -295,14 +308,14 @@ public class Binary extends BaseBinary implements IBaseBinary {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("contentType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Binary.contentType");
+          throw new FHIRException("Cannot call addChild on a singleton property Binary.contentType");
         }
         else if (name.equals("securityContext")) {
           this.securityContext = new Reference();
           return this.securityContext;
         }
         else if (name.equals("data")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Binary.data");
+          throw new FHIRException("Cannot call addChild on a singleton property Binary.data");
         }
         else
           return super.addChild(name);

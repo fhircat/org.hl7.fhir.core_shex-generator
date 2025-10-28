@@ -1,5 +1,7 @@
 package org.hl7.fhir.convertors.conv30_50;
 
+import java.util.Arrays;
+
 import org.hl7.fhir.convertors.advisors.impl.BaseAdvisor_30_50;
 import org.hl7.fhir.convertors.context.ConversionContext30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.Extension30_50;
@@ -91,8 +93,6 @@ import org.hl7.fhir.convertors.conv30_50.resources30_50.TestScript30_50;
 import org.hl7.fhir.convertors.conv30_50.resources30_50.ValueSet30_50;
 import org.hl7.fhir.dstu3.model.Basic;
 import org.hl7.fhir.exceptions.FHIRException;
-
-import java.util.Arrays;
 
 public class Resource30_50 {
 
@@ -292,9 +292,10 @@ public class Resource30_50 {
   public org.hl7.fhir.dstu3.model.Resource convertResource(org.hl7.fhir.r5.model.Resource src) throws FHIRException {
     if (src == null) return null;
     if (src instanceof org.hl7.fhir.r5.model.Parameters) {
-      if (((org.hl7.fhir.r5.model.Parameters) src).hasParameterValue("profile-url"))
-        return ExpansionProfile30_50.convertExpansionProfile((org.hl7.fhir.r5.model.Parameters) src);
-      else return Parameters30_50.convertParameters((org.hl7.fhir.r5.model.Parameters) src);
+//      if (((org.hl7.fhir.r5.model.Parameters) src).hasParameterValue("profile-url"))
+//        return ExpansionProfile30_50.convertExpansionProfile((org.hl7.fhir.r5.model.Parameters) src);
+//      else
+        return Parameters30_50.convertParameters((org.hl7.fhir.r5.model.Parameters) src);
     }
     if (src instanceof org.hl7.fhir.r5.model.ActivityDefinition)
       return ActivityDefinition30_50.convertActivityDefinition((org.hl7.fhir.r5.model.ActivityDefinition) src);

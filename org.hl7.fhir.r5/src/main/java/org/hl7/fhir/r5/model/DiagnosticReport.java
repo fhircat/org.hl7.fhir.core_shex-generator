@@ -264,7 +264,9 @@ public class DiagnosticReport extends DomainResource {
         throw new FHIRException("Unknown DiagnosticReportStatus code '"+codeString+"'");
         }
     public String toCode(DiagnosticReportStatus code) {
-      if (code == DiagnosticReportStatus.REGISTERED)
+       if (code == DiagnosticReportStatus.NULL)
+           return null;
+       if (code == DiagnosticReportStatus.REGISTERED)
         return "registered";
       if (code == DiagnosticReportStatus.PARTIAL)
         return "partial";
@@ -287,7 +289,7 @@ public class DiagnosticReport extends DomainResource {
       if (code == DiagnosticReportStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(DiagnosticReportStatus code) {
       return code.getSystem();
       }
@@ -425,6 +427,17 @@ public class DiagnosticReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("reference")) {
+          this.reference = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -661,6 +674,17 @@ public class DiagnosticReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("link")) {
+          this.link = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -684,7 +708,7 @@ public class DiagnosticReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DiagnosticReport.media.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property DiagnosticReport.media.comment");
         }
         else if (name.equals("link")) {
           this.link = new Reference();
@@ -1200,8 +1224,8 @@ public class DiagnosticReport extends DomainResource {
       return (DateTimeType) this.effective;
     }
 
-    public boolean hasEffectiveDateTimeType() { 
-      return this != null && this.effective instanceof DateTimeType;
+    public boolean hasEffectiveDateTimeType() {
+        return this.effective instanceof DateTimeType;
     }
 
     /**
@@ -1215,8 +1239,8 @@ public class DiagnosticReport extends DomainResource {
       return (Period) this.effective;
     }
 
-    public boolean hasEffectivePeriod() { 
-      return this != null && this.effective instanceof Period;
+    public boolean hasEffectivePeriod() {
+        return this.effective instanceof Period;
     }
 
     public boolean hasEffective() { 
@@ -2093,6 +2117,56 @@ public class DiagnosticReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("status")) {
+          value = new DiagnosticReportStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<DiagnosticReportStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("effective[x]")) {
+          this.effective = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove(value);
+        } else if (name.equals("resultsInterpreter")) {
+          this.getResultsInterpreter().remove(value);
+        } else if (name.equals("specimen")) {
+          this.getSpecimen().remove(value);
+        } else if (name.equals("result")) {
+          this.getResult().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("study")) {
+          this.getStudy().remove(value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove((DiagnosticReportSupportingInfoComponent) value);
+        } else if (name.equals("media")) {
+          this.getMedia().remove((DiagnosticReportMediaComponent) value);
+        } else if (name.equals("composition")) {
+          this.composition = null;
+        } else if (name.equals("conclusion")) {
+          this.conclusion = null;
+        } else if (name.equals("conclusionCode")) {
+          this.getConclusionCode().remove(value);
+        } else if (name.equals("presentedForm")) {
+          this.getPresentedForm().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2161,7 +2235,7 @@ public class DiagnosticReport extends DomainResource {
           return addBasedOn();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DiagnosticReport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DiagnosticReport.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -2187,7 +2261,7 @@ public class DiagnosticReport extends DomainResource {
           return this.effective;
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DiagnosticReport.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property DiagnosticReport.issued");
         }
         else if (name.equals("performer")) {
           return addPerformer();
@@ -2218,7 +2292,7 @@ public class DiagnosticReport extends DomainResource {
           return this.composition;
         }
         else if (name.equals("conclusion")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DiagnosticReport.conclusion");
+          throw new FHIRException("Cannot call addChild on a singleton property DiagnosticReport.conclusion");
         }
         else if (name.equals("conclusionCode")) {
           return addConclusionCode();

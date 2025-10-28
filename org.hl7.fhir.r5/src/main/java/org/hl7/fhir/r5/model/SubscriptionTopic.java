@@ -138,12 +138,14 @@ public class SubscriptionTopic extends CanonicalResource {
         throw new FHIRException("Unknown CriteriaNotExistsBehavior code '"+codeString+"'");
         }
     public String toCode(CriteriaNotExistsBehavior code) {
-      if (code == CriteriaNotExistsBehavior.TESTPASSES)
+       if (code == CriteriaNotExistsBehavior.NULL)
+           return null;
+       if (code == CriteriaNotExistsBehavior.TESTPASSES)
         return "test-passes";
       if (code == CriteriaNotExistsBehavior.TESTFAILS)
         return "test-fails";
       return "?";
-      }
+   }
     public String toSystem(CriteriaNotExistsBehavior code) {
       return code.getSystem();
       }
@@ -248,14 +250,16 @@ public class SubscriptionTopic extends CanonicalResource {
         throw new FHIRException("Unknown InteractionTrigger code '"+codeString+"'");
         }
     public String toCode(InteractionTrigger code) {
-      if (code == InteractionTrigger.CREATE)
+       if (code == InteractionTrigger.NULL)
+           return null;
+       if (code == InteractionTrigger.CREATE)
         return "create";
       if (code == InteractionTrigger.UPDATE)
         return "update";
       if (code == InteractionTrigger.DELETE)
         return "delete";
       return "?";
-      }
+   }
     public String toSystem(InteractionTrigger code) {
       return code.getSystem();
       }
@@ -622,6 +626,24 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("supportedInteraction")) {
+          value = new InteractionTriggerEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getSupportedInteraction().remove((Enumeration) value);
+        } else if (name.equals("queryCriteria")) {
+          this.queryCriteria = (SubscriptionTopicResourceTriggerQueryCriteriaComponent) value; // SubscriptionTopicResourceTriggerQueryCriteriaComponent
+        } else if (name.equals("fhirPathCriteria")) {
+          this.fhirPathCriteria = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -651,20 +673,20 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.description");
         }
         else if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.resource");
         }
         else if (name.equals("supportedInteraction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.supportedInteraction");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.supportedInteraction");
         }
         else if (name.equals("queryCriteria")) {
           this.queryCriteria = new SubscriptionTopicResourceTriggerQueryCriteriaComponent();
           return this.queryCriteria;
         }
         else if (name.equals("fhirPathCriteria")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.fhirPathCriteria");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.fhirPathCriteria");
         }
         else
           return super.addChild(name);
@@ -1093,6 +1115,25 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("previous")) {
+          this.previous = null;
+        } else if (name.equals("resultForCreate")) {
+          value = new CriteriaNotExistsBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.resultForCreate = (Enumeration) value; // Enumeration<CriteriaNotExistsBehavior>
+        } else if (name.equals("current")) {
+          this.current = null;
+        } else if (name.equals("resultForDelete")) {
+          value = new CriteriaNotExistsBehaviorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.resultForDelete = (Enumeration) value; // Enumeration<CriteriaNotExistsBehavior>
+        } else if (name.equals("requireBoth")) {
+          this.requireBoth = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1122,19 +1163,19 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("previous")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.queryCriteria.previous");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.queryCriteria.previous");
         }
         else if (name.equals("resultForCreate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.queryCriteria.resultForCreate");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.queryCriteria.resultForCreate");
         }
         else if (name.equals("current")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.queryCriteria.current");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.queryCriteria.current");
         }
         else if (name.equals("resultForDelete")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.queryCriteria.resultForDelete");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.queryCriteria.resultForDelete");
         }
         else if (name.equals("requireBoth")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.resourceTrigger.queryCriteria.requireBoth");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.resourceTrigger.queryCriteria.requireBoth");
         }
         else
           return super.addChild(name);
@@ -1411,6 +1452,19 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("event")) {
+          this.event = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1436,14 +1490,14 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.eventTrigger.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.eventTrigger.description");
         }
         else if (name.equals("event")) {
           this.event = new CodeableConcept();
           return this.event;
         }
         else if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.eventTrigger.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.eventTrigger.resource");
         }
         else
           return super.addChild(name);
@@ -1961,6 +2015,27 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("filterParameter")) {
+          this.filterParameter = null;
+        } else if (name.equals("filterDefinition")) {
+          this.filterDefinition = null;
+        } else if (name.equals("comparator")) {
+          value = new SearchComparatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getComparator().remove((Enumeration) value);
+        } else if (name.equals("modifier")) {
+          value = new SearchModifierCodeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.getModifier().remove((Enumeration) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1992,22 +2067,22 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.description");
         }
         else if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.resource");
         }
         else if (name.equals("filterParameter")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.filterParameter");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.filterParameter");
         }
         else if (name.equals("filterDefinition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.filterDefinition");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.filterDefinition");
         }
         else if (name.equals("comparator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.comparator");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.comparator");
         }
         else if (name.equals("modifier")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.canFilterBy.modifier");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.canFilterBy.modifier");
         }
         else
           return super.addChild(name);
@@ -2340,6 +2415,19 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("include")) {
+          this.getInclude().remove(value);
+        } else if (name.equals("revInclude")) {
+          this.getRevInclude().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2365,13 +2453,13 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("resource")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.notificationShape.resource");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.notificationShape.resource");
         }
         else if (name.equals("include")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.notificationShape.include");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.notificationShape.include");
         }
         else if (name.equals("revInclude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.notificationShape.revInclude");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.notificationShape.revInclude");
         }
         else
           return super.addChild(name);
@@ -2793,8 +2881,8 @@ public class SubscriptionTopic extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -2808,8 +2896,8 @@ public class SubscriptionTopic extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -4102,6 +4190,64 @@ public class SubscriptionTopic extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("resourceTrigger")) {
+          this.getResourceTrigger().remove((SubscriptionTopicResourceTriggerComponent) value);
+        } else if (name.equals("eventTrigger")) {
+          this.getEventTrigger().remove((SubscriptionTopicEventTriggerComponent) value);
+        } else if (name.equals("canFilterBy")) {
+          this.getCanFilterBy().remove((SubscriptionTopicCanFilterByComponent) value);
+        } else if (name.equals("notificationShape")) {
+          this.getNotificationShape().remove((SubscriptionTopicNotificationShapeComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4172,13 +4318,13 @@ public class SubscriptionTopic extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.url");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.version");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -4189,31 +4335,31 @@ public class SubscriptionTopic extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.name");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.title");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.title");
         }
         else if (name.equals("derivedFrom")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.derivedFrom");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.derivedFrom");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.status");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.date");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.description");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -4222,19 +4368,19 @@ public class SubscriptionTopic extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionTopic.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionTopic.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();

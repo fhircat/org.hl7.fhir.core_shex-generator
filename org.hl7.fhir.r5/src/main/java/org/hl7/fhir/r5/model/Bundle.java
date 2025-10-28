@@ -252,7 +252,9 @@ public class Bundle extends Resource implements IBaseBundle {
         throw new FHIRException("Unknown BundleType code '"+codeString+"'");
         }
     public String toCode(BundleType code) {
-      if (code == BundleType.DOCUMENT)
+       if (code == BundleType.NULL)
+           return null;
+       if (code == BundleType.DOCUMENT)
         return "document";
       if (code == BundleType.MESSAGE)
         return "message";
@@ -273,7 +275,7 @@ public class Bundle extends Resource implements IBaseBundle {
       if (code == BundleType.SUBSCRIPTIONNOTIFICATION)
         return "subscription-notification";
       return "?";
-      }
+   }
     public String toSystem(BundleType code) {
       return code.getSystem();
       }
@@ -420,7 +422,9 @@ public class Bundle extends Resource implements IBaseBundle {
         throw new FHIRException("Unknown HTTPVerb code '"+codeString+"'");
         }
     public String toCode(HTTPVerb code) {
-      if (code == HTTPVerb.GET)
+       if (code == HTTPVerb.NULL)
+           return null;
+       if (code == HTTPVerb.GET)
         return "GET";
       if (code == HTTPVerb.HEAD)
         return "HEAD";
@@ -433,7 +437,7 @@ public class Bundle extends Resource implements IBaseBundle {
       if (code == HTTPVerb.PATCH)
         return "PATCH";
       return "?";
-      }
+   }
     public String toSystem(HTTPVerb code) {
       return code.getSystem();
       }
@@ -2176,7 +2180,9 @@ public class Bundle extends Resource implements IBaseBundle {
         throw new FHIRException("Unknown LinkRelationTypes code '"+codeString+"'");
         }
     public String toCode(LinkRelationTypes code) {
-      if (code == LinkRelationTypes.ABOUT)
+       if (code == LinkRelationTypes.NULL)
+           return null;
+       if (code == LinkRelationTypes.ABOUT)
         return "about";
       if (code == LinkRelationTypes.ACL)
         return "acl";
@@ -2417,7 +2423,7 @@ public class Bundle extends Resource implements IBaseBundle {
       if (code == LinkRelationTypes.WORKINGCOPYOF)
         return "working-copy-of";
       return "?";
-      }
+   }
     public String toSystem(LinkRelationTypes code) {
       return code.getSystem();
       }
@@ -2522,14 +2528,16 @@ public class Bundle extends Resource implements IBaseBundle {
         throw new FHIRException("Unknown SearchEntryMode code '"+codeString+"'");
         }
     public String toCode(SearchEntryMode code) {
-      if (code == SearchEntryMode.MATCH)
+       if (code == SearchEntryMode.NULL)
+           return null;
+       if (code == SearchEntryMode.MATCH)
         return "match";
       if (code == SearchEntryMode.INCLUDE)
         return "include";
       if (code == SearchEntryMode.OUTCOME)
         return "outcome";
       return "?";
-      }
+   }
     public String toSystem(SearchEntryMode code) {
       return code.getSystem();
       }
@@ -2713,6 +2721,18 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("relation")) {
+          value = new LinkRelationTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.relation = (Enumeration) value; // Enumeration<LinkRelationTypes>
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2736,10 +2756,10 @@ public class Bundle extends Resource implements IBaseBundle {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("relation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.link.relation");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.link.relation");
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.link.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.link.url");
         }
         else
           return super.addChild(name);
@@ -3132,6 +3152,25 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("link")) {
+          this.getLink().remove((BundleLinkComponent) value);
+        } else if (name.equals("fullUrl")) {
+          this.fullUrl = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else if (name.equals("search")) {
+          this.search = (BundleEntrySearchComponent) value; // BundleEntrySearchComponent
+        } else if (name.equals("request")) {
+          this.request = (BundleEntryRequestComponent) value; // BundleEntryRequestComponent
+        } else if (name.equals("response")) {
+          this.response = (BundleEntryResponseComponent) value; // BundleEntryResponseComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3166,7 +3205,7 @@ public class Bundle extends Resource implements IBaseBundle {
           return addLink();
         }
         else if (name.equals("fullUrl")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.fullUrl");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.fullUrl");
         }
         else if (name.equals("resource")) {
           throw new FHIRException("Cannot call addChild on an abstract type Bundle.entry.resource");
@@ -3485,6 +3524,18 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("mode")) {
+          value = new SearchEntryModeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.mode = (Enumeration) value; // Enumeration<SearchEntryMode>
+        } else if (name.equals("score")) {
+          this.score = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3508,10 +3559,10 @@ public class Bundle extends Resource implements IBaseBundle {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("mode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.search.mode");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.search.mode");
         }
         else if (name.equals("score")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.search.score");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.search.score");
         }
         else
           return super.addChild(name);
@@ -3994,6 +4045,26 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("method")) {
+          value = new HTTPVerbEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.method = (Enumeration) value; // Enumeration<HTTPVerb>
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("ifNoneMatch")) {
+          this.ifNoneMatch = null;
+        } else if (name.equals("ifModifiedSince")) {
+          this.ifModifiedSince = null;
+        } else if (name.equals("ifMatch")) {
+          this.ifMatch = null;
+        } else if (name.equals("ifNoneExist")) {
+          this.ifNoneExist = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4025,22 +4096,22 @@ public class Bundle extends Resource implements IBaseBundle {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("method")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.method");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.method");
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.url");
         }
         else if (name.equals("ifNoneMatch")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.ifNoneMatch");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.ifNoneMatch");
         }
         else if (name.equals("ifModifiedSince")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.ifModifiedSince");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.ifModifiedSince");
         }
         else if (name.equals("ifMatch")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.ifMatch");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.ifMatch");
         }
         else if (name.equals("ifNoneExist")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.request.ifNoneExist");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.request.ifNoneExist");
         }
         else
           return super.addChild(name);
@@ -4438,6 +4509,23 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("etag")) {
+          this.etag = null;
+        } else if (name.equals("lastModified")) {
+          this.lastModified = null;
+        } else if (name.equals("outcome")) {
+          this.outcome = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4467,16 +4555,16 @@ public class Bundle extends Resource implements IBaseBundle {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.response.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.response.status");
         }
         else if (name.equals("location")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.response.location");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.response.location");
         }
         else if (name.equals("etag")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.response.etag");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.response.etag");
         }
         else if (name.equals("lastModified")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.entry.response.lastModified");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.entry.response.lastModified");
         }
         else if (name.equals("outcome")) {
           throw new FHIRException("Cannot call addChild on an abstract type Bundle.entry.response.outcome");
@@ -5021,6 +5109,30 @@ public class Bundle extends Resource implements IBaseBundle {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("type")) {
+          value = new BundleTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<BundleType>
+        } else if (name.equals("timestamp")) {
+          this.timestamp = null;
+        } else if (name.equals("total")) {
+          this.total = null;
+        } else if (name.equals("link")) {
+          this.getLink().remove((BundleLinkComponent) value);
+        } else if (name.equals("entry")) {
+          this.getEntry().remove((BundleEntryComponent) value);
+        } else if (name.equals("signature")) {
+          this.signature = null;
+        } else if (name.equals("issues")) {
+          this.issues = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5060,13 +5172,13 @@ public class Bundle extends Resource implements IBaseBundle {
           return this.identifier;
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.type");
         }
         else if (name.equals("timestamp")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.timestamp");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.timestamp");
         }
         else if (name.equals("total")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Bundle.total");
+          throw new FHIRException("Cannot call addChild on a singleton property Bundle.total");
         }
         else if (name.equals("link")) {
           return addLink();

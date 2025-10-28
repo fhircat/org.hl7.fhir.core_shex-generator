@@ -180,7 +180,9 @@ public class SubscriptionStatus extends DomainResource {
         throw new FHIRException("Unknown SubscriptionNotificationType code '"+codeString+"'");
         }
     public String toCode(SubscriptionNotificationType code) {
-      if (code == SubscriptionNotificationType.HANDSHAKE)
+       if (code == SubscriptionNotificationType.NULL)
+           return null;
+       if (code == SubscriptionNotificationType.HANDSHAKE)
         return "handshake";
       if (code == SubscriptionNotificationType.HEARTBEAT)
         return "heartbeat";
@@ -191,7 +193,7 @@ public class SubscriptionStatus extends DomainResource {
       if (code == SubscriptionNotificationType.QUERYEVENT)
         return "query-event";
       return "?";
-      }
+   }
     public String toSystem(SubscriptionNotificationType code) {
       return code.getSystem();
       }
@@ -481,6 +483,21 @@ public class SubscriptionStatus extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("eventNumber")) {
+          this.eventNumber = null;
+        } else if (name.equals("timestamp")) {
+          this.timestamp = null;
+        } else if (name.equals("focus")) {
+          this.focus = null;
+        } else if (name.equals("additionalContext")) {
+          this.getAdditionalContext().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -508,10 +525,10 @@ public class SubscriptionStatus extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("eventNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.notificationEvent.eventNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.notificationEvent.eventNumber");
         }
         else if (name.equals("timestamp")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.notificationEvent.timestamp");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.notificationEvent.timestamp");
         }
         else if (name.equals("focus")) {
           this.focus = new Reference();
@@ -1059,6 +1076,29 @@ public class SubscriptionStatus extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("status")) {
+          value = new SubscriptionStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<SubscriptionStatusCodes>
+        } else if (name.equals("type")) {
+          value = new SubscriptionNotificationTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<SubscriptionNotificationType>
+        } else if (name.equals("eventsSinceSubscriptionStart")) {
+          this.eventsSinceSubscriptionStart = null;
+        } else if (name.equals("notificationEvent")) {
+          this.getNotificationEvent().remove((SubscriptionStatusNotificationEventComponent) value);
+        } else if (name.equals("subscription")) {
+          this.subscription = null;
+        } else if (name.equals("topic")) {
+          this.topic = null;
+        } else if (name.equals("error")) {
+          this.getError().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1092,13 +1132,13 @@ public class SubscriptionStatus extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.status");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.status");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.type");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.type");
         }
         else if (name.equals("eventsSinceSubscriptionStart")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.eventsSinceSubscriptionStart");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.eventsSinceSubscriptionStart");
         }
         else if (name.equals("notificationEvent")) {
           return addNotificationEvent();
@@ -1108,7 +1148,7 @@ public class SubscriptionStatus extends DomainResource {
           return this.subscription;
         }
         else if (name.equals("topic")) {
-          throw new FHIRException("Cannot call addChild on a primitive type SubscriptionStatus.topic");
+          throw new FHIRException("Cannot call addChild on a singleton property SubscriptionStatus.topic");
         }
         else if (name.equals("error")) {
           return addError();

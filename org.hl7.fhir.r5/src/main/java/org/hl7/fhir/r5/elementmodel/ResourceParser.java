@@ -16,10 +16,12 @@ import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.xhtml.XhtmlComposer;
 
+@MarkedToMoveToAdjunctPackage
 public class ResourceParser extends ParserBase {
 
   public ResourceParser(IWorkerContext context) {
@@ -27,7 +29,7 @@ public class ResourceParser extends ParserBase {
   }
 
   @Override
-  public List<NamedElement> parse(InputStream stream) throws IOException, FHIRFormatError, DefinitionException, FHIRException {
+  public List<ValidatedFragment> parse(InputStream stream) throws IOException, FHIRFormatError, DefinitionException, FHIRException {
     throw new NotImplementedException("parse(InputStream stream)"); // doesns't make sense
   }
 
@@ -50,7 +52,7 @@ public class ResourceParser extends ParserBase {
     if (sd == null) {
       throw new FHIRException("No definition exists for "+resource.fhirType());
     }
-    Property p = new Property(context, sd.getSnapshot().getElement().get(0), sd, new ProfileUtilities(context, null, null));
+    Property p = new Property(context, sd.getSnapshot().getElement().get(0), sd, getProfileUtilities(), getContextUtilities());
     String path = resource.fhirType();
     
     Element e = new Element(resource.fhirType(), p);
@@ -84,11 +86,6 @@ public class ResourceParser extends ParserBase {
           if (v.isPrimitive()) {
             if (v.fhirType().equals("xhtml")) {
               n.setXhtml(v.getXhtml());
-              try {
-                n.setValue(new XhtmlComposer(true).compose(n.getXhtml()));
-              } catch (Exception e) {
-                // won't happen here
-              }
             } else {
               n.setValue(v.primitiveValue());
             }
@@ -106,7 +103,7 @@ public class ResourceParser extends ParserBase {
             StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(v.fhirType(), null));
             if (sd == null)
               throw new FHIRFormatError(context.formatMessage(I18nConstants.CONTAINED_RESOURCE_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAME_, v.fhirType()));
-            n.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd), SpecialElement.fromProperty(n.getProperty()), p);
+            n.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd, getProfileUtilities(), getContextUtilities()), SpecialElement.fromProperty(n.getProperty()), p);
             n.setType(v.fhirType());
             parseChildren(npath, v, n);
           } else {

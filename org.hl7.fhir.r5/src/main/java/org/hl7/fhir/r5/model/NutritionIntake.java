@@ -405,6 +405,27 @@ public class NutritionIntake extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("nutritionProduct")) {
+          this.nutritionProduct = null;
+        } else if (name.equals("schedule")) {
+          this.schedule = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else if (name.equals("rate")) {
+          this.rate = null;
+        } else if (name.equals("notConsumed")) {
+          this.notConsumed = null;
+        } else if (name.equals("notConsumedReason")) {
+          this.notConsumedReason = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -458,7 +479,7 @@ public class NutritionIntake extends DomainResource {
           return this.rate;
         }
         else if (name.equals("notConsumed")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionIntake.consumedItem.notConsumed");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionIntake.consumedItem.notConsumed");
         }
         else if (name.equals("notConsumedReason")) {
           this.notConsumedReason = new CodeableConcept();
@@ -652,6 +673,17 @@ public class NutritionIntake extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("nutrient")) {
+          this.nutrient = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -862,6 +894,17 @@ public class NutritionIntake extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1573,8 +1616,8 @@ public class NutritionIntake extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -1588,8 +1631,8 @@ public class NutritionIntake extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     public boolean hasOccurrence() { 
@@ -1673,8 +1716,8 @@ public class NutritionIntake extends DomainResource {
       return (BooleanType) this.reported;
     }
 
-    public boolean hasReportedBooleanType() { 
-      return this != null && this.reported instanceof BooleanType;
+    public boolean hasReportedBooleanType() {
+        return this.reported instanceof BooleanType;
     }
 
     /**
@@ -1688,8 +1731,8 @@ public class NutritionIntake extends DomainResource {
       return (Reference) this.reported;
     }
 
-    public boolean hasReportedReference() { 
-      return this != null && this.reported instanceof Reference;
+    public boolean hasReportedReference() {
+        return this.reported instanceof Reference;
     }
 
     public boolean hasReported() { 
@@ -2251,6 +2294,54 @@ public class NutritionIntake extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new EventStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EventStatus>
+        } else if (name.equals("statusReason")) {
+          this.getStatusReason().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("reported[x]")) {
+          this.reported = null;
+        } else if (name.equals("consumedItem")) {
+          this.getConsumedItem().remove((NutritionIntakeConsumedItemComponent) value);
+        } else if (name.equals("ingredientLabel")) {
+          this.getIngredientLabel().remove((NutritionIntakeIngredientLabelComponent) value);
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((NutritionIntakePerformerComponent) value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2315,10 +2406,10 @@ public class NutritionIntake extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionIntake.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionIntake.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionIntake.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionIntake.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -2327,7 +2418,7 @@ public class NutritionIntake extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionIntake.status");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionIntake.status");
         }
         else if (name.equals("statusReason")) {
           return addStatusReason();
@@ -2353,7 +2444,7 @@ public class NutritionIntake extends DomainResource {
           return this.occurrence;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionIntake.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionIntake.recorded");
         }
         else if (name.equals("reportedBoolean")) {
           this.reported = new BooleanType();

@@ -152,14 +152,16 @@ public class PaymentReconciliation extends DomainResource {
         throw new FHIRException("Unknown NoteType code '"+codeString+"'");
         }
     public String toCode(NoteType code) {
-      if (code == NoteType.DISPLAY)
+       if (code == NoteType.NULL)
+           return null;
+       if (code == NoteType.DISPLAY)
         return "display";
       if (code == NoteType.PRINT)
         return "print";
       if (code == NoteType.PRINTOPER)
         return "printoper";
       return "?";
-      }
+   }
     public String toSystem(NoteType code) {
       return code.getSystem();
       }
@@ -278,7 +280,9 @@ public class PaymentReconciliation extends DomainResource {
         throw new FHIRException("Unknown PaymentOutcome code '"+codeString+"'");
         }
     public String toCode(PaymentOutcome code) {
-      if (code == PaymentOutcome.QUEUED)
+       if (code == PaymentOutcome.NULL)
+           return null;
+       if (code == PaymentOutcome.QUEUED)
         return "queued";
       if (code == PaymentOutcome.COMPLETE)
         return "complete";
@@ -287,7 +291,7 @@ public class PaymentReconciliation extends DomainResource {
       if (code == PaymentOutcome.PARTIAL)
         return "partial";
       return "?";
-      }
+   }
     public String toSystem(PaymentOutcome code) {
       return code.getSystem();
       }
@@ -486,8 +490,8 @@ public class PaymentReconciliation extends DomainResource {
           return (StringType) this.targetItem;
         }
 
-        public boolean hasTargetItemStringType() { 
-          return this != null && this.targetItem instanceof StringType;
+        public boolean hasTargetItemStringType() {
+            return this.targetItem instanceof StringType;
         }
 
         /**
@@ -501,8 +505,8 @@ public class PaymentReconciliation extends DomainResource {
           return (Identifier) this.targetItem;
         }
 
-        public boolean hasTargetItemIdentifier() { 
-          return this != null && this.targetItem instanceof Identifier;
+        public boolean hasTargetItemIdentifier() {
+            return this.targetItem instanceof Identifier;
         }
 
         /**
@@ -516,8 +520,8 @@ public class PaymentReconciliation extends DomainResource {
           return (PositiveIntType) this.targetItem;
         }
 
-        public boolean hasTargetItemPositiveIntType() { 
-          return this != null && this.targetItem instanceof PositiveIntType;
+        public boolean hasTargetItemPositiveIntType() {
+            return this.targetItem instanceof PositiveIntType;
         }
 
         public boolean hasTargetItem() { 
@@ -918,6 +922,39 @@ public class PaymentReconciliation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("predecessor")) {
+          this.predecessor = null;
+        } else if (name.equals("target")) {
+          this.target = null;
+        } else if (name.equals("targetItem[x]")) {
+          this.targetItem = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("account")) {
+          this.account = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("submitter")) {
+          this.submitter = null;
+        } else if (name.equals("response")) {
+          this.response = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("responsible")) {
+          this.responsible = null;
+        } else if (name.equals("payee")) {
+          this.payee = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1008,7 +1045,7 @@ public class PaymentReconciliation extends DomainResource {
           return this.response;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.allocation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.allocation.date");
         }
         else if (name.equals("responsible")) {
           this.responsible = new Reference();
@@ -1263,6 +1300,18 @@ public class PaymentReconciliation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new NoteTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<NoteType>
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1286,10 +1335,10 @@ public class PaymentReconciliation extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.processNote.type");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.processNote.type");
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.processNote.text");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.processNote.text");
         }
         else
           return super.addChild(name);
@@ -2886,6 +2935,73 @@ public class PaymentReconciliation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("status")) {
+          value = new FinancialResourceStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FinancialResourceStatusCodes>
+        } else if (name.equals("kind")) {
+          this.kind = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("enterer")) {
+          this.enterer = null;
+        } else if (name.equals("issuerType")) {
+          this.issuerType = null;
+        } else if (name.equals("paymentIssuer")) {
+          this.paymentIssuer = null;
+        } else if (name.equals("request")) {
+          this.request = null;
+        } else if (name.equals("requestor")) {
+          this.requestor = null;
+        } else if (name.equals("outcome")) {
+          value = new PaymentOutcomeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.outcome = (Enumeration) value; // Enumeration<PaymentOutcome>
+        } else if (name.equals("disposition")) {
+          this.disposition = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("cardBrand")) {
+          this.cardBrand = null;
+        } else if (name.equals("accountNumber")) {
+          this.accountNumber = null;
+        } else if (name.equals("expirationDate")) {
+          this.expirationDate = null;
+        } else if (name.equals("processor")) {
+          this.processor = null;
+        } else if (name.equals("referenceNumber")) {
+          this.referenceNumber = null;
+        } else if (name.equals("authorization")) {
+          this.authorization = null;
+        } else if (name.equals("tenderedAmount")) {
+          this.tenderedAmount = null;
+        } else if (name.equals("returnedAmount")) {
+          this.returnedAmount = null;
+        } else if (name.equals("amount")) {
+          this.amount = null;
+        } else if (name.equals("paymentIdentifier")) {
+          this.paymentIdentifier = null;
+        } else if (name.equals("allocation")) {
+          this.getAllocation().remove((PaymentReconciliationAllocationComponent) value);
+        } else if (name.equals("formCode")) {
+          this.formCode = null;
+        } else if (name.equals("processNote")) {
+          this.getProcessNote().remove((NotesComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2970,7 +3086,7 @@ public class PaymentReconciliation extends DomainResource {
           return this.type;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.status");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.status");
         }
         else if (name.equals("kind")) {
           this.kind = new CodeableConcept();
@@ -2981,7 +3097,7 @@ public class PaymentReconciliation extends DomainResource {
           return this.period;
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.created");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.created");
         }
         else if (name.equals("enterer")) {
           this.enterer = new Reference();
@@ -3004,13 +3120,13 @@ public class PaymentReconciliation extends DomainResource {
           return this.requestor;
         }
         else if (name.equals("outcome")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.outcome");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.outcome");
         }
         else if (name.equals("disposition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.disposition");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.disposition");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.date");
         }
         else if (name.equals("location")) {
           this.location = new Reference();
@@ -3021,22 +3137,22 @@ public class PaymentReconciliation extends DomainResource {
           return this.method;
         }
         else if (name.equals("cardBrand")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.cardBrand");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.cardBrand");
         }
         else if (name.equals("accountNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.accountNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.accountNumber");
         }
         else if (name.equals("expirationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.expirationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.expirationDate");
         }
         else if (name.equals("processor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.processor");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.processor");
         }
         else if (name.equals("referenceNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.referenceNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.referenceNumber");
         }
         else if (name.equals("authorization")) {
-          throw new FHIRException("Cannot call addChild on a primitive type PaymentReconciliation.authorization");
+          throw new FHIRException("Cannot call addChild on a singleton property PaymentReconciliation.authorization");
         }
         else if (name.equals("tenderedAmount")) {
           this.tenderedAmount = new Money();

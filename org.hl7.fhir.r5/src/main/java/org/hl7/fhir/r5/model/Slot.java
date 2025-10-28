@@ -180,7 +180,9 @@ public class Slot extends DomainResource {
         throw new FHIRException("Unknown SlotStatus code '"+codeString+"'");
         }
     public String toCode(SlotStatus code) {
-      if (code == SlotStatus.BUSY)
+       if (code == SlotStatus.NULL)
+           return null;
+       if (code == SlotStatus.BUSY)
         return "busy";
       if (code == SlotStatus.FREE)
         return "free";
@@ -191,7 +193,7 @@ public class Slot extends DomainResource {
       if (code == SlotStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(SlotStatus code) {
       return code.getSystem();
       }
@@ -942,6 +944,36 @@ public class Slot extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("serviceCategory")) {
+          this.getServiceCategory().remove(value);
+        } else if (name.equals("serviceType")) {
+          this.getServiceType().remove(value);
+        } else if (name.equals("specialty")) {
+          this.getSpecialty().remove(value);
+        } else if (name.equals("appointmentType")) {
+          this.getAppointmentType().remove(value);
+        } else if (name.equals("schedule")) {
+          this.schedule = null;
+        } else if (name.equals("status")) {
+          value = new SlotStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<SlotStatus>
+        } else if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("end")) {
+          this.end = null;
+        } else if (name.equals("overbooked")) {
+          this.overbooked = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1002,19 +1034,19 @@ public class Slot extends DomainResource {
           return this.schedule;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Slot.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Slot.status");
         }
         else if (name.equals("start")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Slot.start");
+          throw new FHIRException("Cannot call addChild on a singleton property Slot.start");
         }
         else if (name.equals("end")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Slot.end");
+          throw new FHIRException("Cannot call addChild on a singleton property Slot.end");
         }
         else if (name.equals("overbooked")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Slot.overbooked");
+          throw new FHIRException("Cannot call addChild on a singleton property Slot.overbooked");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Slot.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property Slot.comment");
         }
         else
           return super.addChild(name);

@@ -154,14 +154,16 @@ public class MedicationStatement extends DomainResource {
         throw new FHIRException("Unknown MedicationStatementStatusCodes code '"+codeString+"'");
         }
     public String toCode(MedicationStatementStatusCodes code) {
-      if (code == MedicationStatementStatusCodes.RECORDED)
+       if (code == MedicationStatementStatusCodes.NULL)
+           return null;
+       if (code == MedicationStatementStatusCodes.RECORDED)
         return "recorded";
       if (code == MedicationStatementStatusCodes.ENTEREDINERROR)
         return "entered-in-error";
       if (code == MedicationStatementStatusCodes.DRAFT)
         return "draft";
       return "?";
-      }
+   }
     public String toSystem(MedicationStatementStatusCodes code) {
       return code.getSystem();
       }
@@ -299,6 +301,17 @@ public class MedicationStatement extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -814,8 +827,8 @@ public class MedicationStatement extends DomainResource {
       return (DateTimeType) this.effective;
     }
 
-    public boolean hasEffectiveDateTimeType() { 
-      return this != null && this.effective instanceof DateTimeType;
+    public boolean hasEffectiveDateTimeType() {
+        return this.effective instanceof DateTimeType;
     }
 
     /**
@@ -829,8 +842,8 @@ public class MedicationStatement extends DomainResource {
       return (Period) this.effective;
     }
 
-    public boolean hasEffectivePeriod() { 
-      return this != null && this.effective instanceof Period;
+    public boolean hasEffectivePeriod() {
+        return this.effective instanceof Period;
     }
 
     /**
@@ -844,8 +857,8 @@ public class MedicationStatement extends DomainResource {
       return (Timing) this.effective;
     }
 
-    public boolean hasEffectiveTiming() { 
-      return this != null && this.effective instanceof Timing;
+    public boolean hasEffectiveTiming() {
+        return this.effective instanceof Timing;
     }
 
     public boolean hasEffective() { 
@@ -1479,6 +1492,48 @@ public class MedicationStatement extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new MedicationStatementStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MedicationStatementStatusCodes>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("medication")) {
+          this.medication = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("effective[x]")) {
+          this.effective = null;
+        } else if (name.equals("dateAsserted")) {
+          this.dateAsserted = null;
+        } else if (name.equals("informationSource")) {
+          this.getInformationSource().remove(value);
+        } else if (name.equals("derivedFrom")) {
+          this.getDerivedFrom().remove(value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("relatedClinicalInformation")) {
+          this.getRelatedClinicalInformation().remove(value);
+        } else if (name.equals("renderedDosageInstruction")) {
+          this.renderedDosageInstruction = null;
+        } else if (name.equals("dosage")) {
+          this.getDosage().remove(value);
+        } else if (name.equals("adherence")) {
+          this.adherence = (MedicationStatementAdherenceComponent) value; // MedicationStatementAdherenceComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1539,7 +1594,7 @@ public class MedicationStatement extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationStatement.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationStatement.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -1569,7 +1624,7 @@ public class MedicationStatement extends DomainResource {
           return this.effective;
         }
         else if (name.equals("dateAsserted")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationStatement.dateAsserted");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationStatement.dateAsserted");
         }
         else if (name.equals("informationSource")) {
           return addInformationSource();
@@ -1587,7 +1642,7 @@ public class MedicationStatement extends DomainResource {
           return addRelatedClinicalInformation();
         }
         else if (name.equals("renderedDosageInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationStatement.renderedDosageInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationStatement.renderedDosageInstruction");
         }
         else if (name.equals("dosage")) {
           return addDosage();

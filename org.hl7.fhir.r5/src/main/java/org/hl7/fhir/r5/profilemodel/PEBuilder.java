@@ -1,13 +1,45 @@
 package org.hl7.fhir.r5.profilemodel;
 
+/*
+  Copyright (c) 2011+, HL7, Inc.
+  All rights reserved.
+  
+  Redistribution and use in source and binary forms, with or without modification, \
+  are permitted provided that the following conditions are met:
+  
+   * Redistributions of source code must retain the above copyright notice, this \
+     list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright notice, \
+     this list of conditions and the following disclaimer in the documentation \
+     and/or other materials provided with the distribution.
+   * Neither the name of HL7 nor the names of its contributors may be used to 
+     endorse or promote products derived from this software without specific 
+     prior written permission.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND \
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED \
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. \
+  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, \
+  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT \
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR \
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, \
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) \
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE \
+  POSSIBILITY OF SUCH DAMAGE.
+  */
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.hl7.fhir.exceptions.DefinitionException;
+import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.ElementDefinition;
@@ -16,11 +48,14 @@ import org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionSlicingComponent
 import org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionSlicingDiscriminatorComponent;
 import org.hl7.fhir.r5.model.ElementDefinition.SlicingRules;
 import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
+import org.hl7.fhir.r5.model.Enumerations.BindingStrength;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.ResourceFactory;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
+import org.hl7.fhir.r5.model.ValueSet;
+import org.hl7.fhir.r5.model.ValueSet.ValueSetExpansionContainsComponent;
+import org.hl7.fhir.r5.terminologies.expansion.ValueSetExpansionOutcome;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.Utilities;
 
@@ -30,7 +65,7 @@ import org.hl7.fhir.utilities.Utilities;
  * *** NOTE: This sub-system is still under development ***
  * 
  * This subsystem takes a profile and creates a view of the profile that stitches
- * all the parts together, and presents it as a seemless tree. There's two views:
+ * all the parts together, and presents it as a seamless tree. There's two views:
  * 
  *  - definition: A logical view of the contents of the profile 
  *  - instance: a logical view of a resource that conforms to the profile
@@ -120,7 +155,7 @@ public class PEBuilder {
     if (!profile.hasSnapshot()) {
       throw new DefinitionException("Profile '"+profile.getVersionedUrl()+"' does not have a snapshot");      
     }
-    return new PEDefinitionResource(this, profile, profile.getName());
+    return new PEDefinitionResource(this, profile, null);
   }
   
   /**
@@ -297,7 +332,7 @@ public class PEBuilder {
 
 
   private StructureDefinition getProfile(String url, String version) {
-    return context.fetchResource(StructureDefinition.class, url, version);
+    return context.fetchResource(StructureDefinition.class, url, version, null);
   }
 //
 //  protected List<PEDefinition> listChildren(boolean allFixed, StructureDefinition profileStructure, ElementDefinition definition, TypeRefComponent t, CanonicalType u) {
@@ -307,39 +342,50 @@ public class PEBuilder {
 
   protected List<PEDefinition> listChildren(boolean allFixed, PEDefinition parent, StructureDefinition profileStructure, ElementDefinition definition, String url, String... omitList) {
     StructureDefinition profile = profileStructure;
+    boolean inExtension = profile.getDerivation() == TypeDerivationRule.CONSTRAINT && "Extension".equals(profile.getType());
     List<ElementDefinition> list = pu.getChildList(profile, definition);
     if (definition.getType().size() == 1 || (!definition.getPath().contains(".")) || list.isEmpty()) {
       assert url == null || checkType(definition, url);
       List<PEDefinition> res = new ArrayList<>();
       if (list.size() == 0) {
         profile = context.fetchResource(StructureDefinition.class, url);
+        if (profile == null) {
+          throw new FHIRException("Unable to resolve profile "+url);
+        }
         list = pu.getChildList(profile, profile.getSnapshot().getElementFirstRep());
       }
       if (list.size() > 0) {
+        Set<String> names = new HashSet<>();
         int i = 0;
         while (i < list.size()) {
           ElementDefinition defn = list.get(i);
           if (!defn.getMax().equals("0") && (allFixed || include(defn))) {
-            if (passElementPropsCheck(defn) && !Utilities.existsInList(defn.getName(), omitList)) {
-              PEDefinitionElement pe = new PEDefinitionElement(this, profile, defn, parent.path());
+            if (passElementPropsCheck(defn, inExtension) && !Utilities.existsInList(defn.getName(), omitList)) {
+              String name = uniquefy(names, defn.getName());
+              PEDefinitionElement pe = new PEDefinitionElement(this, name, profile, defn, parent.path());
               pe.setRecursing(definition == defn || (profile.getDerivation() == TypeDerivationRule.SPECIALIZATION && profile.getType().equals("Extension")));
-              if (cu.isPrimitiveDatatype(definition.getTypeFirstRep().getWorkingCode()) && "value".equals(pe.name())) {
+              if (context.isPrimitiveType(definition.getTypeFirstRep().getWorkingCode()) && "value".equals(pe.name())) {
                 pe.setMustHaveValue(definition.getMustHaveValue());
               }
               pe.setInFixedValue(definition.hasFixed() || definition.hasPattern() || parent.isInFixedValue());
               if (defn.hasSlicing()) {
                 if (defn.getSlicing().getRules() != SlicingRules.CLOSED) {
                   res.add(pe);
+                  pe.setSlicer(true);
                 }
                 i++;
                 while (i < list.size() && list.get(i).getPath().equals(defn.getPath())) {
                   StructureDefinition ext = getExtensionDefinition(list.get(i));
                   if (ext != null) {
-                    res.add(new PEDefinitionExtension(this, list.get(i).getSliceName(), profile, list.get(i), defn, ext, parent.path()));
+                    res.add(new PEDefinitionExtension(this, uniquefy(names, list.get(i).getSliceName()), profile, list.get(i), defn, ext, parent.path()));
                   } else if (isTypeSlicing(defn)) {
-                    res.add(new PEDefinitionTypeSlice(this, list.get(i).getSliceName(), profile, list.get(i), defn, parent.path()));
+                    res.add(new PEDefinitionTypeSlice(this, uniquefy(names, list.get(i).getSliceName()), profile, list.get(i), defn, parent.path()));
                   } else {
-                    res.add(new PEDefinitionSlice(this, list.get(i).getSliceName(), profile, list.get(i), defn, parent.path()));
+                    if (ProfileUtilities.isComplexExtension(profile) && defn.getPath().endsWith(".extension")) {
+                      res.add(new PEDefinitionSubExtension(this, profile, list.get(i), parent.path()));
+                    } else {
+                      res.add(new PEDefinitionSlice(this, uniquefy(names, list.get(i).getSliceName()), profile, list.get(i), defn, parent.path()));
+                    }
                   }
                   i++;
                 }
@@ -363,7 +409,31 @@ public class PEBuilder {
     }
   }
 
-  private boolean passElementPropsCheck(ElementDefinition bdefn) {
+  private String uniquefy(Set<String> names, String name) {
+    if (names.contains(name)) {
+      int i = 0;
+      while (names.contains(name+i)) {
+        i++;
+      }
+      name = name+i;
+    }
+    names.add(name);
+    return name;
+  }
+
+  protected PEDefinition makeChild(PEDefinition parent, StructureDefinition profileStructure, ElementDefinition definition) {
+    PEDefinitionElement pe = new PEDefinitionElement(this, profileStructure, definition, parent.path());
+    if (context.isPrimitiveType(definition.getTypeFirstRep().getWorkingCode()) && "value".equals(pe.name())) {
+      pe.setMustHaveValue(definition.getMustHaveValue());
+    }
+    pe.setInFixedValue(definition.hasFixed() || definition.hasPattern() || parent.isInFixedValue());
+    return pe;
+  }
+
+  private boolean passElementPropsCheck(ElementDefinition bdefn, boolean inExtension) {
+    if (inExtension) {
+      return !Utilities.existsInList(bdefn.getBase().getPath(), "Element.id");      
+    }
     switch (elementProps) {
     case EXTENSION:
       return !Utilities.existsInList(bdefn.getBase().getPath(), "Element.id");
@@ -416,7 +486,7 @@ public class PEBuilder {
         }
       }
     }
-    return false;
+    return !defn.getPath().contains(".");
   }
 
 
@@ -462,6 +532,10 @@ public class PEBuilder {
   }
 
 
+  protected PEType makeType(String tn, String url) {
+    return new PEType(tn, tn, url);
+  }
+  
   protected PEType makeType(String tn) {
     return new PEType(tn, tn, "http://hl7.org/fhir/StructureDefinition/"+ tn);
   }
@@ -483,26 +557,30 @@ public class PEBuilder {
   }
 
   protected void populateByProfile(Base base, PEDefinition definition) {
-    for (PEDefinition pe : definition.children(true)) {
-      if (pe.fixedValue()) {
-        if (pe.definition().hasPattern()) {
-          base.setProperty(pe.schemaName(), pe.definition().getPattern());
-        } else { 
-          base.setProperty(pe.schemaName(), pe.definition().getFixed());
-        }
-      } else {
+    if (definition.types().size() == 1) {
+      for (PEDefinition pe : definition.directChildren(true)) {
+        if (pe.hasFixedValue()) {
+          if (pe.definition().hasPattern()) {
+            base.setProperty(pe.schemaName(), pe.definition().getPattern());
+          } else { 
+            base.setProperty(pe.schemaName(), pe.definition().getFixed());
+          }
+        } else if (!pe.isSlicer() && pe.max() == 1) {
           for (int i = 0; i < pe.min(); i++) {
             Base b = null;
             if (pe.schemaName().endsWith("[x]")) {
               if (pe.types().size() == 1) {
                 b = base.addChild(pe.schemaName().replace("[x]", Utilities.capitalize(pe.types().get(0).getType())));
               }
+            } else if (!pe.isBaseList()) {
+              b = base.makeProperty(pe.schemaName().hashCode(), pe.schemaName());
             } else {
               b = base.addChild(pe.schemaName());
             }
             if (b != null) {
               populateByProfile(b, pe);
             }
+          }
         }
       }
     }
@@ -524,20 +602,42 @@ public class PEBuilder {
         throw new DefinitionException("The discriminator type 'type' is not supported by the PEBuilder");
       case VALUE:
         String path = d.getPath();
-        if (path.contains(".")) {
-          throw new DefinitionException("The discriminator path '"+path+"' is not supported by the PEBuilder");          
-        }
         ElementDefinition ed = getChildElement(profile, definition, path);
         if (ed == null) {
           throw new DefinitionException("The discriminator path '"+path+"' could not be resolved by the PEBuilder");          
         }
-        if (!ed.hasFixed()) {
-          throw new DefinitionException("The discriminator path '"+path+"' has no fixed value - this is not supported by the PEBuilder");          
+        // three things possible:
+        //  fixed, pattern, or binding
+        if (ed.hasFixed()) {
+          if (!ed.getFixed().isPrimitive()) {
+            throw new DefinitionException("The discriminator path '"+path+"' has a fixed value that is not a primitive ("+ed.getFixed().fhirType()+") - this is not supported by the PEBuilder");          
+          }
+          b.append(path+" = '"+ed.getFixed().primitiveValue()+"'");
+        } else if (ed.hasPattern()) {
+          throw new DefinitionException("The discriminator path '"+path+"' has a pattern on the element '"+ed.getId()+"' - this is not supported by the PEBuilder");
+        } else if (ed.hasBinding()) {
+          if (ed.getBinding().getStrength() != BindingStrength.REQUIRED) {
+            throw new DefinitionException("The discriminator path '"+path+"' has a binding on the element '"+ed.getId()+"' but the strength is not required - this is not supported by the PEBuilder");
+          } else {
+            ValueSet vs = context.findTxResource(ValueSet.class, ed.getBinding().getValueSet());
+            if (vs == null) {
+              throw new DefinitionException("The discriminator path '"+path+"' has a binding on the element '"+ed.getId()+"' but the valueSet '"+ed.getBinding().getValueSet()+"' is not known - this is not supported by the PEBuilder");              
+            }
+            ValueSetExpansionOutcome exp = context.expandVS(vs, true, false);
+            if (exp.isOk()) {
+              CommaSeparatedStringBuilder bs = new CommaSeparatedStringBuilder(" | ");
+              for (ValueSetExpansionContainsComponent cc : exp.getValueset().getExpansion().getContains()) {
+                bs.append("'"+cc.getCode()+"'");
+              }
+              b.append(path+" in ("+bs.toString()+")");
+            } else {
+              throw new DefinitionException("The discriminator path '"+path+"' has a binding on the element '"+ed.getId()+"' but the valueSet '"+ed.getBinding().getValueSet()+"' could not be expanded: "+exp.getError());                            
+            }            
+          }
+        } else {
+          throw new DefinitionException("The discriminator path '"+path+"' has no fixed or pattern value or a binding on the element '"+ed.getId()+"' - this is not supported by the PEBuilder");          
+          
         }
-        if (!ed.getFixed().isPrimitive()) {
-          throw new DefinitionException("The discriminator path '"+path+"' has a fixed value that is not a primitive ("+ed.getFixed().fhirType()+") - this is not supported by the PEBuilder");          
-        }
-        b.append(path+" = '"+ed.getFixed().primitiveValue()+"'");
         break;
       case NULL:
         throw new DefinitionException("The discriminator type 'null' is not supported by the PEBuilder");
@@ -549,13 +649,26 @@ public class PEBuilder {
   }
 
   private ElementDefinition getChildElement(StructureDefinition profile, ElementDefinition definition, String path) {
-    List<ElementDefinition> elements = pu.getChildList(profile, definition);
-    if (elements.size() == 0) {
-      profile = definition.getTypeFirstRep().hasProfile() ? context.fetchResource(StructureDefinition.class, definition.getTypeFirstRep().getProfile().get(0).asStringValue()) :
-        context.fetchTypeDefinition(definition.getTypeFirstRep().getWorkingCode());
-      elements = pu.getChildList(profile, profile.getSnapshot().getElementFirstRep());
-    }
-    return getByName(elements, path);
+    String head = path.contains(".") ? path.substring(0, path.indexOf(".")) : path;
+    String tail = path.contains(".") ? path.substring(path.indexOf(".")+1) : null;
+    ElementDefinition focus = definition;
+    
+    do {
+      List<ElementDefinition> elements = pu.getChildList(profile, focus);
+      if (elements.size() == 0) {
+        profile = focus.getTypeFirstRep().hasProfile() ? context.fetchResource(StructureDefinition.class, focus.getTypeFirstRep().getProfile().get(0).asStringValue()) :
+          context.fetchTypeDefinition(focus.getTypeFirstRep().getWorkingCode());
+        elements = pu.getChildList(profile, profile.getSnapshot().getElementFirstRep());
+      }
+      focus = getByName(elements, head);
+      if (tail != null) {
+        head = tail.contains(".") ? tail.substring(0, tail.indexOf(".")) : tail;
+        tail = tail.contains(".") ? tail.substring(tail.indexOf(".")+1) : null;
+      } else {
+        head = null;
+      }
+    } while (head != null && focus != null);
+    return focus;
   }
 
   public List<Base> exec(Resource resource, Base data, String fhirpath) {
@@ -564,5 +677,9 @@ public class PEBuilder {
 
   public boolean isResource(String name) {
     return cu.isResource(name);
+  }
+
+  public ContextUtilities getContextUtilities() {
+    return cu;
   }
 }

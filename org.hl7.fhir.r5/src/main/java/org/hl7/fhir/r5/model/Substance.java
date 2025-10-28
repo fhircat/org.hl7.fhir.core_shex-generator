@@ -152,14 +152,16 @@ public class Substance extends DomainResource {
         throw new FHIRException("Unknown FHIRSubstanceStatus code '"+codeString+"'");
         }
     public String toCode(FHIRSubstanceStatus code) {
-      if (code == FHIRSubstanceStatus.ACTIVE)
+       if (code == FHIRSubstanceStatus.NULL)
+           return null;
+       if (code == FHIRSubstanceStatus.ACTIVE)
         return "active";
       if (code == FHIRSubstanceStatus.INACTIVE)
         return "inactive";
       if (code == FHIRSubstanceStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(FHIRSubstanceStatus code) {
       return code.getSystem();
       }
@@ -241,8 +243,8 @@ public class Substance extends DomainResource {
           return (CodeableConcept) this.substance;
         }
 
-        public boolean hasSubstanceCodeableConcept() { 
-          return this != null && this.substance instanceof CodeableConcept;
+        public boolean hasSubstanceCodeableConcept() {
+            return this.substance instanceof CodeableConcept;
         }
 
         /**
@@ -256,8 +258,8 @@ public class Substance extends DomainResource {
           return (Reference) this.substance;
         }
 
-        public boolean hasSubstanceReference() { 
-          return this != null && this.substance instanceof Reference;
+        public boolean hasSubstanceReference() {
+            return this.substance instanceof Reference;
         }
 
         public boolean hasSubstance() { 
@@ -326,6 +328,17 @@ public class Substance extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("substance[x]")) {
+          this.substance = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1002,6 +1015,32 @@ public class Substance extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instance")) {
+          this.instance = null;
+        } else if (name.equals("status")) {
+          value = new FHIRSubstanceStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FHIRSubstanceStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("expiry")) {
+          this.expiry = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove((SubstanceIngredientComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1042,10 +1081,10 @@ public class Substance extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instance")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Substance.instance");
+          throw new FHIRException("Cannot call addChild on a singleton property Substance.instance");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Substance.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Substance.status");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -1055,10 +1094,10 @@ public class Substance extends DomainResource {
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Substance.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Substance.description");
         }
         else if (name.equals("expiry")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Substance.expiry");
+          throw new FHIRException("Cannot call addChild on a singleton property Substance.expiry");
         }
         else if (name.equals("quantity")) {
           this.quantity = new Quantity();

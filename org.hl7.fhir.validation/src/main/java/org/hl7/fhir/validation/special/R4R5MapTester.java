@@ -1,11 +1,7 @@
 package org.hl7.fhir.validation.special;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -15,7 +11,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.exceptions.DefinitionException;
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.exceptions.FHIRFormatError;
+import org.hl7.fhir.r5.context.IContextResourceLoader;
+import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
+import org.hl7.fhir.r5.elementmodel.Element;
+import org.hl7.fhir.r5.elementmodel.Manager;
+import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.CanonicalResource;
+import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.Enumerations.PublicationStatus;
 import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.Resource;
@@ -24,39 +31,28 @@ import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapInputMode;
-import org.hl7.fhir.convertors.loaders.loaderR5.R4ToR5Loader;
-import org.hl7.fhir.exceptions.DefinitionException;
-import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.r5.context.SimpleWorkerContext;
-import org.hl7.fhir.r5.context.IWorkerContext.IContextResourceLoader;
-import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
-import org.hl7.fhir.r5.elementmodel.Element;
-import org.hl7.fhir.r5.elementmodel.Manager;
-import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.utils.structuremap.ResolvedGroup;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
-import org.hl7.fhir.r5.utils.structuremap.VariableMode;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.IValidatorResourceFetcher;
 import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
 import org.hl7.fhir.r5.utils.validation.constants.IdStatus;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.json.JsonException;
-import org.hl7.fhir.utilities.json.model.JsonElement;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.model.JsonProperty;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
-import org.hl7.fhir.validation.IgLoader;
+import org.hl7.fhir.validation.ValidatorSettings;
 import org.hl7.fhir.validation.ValidatorUtils;
 import org.hl7.fhir.validation.instance.InstanceValidator;
-import org.hl7.fhir.validation.special.R4R5MapTester.Stats;
 
+@Slf4j
 public class R4R5MapTester implements IValidatorResourceFetcher {
 
   public class Stats {
@@ -161,7 +157,7 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
 
   private InstanceValidator validator;
 
-  private StringBuilder log;
+  private StringBuilder validationLog;
 
   public static void main(String[] args) throws JsonException, IOException {
     
@@ -170,11 +166,11 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
   }
 
   public void testMaps(String src, String maps, String filter) throws JsonException, IOException {
-    log = new StringBuilder();
+    validationLog = new StringBuilder();
     log("Load Test Outcomes");
     JsonObject json = JsonParser.parseObjectFromFile(Utilities.path(src, "input", "_data", "conversions.json"));
     log("Load R5");
-    pcm = new FilesystemPackageCacheManager(true);
+    pcm = new FilesystemPackageCacheManager.Builder().build();
     context = new SimpleWorkerContextBuilder().withAllowLoadingDuplicates(true).fromPackage(pcm.loadPackage("hl7.fhir.r5.core#current"));
     log("Load Maps");
 //     context.loadFromPackage(pcm.loadPackage(), null);
@@ -193,17 +189,17 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
     loadPackage("hl7.fhir.r4.core#4.0.1", false);
     loadPackage("hl7.fhir.r4b.core#4.3.0", false);
     
-    validator = new InstanceValidator(context, null, null);
+    validator = new InstanceValidator(context, null, null, null, new ValidatorSettings());
     validator.setSuppressLoincSnomedMessages(true);
     validator.setResourceIdRule(IdStatus.REQUIRED);
     validator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Warning);
     validator.getExtensionDomains().add("http://hl7.org/fhir/us");
     validator.setFetcher(this);
     validator.setAllowExamples(true);
-    validator.setDebug(false);
+    validator.getSettings().setDebug(false);
     validator.setForPublication(true);
     validator.setNoTerminologyChecks(true);
-    context.setExpansionProfile(new Parameters());
+    context.setExpansionParameters(new Parameters());
     
     log("Load R4 Examples");
     NpmPackage r4Examples = pcm.loadPackage("hl7.fhir.r4.examples");
@@ -226,12 +222,12 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
           List<StructureMap> mapTgt = utils.getMapsForUrl(allMaps, sd.getUrl(), StructureMapInputMode.TARGET);
           changed = checkMaps(sd, o.getJsonObject("r4"), "r4", "http://hl7.org/fhir/4.0", mapSrc, mapTgt, r4Examples) || changed;
           changed = checkMaps(sd, o.getJsonObject("r4b"), "r4b", "http://hl7.org/fhir/4.3", mapSrc, mapTgt, r4bExamples) || changed;
-          JsonParser.compose(json, new FileOutputStream(Utilities.path(src, "input", "_data", "conversions.json")), true);
+          JsonParser.compose(json, ManagedFileAccess.outStream(Utilities.path(src, "input", "_data", "conversions.json")), true);
         }
-        System.out.println("   .. done");
+        log("   .. done");
       }
     }
-    TextFile.stringToFile(log.toString(), Utilities.path(src, "input", "_data", "validation.log"));
+    FileUtilities.stringToFile(validationLog.toString(), Utilities.path(src, "input", "_data", "validation.log"));
     log("Done!");
 //    load R4
 //    load R4B
@@ -252,12 +248,12 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
 
   private void loadFromFolder(String path) throws FHIRFormatError, FHIRException, FileNotFoundException, IOException {
     log("Load "+path);
-    for (File f : new File(path).listFiles()) {
+    for (File f : ManagedFileAccess.file(path).listFiles()) {
       if (f.getName().endsWith(".json")) {
-        context.cacheResource(new org.hl7.fhir.r5.formats.JsonParser().parse(new FileInputStream(f)));
+        context.cacheResource(new org.hl7.fhir.r5.formats.JsonParser().parse(ManagedFileAccess.inStream(f)));
       }
       if (f.getName().endsWith(".fml")) {
-        context.cacheResource(utils.parse(TextFile.fileToString(f), f.getName()));
+        context.cacheResource(utils.parse(FileUtilities.fileToString(f), f.getName()));
       }
     }
     
@@ -325,12 +321,13 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
   private void testRoundTrips(StructureDefinition sd, JsonObject json, ResolvedGroup tgtG, ResolvedGroup srcG, StructureDefinition tsd, NpmPackage examples, String code) throws IOException {
     Stats stats = new Stats();
     for (String s : examples.listResources(tsd.getType())) {
-      log("  Test "+examples.id()+"::"+s, false);
+      String testId = examples.id() + "::" + s;
+      log("  Testing " + testId);
       try {
-        log("  "+testRoundTrip(json, sd, tsd, tgtG, srcG, stats, examples.load("package", s), code)+"%");
+        log("  Tested "+ testId + " " +testRoundTrip(json, sd, tsd, tgtG, srcG, stats, examples.load("package", s), code)+"%");
       } catch (Exception e) {
-        log("error: "+e.getMessage());
-        e.printStackTrace();
+        log("  Tested "+ testId + " error: "+e.getMessage());
+        log.error("Error testing " + testId, e);
         stats.error("Error: "+e.getMessage());
       }
     }
@@ -355,7 +352,7 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
 
   private int testRoundTrip(JsonObject json, StructureDefinition sd, StructureDefinition tsd, ResolvedGroup tgtG, ResolvedGroup srcG, Stats stats, InputStream stream, String code) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
     stats.example();
-    Element r4 = new org.hl7.fhir.r5.elementmodel.JsonParser(context).setLogical(tsd).parseSingle(stream);
+    Element r4 = new org.hl7.fhir.r5.elementmodel.JsonParser(context).setLogical(tsd).parseSingle(stream, null);
     stats.parsed();
     int elementCountBefore = r4.countDescendents()+1;
     String id = r4.getIdBase();
@@ -379,15 +376,15 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
       boolean valid = true;
       for (ValidationMessage vm : r5validationErrors) {
         if (vm.isError()) {
-          log.append(vm.summary());
-          log.append("\r\n");
+          validationLog.append(vm.summary());
+          validationLog.append("\r\n");
           valid = false;
         }
       }
       if (valid) {
-        log.append("All OK\r\n");
+        validationLog.append("All OK\r\n");
       }
-      log.append("\r\n");
+      validationLog.append("\r\n");
       stats.valid(valid);
     } catch (Exception e) {
       json.forceObject(id).set("validation-error", e.getMessage());
@@ -412,26 +409,19 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
 
   private void checkSave(String id, String state, Element e) throws FHIRException, FileNotFoundException, IOException {
     if (saveProcess) {
-      new org.hl7.fhir.r5.elementmodel.JsonParser(context).compose(e, new FileOutputStream(Utilities.path("[tmp]", "r4r5", e.fhirType()+"-"+id+"-"+state+".json")), OutputStyle.PRETTY, id);
+      new org.hl7.fhir.r5.elementmodel.JsonParser(context).compose(e, ManagedFileAccess.outStream(Utilities.path("[tmp]", "r4r5", e.fhirType()+"-"+id+"-"+state+".json")), OutputStyle.PRETTY, id);
     }
   }
 
   private void checkSave(String id, String state, Resource r) throws FHIRException, FileNotFoundException, IOException {
     if (saveProcess) {
-      new org.hl7.fhir.r5.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path("[tmp]", "r4r5", r.fhirType()+"-"+id+"-"+state+".json")), r);
+      new org.hl7.fhir.r5.formats.JsonParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(Utilities.path("[tmp]", "r4r5", r.fhirType()+"-"+id+"-"+state+".json")), r);
     }
   }
   
   private void log(String msg) {
-    log(msg, true);
-  }
-  private void log(String msg, boolean ln) {
-    log.append(msg+"\r\n");
-    if (ln) {
-      System.out.println(msg);
-    } else {
-      System.out.print(msg+" ");
-    }
+    validationLog.append(msg).append("\r\n");
+    log.info(msg);
   }
 
   @Override
@@ -440,7 +430,7 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
   }
 
   @Override
-  public boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type)
+  public boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type, boolean canonical, List<CanonicalType> targets)
       throws IOException, FHIRException {
     return true;
   }
@@ -456,13 +446,18 @@ public class R4R5MapTester implements IValidatorResourceFetcher {
   }
 
   @Override
-  public CanonicalResource fetchCanonicalResource(IResourceValidator validator, String url) throws URISyntaxException {
+  public CanonicalResource fetchCanonicalResource(IResourceValidator validator, Object appContext, String url) throws URISyntaxException {
     return null;
   }
 
   @Override
   public boolean fetchesCanonicalResource(IResourceValidator validator, String url) {
     return false;
+  }
+
+  @Override
+  public Set<String> fetchCanonicalResourceVersions(IResourceValidator validator, Object appContext, String url) {
+    return new HashSet<>();
   }
 
 }

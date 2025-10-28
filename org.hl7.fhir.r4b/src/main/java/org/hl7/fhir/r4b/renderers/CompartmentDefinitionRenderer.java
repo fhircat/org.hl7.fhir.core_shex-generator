@@ -17,6 +17,13 @@ import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.utilities.xhtml.XhtmlParser;
 
+/**
+ * Rendering framework:
+ * 
+ * See R5 rendering framework to render R4B resources
+ * 
+ */
+@Deprecated
 public class CompartmentDefinitionRenderer extends ResourceRenderer {
 
   public CompartmentDefinitionRenderer(RenderingContext context) {
@@ -26,37 +33,35 @@ public class CompartmentDefinitionRenderer extends ResourceRenderer {
   public CompartmentDefinitionRenderer(RenderingContext context, ResourceContext rcontext) {
     super(context, rcontext);
   }
-  
+
   public boolean render(XhtmlNode x, Resource dr) throws FHIRFormatError, DefinitionException, IOException {
     return render(x, (CompartmentDefinition) dr);
   }
 
-  public boolean render(XhtmlNode x, CompartmentDefinition cpd) throws FHIRFormatError, DefinitionException, IOException {
+  public boolean render(XhtmlNode x, CompartmentDefinition cpd)
+      throws FHIRFormatError, DefinitionException, IOException {
     StringBuilder in = new StringBuilder();
     StringBuilder out = new StringBuilder();
-    for (CompartmentDefinitionResourceComponent cc: cpd.getResource()) {
+    for (CompartmentDefinitionResourceComponent cc : cpd.getResource()) {
       CommaSeparatedStringBuilder rules = new CommaSeparatedStringBuilder();
       if (!cc.hasParam()) {
-        out.append(" <li><a href=\"").append(cc.getCode().toLowerCase()).append(".html\">").append(cc.getCode()).append("</a></li>\r\n");
+        out.append(" <li><a href=\"").append(cc.getCode().toLowerCase()).append(".html\">").append(cc.getCode())
+            .append("</a></li>\r\n");
       } else if (!rules.equals("{def}")) {
         for (StringType p : cc.getParam())
           rules.append(p.asStringValue());
-        in.append(" <tr><td><a href=\"").append(cc.getCode().toLowerCase()).append(".html\">").append(cc.getCode()).append("</a></td><td>").append(rules.toString()).append("</td></tr>\r\n");
+        in.append(" <tr><td><a href=\"").append(cc.getCode().toLowerCase()).append(".html\">").append(cc.getCode())
+            .append("</a></td><td>").append(rules.toString()).append("</td></tr>\r\n");
       }
     }
     XhtmlNode xn;
-    xn = new XhtmlParser().parseFragment("<div><p>\r\nThe following resources may be in this compartment:\r\n</p>\r\n" +
-        "<table class=\"grid\">\r\n"+
-        " <tr><td><b>Resource</b></td><td><b>Inclusion Criteria</b></td></tr>\r\n"+
-        in.toString()+
-        "</table>\r\n"+
-        "<p>\r\nA resource is in this compartment if the nominated search parameter (or chain) refers to the patient resource that defines the compartment.\r\n</p>\r\n" +
-        "<p>\r\n\r\n</p>\r\n" +
-        "<p>\r\nThe following resources are never in this compartment:\r\n</p>\r\n" +
-        "<ul>\r\n"+
-        out.toString()+
-        "</ul></div>\r\n");
-    x.getChildNodes().addAll(xn.getChildNodes());
+    xn = new XhtmlParser().parseFragment("<div><p>\r\nThe following resources may be in this compartment:\r\n</p>\r\n"
+        + "<table class=\"grid\">\r\n" + " <tr><td><b>Resource</b></td><td><b>Inclusion Criteria</b></td></tr>\r\n"
+        + in.toString() + "</table>\r\n"
+        + "<p>\r\nA resource is in this compartment if the nominated search parameter (or chain) refers to the patient resource that defines the compartment.\r\n</p>\r\n"
+        + "<p>\r\n\r\n</p>\r\n" + "<p>\r\nThe following resources are never in this compartment:\r\n</p>\r\n"
+        + "<ul>\r\n" + out.toString() + "</ul></div>\r\n");
+    x.addChildNodes(xn.getChildNodes());
     return true;
   }
 

@@ -194,7 +194,9 @@ public class NamingSystem extends MetadataResource {
         throw new FHIRException("Unknown NamingSystemIdentifierType code '"+codeString+"'");
         }
     public String toCode(NamingSystemIdentifierType code) {
-      if (code == NamingSystemIdentifierType.OID)
+       if (code == NamingSystemIdentifierType.NULL)
+           return null;
+       if (code == NamingSystemIdentifierType.OID)
         return "oid";
       if (code == NamingSystemIdentifierType.UUID)
         return "uuid";
@@ -207,7 +209,7 @@ public class NamingSystem extends MetadataResource {
       if (code == NamingSystemIdentifierType.OTHER)
         return "other";
       return "?";
-      }
+   }
     public String toSystem(NamingSystemIdentifierType code) {
       return code.getSystem();
       }
@@ -312,6 +314,10 @@ public class NamingSystem extends MetadataResource {
         throw new FHIRException("Unknown NamingSystemType code '"+codeString+"'");
         }
     public String toCode(NamingSystemType code) {
+       if (code == NamingSystemType.NULL)
+           return null;
+       if (code == NamingSystemType.NULL)
+        return null;
       if (code == NamingSystemType.CODESYSTEM)
         return "codesystem";
       if (code == NamingSystemType.IDENTIFIER)
@@ -319,7 +325,7 @@ public class NamingSystem extends MetadataResource {
       if (code == NamingSystemType.ROOT)
         return "root";
       return "?";
-      }
+   }
     public String toSystem(NamingSystemType code) {
       return code.getSystem();
       }
@@ -726,6 +732,26 @@ public class NamingSystem extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new NamingSystemIdentifierTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<NamingSystemIdentifierType>
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("preferred")) {
+          this.preferred = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("authoritative")) {
+          this.authoritative = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -757,23 +783,23 @@ public class NamingSystem extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.uniqueId.type");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.uniqueId.type");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.uniqueId.value");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.uniqueId.value");
         }
         else if (name.equals("preferred")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.uniqueId.preferred");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.uniqueId.preferred");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.uniqueId.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.uniqueId.comment");
         }
         else if (name.equals("period")) {
           this.period = new Period();
           return this.period;
         }
         else if (name.equals("authoritative")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.uniqueId.authoritative");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.uniqueId.authoritative");
         }
         else
           return super.addChild(name);
@@ -1243,8 +1269,8 @@ public class NamingSystem extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -1258,8 +1284,8 @@ public class NamingSystem extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -2859,6 +2885,77 @@ public class NamingSystem extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("kind")) {
+          value = new NamingSystemTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.kind = (Enumeration) value; // Enumeration<NamingSystemType>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("responsible")) {
+          this.responsible = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("usage")) {
+          this.usage = null;
+        } else if (name.equals("uniqueId")) {
+          this.getUniqueId().remove((NamingSystemUniqueIdComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2941,13 +3038,13 @@ public class NamingSystem extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.url");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.version");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -2958,38 +3055,38 @@ public class NamingSystem extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.name");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.title");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.status");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.status");
         }
         else if (name.equals("kind")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.kind");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.kind");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.date");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("responsible")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.responsible");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.responsible");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
           return this.type;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.description");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -2998,19 +3095,19 @@ public class NamingSystem extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -3035,7 +3132,7 @@ public class NamingSystem extends MetadataResource {
           return addRelatedArtifact();
         }
         else if (name.equals("usage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NamingSystem.usage");
+          throw new FHIRException("Cannot call addChild on a singleton property NamingSystem.usage");
         }
         else if (name.equals("uniqueId")) {
           return addUniqueId();

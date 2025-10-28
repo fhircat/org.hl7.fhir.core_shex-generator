@@ -1,36 +1,71 @@
 package org.hl7.fhir.utilities.validation;
 
-import java.util.Set;
-
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.Utilities;
-
-import java.util.HashSet;
+import org.hl7.fhir.utilities.i18n.AcceptLanguageHeader;
 
 public class ValidationOptions {
-  public enum ValueSetMode {
-    ALL_CHECKS, CHECK_MEMERSHIP_ONLY, NO_MEMBERSHIP_CHECK
+  
+  public enum R5BundleRelativeReferencePolicy {
+    DEFAULT,
+    NEVER,
+    ALWAYS;
+
+    public String toCode() {
+      switch (this) {
+      case ALWAYS: return "always";
+      case DEFAULT: return "default";
+      case NEVER: return "never";
+      }
+      return null;
+    }
+
+    public static R5BundleRelativeReferencePolicy fromCode(String code) {
+      switch (code) {
+      case "always": return ALWAYS;
+      case "default": return DEFAULT;
+      case "never": return NEVER;
+      }
+      throw new FHIRException("bad code "+code);
+    }
   }
 
-  private Set<String> languages = new HashSet<>();
+  private AcceptLanguageHeader langs = null;
   private boolean useServer = true;
   private boolean useClient = true;
   private boolean guessSystem = false;
-  private ValueSetMode valueSetMode = ValueSetMode.ALL_CHECKS;
+  private boolean membershipOnly = false;
   private boolean displayWarningMode = false;
   private boolean vsAsUrl;
   private boolean versionFlexible = true;
   private boolean useValueSetDisplays;
   private boolean englishOk = true;
+  private boolean activeOnly = false;
+  private boolean exampleOK = false;
+  private FhirPublication fhirVersion;
+  private R5BundleRelativeReferencePolicy r5BundleRelativeReferencePolicy = R5BundleRelativeReferencePolicy.DEFAULT;
+  private boolean isDefaultLang = false;
+  
+  public ValidationOptions() { this(FhirPublication.R5); }
 
-  public ValidationOptions(String... languages) {
+  public ValidationOptions(FhirPublication fhirVersion) {
     super();
-    for(String s : languages) {
-      this.languages.add(s);
+    this.fhirVersion = fhirVersion;
+  }
+
+  public ValidationOptions(FhirPublication fhirVersion, String language) {
+    super();
+    if (!Utilities.noString(language)) {
+      langs = new AcceptLanguageHeader(language, false);
+      isDefaultLang = false;
     }
   }
 
   public static ValidationOptions defaults() {
-    return new ValidationOptions("en", "en-US");
+    ValidationOptions vo = new ValidationOptions(FhirPublication.R5, "en, en-US");
+    vo.isDefaultLang  = true;
+    return vo;
   }
   
   /**
@@ -40,12 +75,12 @@ public class ValidationOptions {
    * 
    * @return
    */
-  public Set<String> getLanguages() {
-    return languages;
+  public AcceptLanguageHeader getLanguages() {
+    return langs;
   }
 
   public boolean hasLanguages() {
-    return languages.size() > 0;
+    return langs != null && !Utilities.noString(langs.getSource());
   }
 
 
@@ -78,15 +113,11 @@ public class ValidationOptions {
   public boolean isGuessSystem() {
     return guessSystem;
   }
-
-  /**
-   * See {link}
-   * @return
-   */
-  public ValueSetMode getValueSetMode() {
-    return valueSetMode;
-  }
   
+  public boolean isActiveOnly() {
+    return activeOnly;
+  }
+
   /**
    * Don't know what this does
    * 
@@ -114,6 +145,10 @@ public class ValidationOptions {
     return useValueSetDisplays;
   }
 
+  public boolean isMembershipOnly() {
+    return membershipOnly;
+  }
+
   /**
    * if the language is other than english, should the validator accept english as well?
    * 
@@ -129,7 +164,7 @@ public class ValidationOptions {
       return this;
     }
     ValidationOptions n = this.copy();
-    n.languages.add(language);
+    n.addLanguage(language);
     return n;
   }
 
@@ -138,10 +173,16 @@ public class ValidationOptions {
     n.useServer = false;
     return n;
   }
-  
+
   public ValidationOptions withNoClient() {
     ValidationOptions n = this.copy();
     n.useClient = false;
+    return n;
+  }
+
+  public ValidationOptions withUseClient(boolean value) {
+    ValidationOptions n = this.copy();
+    n.useClient = value;
     return n;
   }
 
@@ -150,16 +191,24 @@ public class ValidationOptions {
     n.guessSystem = true;
     return n;
   }
-  
-  public ValidationOptions withCheckValueSetOnly() {
+
+
+  public ValidationOptions withGuessSystem(boolean value) {
     ValidationOptions n = this.copy();
-    n.valueSetMode = ValueSetMode.CHECK_MEMERSHIP_ONLY;
+    n.guessSystem = value;
     return n;
   }
-
-  public ValidationOptions withNoCheckValueSetMembership() {
+  
+  public ValidationOptions withActiveOnly() {
     ValidationOptions n = this.copy();
-    n.valueSetMode = ValueSetMode.NO_MEMBERSHIP_CHECK;
+    n.activeOnly = true;
+    return n;
+  }
+  
+  /** Only for additional bindings **/
+  public ValidationOptions withCheckValueSetOnly() {
+    ValidationOptions n = this.copy();
+    n.membershipOnly = true;
     return n;
   }
 
@@ -188,16 +237,27 @@ public class ValidationOptions {
   }
 
   public ValidationOptions addLanguage(String language) {
-    this.languages.add(language);
+    if (this.langs == null || isDefaultLang) {
+      langs = new AcceptLanguageHeader(language, false);
+    } else {
+      langs.add(language);
+      isDefaultLang = false;
+    }
     return this;
   }
 
-  public ValidationOptions setNoServer(boolean useServer) {
+  public ValidationOptions setLanguages(String language) {
+    langs = new AcceptLanguageHeader(language, false);
+    isDefaultLang = false;
+    return this;
+  }
+
+  public ValidationOptions setUseServer(boolean useServer) {
     this.useServer = useServer;
     return this;
   }
   
-  public ValidationOptions setNoClient(boolean useClient) {
+  public ValidationOptions setUseClient(boolean useClient) {
     this.useClient = useClient;
     return this;
   }
@@ -207,13 +267,13 @@ public class ValidationOptions {
     return this;
   }
   
-  public ValidationOptions setCheckValueSetOnly() {
-    this.valueSetMode = ValueSetMode.CHECK_MEMERSHIP_ONLY;
+  public ValidationOptions setActiveOnly(boolean activeOnly) {
+    this.activeOnly = activeOnly;
     return this;
   }
-
-  public ValidationOptions setNoCheckValueSetMembership() {
-    this.valueSetMode = ValueSetMode.NO_MEMBERSHIP_CHECK;
+  
+  public ValidationOptions setCheckValueSetOnly() {
+    this.membershipOnly = true;
     return this;
   }
 
@@ -246,35 +306,78 @@ public class ValidationOptions {
     return this;
   }
 
+  public boolean isExampleOK() {
+    return exampleOK;
+  }
+
+  public ValidationOptions setExampleOK(boolean exampleOK) {
+    this.exampleOK = exampleOK;
+    return this;
+  }
+  
+  public ValidationOptions withExampleOK() {
+    return setExampleOK(true);
+  }
+
+  
+  public R5BundleRelativeReferencePolicy getR5BundleRelativeReferencePolicy() {
+    return r5BundleRelativeReferencePolicy;
+  }
+
+  public void setR5BundleRelativeReferencePolicy(R5BundleRelativeReferencePolicy r5BundleRelativeReferencePolicy) {
+    if (r5BundleRelativeReferencePolicy == null) {
+      r5BundleRelativeReferencePolicy = R5BundleRelativeReferencePolicy.DEFAULT;
+    } 
+    this.r5BundleRelativeReferencePolicy = r5BundleRelativeReferencePolicy;
+  }
+
+  public ValidationOptions withR5BundleRelativeReferencePolicy(R5BundleRelativeReferencePolicy r5BundleRelativeReferencePolicy) {
+    setR5BundleRelativeReferencePolicy(r5BundleRelativeReferencePolicy);
+    return this;
+  }
+
   public ValidationOptions copy() {
-    ValidationOptions n = new ValidationOptions();
-    n.languages.addAll(languages);
+    ValidationOptions n = new ValidationOptions(fhirVersion);
+    n.langs = langs == null ? null : langs.copy();
+    n.isDefaultLang = isDefaultLang;
     n.useServer = useServer;
     n.useClient = useClient;
     n.guessSystem = guessSystem; 
+    n.activeOnly = activeOnly; 
     n.vsAsUrl = vsAsUrl;
     n.versionFlexible = versionFlexible;
-    n.valueSetMode = valueSetMode;
+    n.membershipOnly = membershipOnly;
     n.useValueSetDisplays = useValueSetDisplays;   
     n.displayWarningMode = displayWarningMode;
+    n.exampleOK = exampleOK;
+    n.r5BundleRelativeReferencePolicy = r5BundleRelativeReferencePolicy;
     return n;
   }
   
 
   public String toJson() {
-    return "\"langs\":\""+languages.toString()+"\", \"useServer\":\""+Boolean.toString(useServer)+"\", \"useClient\":\""+Boolean.toString(useClient)+"\", "+
-       "\"guessSystem\":\""+Boolean.toString(guessSystem)+"\", \"valueSetMode\":\""+valueSetMode.toString()+"\", \"displayWarningMode\":\""+Boolean.toString(displayWarningMode)+"\", \"versionFlexible\":\""+Boolean.toString(versionFlexible)+"\"";
+    return "\"langs\":\""+( langs == null ? "" : langs.toString())+"\", \"useServer\":\""+Boolean.toString(useServer)+"\", \"useClient\":\""+Boolean.toString(useClient)+"\", "+
+       "\"guessSystem\":\""+Boolean.toString(guessSystem)+"\", \"activeOnly\":\""+Boolean.toString(activeOnly)+(exampleOK ? "\", \"exampleOK\":\""+Boolean.toString(exampleOK) : "")+
+       "\", \"membershipOnly\":\""+Boolean.toString(membershipOnly)+"\", \"displayWarningMode\":\""+Boolean.toString(displayWarningMode)+
+       "\", \"versionFlexible\":\""+Boolean.toString(versionFlexible)+"\""+
+       (r5BundleRelativeReferencePolicy != R5BundleRelativeReferencePolicy.DEFAULT ? ", \"r5BundleRelativeReferencePolicy\":\""+r5BundleRelativeReferencePolicy.toCode()+"\"" : "");
   }
 
   public String langSummary() {
-    if (languages.size() == 0) {
+    if (langs == null) {
       return "--";
     } else {
-      return String.join("|", Utilities.sorted(languages));
+      String s = langs.toString();
+      if (Utilities.noString(s)) {
+        s = "--";
+      }
+      return s;
     }
   }
 
-
+  public FhirPublication getFhirVersion() {
+    return fhirVersion;
+  }
 
   
 }

@@ -1,6 +1,5 @@
 package org.hl7.fhir.validation.tests;
 
-import org.hl7.fhir.utilities.npm.CommonPackages;
 import org.junit.jupiter.api.Test;
 
 public class ProfileComparisonTests {
@@ -34,7 +33,7 @@ public class ProfileComparisonTests {
 //        System.out.println("Generating output...");
 //        File htmlFile = null;
 //        try {
-//          htmlFile = new File(pc.generate());
+//          htmlFile = ManagedFileAccess.file(pc.generate());
 //        } catch (Exception e) {
 //          e.printStackTrace();
 //          throw e;

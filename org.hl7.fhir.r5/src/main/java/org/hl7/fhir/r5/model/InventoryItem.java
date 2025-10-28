@@ -166,7 +166,9 @@ public class InventoryItem extends DomainResource {
         throw new FHIRException("Unknown InventoryItemStatusCodes code '"+codeString+"'");
         }
     public String toCode(InventoryItemStatusCodes code) {
-      if (code == InventoryItemStatusCodes.ACTIVE)
+       if (code == InventoryItemStatusCodes.NULL)
+           return null;
+       if (code == InventoryItemStatusCodes.ACTIVE)
         return "active";
       if (code == InventoryItemStatusCodes.INACTIVE)
         return "inactive";
@@ -175,7 +177,7 @@ public class InventoryItem extends DomainResource {
       if (code == InventoryItemStatusCodes.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(InventoryItemStatusCodes code) {
       return code.getSystem();
       }
@@ -400,6 +402,20 @@ public class InventoryItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("nameType")) {
+          this.nameType = null;
+        } else if (name.equals("language")) {
+          value = new CommonLanguagesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.language = (Enumeration) value; // Enumeration<CommonLanguages>
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -429,10 +445,10 @@ public class InventoryItem extends DomainResource {
           return this.nameType;
         }
         else if (name.equals("language")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.name.language");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.name.language");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.name.name");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.name.name");
         }
         else
           return super.addChild(name);
@@ -615,6 +631,17 @@ public class InventoryItem extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("organization")) {
+          this.organization = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -871,6 +898,18 @@ public class InventoryItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("language")) {
+          value = new CommonLanguagesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.language = (Enumeration) value; // Enumeration<CommonLanguages>
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -894,10 +933,10 @@ public class InventoryItem extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("language")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.description.language");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.description.language");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.description.description");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.description.description");
         }
         else
           return super.addChild(name);
@@ -1121,6 +1160,19 @@ public class InventoryItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("associationType")) {
+          this.associationType = null;
+        } else if (name.equals("relatedItem")) {
+          this.relatedItem = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1283,8 +1335,8 @@ public class InventoryItem extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -1298,8 +1350,8 @@ public class InventoryItem extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -1313,8 +1365,8 @@ public class InventoryItem extends DomainResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+            return this.value instanceof DecimalType;
         }
 
         /**
@@ -1328,8 +1380,8 @@ public class InventoryItem extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1343,8 +1395,8 @@ public class InventoryItem extends DomainResource {
           return (UrlType) this.value;
         }
 
-        public boolean hasValueUrlType() { 
-          return this != null && this.value instanceof UrlType;
+        public boolean hasValueUrlType() {
+            return this.value instanceof UrlType;
         }
 
         /**
@@ -1358,8 +1410,8 @@ public class InventoryItem extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -1373,8 +1425,8 @@ public class InventoryItem extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1388,8 +1440,8 @@ public class InventoryItem extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -1403,8 +1455,8 @@ public class InventoryItem extends DomainResource {
           return (Ratio) this.value;
         }
 
-        public boolean hasValueRatio() { 
-          return this != null && this.value instanceof Ratio;
+        public boolean hasValueRatio() {
+            return this.value instanceof Ratio;
         }
 
         /**
@@ -1418,8 +1470,8 @@ public class InventoryItem extends DomainResource {
           return (Annotation) this.value;
         }
 
-        public boolean hasValueAnnotation() { 
-          return this != null && this.value instanceof Annotation;
+        public boolean hasValueAnnotation() {
+            return this.value instanceof Annotation;
         }
 
         /**
@@ -1433,8 +1485,8 @@ public class InventoryItem extends DomainResource {
           return (Address) this.value;
         }
 
-        public boolean hasValueAddress() { 
-          return this != null && this.value instanceof Address;
+        public boolean hasValueAddress() {
+            return this.value instanceof Address;
         }
 
         /**
@@ -1448,8 +1500,8 @@ public class InventoryItem extends DomainResource {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         /**
@@ -1463,8 +1515,8 @@ public class InventoryItem extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         public boolean hasValue() { 
@@ -1544,6 +1596,17 @@ public class InventoryItem extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("characteristicType")) {
+          this.characteristicType = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1994,6 +2057,23 @@ public class InventoryItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("lotNumber")) {
+          this.lotNumber = null;
+        } else if (name.equals("expiry")) {
+          this.expiry = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2026,10 +2106,10 @@ public class InventoryItem extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("lotNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.instance.lotNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.instance.lotNumber");
         }
         else if (name.equals("expiry")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.instance.expiry");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.instance.expiry");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -2950,6 +3030,42 @@ public class InventoryItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new InventoryItemStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<InventoryItemStatusCodes>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("name")) {
+          this.getName().remove((InventoryItemNameComponent) value);
+        } else if (name.equals("responsibleOrganization")) {
+          this.getResponsibleOrganization().remove((InventoryItemResponsibleOrganizationComponent) value);
+        } else if (name.equals("description")) {
+          this.description = (InventoryItemDescriptionComponent) value; // InventoryItemDescriptionComponent
+        } else if (name.equals("inventoryStatus")) {
+          this.getInventoryStatus().remove(value);
+        } else if (name.equals("baseUnit")) {
+          this.baseUnit = null;
+        } else if (name.equals("netContent")) {
+          this.netContent = null;
+        } else if (name.equals("association")) {
+          this.getAssociation().remove((InventoryItemAssociationComponent) value);
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((InventoryItemCharacteristicComponent) value);
+        } else if (name.equals("instance")) {
+          this.instance = (InventoryItemInstanceComponent) value; // InventoryItemInstanceComponent
+        } else if (name.equals("productReference")) {
+          this.productReference = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3000,7 +3116,7 @@ public class InventoryItem extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryItem.status");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryItem.status");
         }
         else if (name.equals("category")) {
           return addCategory();

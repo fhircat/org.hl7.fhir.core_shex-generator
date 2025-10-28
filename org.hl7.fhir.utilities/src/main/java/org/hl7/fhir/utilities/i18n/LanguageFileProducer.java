@@ -1,18 +1,15 @@
 package org.hl7.fhir.utilities.i18n;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.hl7.fhir.utilities.i18n.LanguageFileProducer.TextUnit;
-import org.hl7.fhir.utilities.i18n.LanguageFileProducer.TranslationUnit;
+import org.hl7.fhir.utilities.Utilities;
 import org.xml.sax.SAXException;
-
-import java.util.HashMap;
 
 
 public abstract class LanguageFileProducer {
@@ -43,7 +40,7 @@ public abstract class LanguageFileProducer {
      * Additional language that helps establish the context
      * @return
      */
-    public String getContext1() {
+    public String getContext() {
       return context;
     }
 
@@ -68,6 +65,7 @@ public abstract class LanguageFileProducer {
   
   public static class TranslationUnit extends TextUnit {
     private String language;
+    private String original; // for when the source text has been modified since being translated
 
     public TranslationUnit(String language, String id, String context, String srcText, String tgtText) {
       super(id, context, srcText, tgtText);
@@ -89,6 +87,21 @@ public abstract class LanguageFileProducer {
     public void setTgtText(String tgtText) {
       this.tgtText = tgtText;
     }
+
+    public String getOriginal() {
+      return original;
+    }
+
+    public TranslationUnit setOriginal(String original) {
+      this.original = original;
+      return this;
+    }
+
+    @Override
+    public String toString() {
+      return "["+language+":"+id+"]"+" '"+srcText+"' -> '"+ tgtText+"' ("+context+")";
+    }
+    
   }
 
   public class Translations {
@@ -147,20 +160,40 @@ public abstract class LanguageFileProducer {
     public abstract void finish() throws IOException;
   }
   
-  private String folder;
+  private String rootFolder;
+  private String folderName;
+  private boolean useLangFolder;
   
-  public LanguageFileProducer(String folder) {
+  public LanguageFileProducer(String rootFolder, String folderName, boolean useLangFolder) {
     super();
-    this.folder = folder;
+    this.rootFolder = rootFolder;
+    this.folderName = folderName;
+    this.useLangFolder = useLangFolder;
   }
   
   public LanguageFileProducer() {
     super();
   }
   
-  public String getFolder() {
-    return folder;
+
+  public String getRootFolder() {
+    return rootFolder;
   }
+
+  public String getFolderName() {
+    return folderName;
+  }
+
+  public boolean isUseLangFolder() {
+    return useLangFolder;
+  }
+  
+
+  protected String getTargetFileName(String targetLang, String filename) throws IOException {
+    return Utilities.path(getRootFolder(), isUseLangFolder() ? targetLang : ".", getFolderName(), filename);
+  }
+
+  
 
   public abstract LanguageProducerSession startSession(String id, String baseLang) throws IOException;
   public abstract void finish();

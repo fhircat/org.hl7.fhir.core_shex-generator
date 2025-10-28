@@ -152,14 +152,16 @@ public class Device extends DomainResource {
         throw new FHIRException("Unknown FHIRDeviceStatus code '"+codeString+"'");
         }
     public String toCode(FHIRDeviceStatus code) {
-      if (code == FHIRDeviceStatus.ACTIVE)
+       if (code == FHIRDeviceStatus.NULL)
+           return null;
+       if (code == FHIRDeviceStatus.ACTIVE)
         return "active";
       if (code == FHIRDeviceStatus.INACTIVE)
         return "inactive";
       if (code == FHIRDeviceStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(FHIRDeviceStatus code) {
       return code.getSystem();
       }
@@ -320,7 +322,9 @@ public class Device extends DomainResource {
         throw new FHIRException("Unknown UDIEntryType code '"+codeString+"'");
         }
     public String toCode(UDIEntryType code) {
-      if (code == UDIEntryType.BARCODE)
+       if (code == UDIEntryType.NULL)
+           return null;
+       if (code == UDIEntryType.BARCODE)
         return "barcode";
       if (code == UDIEntryType.RFID)
         return "rfid";
@@ -335,7 +339,7 @@ public class Device extends DomainResource {
       if (code == UDIEntryType.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(UDIEntryType code) {
       return code.getSystem();
       }
@@ -795,6 +799,26 @@ public class Device extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("deviceIdentifier")) {
+          this.deviceIdentifier = null;
+        } else if (name.equals("issuer")) {
+          this.issuer = null;
+        } else if (name.equals("jurisdiction")) {
+          this.jurisdiction = null;
+        } else if (name.equals("carrierAIDC")) {
+          this.carrierAIDC = null;
+        } else if (name.equals("carrierHRF")) {
+          this.carrierHRF = null;
+        } else if (name.equals("entryType")) {
+          value = new UDIEntryTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.entryType = (Enumeration) value; // Enumeration<UDIEntryType>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -826,22 +850,22 @@ public class Device extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("deviceIdentifier")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.deviceIdentifier");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.deviceIdentifier");
         }
         else if (name.equals("issuer")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.issuer");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.issuer");
         }
         else if (name.equals("jurisdiction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.jurisdiction");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.jurisdiction");
         }
         else if (name.equals("carrierAIDC")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.carrierAIDC");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.carrierAIDC");
         }
         else if (name.equals("carrierHRF")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.carrierHRF");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.carrierHRF");
         }
         else if (name.equals("entryType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.udiCarrier.entryType");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.udiCarrier.entryType");
         }
         else
           return super.addChild(name);
@@ -1137,6 +1161,20 @@ public class Device extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("type")) {
+          value = new DeviceNameTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<DeviceNameType>
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1162,13 +1200,13 @@ public class Device extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.name.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.name.value");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.name.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.name.type");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.name.display");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.name.display");
         }
         else
           return super.addChild(name);
@@ -1477,6 +1515,21 @@ public class Device extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("component")) {
+          this.component = null;
+        } else if (name.equals("installDate")) {
+          this.installDate = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1512,10 +1565,10 @@ public class Device extends DomainResource {
           return this.component;
         }
         else if (name.equals("installDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.version.installDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.version.installDate");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.version.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.version.value");
         }
         else
           return super.addChild(name);
@@ -1766,6 +1819,19 @@ public class Device extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("specification")) {
+          this.specification = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1799,7 +1865,7 @@ public class Device extends DomainResource {
           return this.specification;
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.conformsTo.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.conformsTo.version");
         }
         else
           return super.addChild(name);
@@ -1928,8 +1994,8 @@ public class Device extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -1943,8 +2009,8 @@ public class Device extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -1958,8 +2024,8 @@ public class Device extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -1973,8 +2039,8 @@ public class Device extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -1988,8 +2054,8 @@ public class Device extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+            return this.value instanceof IntegerType;
         }
 
         /**
@@ -2003,8 +2069,8 @@ public class Device extends DomainResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         /**
@@ -2018,8 +2084,8 @@ public class Device extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         public boolean hasValue() { 
@@ -2093,6 +2159,17 @@ public class Device extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -4124,6 +4201,78 @@ public class Device extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("displayName")) {
+          this.displayName = null;
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else if (name.equals("udiCarrier")) {
+          this.getUdiCarrier().remove((DeviceUdiCarrierComponent) value);
+        } else if (name.equals("status")) {
+          value = new FHIRDeviceStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FHIRDeviceStatus>
+        } else if (name.equals("availabilityStatus")) {
+          this.availabilityStatus = null;
+        } else if (name.equals("biologicalSourceEvent")) {
+          this.biologicalSourceEvent = null;
+        } else if (name.equals("manufacturer")) {
+          this.manufacturer = null;
+        } else if (name.equals("manufactureDate")) {
+          this.manufactureDate = null;
+        } else if (name.equals("expirationDate")) {
+          this.expirationDate = null;
+        } else if (name.equals("lotNumber")) {
+          this.lotNumber = null;
+        } else if (name.equals("serialNumber")) {
+          this.serialNumber = null;
+        } else if (name.equals("name")) {
+          this.getName().remove((DeviceNameComponent) value);
+        } else if (name.equals("modelNumber")) {
+          this.modelNumber = null;
+        } else if (name.equals("partNumber")) {
+          this.partNumber = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("version")) {
+          this.getVersion().remove((DeviceVersionComponent) value);
+        } else if (name.equals("conformsTo")) {
+          this.getConformsTo().remove((DeviceConformsToComponent) value);
+        } else if (name.equals("property")) {
+          this.getProperty().remove((DevicePropertyComponent) value);
+        } else if (name.equals("mode")) {
+          this.mode = null;
+        } else if (name.equals("cycle")) {
+          this.cycle = null;
+        } else if (name.equals("duration")) {
+          this.duration = null;
+        } else if (name.equals("owner")) {
+          this.owner = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("endpoint")) {
+          this.getEndpoint().remove(value);
+        } else if (name.equals("gateway")) {
+          this.getGateway().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("safety")) {
+          this.getSafety().remove(value);
+        } else if (name.equals("parent")) {
+          this.parent = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4210,7 +4359,7 @@ public class Device extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("displayName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.displayName");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.displayName");
         }
         else if (name.equals("definition")) {
           this.definition = new CodeableReference();
@@ -4220,7 +4369,7 @@ public class Device extends DomainResource {
           return addUdiCarrier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.status");
         }
         else if (name.equals("availabilityStatus")) {
           this.availabilityStatus = new CodeableConcept();
@@ -4231,28 +4380,28 @@ public class Device extends DomainResource {
           return this.biologicalSourceEvent;
         }
         else if (name.equals("manufacturer")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.manufacturer");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.manufacturer");
         }
         else if (name.equals("manufactureDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.manufactureDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.manufactureDate");
         }
         else if (name.equals("expirationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.expirationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.expirationDate");
         }
         else if (name.equals("lotNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.lotNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.lotNumber");
         }
         else if (name.equals("serialNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.serialNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.serialNumber");
         }
         else if (name.equals("name")) {
           return addName();
         }
         else if (name.equals("modelNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.modelNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.modelNumber");
         }
         else if (name.equals("partNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.partNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.partNumber");
         }
         else if (name.equals("category")) {
           return addCategory();
@@ -4293,7 +4442,7 @@ public class Device extends DomainResource {
           return this.location;
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Device.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Device.url");
         }
         else if (name.equals("endpoint")) {
           return addEndpoint();

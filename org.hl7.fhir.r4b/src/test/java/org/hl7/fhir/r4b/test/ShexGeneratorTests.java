@@ -12,18 +12,20 @@ import org.hl7.fhir.r4b.conformance.ShExGenerator;
 import org.hl7.fhir.r4b.conformance.ShExGenerator.HTMLLinkPolicy;
 import org.hl7.fhir.r4b.model.StructureDefinition;
 import org.hl7.fhir.r4b.test.utils.TestingUtilities;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.junit.jupiter.api.Test;
 
 public class ShexGeneratorTests {
 
   private void doTest(String name) throws FileNotFoundException, IOException, FHIRException, UcumException {
-    StructureDefinition sd = TestingUtilities.context().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, null));
+    StructureDefinition sd = TestingUtilities.context().fetchResource(StructureDefinition.class,
+        ProfileUtilities.sdNs(name, null));
     if (sd == null) {
       throw new FHIRException("StructuredDefinition for " + name + "was null");
     }
     Path outPath = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), name.toLowerCase() + ".shex");
-    TextFile.stringToFile(new ShExGenerator(TestingUtilities.context()).generate(HTMLLinkPolicy.NONE, sd), outPath.toString());
+    FileUtilities.stringToFile(new ShExGenerator(TestingUtilities.context()).generate(HTMLLinkPolicy.NONE, sd),
+        outPath.toString());
   }
 
   @Test

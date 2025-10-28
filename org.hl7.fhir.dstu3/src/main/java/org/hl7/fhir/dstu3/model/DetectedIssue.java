@@ -220,7 +220,9 @@ public class DetectedIssue extends DomainResource {
         throw new FHIRException("Unknown DetectedIssueStatus code '"+codeString+"'");
         }
     public String toCode(DetectedIssueStatus code) {
-      if (code == DetectedIssueStatus.REGISTERED)
+       if (code == DetectedIssueStatus.NULL)
+           return null;
+       if (code == DetectedIssueStatus.REGISTERED)
         return "registered";
       if (code == DetectedIssueStatus.PRELIMINARY)
         return "preliminary";
@@ -237,7 +239,7 @@ public class DetectedIssue extends DomainResource {
       if (code == DetectedIssueStatus.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(DetectedIssueStatus code) {
       return code.getSystem();
       }
@@ -342,14 +344,16 @@ public class DetectedIssue extends DomainResource {
         throw new FHIRException("Unknown DetectedIssueSeverity code '"+codeString+"'");
         }
     public String toCode(DetectedIssueSeverity code) {
-      if (code == DetectedIssueSeverity.HIGH)
+       if (code == DetectedIssueSeverity.NULL)
+           return null;
+       if (code == DetectedIssueSeverity.HIGH)
         return "high";
       if (code == DetectedIssueSeverity.MODERATE)
         return "moderate";
       if (code == DetectedIssueSeverity.LOW)
         return "low";
       return "?";
-      }
+   }
     public String toSystem(DetectedIssueSeverity code) {
       return code.getSystem();
       }
@@ -606,7 +610,7 @@ public class DetectedIssue extends DomainResource {
           return this.action;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.date");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.date");
         }
         else if (name.equals("author")) {
           this.author = new Reference();
@@ -1097,16 +1101,6 @@ public class DetectedIssue extends DomainResource {
     }
 
     /**
-     * @deprecated Use Reference#setResource(IBaseResource) instead
-     */
-    @Deprecated
-    public List<Resource> getImplicatedTarget() { 
-      if (this.implicatedTarget == null)
-        this.implicatedTarget = new ArrayList<Resource>();
-      return this.implicatedTarget;
-    }
-
-    /**
      * @return {@link #detail} (A textual explanation of the detected issue.). This is the underlying object with id, value and extensions. The accessor "getDetail" gives direct access to the value
      */
     public StringType getDetailElement() { 
@@ -1429,21 +1423,21 @@ public class DetectedIssue extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.status");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.status");
         }
         else if (name.equals("category")) {
           this.category = new CodeableConcept();
           return this.category;
         }
         else if (name.equals("severity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.severity");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.severity");
         }
         else if (name.equals("patient")) {
           this.patient = new Reference();
           return this.patient;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.date");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.date");
         }
         else if (name.equals("author")) {
           this.author = new Reference();
@@ -1453,10 +1447,10 @@ public class DetectedIssue extends DomainResource {
           return addImplicated();
         }
         else if (name.equals("detail")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.detail");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.detail");
         }
         else if (name.equals("reference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DetectedIssue.reference");
+          throw new FHIRException("Cannot call addChild on a singleton property DetectedIssue.reference");
         }
         else if (name.equals("mitigation")) {
           return addMitigation();

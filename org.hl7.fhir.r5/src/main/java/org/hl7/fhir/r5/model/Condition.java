@@ -185,6 +185,17 @@ public class Condition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -454,6 +465,19 @@ public class Condition extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("summary")) {
+          this.summary = null;
+        } else if (name.equals("assessment")) {
+          this.getAssessment().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1003,8 +1027,8 @@ public class Condition extends DomainResource {
       return (DateTimeType) this.onset;
     }
 
-    public boolean hasOnsetDateTimeType() { 
-      return this != null && this.onset instanceof DateTimeType;
+    public boolean hasOnsetDateTimeType() {
+        return this.onset instanceof DateTimeType;
     }
 
     /**
@@ -1018,8 +1042,8 @@ public class Condition extends DomainResource {
       return (Age) this.onset;
     }
 
-    public boolean hasOnsetAge() { 
-      return this != null && this.onset instanceof Age;
+    public boolean hasOnsetAge() {
+        return this.onset instanceof Age;
     }
 
     /**
@@ -1033,8 +1057,8 @@ public class Condition extends DomainResource {
       return (Period) this.onset;
     }
 
-    public boolean hasOnsetPeriod() { 
-      return this != null && this.onset instanceof Period;
+    public boolean hasOnsetPeriod() {
+        return this.onset instanceof Period;
     }
 
     /**
@@ -1048,8 +1072,8 @@ public class Condition extends DomainResource {
       return (Range) this.onset;
     }
 
-    public boolean hasOnsetRange() { 
-      return this != null && this.onset instanceof Range;
+    public boolean hasOnsetRange() {
+        return this.onset instanceof Range;
     }
 
     /**
@@ -1063,8 +1087,8 @@ public class Condition extends DomainResource {
       return (StringType) this.onset;
     }
 
-    public boolean hasOnsetStringType() { 
-      return this != null && this.onset instanceof StringType;
+    public boolean hasOnsetStringType() {
+        return this.onset instanceof StringType;
     }
 
     public boolean hasOnset() { 
@@ -1099,8 +1123,8 @@ public class Condition extends DomainResource {
       return (DateTimeType) this.abatement;
     }
 
-    public boolean hasAbatementDateTimeType() { 
-      return this != null && this.abatement instanceof DateTimeType;
+    public boolean hasAbatementDateTimeType() {
+        return this.abatement instanceof DateTimeType;
     }
 
     /**
@@ -1114,8 +1138,8 @@ public class Condition extends DomainResource {
       return (Age) this.abatement;
     }
 
-    public boolean hasAbatementAge() { 
-      return this != null && this.abatement instanceof Age;
+    public boolean hasAbatementAge() {
+        return this.abatement instanceof Age;
     }
 
     /**
@@ -1129,8 +1153,8 @@ public class Condition extends DomainResource {
       return (Period) this.abatement;
     }
 
-    public boolean hasAbatementPeriod() { 
-      return this != null && this.abatement instanceof Period;
+    public boolean hasAbatementPeriod() {
+        return this.abatement instanceof Period;
     }
 
     /**
@@ -1144,8 +1168,8 @@ public class Condition extends DomainResource {
       return (Range) this.abatement;
     }
 
-    public boolean hasAbatementRange() { 
-      return this != null && this.abatement instanceof Range;
+    public boolean hasAbatementRange() {
+        return this.abatement instanceof Range;
     }
 
     /**
@@ -1159,8 +1183,8 @@ public class Condition extends DomainResource {
       return (StringType) this.abatement;
     }
 
-    public boolean hasAbatementStringType() { 
-      return this != null && this.abatement instanceof StringType;
+    public boolean hasAbatementStringType() {
+        return this.abatement instanceof StringType;
     }
 
     public boolean hasAbatement() { 
@@ -1613,6 +1637,45 @@ public class Condition extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("clinicalStatus")) {
+          this.clinicalStatus = null;
+        } else if (name.equals("verificationStatus")) {
+          this.verificationStatus = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("severity")) {
+          this.severity = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("bodySite")) {
+          this.getBodySite().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("onset[x]")) {
+          this.onset = null;
+        } else if (name.equals("abatement[x]")) {
+          this.abatement = null;
+        } else if (name.equals("recordedDate")) {
+          this.recordedDate = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((ConditionParticipantComponent) value);
+        } else if (name.equals("stage")) {
+          this.getStage().remove((ConditionStageComponent) value);
+        } else if (name.equals("evidence")) {
+          this.getEvidence().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1739,7 +1802,7 @@ public class Condition extends DomainResource {
           return this.abatement;
         }
         else if (name.equals("recordedDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Condition.recordedDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Condition.recordedDate");
         }
         else if (name.equals("participant")) {
           return addParticipant();

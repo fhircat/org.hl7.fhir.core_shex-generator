@@ -166,7 +166,9 @@ public class Encounter extends DomainResource {
         throw new FHIRException("Unknown EncounterLocationStatus code '"+codeString+"'");
         }
     public String toCode(EncounterLocationStatus code) {
-      if (code == EncounterLocationStatus.PLANNED)
+       if (code == EncounterLocationStatus.NULL)
+           return null;
+       if (code == EncounterLocationStatus.PLANNED)
         return "planned";
       if (code == EncounterLocationStatus.ACTIVE)
         return "active";
@@ -175,7 +177,7 @@ public class Encounter extends DomainResource {
       if (code == EncounterLocationStatus.COMPLETED)
         return "completed";
       return "?";
-      }
+   }
     public String toSystem(EncounterLocationStatus code) {
       return code.getSystem();
       }
@@ -372,6 +374,19 @@ public class Encounter extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -646,6 +661,17 @@ public class Encounter extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("use")) {
+          this.getUse().remove(value);
+        } else if (name.equals("value")) {
+          this.getValue().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -911,6 +937,17 @@ public class Encounter extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("condition")) {
+          this.getCondition().remove(value);
+        } else if (name.equals("use")) {
+          this.getUse().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1279,6 +1316,25 @@ public class Encounter extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("preAdmissionIdentifier")) {
+          this.preAdmissionIdentifier = null;
+        } else if (name.equals("origin")) {
+          this.origin = null;
+        } else if (name.equals("admitSource")) {
+          this.admitSource = null;
+        } else if (name.equals("reAdmission")) {
+          this.reAdmission = null;
+        } else if (name.equals("destination")) {
+          this.destination = null;
+        } else if (name.equals("dischargeDisposition")) {
+          this.dischargeDisposition = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1627,6 +1683,22 @@ public class Encounter extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("status")) {
+          value = new EncounterLocationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EncounterLocationStatus>
+        } else if (name.equals("form")) {
+          this.form = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1658,7 +1730,7 @@ public class Encounter extends DomainResource {
           return this.location;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Encounter.location.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Encounter.location.status");
         }
         else if (name.equals("form")) {
           this.form = new CodeableConcept();
@@ -1859,7 +1931,9 @@ public class Encounter extends DomainResource {
     protected DateTimeType plannedEndDate;
 
     /**
-     * Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.When missing it is the time in between the start and end values.
+     * Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.
+
+When missing it is the time in between the start and end values.
      */
     @Child(name = "length", type = {Duration.class}, order=19, min=0, max=1, modifier=false, summary=false)
     @Description(shortDefinition="Actual quantity of time the encounter lasted (less time absent)", formalDefinition="Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.\r\rWhen missing it is the time in between the start and end values." )
@@ -1911,7 +1985,9 @@ public class Encounter extends DomainResource {
     protected List<CodeableConcept> specialCourtesy;
 
     /**
-     * Details about the stay during which a healthcare service is provided.This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.
+     * Details about the stay during which a healthcare service is provided.
+
+This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.
      */
     @Child(name = "admission", type = {}, order=26, min=0, max=1, modifier=false, summary=false)
     @Description(shortDefinition="Details about the admission to a healthcare service", formalDefinition="Details about the stay during which a healthcare service is provided.\r\rThis does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge." )
@@ -2759,7 +2835,9 @@ public class Encounter extends DomainResource {
     }
 
     /**
-     * @return {@link #length} (Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.When missing it is the time in between the start and end values.)
+     * @return {@link #length} (Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.
+
+When missing it is the time in between the start and end values.)
      */
     public Duration getLength() { 
       if (this.length == null)
@@ -2775,7 +2853,9 @@ public class Encounter extends DomainResource {
     }
 
     /**
-     * @param value {@link #length} (Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.When missing it is the time in between the start and end values.)
+     * @param value {@link #length} (Actual quantity of time the encounter lasted. This excludes the time during leaves of absence.
+
+When missing it is the time in between the start and end values.)
      */
     public Encounter setLength(Duration value) { 
       this.length = value;
@@ -3101,7 +3181,9 @@ public class Encounter extends DomainResource {
     }
 
     /**
-     * @return {@link #admission} (Details about the stay during which a healthcare service is provided.This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.)
+     * @return {@link #admission} (Details about the stay during which a healthcare service is provided.
+
+This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.)
      */
     public EncounterAdmissionComponent getAdmission() { 
       if (this.admission == null)
@@ -3117,7 +3199,9 @@ public class Encounter extends DomainResource {
     }
 
     /**
-     * @param value {@link #admission} (Details about the stay during which a healthcare service is provided.This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.)
+     * @param value {@link #admission} (Details about the stay during which a healthcare service is provided.
+
+This does not describe the event of admitting the patient, but rather any information that is relevant from the time of admittance until the time of discharge.)
      */
     public Encounter setAdmission(EncounterAdmissionComponent value) { 
       this.admission = value;
@@ -3438,6 +3522,70 @@ public class Encounter extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new EncounterStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<EncounterStatus>
+        } else if (name.equals("class")) {
+          this.getClass_().remove(value);
+        } else if (name.equals("priority")) {
+          this.priority = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("serviceType")) {
+          this.getServiceType().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("subjectStatus")) {
+          this.subjectStatus = null;
+        } else if (name.equals("episodeOfCare")) {
+          this.getEpisodeOfCare().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("careTeam")) {
+          this.getCareTeam().remove(value);
+        } else if (name.equals("partOf")) {
+          this.partOf = null;
+        } else if (name.equals("serviceProvider")) {
+          this.serviceProvider = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((EncounterParticipantComponent) value);
+        } else if (name.equals("appointment")) {
+          this.getAppointment().remove(value);
+        } else if (name.equals("virtualService")) {
+          this.getVirtualService().remove(value);
+        } else if (name.equals("actualPeriod")) {
+          this.actualPeriod = null;
+        } else if (name.equals("plannedStartDate")) {
+          this.plannedStartDate = null;
+        } else if (name.equals("plannedEndDate")) {
+          this.plannedEndDate = null;
+        } else if (name.equals("length")) {
+          this.length = null;
+        } else if (name.equals("reason")) {
+          this.getReason().remove((ReasonComponent) value);
+        } else if (name.equals("diagnosis")) {
+          this.getDiagnosis().remove((DiagnosisComponent) value);
+        } else if (name.equals("account")) {
+          this.getAccount().remove(value);
+        } else if (name.equals("dietPreference")) {
+          this.getDietPreference().remove(value);
+        } else if (name.equals("specialArrangement")) {
+          this.getSpecialArrangement().remove(value);
+        } else if (name.equals("specialCourtesy")) {
+          this.getSpecialCourtesy().remove(value);
+        } else if (name.equals("admission")) {
+          this.admission = (EncounterAdmissionComponent) value; // EncounterAdmissionComponent
+        } else if (name.equals("location")) {
+          this.getLocation().remove((EncounterLocationComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3516,7 +3664,7 @@ public class Encounter extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Encounter.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Encounter.status");
         }
         else if (name.equals("class")) {
           return addClass_();
@@ -3570,10 +3718,10 @@ public class Encounter extends DomainResource {
           return this.actualPeriod;
         }
         else if (name.equals("plannedStartDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Encounter.plannedStartDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Encounter.plannedStartDate");
         }
         else if (name.equals("plannedEndDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Encounter.plannedEndDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Encounter.plannedEndDate");
         }
         else if (name.equals("length")) {
           this.length = new Duration();

@@ -166,7 +166,9 @@ public class GraphDefinition extends CanonicalResource {
         throw new FHIRException("Unknown GraphCompartmentRule code '"+codeString+"'");
         }
     public String toCode(GraphCompartmentRule code) {
-      if (code == GraphCompartmentRule.IDENTICAL)
+       if (code == GraphCompartmentRule.NULL)
+           return null;
+       if (code == GraphCompartmentRule.IDENTICAL)
         return "identical";
       if (code == GraphCompartmentRule.MATCHING)
         return "matching";
@@ -175,7 +177,7 @@ public class GraphDefinition extends CanonicalResource {
       if (code == GraphCompartmentRule.CUSTOM)
         return "custom";
       return "?";
-      }
+   }
     public String toSystem(GraphCompartmentRule code) {
       return code.getSystem();
       }
@@ -266,12 +268,14 @@ public class GraphDefinition extends CanonicalResource {
         throw new FHIRException("Unknown GraphCompartmentUse code '"+codeString+"'");
         }
     public String toCode(GraphCompartmentUse code) {
-      if (code == GraphCompartmentUse.WHERE)
+       if (code == GraphCompartmentUse.NULL)
+           return null;
+       if (code == GraphCompartmentUse.WHERE)
         return "where";
       if (code == GraphCompartmentUse.REQUIRES)
         return "requires";
       return "?";
-      }
+   }
     public String toSystem(GraphCompartmentUse code) {
       return code.getSystem();
       }
@@ -583,6 +587,22 @@ public class GraphDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("nodeId")) {
+          this.nodeId = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("type")) {
+          value = new VersionIndependentResourceTypesAllEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<VersionIndependentResourceTypesAll>
+        } else if (name.equals("profile")) {
+          this.profile = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -610,16 +630,16 @@ public class GraphDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("nodeId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.node.nodeId");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.node.nodeId");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.node.description");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.node.description");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.node.type");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.node.type");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.node.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.node.profile");
         }
         else
           return super.addChild(name);
@@ -1296,6 +1316,31 @@ public class GraphDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("min")) {
+          this.min = null;
+        } else if (name.equals("max")) {
+          this.max = null;
+        } else if (name.equals("sourceId")) {
+          this.sourceId = null;
+        } else if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("sliceName")) {
+          this.sliceName = null;
+        } else if (name.equals("targetId")) {
+          this.targetId = null;
+        } else if (name.equals("params")) {
+          this.params = null;
+        } else if (name.equals("compartment")) {
+          this.getCompartment().remove((GraphDefinitionLinkCompartmentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1333,28 +1378,28 @@ public class GraphDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.description");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.description");
         }
         else if (name.equals("min")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.min");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.min");
         }
         else if (name.equals("max")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.max");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.max");
         }
         else if (name.equals("sourceId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.sourceId");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.sourceId");
         }
         else if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.path");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.path");
         }
         else if (name.equals("sliceName")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.sliceName");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.sliceName");
         }
         else if (name.equals("targetId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.targetId");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.targetId");
         }
         else if (name.equals("params")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.params");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.params");
         }
         else if (name.equals("compartment")) {
           return addCompartment();
@@ -1796,6 +1841,26 @@ public class GraphDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("use")) {
+          value = new GraphCompartmentUseEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.use = (Enumeration) value; // Enumeration<GraphCompartmentUse>
+        } else if (name.equals("rule")) {
+          value = new GraphCompartmentRuleEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.rule = (Enumeration) value; // Enumeration<GraphCompartmentRule>
+        } else if (name.equals("code")) {
+          value = new CompartmentTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<CompartmentType>
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1825,19 +1890,19 @@ public class GraphDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.compartment.use");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.compartment.use");
         }
         else if (name.equals("rule")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.compartment.rule");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.compartment.rule");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.compartment.code");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.compartment.code");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.compartment.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.compartment.expression");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.link.compartment.description");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.link.compartment.description");
         }
         else
           return super.addChild(name);
@@ -2224,8 +2289,8 @@ public class GraphDefinition extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -2239,8 +2304,8 @@ public class GraphDefinition extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -3249,6 +3314,54 @@ public class GraphDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("start")) {
+          this.start = null;
+        } else if (name.equals("node")) {
+          this.getNode().remove((GraphDefinitionNodeComponent) value);
+        } else if (name.equals("link")) {
+          this.getLink().remove((GraphDefinitionLinkComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3309,13 +3422,13 @@ public class GraphDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -3326,28 +3439,28 @@ public class GraphDefinition extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -3356,16 +3469,16 @@ public class GraphDefinition extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.copyrightLabel");
         }
         else if (name.equals("start")) {
-          throw new FHIRException("Cannot call addChild on a primitive type GraphDefinition.start");
+          throw new FHIRException("Cannot call addChild on a singleton property GraphDefinition.start");
         }
         else if (name.equals("node")) {
           return addNode();

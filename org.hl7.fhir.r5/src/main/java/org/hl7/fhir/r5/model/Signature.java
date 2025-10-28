@@ -500,6 +500,27 @@ public class Signature extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("when")) {
+          this.when = null;
+        } else if (name.equals("who")) {
+          this.who = null;
+        } else if (name.equals("onBehalfOf")) {
+          this.onBehalfOf = null;
+        } else if (name.equals("targetFormat")) {
+          this.targetFormat = null;
+        } else if (name.equals("sigFormat")) {
+          this.sigFormat = null;
+        } else if (name.equals("data")) {
+          this.data = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -536,7 +557,7 @@ public class Signature extends DataType implements ICompositeType {
           return addType();
         }
         else if (name.equals("when")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Signature.when");
+          throw new FHIRException("Cannot call addChild on a singleton property Signature.when");
         }
         else if (name.equals("who")) {
           this.who = new Reference();
@@ -547,13 +568,13 @@ public class Signature extends DataType implements ICompositeType {
           return this.onBehalfOf;
         }
         else if (name.equals("targetFormat")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Signature.targetFormat");
+          throw new FHIRException("Cannot call addChild on a singleton property Signature.targetFormat");
         }
         else if (name.equals("sigFormat")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Signature.sigFormat");
+          throw new FHIRException("Cannot call addChild on a singleton property Signature.sigFormat");
         }
         else if (name.equals("data")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Signature.data");
+          throw new FHIRException("Cannot call addChild on a singleton property Signature.data");
         }
         else
           return super.addChild(name);

@@ -136,12 +136,14 @@ public class DataRequirement extends DataType implements ICompositeType {
         throw new FHIRException("Unknown SortDirection code '"+codeString+"'");
         }
     public String toCode(SortDirection code) {
-      if (code == SortDirection.ASCENDING)
+       if (code == SortDirection.NULL)
+           return null;
+       if (code == SortDirection.ASCENDING)
         return "ascending";
       if (code == SortDirection.DESCENDING)
         return "descending";
       return "?";
-      }
+   }
     public String toSystem(SortDirection code) {
       return code.getSystem();
       }
@@ -302,7 +304,9 @@ public class DataRequirement extends DataType implements ICompositeType {
         throw new FHIRException("Unknown ValueFilterComparator code '"+codeString+"'");
         }
     public String toCode(ValueFilterComparator code) {
-      if (code == ValueFilterComparator.EQ)
+       if (code == ValueFilterComparator.NULL)
+           return null;
+       if (code == ValueFilterComparator.EQ)
         return "eq";
       if (code == ValueFilterComparator.GT)
         return "gt";
@@ -317,7 +321,7 @@ public class DataRequirement extends DataType implements ICompositeType {
       if (code == ValueFilterComparator.EB)
         return "eb";
       return "?";
-      }
+   }
     public String toSystem(ValueFilterComparator code) {
       return code.getSystem();
       }
@@ -629,6 +633,21 @@ public class DataRequirement extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("searchParam")) {
+          this.searchParam = null;
+        } else if (name.equals("valueSet")) {
+          this.valueSet = null;
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -656,13 +675,13 @@ public class DataRequirement extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.codeFilter.path");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.codeFilter.path");
         }
         else if (name.equals("searchParam")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.codeFilter.searchParam");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.codeFilter.searchParam");
         }
         else if (name.equals("valueSet")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.codeFilter.valueSet");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.codeFilter.valueSet");
         }
         else if (name.equals("code")) {
           return addCode();
@@ -871,8 +890,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -886,8 +905,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -901,8 +920,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         public boolean hasValue() { 
@@ -982,6 +1001,19 @@ public class DataRequirement extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("searchParam")) {
+          this.searchParam = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1008,10 +1040,10 @@ public class DataRequirement extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.dateFilter.path");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.dateFilter.path");
         }
         else if (name.equals("searchParam")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.dateFilter.searchParam");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.dateFilter.searchParam");
         }
         else if (name.equals("valueDateTime")) {
           this.value = new DateTimeType();
@@ -1280,8 +1312,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+            return this.value instanceof DateTimeType;
         }
 
         /**
@@ -1295,8 +1327,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (Period) this.value;
         }
 
-        public boolean hasValuePeriod() { 
-          return this != null && this.value instanceof Period;
+        public boolean hasValuePeriod() {
+            return this.value instanceof Period;
         }
 
         /**
@@ -1310,8 +1342,8 @@ public class DataRequirement extends DataType implements ICompositeType {
           return (Duration) this.value;
         }
 
-        public boolean hasValueDuration() { 
-          return this != null && this.value instanceof Duration;
+        public boolean hasValueDuration() {
+            return this.value instanceof Duration;
         }
 
         public boolean hasValue() { 
@@ -1401,6 +1433,22 @@ public class DataRequirement extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("searchParam")) {
+          this.searchParam = null;
+        } else if (name.equals("comparator")) {
+          value = new ValueFilterComparatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.comparator = (Enumeration) value; // Enumeration<ValueFilterComparator>
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1429,13 +1477,13 @@ public class DataRequirement extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.valueFilter.path");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.valueFilter.path");
         }
         else if (name.equals("searchParam")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.valueFilter.searchParam");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.valueFilter.searchParam");
         }
         else if (name.equals("comparator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.valueFilter.comparator");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.valueFilter.comparator");
         }
         else if (name.equals("valueDateTime")) {
           this.value = new DateTimeType();
@@ -1679,6 +1727,18 @@ public class DataRequirement extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("path")) {
+          this.path = null;
+        } else if (name.equals("direction")) {
+          value = new SortDirectionEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.direction = (Enumeration) value; // Enumeration<SortDirection>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1702,10 +1762,10 @@ public class DataRequirement extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.sort.path");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.sort.path");
         }
         else if (name.equals("direction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.sort.direction");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.sort.direction");
         }
         else
           return super.addChild(name);
@@ -1962,8 +2022,8 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
       return (CodeableConcept) this.subject;
     }
 
-    public boolean hasSubjectCodeableConcept() { 
-      return this != null && this.subject instanceof CodeableConcept;
+    public boolean hasSubjectCodeableConcept() {
+        return this.subject instanceof CodeableConcept;
     }
 
     /**
@@ -1977,8 +2037,8 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
       return (Reference) this.subject;
     }
 
-    public boolean hasSubjectReference() { 
-      return this != null && this.subject instanceof Reference;
+    public boolean hasSubjectReference() {
+        return this.subject instanceof Reference;
     }
 
     public boolean hasSubject() { 
@@ -2433,6 +2493,32 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new FHIRTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<FHIRTypes>
+        } else if (name.equals("profile")) {
+          this.getProfile().remove(value);
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("mustSupport")) {
+          this.getMustSupport().remove(value);
+        } else if (name.equals("codeFilter")) {
+          this.getCodeFilter().remove((DataRequirementCodeFilterComponent) value);
+        } else if (name.equals("dateFilter")) {
+          this.getDateFilter().remove((DataRequirementDateFilterComponent) value);
+        } else if (name.equals("valueFilter")) {
+          this.getValueFilter().remove((DataRequirementValueFilterComponent) value);
+        } else if (name.equals("limit")) {
+          this.limit = null;
+        } else if (name.equals("sort")) {
+          this.getSort().remove((DataRequirementSortComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2471,10 +2557,10 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.type");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.type");
         }
         else if (name.equals("profile")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.profile");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.profile");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -2485,7 +2571,7 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
           return this.subject;
         }
         else if (name.equals("mustSupport")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.mustSupport");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.mustSupport");
         }
         else if (name.equals("codeFilter")) {
           return addCodeFilter();
@@ -2497,7 +2583,7 @@ The value of mustSupport SHALL be a FHIRPath resolvable on the type of the DataR
           return addValueFilter();
         }
         else if (name.equals("limit")) {
-          throw new FHIRException("Cannot call addChild on a primitive type DataRequirement.limit");
+          throw new FHIRException("Cannot call addChild on a singleton property DataRequirement.limit");
         }
         else if (name.equals("sort")) {
           return addSort();

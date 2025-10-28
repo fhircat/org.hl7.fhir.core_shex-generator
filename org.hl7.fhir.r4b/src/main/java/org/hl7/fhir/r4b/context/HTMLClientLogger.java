@@ -29,28 +29,30 @@ package org.hl7.fhir.r4b.context;
   
  */
 
-
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.ToolingClientLogger;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 
+@MarkedToMoveToAdjunctPackage
+@Slf4j
 public class HTMLClientLogger extends BaseLogger implements ToolingClientLogger {
 
-  private static final boolean DEBUG = false;
-  
   private boolean req = false;
   private PrintStream file;
 
-  public HTMLClientLogger(String log) {
+  public HTMLClientLogger(String log) throws IOException {
     if (log != null) {
       try {
-        file = new PrintStream(new FileOutputStream(log));
+        file = new PrintStream(ManagedFileAccess.outStream(log));
       } catch (FileNotFoundException e) {
       }
     }
@@ -58,18 +60,17 @@ public class HTMLClientLogger extends BaseLogger implements ToolingClientLogger 
 
   @Override
   public void logRequest(String method, String url, List<String> headers, byte[] body) {
-    if (DEBUG) {
-      System.out.println(" txlog req: " +method+" "+url+" "+present(body));
-    }
+    log.debug(" txlog req: " + method + " " + url + " " + present(body));
+
     if (file == null)
       return;
     String id = nextId();
-    file.println("<hr/><a name=\"l"+id+"\"> </a>");
-    file.println("<p>#"+id+"</p>");
+    file.println("<hr/><a name=\"l" + id + "\"> </a>");
+    file.println("<p>#" + id + "</p>");
     file.println("<pre>");
-    file.println(method+" "+url+" HTTP/1.0");
+    file.println(method + " " + url + " HTTP/1.0");
     if (headers != null) {
-      for (String s : headers) {  
+      for (String s : headers) {
         file.println(Utilities.escapeXml(s));
       }
     }
@@ -85,20 +86,20 @@ public class HTMLClientLogger extends BaseLogger implements ToolingClientLogger 
   }
 
   @Override
-  public void logResponse(String outcome, List<String> headers, byte[] body) {
-    if (DEBUG) {
-      System.out.println(" txlog resp: " +outcome+" "+present(body));
-    }
+  public void logResponse(String outcome, List<String> headers, byte[] body, long start) {
+
+    log.debug(" txlog resp: " + outcome + " " + present(body));
+
 
     if (file == null)
       return;
     if (!req) {
-      System.out.println("Record Response without request");
+      log.debug("Record Response without request");
     }
     req = false;
     file.println("<pre>");
     file.println(outcome);
-    for (String s : headers)  
+    for (String s : headers)
       file.println(Utilities.escapeXml(s));
     if (body != null) {
       file.println("");
@@ -117,11 +118,10 @@ public class HTMLClientLogger extends BaseLogger implements ToolingClientLogger 
     String cnt = new String(body);
     cnt = cnt.replace("\n", " ").replace("\r", "");
     if (cnt.length() > 800) {
-      return cnt.substring(0, 798)+"...";
+      return cnt.substring(0, 798) + "...";
     } else {
       return cnt;
     }
   }
-
 
 }

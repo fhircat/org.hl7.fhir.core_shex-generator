@@ -4,12 +4,15 @@ import org.hl7.fhir.r4b.model.Base;
 import org.hl7.fhir.r4b.model.DataType;
 import org.hl7.fhir.r4b.model.Property;
 import org.hl7.fhir.r4b.model.Resource;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
 
+@MarkedToMoveToAdjunctPackage
 public class DataTypeVisitor {
 
   public interface IDatatypeVisitor<T extends DataType> {
     Class<T> classT();
+
     boolean visit(String path, T node);
   }
 
@@ -17,7 +20,7 @@ public class DataTypeVisitor {
   private boolean anyTrue;
   private int nodeCount;
   private int selectedCount;
-  
+
   public <T extends DataType> void visit(Resource resource, IDatatypeVisitor<T> visitor) {
     visitNode(resource.fhirType(), resource, visitor);
   }
@@ -38,12 +41,12 @@ public class DataTypeVisitor {
       if (p.isList()) {
         int i = 0;
         for (Base b : p.getValues()) {
-          visitNode(path+"."+p.getName()+"["+i+"]", b, visitor);
+          visitNode(path + "." + p.getName() + "[" + i + "]", b, visitor);
           i++;
         }
       } else {
         for (Base b : p.getValues()) {
-          visitNode(path+"."+p.getName(), b, visitor);
+          visitNode(path + "." + p.getName(), b, visitor);
         }
       }
     }
@@ -64,6 +67,5 @@ public class DataTypeVisitor {
   public int getSelectedCount() {
     return selectedCount;
   }
-  
-  
+
 }

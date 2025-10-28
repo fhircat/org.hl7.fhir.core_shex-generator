@@ -126,8 +126,8 @@ public class Dosage extends BackboneType implements ICompositeType {
           return (Range) this.dose;
         }
 
-        public boolean hasDoseRange() { 
-          return this != null && this.dose instanceof Range;
+        public boolean hasDoseRange() {
+            return this.dose instanceof Range;
         }
 
         /**
@@ -141,8 +141,8 @@ public class Dosage extends BackboneType implements ICompositeType {
           return (Quantity) this.dose;
         }
 
-        public boolean hasDoseQuantity() { 
-          return this != null && this.dose instanceof Quantity;
+        public boolean hasDoseQuantity() {
+            return this.dose instanceof Quantity;
         }
 
         public boolean hasDose() { 
@@ -177,8 +177,8 @@ public class Dosage extends BackboneType implements ICompositeType {
           return (Ratio) this.rate;
         }
 
-        public boolean hasRateRatio() { 
-          return this != null && this.rate instanceof Ratio;
+        public boolean hasRateRatio() {
+            return this.rate instanceof Ratio;
         }
 
         /**
@@ -192,8 +192,8 @@ public class Dosage extends BackboneType implements ICompositeType {
           return (Range) this.rate;
         }
 
-        public boolean hasRateRange() { 
-          return this != null && this.rate instanceof Range;
+        public boolean hasRateRange() {
+            return this.rate instanceof Range;
         }
 
         /**
@@ -207,8 +207,8 @@ public class Dosage extends BackboneType implements ICompositeType {
           return (Quantity) this.rate;
         }
 
-        public boolean hasRateQuantity() { 
-          return this != null && this.rate instanceof Quantity;
+        public boolean hasRateQuantity() {
+            return this.rate instanceof Quantity;
         }
 
         public boolean hasRate() { 
@@ -289,6 +289,19 @@ public class Dosage extends BackboneType implements ICompositeType {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("dose[x]")) {
+          this.dose = null;
+        } else if (name.equals("rate[x]")) {
+          this.rate = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1193,6 +1206,41 @@ public class Dosage extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("additionalInstruction")) {
+          this.getAdditionalInstruction().remove(value);
+        } else if (name.equals("patientInstruction")) {
+          this.patientInstruction = null;
+        } else if (name.equals("timing")) {
+          this.timing = null;
+        } else if (name.equals("asNeeded")) {
+          this.asNeeded = null;
+        } else if (name.equals("asNeededFor")) {
+          this.getAsNeededFor().remove(value);
+        } else if (name.equals("site")) {
+          this.site = null;
+        } else if (name.equals("route")) {
+          this.route = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("doseAndRate")) {
+          this.getDoseAndRate().remove((DosageDoseAndRateComponent) value);
+        } else if (name.equals("maxDosePerPeriod")) {
+          this.getMaxDosePerPeriod().remove(value);
+        } else if (name.equals("maxDosePerAdministration")) {
+          this.maxDosePerAdministration = null;
+        } else if (name.equals("maxDosePerLifetime")) {
+          this.maxDosePerLifetime = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1240,23 +1288,23 @@ public class Dosage extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Dosage.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property Dosage.sequence");
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Dosage.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Dosage.text");
         }
         else if (name.equals("additionalInstruction")) {
           return addAdditionalInstruction();
         }
         else if (name.equals("patientInstruction")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Dosage.patientInstruction");
+          throw new FHIRException("Cannot call addChild on a singleton property Dosage.patientInstruction");
         }
         else if (name.equals("timing")) {
           this.timing = new Timing();
           return this.timing;
         }
         else if (name.equals("asNeeded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Dosage.asNeeded");
+          throw new FHIRException("Cannot call addChild on a singleton property Dosage.asNeeded");
         }
         else if (name.equals("asNeededFor")) {
           return addAsNeededFor();

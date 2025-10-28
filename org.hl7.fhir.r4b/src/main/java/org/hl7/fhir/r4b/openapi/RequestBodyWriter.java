@@ -1,5 +1,7 @@
 package org.hl7.fhir.r4b.openapi;
 
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
@@ -29,10 +31,9 @@ package org.hl7.fhir.r4b.openapi;
   
  */
 
-
-
 import com.google.gson.JsonObject;
 
+@MarkedToMoveToAdjunctPackage
 public class RequestBodyWriter extends BaseWriter {
 
   public RequestBodyWriter(JsonObject object) {
@@ -41,16 +42,16 @@ public class RequestBodyWriter extends BaseWriter {
 
   public RequestBodyWriter description(String value) {
     object.addProperty("description", value);
-    return this;            
+    return this;
   }
-  
+
   public RequestBodyWriter required(boolean value) {
     object.addProperty("required", value);
-    return this;            
+    return this;
   }
-  
+
   public MediaTypeObjectWriter content(String type) {
     return new MediaTypeObjectWriter(ensureMapObject("content", type));
   }
-  
+
 }

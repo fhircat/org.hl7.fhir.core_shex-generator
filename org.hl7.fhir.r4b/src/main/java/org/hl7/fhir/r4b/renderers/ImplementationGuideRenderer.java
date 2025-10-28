@@ -13,6 +13,13 @@ import org.hl7.fhir.r4b.renderers.utils.BaseWrappers.ResourceWrapper;
 import org.hl7.fhir.r4b.renderers.utils.Resolver.ResourceContext;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+/**
+ * Rendering framework:
+ * 
+ * See R5 rendering framework to render R4B resources
+ * 
+ */
+@Deprecated
 public class ImplementationGuideRenderer extends ResourceRenderer {
 
   public ImplementationGuideRenderer(RenderingContext context) {
@@ -22,7 +29,7 @@ public class ImplementationGuideRenderer extends ResourceRenderer {
   public ImplementationGuideRenderer(RenderingContext context, ResourceContext rcontext) {
     super(context, rcontext);
   }
-  
+
   public boolean render(XhtmlNode x, Resource dr) throws FHIRFormatError, DefinitionException, IOException {
     return render(x, (ImplementationGuide) dr);
   }

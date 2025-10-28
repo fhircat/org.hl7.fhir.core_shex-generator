@@ -410,6 +410,23 @@ public class Statistic extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("numberOfStudies")) {
+          this.numberOfStudies = null;
+        } else if (name.equals("numberOfParticipants")) {
+          this.numberOfParticipants = null;
+        } else if (name.equals("knownDataCount")) {
+          this.knownDataCount = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -439,19 +456,19 @@ public class Statistic extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.sampleSize.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.sampleSize.description");
         }
         else if (name.equals("note")) {
           return addNote();
         }
         else if (name.equals("numberOfStudies")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.sampleSize.numberOfStudies");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.sampleSize.numberOfStudies");
         }
         else if (name.equals("numberOfParticipants")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.sampleSize.numberOfParticipants");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.sampleSize.numberOfParticipants");
         }
         else if (name.equals("knownDataCount")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.sampleSize.knownDataCount");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.sampleSize.knownDataCount");
         }
         else
           return super.addChild(name);
@@ -958,6 +975,27 @@ public class Statistic extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("level")) {
+          this.level = null;
+        } else if (name.equals("range")) {
+          this.range = null;
+        } else if (name.equals("attributeEstimate")) {
+          this.getAttributeEstimate().remove((StatisticAttributeEstimateAttributeEstimateComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -991,7 +1029,7 @@ public class Statistic extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.attributeEstimate.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.attributeEstimate.description");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -1005,7 +1043,7 @@ public class Statistic extends BackboneType implements ICompositeType {
           return this.quantity;
         }
         else if (name.equals("level")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.attributeEstimate.level");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.attributeEstimate.level");
         }
         else if (name.equals("range")) {
           this.range = new Range();
@@ -1455,6 +1493,25 @@ public class Statistic extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("level")) {
+          this.level = null;
+        } else if (name.equals("range")) {
+          this.range = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1486,7 +1543,7 @@ public class Statistic extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.attributeEstimate.attributeEstimate.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.attributeEstimate.attributeEstimate.description");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -1500,7 +1557,7 @@ public class Statistic extends BackboneType implements ICompositeType {
           return this.quantity;
         }
         else if (name.equals("level")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.attributeEstimate.attributeEstimate.level");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.attributeEstimate.attributeEstimate.level");
         }
         else if (name.equals("range")) {
           this.range = new Range();
@@ -1763,6 +1820,19 @@ public class Statistic extends BackboneType implements ICompositeType {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("variable")) {
+          this.getVariable().remove((StatisticModelCharacteristicVariableComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2217,6 +2287,24 @@ public class Statistic extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("variableDefinition")) {
+          this.variableDefinition = null;
+        } else if (name.equals("handling")) {
+          value = new EvidenceVariableHandlingEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.handling = (Enumeration) value; // Enumeration<EvidenceVariableHandling>
+        } else if (name.equals("valueCategory")) {
+          this.getValueCategory().remove(value);
+        } else if (name.equals("valueQuantity")) {
+          this.getValueQuantity().remove(value);
+        } else if (name.equals("valueRange")) {
+          this.getValueRange().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2250,7 +2338,7 @@ public class Statistic extends BackboneType implements ICompositeType {
           return this.variableDefinition;
         }
         else if (name.equals("handling")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.modelCharacteristic.variable.handling");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.modelCharacteristic.variable.handling");
         }
         else if (name.equals("valueCategory")) {
           return addValueCategory();
@@ -2915,6 +3003,33 @@ public class Statistic extends BackboneType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("statisticType")) {
+          this.statisticType = null;
+        } else if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("numberOfEvents")) {
+          this.numberOfEvents = null;
+        } else if (name.equals("numberAffected")) {
+          this.numberAffected = null;
+        } else if (name.equals("sampleSize")) {
+          this.sampleSize = (StatisticSampleSizeComponent) value; // StatisticSampleSizeComponent
+        } else if (name.equals("attributeEstimate")) {
+          this.getAttributeEstimate().remove((StatisticAttributeEstimateComponent) value);
+        } else if (name.equals("modelCharacteristic")) {
+          this.getModelCharacteristic().remove((StatisticModelCharacteristicComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2954,7 +3069,7 @@ public class Statistic extends BackboneType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.description");
         }
         else if (name.equals("note")) {
           return addNote();
@@ -2972,10 +3087,10 @@ public class Statistic extends BackboneType implements ICompositeType {
           return this.quantity;
         }
         else if (name.equals("numberOfEvents")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.numberOfEvents");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.numberOfEvents");
         }
         else if (name.equals("numberAffected")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Statistic.numberAffected");
+          throw new FHIRException("Cannot call addChild on a singleton property Statistic.numberAffected");
         }
         else if (name.equals("sampleSize")) {
           this.sampleSize = new StatisticSampleSizeComponent();

@@ -97,8 +97,8 @@ public class CommunicationRequest extends DomainResource {
           return (Attachment) this.content;
         }
 
-        public boolean hasContentAttachment() { 
-          return this != null && this.content instanceof Attachment;
+        public boolean hasContentAttachment() {
+            return this.content instanceof Attachment;
         }
 
         /**
@@ -112,8 +112,8 @@ public class CommunicationRequest extends DomainResource {
           return (Reference) this.content;
         }
 
-        public boolean hasContentReference() { 
-          return this != null && this.content instanceof Reference;
+        public boolean hasContentReference() {
+            return this.content instanceof Reference;
         }
 
         /**
@@ -127,8 +127,8 @@ public class CommunicationRequest extends DomainResource {
           return (CodeableConcept) this.content;
         }
 
-        public boolean hasContentCodeableConcept() { 
-          return this != null && this.content instanceof CodeableConcept;
+        public boolean hasContentCodeableConcept() {
+            return this.content instanceof CodeableConcept;
         }
 
         public boolean hasContent() { 
@@ -190,6 +190,15 @@ public class CommunicationRequest extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("content[x]")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1119,8 +1128,8 @@ public class CommunicationRequest extends DomainResource {
       return (DateTimeType) this.occurrence;
     }
 
-    public boolean hasOccurrenceDateTimeType() { 
-      return this != null && this.occurrence instanceof DateTimeType;
+    public boolean hasOccurrenceDateTimeType() {
+        return this.occurrence instanceof DateTimeType;
     }
 
     /**
@@ -1134,8 +1143,8 @@ public class CommunicationRequest extends DomainResource {
       return (Period) this.occurrence;
     }
 
-    public boolean hasOccurrencePeriod() { 
-      return this != null && this.occurrence instanceof Period;
+    public boolean hasOccurrencePeriod() {
+        return this.occurrence instanceof Period;
     }
 
     public boolean hasOccurrence() { 
@@ -1657,6 +1666,60 @@ public class CommunicationRequest extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("replaces")) {
+          this.getReplaces().remove(value);
+        } else if (name.equals("groupIdentifier")) {
+          this.groupIdentifier = null;
+        } else if (name.equals("status")) {
+          value = new RequestStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<RequestStatus>
+        } else if (name.equals("statusReason")) {
+          this.statusReason = null;
+        } else if (name.equals("intent")) {
+          value = new RequestIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<RequestIntent>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("priority")) {
+          value = new RequestPriorityEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.priority = (Enumeration) value; // Enumeration<RequestPriority>
+        } else if (name.equals("doNotPerform")) {
+          this.doNotPerform = null;
+        } else if (name.equals("medium")) {
+          this.getMedium().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("about")) {
+          this.getAbout().remove(value);
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("payload")) {
+          this.getPayload().remove((CommunicationRequestPayloadComponent) value);
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("authoredOn")) {
+          this.authoredOn = null;
+        } else if (name.equals("requester")) {
+          this.requester = null;
+        } else if (name.equals("recipient")) {
+          this.getRecipient().remove(value);
+        } else if (name.equals("informationProvider")) {
+          this.getInformationProvider().remove(value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1734,23 +1797,23 @@ public class CommunicationRequest extends DomainResource {
           return this.groupIdentifier;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CommunicationRequest.status");
+          throw new FHIRException("Cannot call addChild on a singleton property CommunicationRequest.status");
         }
         else if (name.equals("statusReason")) {
           this.statusReason = new CodeableConcept();
           return this.statusReason;
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CommunicationRequest.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property CommunicationRequest.intent");
         }
         else if (name.equals("category")) {
           return addCategory();
         }
         else if (name.equals("priority")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CommunicationRequest.priority");
+          throw new FHIRException("Cannot call addChild on a singleton property CommunicationRequest.priority");
         }
         else if (name.equals("doNotPerform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CommunicationRequest.doNotPerform");
+          throw new FHIRException("Cannot call addChild on a singleton property CommunicationRequest.doNotPerform");
         }
         else if (name.equals("medium")) {
           return addMedium();
@@ -1778,7 +1841,7 @@ public class CommunicationRequest extends DomainResource {
           return this.occurrence;
         }
         else if (name.equals("authoredOn")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CommunicationRequest.authoredOn");
+          throw new FHIRException("Cannot call addChild on a singleton property CommunicationRequest.authoredOn");
         }
         else if (name.equals("requester")) {
           this.requester = new Reference();

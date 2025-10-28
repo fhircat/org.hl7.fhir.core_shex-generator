@@ -436,6 +436,23 @@ public class CompartmentDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("param")) {
+          this.getParam().remove(value);
+        } else if (name.equals("documentation")) {
+          this.documentation = null;
+        } else if (name.equals("startParam")) {
+          this.startParam = null;
+        } else if (name.equals("endParam")) {
+          this.endParam = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -465,19 +482,19 @@ public class CompartmentDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.resource.code");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.resource.code");
         }
         else if (name.equals("param")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.resource.param");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.resource.param");
         }
         else if (name.equals("documentation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.resource.documentation");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.resource.documentation");
         }
         else if (name.equals("startParam")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.resource.startParam");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.resource.startParam");
         }
         else if (name.equals("endParam")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.resource.endParam");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.resource.endParam");
         }
         else
           return super.addChild(name);
@@ -784,8 +801,8 @@ public class CompartmentDefinition extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -799,8 +816,8 @@ public class CompartmentDefinition extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -1758,6 +1775,47 @@ public class CompartmentDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("code")) {
+          value = new CompartmentTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<CompartmentType>
+        } else if (name.equals("search")) {
+          this.search = null;
+        } else if (name.equals("resource")) {
+          this.getResource().remove((CompartmentDefinitionResourceComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1810,10 +1868,10 @@ public class CompartmentDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.url");
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -1824,40 +1882,40 @@ public class CompartmentDefinition extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.purpose");
         }
         else if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.code");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.code");
         }
         else if (name.equals("search")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CompartmentDefinition.search");
+          throw new FHIRException("Cannot call addChild on a singleton property CompartmentDefinition.search");
         }
         else if (name.equals("resource")) {
           return addResource();

@@ -220,7 +220,9 @@ public class TriggerDefinition extends DataType implements ICompositeType {
         throw new FHIRException("Unknown TriggerType code '"+codeString+"'");
         }
     public String toCode(TriggerType code) {
-      if (code == TriggerType.NAMEDEVENT)
+       if (code == TriggerType.NULL)
+           return null;
+       if (code == TriggerType.NAMEDEVENT)
         return "named-event";
       if (code == TriggerType.PERIODIC)
         return "periodic";
@@ -237,7 +239,7 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       if (code == TriggerType.DATAACCESSENDED)
         return "data-access-ended";
       return "?";
-      }
+   }
     public String toSystem(TriggerType code) {
       return code.getSystem();
       }
@@ -495,8 +497,8 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       return (Timing) this.timing;
     }
 
-    public boolean hasTimingTiming() { 
-      return this != null && this.timing instanceof Timing;
+    public boolean hasTimingTiming() {
+        return this.timing instanceof Timing;
     }
 
     /**
@@ -510,8 +512,8 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       return (Reference) this.timing;
     }
 
-    public boolean hasTimingReference() { 
-      return this != null && this.timing instanceof Reference;
+    public boolean hasTimingReference() {
+        return this.timing instanceof Reference;
     }
 
     /**
@@ -525,8 +527,8 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       return (DateType) this.timing;
     }
 
-    public boolean hasTimingDateType() { 
-      return this != null && this.timing instanceof DateType;
+    public boolean hasTimingDateType() {
+        return this.timing instanceof DateType;
     }
 
     /**
@@ -540,8 +542,8 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       return (DateTimeType) this.timing;
     }
 
-    public boolean hasTimingDateTimeType() { 
-      return this != null && this.timing instanceof DateTimeType;
+    public boolean hasTimingDateTimeType() {
+        return this.timing instanceof DateTimeType;
     }
 
     public boolean hasTiming() { 
@@ -733,6 +735,28 @@ public class TriggerDefinition extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new TriggerTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<TriggerType>
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("subscriptionTopic")) {
+          this.subscriptionTopic = null;
+        } else if (name.equals("timing[x]")) {
+          this.timing = null;
+        } else if (name.equals("data")) {
+          this.getData().remove(value);
+        } else if (name.equals("condition")) {
+          this.condition = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -767,17 +791,17 @@ public class TriggerDefinition extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TriggerDefinition.type");
+          throw new FHIRException("Cannot call addChild on a singleton property TriggerDefinition.type");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TriggerDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property TriggerDefinition.name");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("subscriptionTopic")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TriggerDefinition.subscriptionTopic");
+          throw new FHIRException("Cannot call addChild on a singleton property TriggerDefinition.subscriptionTopic");
         }
         else if (name.equals("timingTiming")) {
           this.timing = new Timing();

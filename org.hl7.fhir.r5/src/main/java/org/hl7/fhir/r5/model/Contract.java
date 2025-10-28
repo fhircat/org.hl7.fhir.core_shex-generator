@@ -321,7 +321,9 @@ public class Contract extends DomainResource {
         throw new FHIRException("Unknown ContractResourcePublicationStatusCodes code '"+codeString+"'");
         }
     public String toCode(ContractResourcePublicationStatusCodes code) {
-      if (code == ContractResourcePublicationStatusCodes.AMENDED)
+       if (code == ContractResourcePublicationStatusCodes.NULL)
+           return null;
+       if (code == ContractResourcePublicationStatusCodes.AMENDED)
         return "amended";
       if (code == ContractResourcePublicationStatusCodes.APPENDED)
         return "appended";
@@ -352,7 +354,7 @@ public class Contract extends DomainResource {
       if (code == ContractResourcePublicationStatusCodes.TERMINATED)
         return "terminated";
       return "?";
-      }
+   }
     public String toSystem(ContractResourcePublicationStatusCodes code) {
       return code.getSystem();
       }
@@ -625,7 +627,9 @@ public class Contract extends DomainResource {
         throw new FHIRException("Unknown ContractResourceStatusCodes code '"+codeString+"'");
         }
     public String toCode(ContractResourceStatusCodes code) {
-      if (code == ContractResourceStatusCodes.AMENDED)
+       if (code == ContractResourceStatusCodes.NULL)
+           return null;
+       if (code == ContractResourceStatusCodes.AMENDED)
         return "amended";
       if (code == ContractResourceStatusCodes.APPENDED)
         return "appended";
@@ -656,7 +660,7 @@ public class Contract extends DomainResource {
       if (code == ContractResourceStatusCodes.TERMINATED)
         return "terminated";
       return "?";
-      }
+   }
     public String toSystem(ContractResourceStatusCodes code) {
       return code.getSystem();
       }
@@ -1027,6 +1031,26 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subType")) {
+          this.subType = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("publicationDate")) {
+          this.publicationDate = null;
+        } else if (name.equals("publicationStatus")) {
+          value = new ContractResourcePublicationStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.publicationStatus = (Enumeration) value; // Enumeration<ContractResourcePublicationStatusCodes>
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1070,13 +1094,13 @@ public class Contract extends DomainResource {
           return this.publisher;
         }
         else if (name.equals("publicationDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.contentDefinition.publicationDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.contentDefinition.publicationDate");
         }
         else if (name.equals("publicationStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.contentDefinition.publicationStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.contentDefinition.publicationStatus");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.contentDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.contentDefinition.copyright");
         }
         else
           return super.addChild(name);
@@ -1353,8 +1377,8 @@ public class Contract extends DomainResource {
           return (CodeableConcept) this.topic;
         }
 
-        public boolean hasTopicCodeableConcept() { 
-          return this != null && this.topic instanceof CodeableConcept;
+        public boolean hasTopicCodeableConcept() {
+          return this.topic instanceof CodeableConcept;
         }
 
         /**
@@ -1368,8 +1392,8 @@ public class Contract extends DomainResource {
           return (Reference) this.topic;
         }
 
-        public boolean hasTopicReference() { 
-          return this != null && this.topic instanceof Reference;
+        public boolean hasTopicReference() {
+          return this.topic instanceof Reference;
         }
 
         public boolean hasTopic() { 
@@ -1853,6 +1877,37 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("applies")) {
+          this.applies = null;
+        } else if (name.equals("topic[x]")) {
+          this.topic = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subType")) {
+          this.subType = null;
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("securityLabel")) {
+          this.getSecurityLabel().remove((SecurityLabelComponent) value);
+        } else if (name.equals("offer")) {
+          this.offer = (ContractOfferComponent) value; // ContractOfferComponent
+        } else if (name.equals("asset")) {
+          this.getAsset().remove((ContractAssetComponent) value);
+        } else if (name.equals("action")) {
+          this.getAction().remove((ActionComponent) value);
+        } else if (name.equals("group")) {
+          this.getGroup().remove((TermComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1901,7 +1956,7 @@ public class Contract extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.issued");
         }
         else if (name.equals("applies")) {
           this.applies = new Period();
@@ -1924,7 +1979,7 @@ public class Contract extends DomainResource {
           return this.subType;
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.text");
         }
         else if (name.equals("securityLabel")) {
           return addSecurityLabel();
@@ -2328,6 +2383,21 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("number")) {
+          this.getNumber().remove(value);
+        } else if (name.equals("classification")) {
+          this.classification = null;
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("control")) {
+          this.getControl().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2355,7 +2425,7 @@ public class Contract extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("number")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.securityLabel.number");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.securityLabel.number");
         }
         else if (name.equals("classification")) {
           this.classification = new Coding();
@@ -3084,6 +3154,33 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("party")) {
+          this.getParty().remove((ContractPartyComponent) value);
+        } else if (name.equals("topic")) {
+          this.topic = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("decision")) {
+          this.decision = null;
+        } else if (name.equals("decisionMode")) {
+          this.getDecisionMode().remove(value);
+        } else if (name.equals("answer")) {
+          this.getAnswer().remove((AnswerComponent) value);
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("linkId")) {
+          this.getLinkId().remove(value);
+        } else if (name.equals("securityLabelNumber")) {
+          this.getSecurityLabelNumber().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3147,13 +3244,13 @@ public class Contract extends DomainResource {
           return addAnswer();
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.offer.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.offer.text");
         }
         else if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.offer.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.offer.linkId");
         }
         else if (name.equals("securityLabelNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.offer.securityLabelNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.offer.securityLabelNumber");
         }
         else
           return super.addChild(name);
@@ -3402,6 +3499,17 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.getReference().remove(value);
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3526,8 +3634,8 @@ public class Contract extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+          return this.value instanceof BooleanType;
         }
 
         /**
@@ -3541,8 +3649,8 @@ public class Contract extends DomainResource {
           return (DecimalType) this.value;
         }
 
-        public boolean hasValueDecimalType() { 
-          return this != null && this.value instanceof DecimalType;
+        public boolean hasValueDecimalType() {
+          return this.value instanceof DecimalType;
         }
 
         /**
@@ -3556,8 +3664,8 @@ public class Contract extends DomainResource {
           return (IntegerType) this.value;
         }
 
-        public boolean hasValueIntegerType() { 
-          return this != null && this.value instanceof IntegerType;
+        public boolean hasValueIntegerType() {
+          return this.value instanceof IntegerType;
         }
 
         /**
@@ -3571,8 +3679,8 @@ public class Contract extends DomainResource {
           return (DateType) this.value;
         }
 
-        public boolean hasValueDateType() { 
-          return this != null && this.value instanceof DateType;
+        public boolean hasValueDateType() {
+          return this.value instanceof DateType;
         }
 
         /**
@@ -3586,8 +3694,8 @@ public class Contract extends DomainResource {
           return (DateTimeType) this.value;
         }
 
-        public boolean hasValueDateTimeType() { 
-          return this != null && this.value instanceof DateTimeType;
+        public boolean hasValueDateTimeType() {
+          return this.value instanceof DateTimeType;
         }
 
         /**
@@ -3601,8 +3709,8 @@ public class Contract extends DomainResource {
           return (TimeType) this.value;
         }
 
-        public boolean hasValueTimeType() { 
-          return this != null && this.value instanceof TimeType;
+        public boolean hasValueTimeType() {
+          return this.value instanceof TimeType;
         }
 
         /**
@@ -3616,8 +3724,8 @@ public class Contract extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+          return this.value instanceof StringType;
         }
 
         /**
@@ -3631,8 +3739,8 @@ public class Contract extends DomainResource {
           return (UriType) this.value;
         }
 
-        public boolean hasValueUriType() { 
-          return this != null && this.value instanceof UriType;
+        public boolean hasValueUriType() {
+          return this.value instanceof UriType;
         }
 
         /**
@@ -3646,8 +3754,8 @@ public class Contract extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+          return this.value instanceof Attachment;
         }
 
         /**
@@ -3661,8 +3769,8 @@ public class Contract extends DomainResource {
           return (Coding) this.value;
         }
 
-        public boolean hasValueCoding() { 
-          return this != null && this.value instanceof Coding;
+        public boolean hasValueCoding() {
+          return this.value instanceof Coding;
         }
 
         /**
@@ -3676,8 +3784,8 @@ public class Contract extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+          return this.value instanceof Quantity;
         }
 
         /**
@@ -3691,8 +3799,8 @@ public class Contract extends DomainResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+          return this.value instanceof Reference;
         }
 
         public boolean hasValue() { 
@@ -3763,6 +3871,15 @@ public class Contract extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -4901,6 +5018,43 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("scope")) {
+          this.scope = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("typeReference")) {
+          this.getTypeReference().remove(value);
+        } else if (name.equals("subtype")) {
+          this.getSubtype().remove(value);
+        } else if (name.equals("relationship")) {
+          this.relationship = null;
+        } else if (name.equals("context")) {
+          this.getContext().remove((AssetContextComponent) value);
+        } else if (name.equals("condition")) {
+          this.condition = null;
+        } else if (name.equals("periodType")) {
+          this.getPeriodType().remove(value);
+        } else if (name.equals("period")) {
+          this.getPeriod().remove(value);
+        } else if (name.equals("usePeriod")) {
+          this.getUsePeriod().remove(value);
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("linkId")) {
+          this.getLinkId().remove(value);
+        } else if (name.equals("answer")) {
+          this.getAnswer().remove((AnswerComponent) value);
+        } else if (name.equals("securityLabelNumber")) {
+          this.getSecurityLabelNumber().remove(value);
+        } else if (name.equals("valuedItem")) {
+          this.getValuedItem().remove((ValuedItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4970,7 +5124,7 @@ public class Contract extends DomainResource {
           return addContext();
         }
         else if (name.equals("condition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.condition");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.condition");
         }
         else if (name.equals("periodType")) {
           return addPeriodType();
@@ -4982,16 +5136,16 @@ public class Contract extends DomainResource {
           return addUsePeriod();
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.text");
         }
         else if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.linkId");
         }
         else if (name.equals("answer")) {
           return addAnswer();
         }
         else if (name.equals("securityLabelNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.securityLabelNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.securityLabelNumber");
         }
         else if (name.equals("valuedItem")) {
           return addValuedItem();
@@ -5326,6 +5480,19 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.reference = null;
+        } else if (name.equals("code")) {
+          this.getCode().remove(value);
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -5358,7 +5525,7 @@ public class Contract extends DomainResource {
           return addCode();
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.context.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.context.text");
         }
         else
           return super.addChild(name);
@@ -5540,8 +5707,8 @@ public class Contract extends DomainResource {
           return (CodeableConcept) this.entity;
         }
 
-        public boolean hasEntityCodeableConcept() { 
-          return this != null && this.entity instanceof CodeableConcept;
+        public boolean hasEntityCodeableConcept() {
+          return this.entity instanceof CodeableConcept;
         }
 
         /**
@@ -5555,8 +5722,8 @@ public class Contract extends DomainResource {
           return (Reference) this.entity;
         }
 
-        public boolean hasEntityReference() { 
-          return this != null && this.entity instanceof Reference;
+        public boolean hasEntityReference() {
+          return this.entity instanceof Reference;
         }
 
         public boolean hasEntity() { 
@@ -6270,6 +6437,41 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("entity[x]")) {
+          this.entity = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("effectiveTime")) {
+          this.effectiveTime = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("unitPrice")) {
+          this.unitPrice = null;
+        } else if (name.equals("factor")) {
+          this.factor = null;
+        } else if (name.equals("points")) {
+          this.points = null;
+        } else if (name.equals("net")) {
+          this.net = null;
+        } else if (name.equals("payment")) {
+          this.payment = null;
+        } else if (name.equals("paymentDate")) {
+          this.paymentDate = null;
+        } else if (name.equals("responsible")) {
+          this.responsible = null;
+        } else if (name.equals("recipient")) {
+          this.recipient = null;
+        } else if (name.equals("linkId")) {
+          this.getLinkId().remove(value);
+        } else if (name.equals("securityLabelNumber")) {
+          this.getSecurityLabelNumber().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6330,7 +6532,7 @@ public class Contract extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("effectiveTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.effectiveTime");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.effectiveTime");
         }
         else if (name.equals("quantity")) {
           this.quantity = new Quantity();
@@ -6341,20 +6543,20 @@ public class Contract extends DomainResource {
           return this.unitPrice;
         }
         else if (name.equals("factor")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.factor");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.factor");
         }
         else if (name.equals("points")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.points");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.points");
         }
         else if (name.equals("net")) {
           this.net = new Money();
           return this.net;
         }
         else if (name.equals("payment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.payment");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.payment");
         }
         else if (name.equals("paymentDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.paymentDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.paymentDate");
         }
         else if (name.equals("responsible")) {
           this.responsible = new Reference();
@@ -6365,10 +6567,10 @@ public class Contract extends DomainResource {
           return this.recipient;
         }
         else if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.linkId");
         }
         else if (name.equals("securityLabelNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.asset.valuedItem.securityLabelNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.asset.valuedItem.securityLabelNumber");
         }
         else
           return super.addChild(name);
@@ -6941,8 +7143,8 @@ public class Contract extends DomainResource {
           return (DateTimeType) this.occurrence;
         }
 
-        public boolean hasOccurrenceDateTimeType() { 
-          return this != null && this.occurrence instanceof DateTimeType;
+        public boolean hasOccurrenceDateTimeType() {
+          return this.occurrence instanceof DateTimeType;
         }
 
         /**
@@ -6956,8 +7158,8 @@ public class Contract extends DomainResource {
           return (Period) this.occurrence;
         }
 
-        public boolean hasOccurrencePeriod() { 
-          return this != null && this.occurrence instanceof Period;
+        public boolean hasOccurrencePeriod() {
+          return this.occurrence instanceof Period;
         }
 
         /**
@@ -6971,8 +7173,8 @@ public class Contract extends DomainResource {
           return (Timing) this.occurrence;
         }
 
-        public boolean hasOccurrenceTiming() { 
-          return this != null && this.occurrence instanceof Timing;
+        public boolean hasOccurrenceTiming() {
+          return this.occurrence instanceof Timing;
         }
 
         public boolean hasOccurrence() { 
@@ -7684,6 +7886,51 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("doNotPerform")) {
+          this.doNotPerform = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subject")) {
+          this.getSubject().remove((ActionSubjectComponent) value);
+        } else if (name.equals("intent")) {
+          this.intent = null;
+        } else if (name.equals("linkId")) {
+          this.getLinkId().remove(value);
+        } else if (name.equals("status")) {
+          this.status = null;
+        } else if (name.equals("context")) {
+          this.context = null;
+        } else if (name.equals("contextLinkId")) {
+          this.getContextLinkId().remove(value);
+        } else if (name.equals("occurrence[x]")) {
+          this.occurrence = null;
+        } else if (name.equals("requester")) {
+          this.getRequester().remove(value);
+        } else if (name.equals("requesterLinkId")) {
+          this.getRequesterLinkId().remove(value);
+        } else if (name.equals("performerType")) {
+          this.getPerformerType().remove(value);
+        } else if (name.equals("performerRole")) {
+          this.performerRole = null;
+        } else if (name.equals("performer")) {
+          this.performer = null;
+        } else if (name.equals("performerLinkId")) {
+          this.getPerformerLinkId().remove(value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("reasonLinkId")) {
+          this.getReasonLinkId().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("securityLabelNumber")) {
+          this.getSecurityLabelNumber().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -7742,7 +7989,7 @@ public class Contract extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("doNotPerform")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.doNotPerform");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.doNotPerform");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -7756,7 +8003,7 @@ public class Contract extends DomainResource {
           return this.intent;
         }
         else if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.linkId");
         }
         else if (name.equals("status")) {
           this.status = new CodeableConcept();
@@ -7767,7 +8014,7 @@ public class Contract extends DomainResource {
           return this.context;
         }
         else if (name.equals("contextLinkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.contextLinkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.contextLinkId");
         }
         else if (name.equals("occurrenceDateTime")) {
           this.occurrence = new DateTimeType();
@@ -7785,7 +8032,7 @@ public class Contract extends DomainResource {
           return addRequester();
         }
         else if (name.equals("requesterLinkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.requesterLinkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.requesterLinkId");
         }
         else if (name.equals("performerType")) {
           return addPerformerType();
@@ -7799,19 +8046,19 @@ public class Contract extends DomainResource {
           return this.performer;
         }
         else if (name.equals("performerLinkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.performerLinkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.performerLinkId");
         }
         else if (name.equals("reason")) {
           return addReason();
         }
         else if (name.equals("reasonLinkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.reasonLinkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.reasonLinkId");
         }
         else if (name.equals("note")) {
           return addNote();
         }
         else if (name.equals("securityLabelNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.term.action.securityLabelNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.term.action.securityLabelNumber");
         }
         else
           return super.addChild(name);
@@ -8094,6 +8341,17 @@ public class Contract extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.getReference().remove(value);
+        } else if (name.equals("role")) {
+          this.role = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -8379,6 +8637,19 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("party")) {
+          this.party = null;
+        } else if (name.equals("signature")) {
+          this.getSignature().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -8511,8 +8782,8 @@ public class Contract extends DomainResource {
           return (Attachment) this.content;
         }
 
-        public boolean hasContentAttachment() { 
-          return this != null && this.content instanceof Attachment;
+        public boolean hasContentAttachment() {
+          return this.content instanceof Attachment;
         }
 
         /**
@@ -8526,8 +8797,8 @@ public class Contract extends DomainResource {
           return (Reference) this.content;
         }
 
-        public boolean hasContentReference() { 
-          return this != null && this.content instanceof Reference;
+        public boolean hasContentReference() {
+          return this.content instanceof Reference;
         }
 
         public boolean hasContent() { 
@@ -8588,6 +8859,15 @@ public class Contract extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("content[x]")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -8709,8 +8989,8 @@ public class Contract extends DomainResource {
           return (Attachment) this.content;
         }
 
-        public boolean hasContentAttachment() { 
-          return this != null && this.content instanceof Attachment;
+        public boolean hasContentAttachment() {
+          return this.content instanceof Attachment;
         }
 
         /**
@@ -8724,8 +9004,8 @@ public class Contract extends DomainResource {
           return (Reference) this.content;
         }
 
-        public boolean hasContentReference() { 
-          return this != null && this.content instanceof Reference;
+        public boolean hasContentReference() {
+          return this.content instanceof Reference;
         }
 
         public boolean hasContent() { 
@@ -8786,6 +9066,15 @@ public class Contract extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("content[x]")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -8907,8 +9196,8 @@ public class Contract extends DomainResource {
           return (Attachment) this.content;
         }
 
-        public boolean hasContentAttachment() { 
-          return this != null && this.content instanceof Attachment;
+        public boolean hasContentAttachment() {
+          return this.content instanceof Attachment;
         }
 
         /**
@@ -8922,8 +9211,8 @@ public class Contract extends DomainResource {
           return (Reference) this.content;
         }
 
-        public boolean hasContentReference() { 
-          return this != null && this.content instanceof Reference;
+        public boolean hasContentReference() {
+          return this.content instanceof Reference;
         }
 
         public boolean hasContent() { 
@@ -8984,6 +9273,15 @@ public class Contract extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("content[x]")) {
+          this.content = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -10212,8 +10510,8 @@ public class Contract extends DomainResource {
       return (CodeableConcept) this.topic;
     }
 
-    public boolean hasTopicCodeableConcept() { 
-      return this != null && this.topic instanceof CodeableConcept;
+    public boolean hasTopicCodeableConcept() {
+      return this.topic instanceof CodeableConcept;
     }
 
     /**
@@ -10227,8 +10525,8 @@ public class Contract extends DomainResource {
       return (Reference) this.topic;
     }
 
-    public boolean hasTopicReference() { 
-      return this != null && this.topic instanceof Reference;
+    public boolean hasTopicReference() {
+      return this.topic instanceof Reference;
     }
 
     public boolean hasTopic() { 
@@ -10735,8 +11033,8 @@ public class Contract extends DomainResource {
       return (Attachment) this.legallyBinding;
     }
 
-    public boolean hasLegallyBindingAttachment() { 
-      return this != null && this.legallyBinding instanceof Attachment;
+    public boolean hasLegallyBindingAttachment() {
+      return this.legallyBinding instanceof Attachment;
     }
 
     /**
@@ -10750,8 +11048,8 @@ public class Contract extends DomainResource {
       return (Reference) this.legallyBinding;
     }
 
-    public boolean hasLegallyBindingReference() { 
-      return this != null && this.legallyBinding instanceof Reference;
+    public boolean hasLegallyBindingReference() {
+      return this.legallyBinding instanceof Reference;
     }
 
     public boolean hasLegallyBinding() { 
@@ -11075,6 +11373,80 @@ public class Contract extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("status")) {
+          value = new ContractResourceStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ContractResourceStatusCodes>
+        } else if (name.equals("legalState")) {
+          this.legalState = null;
+        } else if (name.equals("instantiatesCanonical")) {
+          this.instantiatesCanonical = null;
+        } else if (name.equals("instantiatesUri")) {
+          this.instantiatesUri = null;
+        } else if (name.equals("contentDerivative")) {
+          this.contentDerivative = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("applies")) {
+          this.applies = null;
+        } else if (name.equals("expirationType")) {
+          this.expirationType = null;
+        } else if (name.equals("subject")) {
+          this.getSubject().remove(value);
+        } else if (name.equals("authority")) {
+          this.getAuthority().remove(value);
+        } else if (name.equals("domain")) {
+          this.getDomain().remove(value);
+        } else if (name.equals("site")) {
+          this.getSite().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("subtitle")) {
+          this.subtitle = null;
+        } else if (name.equals("alias")) {
+          this.getAlias().remove(value);
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("scope")) {
+          this.scope = null;
+        } else if (name.equals("topic[x]")) {
+          this.topic = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subType")) {
+          this.getSubType().remove(value);
+        } else if (name.equals("contentDefinition")) {
+          this.contentDefinition = (ContentDefinitionComponent) value; // ContentDefinitionComponent
+        } else if (name.equals("term")) {
+          this.getTerm().remove((TermComponent) value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove(value);
+        } else if (name.equals("relevantHistory")) {
+          this.getRelevantHistory().remove(value);
+        } else if (name.equals("signer")) {
+          this.getSigner().remove((SignatoryComponent) value);
+        } else if (name.equals("friendly")) {
+          this.getFriendly().remove((FriendlyLanguageComponent) value);
+        } else if (name.equals("legal")) {
+          this.getLegal().remove((LegalLanguageComponent) value);
+        } else if (name.equals("rule")) {
+          this.getRule().remove((ComputableLanguageComponent) value);
+        } else if (name.equals("legallyBinding[x]")) {
+          this.legallyBinding = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -11165,13 +11537,13 @@ public class Contract extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.url");
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.version");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.status");
         }
         else if (name.equals("legalState")) {
           this.legalState = new CodeableConcept();
@@ -11182,14 +11554,14 @@ public class Contract extends DomainResource {
           return this.instantiatesCanonical;
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.instantiatesUri");
         }
         else if (name.equals("contentDerivative")) {
           this.contentDerivative = new CodeableConcept();
           return this.contentDerivative;
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.issued");
         }
         else if (name.equals("applies")) {
           this.applies = new Period();
@@ -11212,16 +11584,16 @@ public class Contract extends DomainResource {
           return addSite();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.title");
         }
         else if (name.equals("subtitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.subtitle");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.subtitle");
         }
         else if (name.equals("alias")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Contract.alias");
+          throw new FHIRException("Cannot call addChild on a singleton property Contract.alias");
         }
         else if (name.equals("author")) {
           this.author = new Reference();

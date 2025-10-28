@@ -1,5 +1,10 @@
 package org.hl7.fhir.r4.test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.fhir.ucum.UcumException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.conformance.ProfileUtilities;
@@ -11,22 +16,17 @@ import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r4.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r4.test.utils.TestingUtilities;
 import org.hl7.fhir.r4.utils.EOperationOutcome;
-import org.hl7.fhir.utilities.CSFile;
+import org.hl7.fhir.utilities.UUIDUtilities;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 @Disabled
 public class ProfileUtilitiesTests {
 
-  //  /**
+  // /**
 //   * This is simple: we just create an empty differential, generate the snapshot, and then insist it must match the base 
 //   * 
 //   * @param context2
@@ -37,13 +37,15 @@ public class ProfileUtilitiesTests {
   public void testSimple() throws FHIRException, FileNotFoundException, IOException, UcumException {
 
     StructureDefinition focus = new StructureDefinition();
-    StructureDefinition base = TestingUtilities.context().fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/Patient").copy();
-    focus.setUrl(Utilities.makeUuidUrn());
+    StructureDefinition base = TestingUtilities.context()
+        .fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/Patient").copy();
+    focus.setUrl(UUIDUtilities.makeUuidUrn());
     focus.setBaseDefinition(base.getUrl());
     focus.setType("Patient");
     focus.setDerivation(TypeDerivationRule.CONSTRAINT);
     List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-    new ProfileUtilities(TestingUtilities.context(), messages, null).generateSnapshot(base, focus, focus.getUrl(), "http://hl7.org/fhir/R4", "Simple Test");
+    new ProfileUtilities(TestingUtilities.context(), messages, null).generateSnapshot(base, focus, focus.getUrl(),
+        "http://hl7.org/fhir/R4", "Simple Test");
 
     boolean ok = base.getSnapshot().getElement().size() == focus.getSnapshot().getElement().size();
     for (int i = 0; i < base.getSnapshot().getElement().size(); i++) {
@@ -69,7 +71,6 @@ public class ProfileUtilitiesTests {
       System.out.println("Snap shot generation simple test passed");
   }
 
-
   //
 //  /**
 //   * This is simple: we just create an empty differential, generate the snapshot, and then insist it must match the base. for a different resource with recursion 
@@ -80,13 +81,15 @@ public class ProfileUtilitiesTests {
 //   */
   @Test
   public void testSimple2() throws EOperationOutcome, Exception {
-    StructureDefinition base = TestingUtilities.context().fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/ValueSet").copy();
+    StructureDefinition base = TestingUtilities.context()
+        .fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/ValueSet").copy();
     StructureDefinition focus = base.copy();
-    focus.setUrl(Utilities.makeUuidUrn());
+    focus.setUrl(UUIDUtilities.makeUuidUrn());
     focus.setSnapshot(null);
     focus.setDifferential(null);
     List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-    new ProfileUtilities(TestingUtilities.context(), messages, null).generateSnapshot(base, focus, focus.getUrl(), "http://hl7.org/fhir/R4", "Simple Test");
+    new ProfileUtilities(TestingUtilities.context(), messages, null).generateSnapshot(base, focus, focus.getUrl(),
+        "http://hl7.org/fhir/R4", "Simple Test");
 
     boolean ok = base.getSnapshot().getElement().size() == focus.getSnapshot().getElement().size();
     for (int i = 0; i < base.getSnapshot().getElement().size(); i++) {
@@ -786,25 +789,25 @@ public class ProfileUtilitiesTests {
 //  }
 //
 
-  private void compareXml(StructureDefinition base, StructureDefinition focus) throws FileNotFoundException, IOException {
+  private void compareXml(StructureDefinition base, StructureDefinition focus)
+      throws FileNotFoundException, IOException {
     base.setText(null);
     focus.setText(null);
     base.setDifferential(null);
 //    focus.setDifferential(null);
     String f1 = Utilities.path("c:", "temp", "base.xml");
     String f2 = Utilities.path("c:", "temp", "derived.xml");
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(f1), base);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(f1), base);
     ;
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(f2), focus);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(f2), focus);
     ;
     String diff = Utilities.path(System.getenv("ProgramFiles(X86)"), "WinMerge", "WinMergeU.exe");
     List<String> command = new ArrayList<String>();
     command.add("\"" + diff + "\" \"" + f1 + "\" \"" + f2 + "\"");
 
     ProcessBuilder builder = new ProcessBuilder(command);
-    builder.directory(new CSFile(Utilities.path("[tmp]")));
+    builder.directory(ManagedFileAccess.csfile(Utilities.path("[tmp]")));
     builder.start();
   }
-
 
 }

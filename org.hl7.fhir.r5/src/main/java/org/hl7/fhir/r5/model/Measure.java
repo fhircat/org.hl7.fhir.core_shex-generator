@@ -203,6 +203,17 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("definition")) {
+          this.definition = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -230,7 +241,7 @@ public class Measure extends MetadataResource {
           return this.code;
         }
         else if (name.equals("definition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.term.definition");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.term.definition");
         }
         else
           return super.addChild(name);
@@ -581,8 +592,8 @@ public class Measure extends MetadataResource {
           return (CodeableConcept) this.subject;
         }
 
-        public boolean hasSubjectCodeableConcept() { 
-          return this != null && this.subject instanceof CodeableConcept;
+        public boolean hasSubjectCodeableConcept() {
+            return this.subject instanceof CodeableConcept;
         }
 
         /**
@@ -596,8 +607,8 @@ public class Measure extends MetadataResource {
           return (Reference) this.subject;
         }
 
-        public boolean hasSubjectReference() { 
-          return this != null && this.subject instanceof Reference;
+        public boolean hasSubjectReference() {
+            return this.subject instanceof Reference;
         }
 
         public boolean hasSubject() { 
@@ -1095,6 +1106,40 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("basis")) {
+          value = new FHIRTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.basis = (Enumeration) value; // Enumeration<FHIRTypes>
+        } else if (name.equals("scoring")) {
+          this.scoring = null;
+        } else if (name.equals("scoringUnit")) {
+          this.scoringUnit = null;
+        } else if (name.equals("rateAggregation")) {
+          this.rateAggregation = null;
+        } else if (name.equals("improvementNotation")) {
+          this.improvementNotation = null;
+        } else if (name.equals("library")) {
+          this.getLibrary().remove(value);
+        } else if (name.equals("population")) {
+          this.getPopulation().remove((MeasureGroupPopulationComponent) value);
+        } else if (name.equals("stratifier")) {
+          this.getStratifier().remove((MeasureGroupStratifierComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1141,14 +1186,14 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.description");
         }
         else if (name.equals("type")) {
           return addType();
@@ -1162,7 +1207,7 @@ public class Measure extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("basis")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.basis");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.basis");
         }
         else if (name.equals("scoring")) {
           this.scoring = new CodeableConcept();
@@ -1173,14 +1218,14 @@ public class Measure extends MetadataResource {
           return this.scoringUnit;
         }
         else if (name.equals("rateAggregation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.rateAggregation");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.rateAggregation");
         }
         else if (name.equals("improvementNotation")) {
           this.improvementNotation = new CodeableConcept();
           return this.improvementNotation;
         }
         else if (name.equals("library")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.library");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.library");
         }
         else if (name.equals("population")) {
           return addPopulation();
@@ -1666,6 +1711,27 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("criteria")) {
+          this.criteria = null;
+        } else if (name.equals("groupDefinition")) {
+          this.groupDefinition = null;
+        } else if (name.equals("inputPopulationId")) {
+          this.inputPopulationId = null;
+        } else if (name.equals("aggregateMethod")) {
+          this.aggregateMethod = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1699,14 +1765,14 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.population.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.population.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.population.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.population.description");
         }
         else if (name.equals("criteria")) {
           this.criteria = new Expression();
@@ -1717,7 +1783,7 @@ public class Measure extends MetadataResource {
           return this.groupDefinition;
         }
         else if (name.equals("inputPopulationId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.population.inputPopulationId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.population.inputPopulationId");
         }
         else if (name.equals("aggregateMethod")) {
           this.aggregateMethod = new CodeableConcept();
@@ -2140,6 +2206,25 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("criteria")) {
+          this.criteria = null;
+        } else if (name.equals("groupDefinition")) {
+          this.groupDefinition = null;
+        } else if (name.equals("component")) {
+          this.getComponent().remove((MeasureGroupStratifierComponentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2171,14 +2256,14 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.stratifier.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.stratifier.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.stratifier.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.stratifier.description");
         }
         else if (name.equals("criteria")) {
           this.criteria = new Expression();
@@ -2541,6 +2626,23 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("criteria")) {
+          this.criteria = null;
+        } else if (name.equals("groupDefinition")) {
+          this.groupDefinition = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2570,14 +2672,14 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.stratifier.component.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.stratifier.component.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
           return this.code;
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.group.stratifier.component.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.group.stratifier.component.description");
         }
         else if (name.equals("criteria")) {
           this.criteria = new Expression();
@@ -2970,6 +3072,23 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("linkId")) {
+          this.linkId = null;
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("usage")) {
+          this.getUsage().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("criteria")) {
+          this.criteria = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2999,7 +3118,7 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("linkId")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.supplementalData.linkId");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.supplementalData.linkId");
         }
         else if (name.equals("code")) {
           this.code = new CodeableConcept();
@@ -3009,7 +3128,7 @@ public class Measure extends MetadataResource {
           return addUsage();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.supplementalData.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.supplementalData.description");
         }
         else if (name.equals("criteria")) {
           this.criteria = new Expression();
@@ -3583,8 +3702,8 @@ public class Measure extends MetadataResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -3598,8 +3717,8 @@ public class Measure extends MetadataResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -3871,8 +3990,8 @@ public class Measure extends MetadataResource {
       return (CodeableConcept) this.subject;
     }
 
-    public boolean hasSubjectCodeableConcept() { 
-      return this != null && this.subject instanceof CodeableConcept;
+    public boolean hasSubjectCodeableConcept() {
+        return this.subject instanceof CodeableConcept;
     }
 
     /**
@@ -3886,8 +4005,8 @@ public class Measure extends MetadataResource {
       return (Reference) this.subject;
     }
 
-    public boolean hasSubjectReference() { 
-      return this != null && this.subject instanceof Reference;
+    public boolean hasSubjectReference() {
+        return this.subject instanceof Reference;
     }
 
     public boolean hasSubject() { 
@@ -5963,6 +6082,105 @@ public class Measure extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("subtitle")) {
+          this.subtitle = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("subject[x]")) {
+          this.subject = null;
+        } else if (name.equals("basis")) {
+          value = new FHIRTypesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.basis = (Enumeration) value; // Enumeration<FHIRTypes>
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("usage")) {
+          this.usage = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("effectivePeriod")) {
+          this.effectivePeriod = null;
+        } else if (name.equals("topic")) {
+          this.getTopic().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("library")) {
+          this.getLibrary().remove(value);
+        } else if (name.equals("disclaimer")) {
+          this.disclaimer = null;
+        } else if (name.equals("scoring")) {
+          this.scoring = null;
+        } else if (name.equals("scoringUnit")) {
+          this.scoringUnit = null;
+        } else if (name.equals("compositeScoring")) {
+          this.compositeScoring = null;
+        } else if (name.equals("type")) {
+          this.getType().remove(value);
+        } else if (name.equals("riskAdjustment")) {
+          this.riskAdjustment = null;
+        } else if (name.equals("rateAggregation")) {
+          this.rateAggregation = null;
+        } else if (name.equals("rationale")) {
+          this.rationale = null;
+        } else if (name.equals("clinicalRecommendationStatement")) {
+          this.clinicalRecommendationStatement = null;
+        } else if (name.equals("improvementNotation")) {
+          this.improvementNotation = null;
+        } else if (name.equals("term")) {
+          this.getTerm().remove((MeasureTermComponent) value);
+        } else if (name.equals("guidance")) {
+          this.guidance = null;
+        } else if (name.equals("group")) {
+          this.getGroup().remove((MeasureGroupComponent) value);
+        } else if (name.equals("supplementalData")) {
+          this.getSupplementalData().remove((MeasureSupplementalDataComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -6074,13 +6292,13 @@ public class Measure extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.url");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.version");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -6091,19 +6309,19 @@ public class Measure extends MetadataResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.title");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.title");
         }
         else if (name.equals("subtitle")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.subtitle");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.subtitle");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.experimental");
         }
         else if (name.equals("subjectCodeableConcept")) {
           this.subject = new CodeableConcept();
@@ -6114,19 +6332,19 @@ public class Measure extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("basis")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.basis");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.basis");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.description");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -6135,22 +6353,22 @@ public class Measure extends MetadataResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.purpose");
         }
         else if (name.equals("usage")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.usage");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.usage");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.copyrightLabel");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.lastReviewDate");
         }
         else if (name.equals("effectivePeriod")) {
           this.effectivePeriod = new Period();
@@ -6175,10 +6393,10 @@ public class Measure extends MetadataResource {
           return addRelatedArtifact();
         }
         else if (name.equals("library")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.library");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.library");
         }
         else if (name.equals("disclaimer")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.disclaimer");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.disclaimer");
         }
         else if (name.equals("scoring")) {
           this.scoring = new CodeableConcept();
@@ -6196,16 +6414,16 @@ public class Measure extends MetadataResource {
           return addType();
         }
         else if (name.equals("riskAdjustment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.riskAdjustment");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.riskAdjustment");
         }
         else if (name.equals("rateAggregation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.rateAggregation");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.rateAggregation");
         }
         else if (name.equals("rationale")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.rationale");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.rationale");
         }
         else if (name.equals("clinicalRecommendationStatement")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.clinicalRecommendationStatement");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.clinicalRecommendationStatement");
         }
         else if (name.equals("improvementNotation")) {
           this.improvementNotation = new CodeableConcept();
@@ -6215,7 +6433,7 @@ public class Measure extends MetadataResource {
           return addTerm();
         }
         else if (name.equals("guidance")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Measure.guidance");
+          throw new FHIRException("Cannot call addChild on a singleton property Measure.guidance");
         }
         else if (name.equals("group")) {
           return addGroup();

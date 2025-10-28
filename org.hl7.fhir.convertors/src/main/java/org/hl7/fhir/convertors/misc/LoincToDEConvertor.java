@@ -31,7 +31,6 @@ package org.hl7.fhir.convertors.misc;
 
 
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +39,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.Bundle;
@@ -50,6 +50,7 @@ import org.hl7.fhir.r5.model.DateTimeType;
 import org.hl7.fhir.r5.model.InstantType;
 import org.hl7.fhir.r5.model.Meta;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,8 +63,10 @@ import org.xmlpull.v1.XmlPullParserException;
  * @author Grahame
  *
  */
+@Slf4j
 public class LoincToDEConvertor {
 
+  @SuppressWarnings("checkstyle:systemout")
 	public static void main(String[] args) throws FHIRFormatError, IOException, XmlPullParserException, SAXException, ParserConfigurationException {
 		if (args.length == 0) {
 			System.out.println("FHIR LOINC to CDE convertor. ");
@@ -107,9 +110,10 @@ public class LoincToDEConvertor {
 
   public Bundle process(String sourceFile) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
     this.definitions = sourceFile;
-    log("Begin. Produce Loinc CDEs in "+dest+" from "+definitions);
+    log.info("Begin. Produce Loinc CDEs in "+dest+" from "+definitions);
+
     loadLoinc();
-    log("LOINC loaded");
+    log.info("LOINC loaded");
 
     now = DateTimeType.now();
 
@@ -123,11 +127,12 @@ public class LoincToDEConvertor {
   }
   
 	public void process() throws FHIRFormatError, IOException, XmlPullParserException, SAXException, ParserConfigurationException {
-		log("Begin. Produce Loinc CDEs in "+dest+" from "+definitions);
-		loadLoinc();
-		log("LOINC loaded");
+    log.info("Begin. Produce Loinc CDEs in "+dest+" from "+definitions);
 
-		now = DateTimeType.now();
+    loadLoinc();
+    log.info("LOINC loaded");
+
+    now = DateTimeType.now();
 
 		bundle = new Bundle();
 		bundle.setId("http://hl7.org/fhir/commondataelement/loinc");
@@ -135,28 +140,25 @@ public class LoincToDEConvertor {
 
 		processLoincCodes();
 		if (dest != null) {
-			log("Saving...");
-			saveBundle();
+      log.info("Saving...");
+
+      saveBundle();
 		}
-		log("Done");
+    log.info("Done");
 
-	}
+  }
 
-	private void log(String string) {
-		System.out.println(string);
-
-	}
-	private void loadLoinc() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+  private void loadLoinc() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+		DocumentBuilderFactory factory = XMLUtil.newXXEProtectedDocumentBuilderFactory();
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder = factory.newDocumentBuilder();
 
-		xml = builder.parse(new FileInputStream(definitions)); 
+		xml = builder.parse(ManagedFileAccess.inStream(definitions)); 
 	}
 
 	private void saveBundle() throws FHIRFormatError, IOException, XmlPullParserException {
 		XmlParser xml = new XmlParser();
-		FileOutputStream s = new FileOutputStream(dest);
+		FileOutputStream s = ManagedFileAccess.outStream(dest);
     xml.compose(s, bundle, true);
     s.close();
 	}
@@ -173,12 +175,19 @@ public class LoincToDEConvertor {
 		return Utilities.noString(col(row, name));
 	}
 
+
+  /*
+ The following prints to both log and System to track progress. Ideally, this should be done with a more generic
+ progress tracking class.
+ */
+  @SuppressWarnings("checkstyle:systemout")
 	private void processLoincCodes() {
 		Element row = XMLUtil.getFirstChild(xml.getDocumentElement());
 		int i = 0;
 		while (row != null) {
 			i++;
 			if (i % 1000 == 0)
+        log.debug("Processed {} LOINC codes", i);
 				System.out.print(".");
 				String code = col(row, "LOINC_NUM");
 				String comp = col(row, "COMPONENT");
@@ -252,12 +261,13 @@ public class LoincToDEConvertor {
 //				// units:
 //				// UNITSREQUIRED	
 //				// SUBMITTED_UNITS
-//				ToolingExtensions.setAllowableUnits(dee, makeUnits(col(row, "EXAMPLE_UNITS"), col(row, "EXAMPLE_UCUM_UNITS")));
+//				ExtensionUtilities.setAllowableUnits(dee, makeUnits(col(row, "EXAMPLE_UNITS"), col(row, "EXAMPLE_UCUM_UNITS")));
 //				// EXAMPLE_SI_UCUM_UNITS	
 			
 			row = XMLUtil.getNextSibling(row);
 		}
 		System.out.println("done");
+    log.info("Processing complete");
 	}
 
 	private String makeType(String type, String id) {

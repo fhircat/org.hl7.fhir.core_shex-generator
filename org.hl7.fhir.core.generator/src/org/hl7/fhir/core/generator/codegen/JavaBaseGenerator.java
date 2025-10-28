@@ -32,7 +32,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hl7.fhir.core.generator.engine.Definitions;
@@ -46,6 +45,7 @@ import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.model.ValueSet.ConceptSetComponent;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.utilities.OIDUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 
@@ -216,7 +216,7 @@ public class JavaBaseGenerator extends OutputStreamWriter {
   protected String makeConst(String cc) {
     if (cc.equals("*"))
       cc = "ASTERISK";
-    if (Utilities.isOid(cc) && Utilities.charCount(cc, '.') > 2)
+    if (OIDUtilities.isValidOID(cc) && Utilities.charCount(cc, '.') > 2)
       cc = "OID_"+cc;
     if (cc.equals("%"))
       cc = "pct";

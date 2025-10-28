@@ -239,4 +239,23 @@ public class JsonCreatorDirect implements JsonCreator {
   }
        
 
+  @Override
+  public void externalLink(String string) {
+    // not used
+  }
+
+  @Override
+  public boolean canElide() { return false; }
+
+  @Override
+  public void elide() {
+    // not used
+  }
+  
+  @Override
+  public boolean isCanonical() {
+    return false;
+  }
+
+  
 }

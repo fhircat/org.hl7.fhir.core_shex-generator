@@ -34,16 +34,16 @@ package org.hl7.fhir.r5.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.r5.model.Enumerations.*;
+
 import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.ICompositeType;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
 import ca.uhn.fhir.model.api.annotation.SearchParamDefinition;
-import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
 import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.ChildOrder;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Block;
 
@@ -152,14 +152,16 @@ public class StructureDefinition extends CanonicalResource {
         throw new FHIRException("Unknown ExtensionContextType code '"+codeString+"'");
         }
     public String toCode(ExtensionContextType code) {
-      if (code == ExtensionContextType.FHIRPATH)
+       if (code == ExtensionContextType.NULL)
+           return null;
+       if (code == ExtensionContextType.FHIRPATH)
         return "fhirpath";
       if (code == ExtensionContextType.ELEMENT)
         return "element";
       if (code == ExtensionContextType.EXTENSION)
         return "extension";
       return "?";
-      }
+   }
     public String toSystem(ExtensionContextType code) {
       return code.getSystem();
       }
@@ -278,7 +280,9 @@ public class StructureDefinition extends CanonicalResource {
         throw new FHIRException("Unknown StructureDefinitionKind code '"+codeString+"'");
         }
     public String toCode(StructureDefinitionKind code) {
-      if (code == StructureDefinitionKind.PRIMITIVETYPE)
+       if (code == StructureDefinitionKind.NULL)
+           return null;
+       if (code == StructureDefinitionKind.PRIMITIVETYPE)
         return "primitive-type";
       if (code == StructureDefinitionKind.COMPLEXTYPE)
         return "complex-type";
@@ -287,7 +291,7 @@ public class StructureDefinition extends CanonicalResource {
       if (code == StructureDefinitionKind.LOGICAL)
         return "logical";
       return "?";
-      }
+   }
     public String toSystem(StructureDefinitionKind code) {
       return code.getSystem();
       }
@@ -378,12 +382,14 @@ public class StructureDefinition extends CanonicalResource {
         throw new FHIRException("Unknown TypeDerivationRule code '"+codeString+"'");
         }
     public String toCode(TypeDerivationRule code) {
-      if (code == TypeDerivationRule.SPECIALIZATION)
+       if (code == TypeDerivationRule.NULL)
+           return null;
+       if (code == TypeDerivationRule.SPECIALIZATION)
         return "specialization";
       if (code == TypeDerivationRule.CONSTRAINT)
         return "constraint";
       return "?";
-      }
+   }
     public String toSystem(TypeDerivationRule code) {
       return code.getSystem();
       }
@@ -391,6 +397,11 @@ public class StructureDefinition extends CanonicalResource {
 
     @Block()
     public static class StructureDefinitionMappingComponent extends BackboneElement implements IBaseBackboneElement {
+        @Override
+      public String toString() {
+        return identity + "=" + uri + " (\""+name+"\")";
+      }
+
         /**
          * An Internal id that is used to identify this mapping set when specific mappings are made.
          */
@@ -695,6 +706,21 @@ public class StructureDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identity")) {
+          this.identity = null;
+        } else if (name.equals("uri")) {
+          this.uri = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("comment")) {
+          this.comment = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -722,16 +748,16 @@ public class StructureDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("identity")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.mapping.identity");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.mapping.identity");
         }
         else if (name.equals("uri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.mapping.uri");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.mapping.uri");
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.mapping.name");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.mapping.name");
         }
         else if (name.equals("comment")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.mapping.comment");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.mapping.comment");
         }
         else
           return super.addChild(name);
@@ -963,6 +989,18 @@ public class StructureDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new ExtensionContextTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<ExtensionContextType>
+        } else if (name.equals("expression")) {
+          this.expression = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -986,10 +1024,10 @@ public class StructureDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.context.type");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.context.type");
         }
         else if (name.equals("expression")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.context.expression");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.context.expression");
         }
         else
           return super.addChild(name);
@@ -1158,6 +1196,15 @@ public class StructureDefinition extends CanonicalResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("element")) {
+          this.getElement().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1383,6 +1430,15 @@ public class StructureDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("element")) {
+          this.getElement().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1454,6 +1510,34 @@ public class StructureDefinition extends CanonicalResource {
 
   }
 
+//added from java-adornments.txt:
+
+ public ElementDefinition getElementByPath(String path) {
+   if (path == null) {
+     return null;
+   }
+   for (ElementDefinition ed : getElement()) {
+     if (path.equals(ed.getPath()) || (path+"[x]").equals(ed.getPath())) {
+       return ed;
+     }
+   }
+   return null;
+ }
+
+
+ public ElementDefinition getElementById(String id) {
+   if (id == null) {
+     return null;
+   }
+   for (ElementDefinition ed : getElement()) {
+     if (id.equals(ed.getId())) {
+       return ed;
+     }
+   }
+   return null;
+ }
+
+//end addition
   }
 
     /**
@@ -1854,8 +1938,8 @@ public class StructureDefinition extends CanonicalResource {
       return (StringType) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmStringType() { 
-      return this != null && this.versionAlgorithm instanceof StringType;
+    public boolean hasVersionAlgorithmStringType() {
+        return this.versionAlgorithm instanceof StringType;
     }
 
     /**
@@ -1869,8 +1953,8 @@ public class StructureDefinition extends CanonicalResource {
       return (Coding) this.versionAlgorithm;
     }
 
-    public boolean hasVersionAlgorithmCoding() { 
-      return this != null && this.versionAlgorithm instanceof Coding;
+    public boolean hasVersionAlgorithmCoding() {
+        return this.versionAlgorithm instanceof Coding;
     }
 
     public boolean hasVersionAlgorithm() { 
@@ -3352,6 +3436,75 @@ public class StructureDefinition extends CanonicalResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("version")) {
+          this.version = null;
+        } else if (name.equals("versionAlgorithm[x]")) {
+          this.versionAlgorithm = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("experimental")) {
+          this.experimental = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("jurisdiction")) {
+          this.getJurisdiction().remove(value);
+        } else if (name.equals("purpose")) {
+          this.purpose = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("copyrightLabel")) {
+          this.copyrightLabel = null;
+        } else if (name.equals("keyword")) {
+          this.getKeyword().remove(value);
+        } else if (name.equals("fhirVersion")) {
+          value = new FHIRVersionEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.fhirVersion = (Enumeration) value; // Enumeration<FHIRVersion>
+        } else if (name.equals("mapping")) {
+          this.getMapping().remove((StructureDefinitionMappingComponent) value);
+        } else if (name.equals("kind")) {
+          value = new StructureDefinitionKindEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.kind = (Enumeration) value; // Enumeration<StructureDefinitionKind>
+        } else if (name.equals("abstract")) {
+          this.abstract_ = null;
+        } else if (name.equals("context")) {
+          this.getContext().remove((StructureDefinitionContextComponent) value);
+        } else if (name.equals("contextInvariant")) {
+          this.getContextInvariant().remove(value);
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("baseDefinition")) {
+          this.baseDefinition = null;
+        } else if (name.equals("derivation")) {
+          value = new TypeDerivationRuleEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.derivation = (Enumeration) value; // Enumeration<TypeDerivationRule>
+        } else if (name.equals("snapshot")) {
+          this.snapshot = (StructureDefinitionSnapshotComponent) value; // StructureDefinitionSnapshotComponent
+        } else if (name.equals("differential")) {
+          this.differential = (StructureDefinitionDifferentialComponent) value; // StructureDefinitionDifferentialComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3430,13 +3583,13 @@ public class StructureDefinition extends CanonicalResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.url");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.url");
         }
         else if (name.equals("identifier")) {
           return addIdentifier();
         }
         else if (name.equals("version")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.version");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.version");
         }
         else if (name.equals("versionAlgorithmString")) {
           this.versionAlgorithm = new StringType();
@@ -3447,28 +3600,28 @@ public class StructureDefinition extends CanonicalResource {
           return this.versionAlgorithm;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.name");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.name");
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.title");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.title");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.status");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.status");
         }
         else if (name.equals("experimental")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.experimental");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.experimental");
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.date");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.date");
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.description");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.description");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -3477,43 +3630,43 @@ public class StructureDefinition extends CanonicalResource {
           return addJurisdiction();
         }
         else if (name.equals("purpose")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.purpose");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.purpose");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.copyright");
         }
         else if (name.equals("copyrightLabel")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.copyrightLabel");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.copyrightLabel");
         }
         else if (name.equals("keyword")) {
           return addKeyword();
         }
         else if (name.equals("fhirVersion")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.fhirVersion");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.fhirVersion");
         }
         else if (name.equals("mapping")) {
           return addMapping();
         }
         else if (name.equals("kind")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.kind");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.kind");
         }
         else if (name.equals("abstract")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.abstract");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.abstract");
         }
         else if (name.equals("context")) {
           return addContext();
         }
         else if (name.equals("contextInvariant")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.contextInvariant");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.contextInvariant");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.type");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.type");
         }
         else if (name.equals("baseDefinition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.baseDefinition");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.baseDefinition");
         }
         else if (name.equals("derivation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type StructureDefinition.derivation");
+          throw new FHIRException("Cannot call addChild on a singleton property StructureDefinition.derivation");
         }
         else if (name.equals("snapshot")) {
           this.snapshot = new StructureDefinitionSnapshotComponent();
@@ -5189,18 +5342,6 @@ public class StructureDefinition extends CanonicalResource {
   public static final ca.uhn.fhir.model.api.Include INCLUDE_VALUESET = new ca.uhn.fhir.model.api.Include("StructureDefinition:valueset").toLocked();
 
 // Manual code (from Configuration.txt):
-public String describeType() {
-    if ("Extension".equals(getType()))
-      return "Extension" ;
-    switch (getKind()) {
-    case COMPLEXTYPE: return getDerivation() == TypeDerivationRule.CONSTRAINT ? "DataType Constraint" : "DataType" ;
-    case LOGICAL: return getDerivation() == TypeDerivationRule.CONSTRAINT ? "Logical Model" : "Logical Model Profile";
-    case PRIMITIVETYPE: return getDerivation() == TypeDerivationRule.CONSTRAINT ? "PrimitiveType Constraint" : "PrimitiveType";
-    case RESOURCE: return getDerivation() == TypeDerivationRule.CONSTRAINT ? "Resource Profile" : "Resource";
-    default:
-      return "Definition";
-    }
-  }
 
 
   public String getTypeName() { 
@@ -5219,6 +5360,8 @@ public String describeType() {
   private boolean generatedSnapshot;
   private boolean generatingSnapshot;
 
+  private List<String> baseDefinitions;
+
   public boolean isGeneratedSnapshot() {
     return generatedSnapshot;
   }
@@ -5234,6 +5377,29 @@ public String describeType() {
   public void setGeneratingSnapshot(boolean generatingSnapshot) {
     this.generatingSnapshot = generatingSnapshot;
   }
+
+  public List<String> getBaseDefinitions() {
+    if (baseDefinitions == null) {
+      baseDefinitions = new ArrayList<>();
+      baseDefinitions.add(getBaseDefinition());
+      for (Extension ex : getExtensionsByUrl(ExtensionDefinitions.EXT_ADDITIONAL_BASE)) {
+        if (ex.hasValue() && ex.getValue().hasPrimitiveValue()) {
+          baseDefinitions.add(ex.getValue().primitiveValue());
+        }
+      }
+    }
+    return baseDefinitions;
+  }
+
+  public String getBaseDefinitionNoVersion() {
+    String bd = getBaseDefinition();
+    if (bd != null && bd.contains("|")) {
+      bd = bd.substring(0, bd.indexOf("|"));
+    }
+    return bd;
+  }
+
+
 
 // end addition
 

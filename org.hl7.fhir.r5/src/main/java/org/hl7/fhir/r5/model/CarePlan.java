@@ -180,7 +180,9 @@ public class CarePlan extends DomainResource {
         throw new FHIRException("Unknown CarePlanIntent code '"+codeString+"'");
         }
     public String toCode(CarePlanIntent code) {
-      if (code == CarePlanIntent.PROPOSAL)
+       if (code == CarePlanIntent.NULL)
+           return null;
+       if (code == CarePlanIntent.PROPOSAL)
         return "proposal";
       if (code == CarePlanIntent.PLAN)
         return "plan";
@@ -191,7 +193,7 @@ public class CarePlan extends DomainResource {
       if (code == CarePlanIntent.DIRECTIVE)
         return "directive";
       return "?";
-      }
+   }
     public String toSystem(CarePlanIntent code) {
       return code.getSystem();
       }
@@ -417,6 +419,19 @@ public class CarePlan extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("performedActivity")) {
+          this.getPerformedActivity().remove(value);
+        } else if (name.equals("progress")) {
+          this.getProgress().remove(value);
+        } else if (name.equals("plannedActivityReference")) {
+          this.plannedActivityReference = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2009,6 +2024,61 @@ public class CarePlan extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("instantiatesCanonical")) {
+          this.getInstantiatesCanonical().remove(value);
+        } else if (name.equals("instantiatesUri")) {
+          this.getInstantiatesUri().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("replaces")) {
+          this.getReplaces().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new RequestStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<RequestStatus>
+        } else if (name.equals("intent")) {
+          value = new CarePlanIntentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.intent = (Enumeration) value; // Enumeration<CarePlanIntent>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else if (name.equals("created")) {
+          this.created = null;
+        } else if (name.equals("custodian")) {
+          this.custodian = null;
+        } else if (name.equals("contributor")) {
+          this.getContributor().remove(value);
+        } else if (name.equals("careTeam")) {
+          this.getCareTeam().remove(value);
+        } else if (name.equals("addresses")) {
+          this.getAddresses().remove(value);
+        } else if (name.equals("supportingInfo")) {
+          this.getSupportingInfo().remove(value);
+        } else if (name.equals("goal")) {
+          this.getGoal().remove(value);
+        } else if (name.equals("activity")) {
+          this.getActivity().remove((CarePlanActivityComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2077,10 +2147,10 @@ public class CarePlan extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("instantiatesCanonical")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.instantiatesCanonical");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.instantiatesCanonical");
         }
         else if (name.equals("instantiatesUri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.instantiatesUri");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.instantiatesUri");
         }
         else if (name.equals("basedOn")) {
           return addBasedOn();
@@ -2092,19 +2162,19 @@ public class CarePlan extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.status");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.status");
         }
         else if (name.equals("intent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.intent");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.intent");
         }
         else if (name.equals("category")) {
           return addCategory();
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.title");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.title");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.description");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.description");
         }
         else if (name.equals("subject")) {
           this.subject = new Reference();
@@ -2119,7 +2189,7 @@ public class CarePlan extends DomainResource {
           return this.period;
         }
         else if (name.equals("created")) {
-          throw new FHIRException("Cannot call addChild on a primitive type CarePlan.created");
+          throw new FHIRException("Cannot call addChild on a singleton property CarePlan.created");
         }
         else if (name.equals("custodian")) {
           this.custodian = new Reference();

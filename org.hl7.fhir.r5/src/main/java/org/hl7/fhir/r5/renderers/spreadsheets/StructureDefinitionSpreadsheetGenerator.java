@@ -3,6 +3,7 @@ package org.hl7.fhir.r5.renderers.spreadsheets;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition;
@@ -60,6 +61,7 @@ import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionContextCompo
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionMappingComponent;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.TextStreamWriter;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTAutoFilter;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCustomFilter;
@@ -69,6 +71,8 @@ import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilters;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.STFilterOperator;
 
 
+@MarkedToMoveToAdjunctPackage
+@Slf4j
 public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadsheetGenerator {
   private XmlParser xml = new XmlParser();
   private JsonParser json = new JsonParser();
@@ -91,7 +95,7 @@ public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadshee
 
   public StructureDefinitionSpreadsheetGenerator renderStructureDefinition(StructureDefinition sd, boolean forMultiple) throws Exception {
     if (sd == null) {
-      System.out.println("no structure!");
+      log.warn("no structure!");
     }
     if (!sd.hasSnapshot()) {
       throw new DefinitionException(context.formatMessage(I18nConstants.NEEDS_A_SNAPSHOT));
@@ -99,7 +103,7 @@ public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadshee
     addStructureDefinitionMetadata(renderCanonicalResource(sd, forMultiple), sd);
     Sheet sheet = forMultiple && hasSheet("Elements") ? getSheet("Elements") : makeSheet("Elements");
 
-    if (sheet.getLastRowNum() == 0) {
+    if (sheet.getPhysicalNumberOfRows() == 0) {
       Row headerRow = sheet.createRow(0);
       int coffset = forMultiple ? 1 : 0;
       for (int i = 0; i < titles.length; i++) {
@@ -135,7 +139,7 @@ public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadshee
 
   private void addStructureDefinitionMetadata(Sheet sheet, StructureDefinition sd) {
     for (Coding k : sd.getKeyword()) {
-      addMetadataRow(sheet, "Keyword", dr.display(k));
+      addMetadataRow(sheet, "Keyword", dr.displayDataType(k));
     }
     addMetadataRow(sheet, "FHIR Version", sd.getFhirVersionElement().asStringValue());
     addMetadataRow(sheet, "Kind", sd.getKindElement().asStringValue());
@@ -374,22 +378,24 @@ public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadshee
 
       XSSFSheet xSheet = (XSSFSheet)sheet;
 
+      final int mustSupportCol = 7;
+      final int slicingCol = 27;
       CTAutoFilter sheetFilter = xSheet.getCTWorksheet().getAutoFilter();
       CTFilterColumn filterColumn1 = sheetFilter.addNewFilterColumn();
-      filterColumn1.setColId(6);
+      filterColumn1.setColId(mustSupportCol); // mustSupport
       CTCustomFilters filters = filterColumn1.addNewCustomFilters();
       CTCustomFilter filter1 = filters.addNewCustomFilter();
       filter1.setOperator(STFilterOperator.NOT_EQUAL);
       filter1.setVal(" ");
 
       CTFilterColumn filterColumn2 = sheetFilter.addNewFilterColumn();
-      filterColumn2.setColId(26);
+      filterColumn2.setColId(slicingCol); //slicing
       CTFilters filters2 = filterColumn2.addNewFilters();
       filters2.setBlank(true);
 
       // We have to apply the filter ourselves by hiding the rows: 
       for (Row row : sheet) {
-        if (row.getRowNum()>0 && (!row.getCell(6).getStringCellValue().equals("Y") || !row.getCell(26).getStringCellValue().isEmpty())) {
+        if (row.getRowNum()>0 && (!row.getCell(mustSupportCol).getStringCellValue().equals("Y") || !row.getCell(slicingCol).getStringCellValue().isEmpty())) {
           ((XSSFRow) row).getCTRow().setHidden(true);
         }
       }
@@ -397,6 +403,14 @@ public class StructureDefinitionSpreadsheetGenerator extends CanonicalSpreadshee
     if (sheet.getLastRowNum() > 0) {
       sheet.setActiveCell(new CellAddress(sheet.getRow(1).getCell(0)));
     }
+  }
+
+  public void dump() {
+    super.dump();
+    xml = null;
+    json = null;
+    mapKeys = null;
+    
   }
 
 }

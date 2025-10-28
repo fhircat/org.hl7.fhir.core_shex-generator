@@ -152,14 +152,16 @@ public class FormularyItem extends DomainResource {
         throw new FHIRException("Unknown FormularyItemStatusCodes code '"+codeString+"'");
         }
     public String toCode(FormularyItemStatusCodes code) {
-      if (code == FormularyItemStatusCodes.ACTIVE)
+       if (code == FormularyItemStatusCodes.NULL)
+           return null;
+       if (code == FormularyItemStatusCodes.ACTIVE)
         return "active";
       if (code == FormularyItemStatusCodes.ENTEREDINERROR)
         return "entered-in-error";
       if (code == FormularyItemStatusCodes.INACTIVE)
         return "inactive";
       return "?";
-      }
+   }
     public String toSystem(FormularyItemStatusCodes code) {
       return code.getSystem();
       }
@@ -384,6 +386,20 @@ public class FormularyItem extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("status")) {
+          value = new FormularyItemStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<FormularyItemStatusCodes>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -416,7 +432,7 @@ public class FormularyItem extends DomainResource {
           return this.code;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type FormularyItem.status");
+          throw new FHIRException("Cannot call addChild on a singleton property FormularyItem.status");
         }
         else
           return super.addChild(name);

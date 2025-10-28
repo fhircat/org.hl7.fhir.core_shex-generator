@@ -57,25 +57,21 @@ import org.hl7.fhir.r5.model.OperationOutcome;
  */
 public class EFhirClientException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
-	private List<OperationOutcome> errors = new ArrayList<OperationOutcome>();
+	private OperationOutcome error = null;
+  private int code;
 	 
-	public EFhirClientException(String message) {
+	public EFhirClientException(int code, String message) {
 		super(message);
+		this.code = code;
 	}
 	
-	public EFhirClientException(String message, List<OperationOutcome> serverErrors) {
-		super(message);
-		if(serverErrors != null && serverErrors.size() > 0) {
-			errors.addAll(serverErrors);
-		}
-	}
-
 	public EFhirClientException(Exception cause) {
 		super(cause);
 	}
 	
-	public EFhirClientException(String message, Exception cause) {
+	public EFhirClientException(int code, String message, Exception cause) {
 		super(message, cause);
+    this.code = code;
 	}
 	
 	/**
@@ -85,13 +81,26 @@ public class EFhirClientException extends RuntimeException {
 	 * @param message
 	 * @param serverError
 	 */
-	public EFhirClientException(String message, OperationOutcome serverError) {
-		super(message);
-		if(serverError != null) {
-			errors.add(serverError);
-		}
+	public EFhirClientException(int code, String message, OperationOutcome serverError) {
+	  super(message);
+    this.code = code;
+	  error = serverError;
 	}
-	
+
+
+	/**
+	 * Generate EFhirClientException which include a message indicating the cause of the exception
+	 * along with any OperationOutcome server error that may have resulted.
+	 * 
+	 * @param message
+	 * @param serverError
+	 */
+	public EFhirClientException(int code, String message, OperationOutcome serverError, Exception cause) {
+	  super(message, cause);
+    this.code = code;
+    error = serverError;
+	}
+
 	/**
 	 * Generate EFhirClientException indicating the cause of the exception
 	 * along with any OperationOutcome server error the server may have generated.
@@ -101,21 +110,14 @@ public class EFhirClientException extends RuntimeException {
 	 * 
 	 * @param serverError
 	 */
-	public EFhirClientException(OperationOutcome serverError) {
+	public EFhirClientException(int code, OperationOutcome serverError) {
 		super("Error on the server: "+serverError.getText().getDiv().allText()+". Refer to e.getServerErrors() for additional details.");
-		if(serverError != null) {
-			errors.add(serverError);
-		}
+    this.code = code;
+    error = serverError;
 	}
 	
-	/**
-	 * Method returns all OperationOutcome server errors that are 
-	 * associated with this exception.
-	 * 
-	 * @return
-	 */
-	public List<OperationOutcome> getServerErrors() {
-		return errors;
+	public OperationOutcome getServerError() {
+		return error;
 	}
 	
 	/**
@@ -123,8 +125,12 @@ public class EFhirClientException extends RuntimeException {
 	 * 
 	 * @return
 	 */
-	public boolean hasServerErrors() {
-		return errors.size() > 0;
+	public boolean hasServerError() {
+		return error != null;
 	}
+
+  public int getCode() {
+    return code;
+  }
 
 }

@@ -1,13 +1,18 @@
 package org.hl7.fhir.validation.special;
 
+import org.hl7.fhir.r5.model.CapabilityStatement;
+import org.hl7.fhir.r5.model.CapabilityStatement.CapabilityStatementRestComponent;
 import org.hl7.fhir.r5.model.DomainResource;
 import org.hl7.fhir.r5.model.Element;
 import org.hl7.fhir.r5.model.Extension;
 import org.hl7.fhir.r5.model.OperationOutcome;
+import org.hl7.fhir.r5.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.model.TerminologyCapabilities;
 import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.utils.ElementVisitor;
+import org.hl7.fhir.r5.utils.ElementVisitor.ElementVisitorInstruction;
 import org.hl7.fhir.r5.utils.ElementVisitor.IElementVisitor;
 import org.hl7.fhir.utilities.Utilities;
 
@@ -27,8 +32,9 @@ public class TxTesterScrubbers {
       return tight || !Utilities.isAbsoluteUrl(extension.getUrl()) || Utilities.existsInList(extension.getUrl(), 
           "http://hl7.org/fhir/StructureDefinition/codesystem-alternate", 
           "http://hl7.org/fhir/StructureDefinition/codesystem-conceptOrder",
-          "http://hl7.org/fhir/StructureDefinition/codesystem-label", 
+          "http://hl7.org/fhir/StructureDefinition/codesystem-label",
           "http://hl7.org/fhir/StructureDefinition/coding-sctdescid",
+          "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
           "http://hl7.org/fhir/StructureDefinition/itemWeight", 
           "http://hl7.org/fhir/StructureDefinition/rendering-style", 
           "http://hl7.org/fhir/StructureDefinition/rendering-xhtml", 
@@ -47,39 +53,75 @@ public class TxTesterScrubbers {
           "http://hl7.org/fhir/test/ValueSet/extensions-bad-supplement", 
           "http://hl7.org/fhir/test/ValueSet/simple-all", 
           "http://hl7.org/fhir/test/ValueSet/simple-enumerated", 
+          "http://hl7.org/fhir/StructureDefinition/alternate-code-use",
+          "http://hl7.org/fhir/StructureDefinition/alternate-code-status",
+          "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
           "http://hl7.org/fhir/test/ValueSet/simple-filter-isa");
     }
     
     @Override
-    public void visit(Resource resource) {
+    public ElementVisitorInstruction visit(Object context, Resource resource) {
       if (resource instanceof DomainResource) {
         DomainResource dr = (DomainResource) resource;
         dr.getExtension().removeIf(ext -> !isManagedExtension(ext));
       } 
+      return ElementVisitorInstruction.VISIT_CHILDREN;
     }
 
     @Override
-    public void visit(Element element) {
+    public ElementVisitorInstruction visit(Object context, Element element) {
       element.getExtension().removeIf(ext -> !isManagedExtension(ext));
+      if (element.fhirType().equals("ValueSet.compose")) {
+        return ElementVisitorInstruction.NO_VISIT_CHILDREN;
+      } else {
+        return ElementVisitorInstruction.VISIT_CHILDREN;
+      }
     }
   }
   
   public static void scrubDR(DomainResource dr, boolean tight) {
     dr.setText(null);
     dr.setMeta(null);  
-    new ElementVisitor(new TxTesterScrubberVisitor(tight)).visit(dr);
+    new ElementVisitor(new TxTesterScrubberVisitor(tight)).visit(null, dr);
   }
 
   public static void scrubVS(ValueSet vs, boolean tight) {
     scrubDR(vs, tight);    
   }
 
-  public static void scrubParams(Parameters po) {
+  public static void scrubParams(Parameters po, boolean tight) {
     po.setMeta(null);
+    for (var pp : po.getParameter()) {
+      if (pp.getResource() != null) {
+        if (pp.getResource() instanceof ValueSet) {
+          scrubVS((ValueSet) pp.getResource(), tight);
+        }
+        if (pp.getResource() instanceof OperationOutcome) {
+          scrubOO((OperationOutcome) pp.getResource(), tight);
+        }
+        if (pp.getResource() instanceof Parameters) {
+          scrubParams((Parameters) pp.getResource(), tight);
+        }
+      }
+    }
   }
 
   public static void scrubOO(OperationOutcome po, boolean tight) {
     scrubDR(po, tight);
+    po.getIssue().removeIf(i -> i.hasDiagnostics() & !i.hasDetails());
+    for (OperationOutcomeIssueComponent iss : po.getIssue()) {
+      if (iss.hasDiagnostics() && !iss.getDiagnostics().toLowerCase().contains("x-request-id")) {
+        iss.setDiagnostics(null);
+      }
+    }
+  }
+
+  public static void scrubCapStmt(CapabilityStatement cs, boolean tight) {
+    // nothing yet?
+  }
+
+  public static void scrubTermCaps(TerminologyCapabilities cs, boolean tight) {
+    // nothing yet? 
   }
 
 }

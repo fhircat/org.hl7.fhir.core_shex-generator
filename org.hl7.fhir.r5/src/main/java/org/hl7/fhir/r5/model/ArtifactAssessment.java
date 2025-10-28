@@ -180,7 +180,9 @@ public class ArtifactAssessment extends DomainResource {
         throw new FHIRException("Unknown ArtifactAssessmentDisposition code '"+codeString+"'");
         }
     public String toCode(ArtifactAssessmentDisposition code) {
-      if (code == ArtifactAssessmentDisposition.UNRESOLVED)
+       if (code == ArtifactAssessmentDisposition.NULL)
+           return null;
+       if (code == ArtifactAssessmentDisposition.UNRESOLVED)
         return "unresolved";
       if (code == ArtifactAssessmentDisposition.NOTPERSUASIVE)
         return "not-persuasive";
@@ -191,7 +193,7 @@ public class ArtifactAssessment extends DomainResource {
       if (code == ArtifactAssessmentDisposition.NOTPERSUASIVEWITHMODIFICATION)
         return "not-persuasive-with-modification";
       return "?";
-      }
+   }
     public String toSystem(ArtifactAssessmentDisposition code) {
       return code.getSystem();
       }
@@ -338,7 +340,9 @@ public class ArtifactAssessment extends DomainResource {
         throw new FHIRException("Unknown ArtifactAssessmentInformationType code '"+codeString+"'");
         }
     public String toCode(ArtifactAssessmentInformationType code) {
-      if (code == ArtifactAssessmentInformationType.COMMENT)
+       if (code == ArtifactAssessmentInformationType.NULL)
+           return null;
+       if (code == ArtifactAssessmentInformationType.COMMENT)
         return "comment";
       if (code == ArtifactAssessmentInformationType.CLASSIFIER)
         return "classifier";
@@ -351,7 +355,7 @@ public class ArtifactAssessment extends DomainResource {
       if (code == ArtifactAssessmentInformationType.CHANGEREQUEST)
         return "change-request";
       return "?";
-      }
+   }
     public String toSystem(ArtifactAssessmentInformationType code) {
       return code.getSystem();
       }
@@ -554,7 +558,9 @@ public class ArtifactAssessment extends DomainResource {
         throw new FHIRException("Unknown ArtifactAssessmentWorkflowStatus code '"+codeString+"'");
         }
     public String toCode(ArtifactAssessmentWorkflowStatus code) {
-      if (code == ArtifactAssessmentWorkflowStatus.SUBMITTED)
+       if (code == ArtifactAssessmentWorkflowStatus.NULL)
+           return null;
+       if (code == ArtifactAssessmentWorkflowStatus.SUBMITTED)
         return "submitted";
       if (code == ArtifactAssessmentWorkflowStatus.TRIAGED)
         return "triaged";
@@ -575,7 +581,7 @@ public class ArtifactAssessment extends DomainResource {
       if (code == ArtifactAssessmentWorkflowStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(ArtifactAssessmentWorkflowStatus code) {
       return code.getSystem();
       }
@@ -1217,6 +1223,34 @@ public class ArtifactAssessment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("informationType")) {
+          value = new ArtifactAssessmentInformationTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.informationType = (Enumeration) value; // Enumeration<ArtifactAssessmentInformationType>
+        } else if (name.equals("summary")) {
+          this.summary = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("classifier")) {
+          this.getClassifier().remove(value);
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("author")) {
+          this.author = null;
+        } else if (name.equals("path")) {
+          this.getPath().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("freeToShare")) {
+          this.freeToShare = null;
+        } else if (name.equals("component")) {
+          this.getComponent().remove((ArtifactAssessmentContentComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1256,10 +1290,10 @@ public class ArtifactAssessment extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("informationType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.content.informationType");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.content.informationType");
         }
         else if (name.equals("summary")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.content.summary");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.content.summary");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -1277,13 +1311,13 @@ public class ArtifactAssessment extends DomainResource {
           return this.author;
         }
         else if (name.equals("path")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.content.path");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.content.path");
         }
         else if (name.equals("relatedArtifact")) {
           return addRelatedArtifact();
         }
         else if (name.equals("freeToShare")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.content.freeToShare");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.content.freeToShare");
         }
         else if (name.equals("component")) {
           return addComponent();
@@ -1581,8 +1615,8 @@ public class ArtifactAssessment extends DomainResource {
       return (Reference) this.citeAs;
     }
 
-    public boolean hasCiteAsReference() { 
-      return this != null && this.citeAs instanceof Reference;
+    public boolean hasCiteAsReference() {
+        return this.citeAs instanceof Reference;
     }
 
     /**
@@ -1596,8 +1630,8 @@ public class ArtifactAssessment extends DomainResource {
       return (MarkdownType) this.citeAs;
     }
 
-    public boolean hasCiteAsMarkdownType() { 
-      return this != null && this.citeAs instanceof MarkdownType;
+    public boolean hasCiteAsMarkdownType() {
+        return this.citeAs instanceof MarkdownType;
     }
 
     public boolean hasCiteAs() { 
@@ -1828,8 +1862,8 @@ public class ArtifactAssessment extends DomainResource {
       return (Reference) this.artifact;
     }
 
-    public boolean hasArtifactReference() { 
-      return this != null && this.artifact instanceof Reference;
+    public boolean hasArtifactReference() {
+        return this.artifact instanceof Reference;
     }
 
     /**
@@ -1843,8 +1877,8 @@ public class ArtifactAssessment extends DomainResource {
       return (CanonicalType) this.artifact;
     }
 
-    public boolean hasArtifactCanonicalType() { 
-      return this != null && this.artifact instanceof CanonicalType;
+    public boolean hasArtifactCanonicalType() {
+        return this.artifact instanceof CanonicalType;
     }
 
     /**
@@ -1858,8 +1892,8 @@ public class ArtifactAssessment extends DomainResource {
       return (UriType) this.artifact;
     }
 
-    public boolean hasArtifactUriType() { 
-      return this != null && this.artifact instanceof UriType;
+    public boolean hasArtifactUriType() {
+        return this.artifact instanceof UriType;
     }
 
     public boolean hasArtifact() { 
@@ -2161,6 +2195,37 @@ public class ArtifactAssessment extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("citeAs[x]")) {
+          this.citeAs = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("copyright")) {
+          this.copyright = null;
+        } else if (name.equals("approvalDate")) {
+          this.approvalDate = null;
+        } else if (name.equals("lastReviewDate")) {
+          this.lastReviewDate = null;
+        } else if (name.equals("artifact[x]")) {
+          this.artifact = null;
+        } else if (name.equals("content")) {
+          this.getContent().remove((ArtifactAssessmentContentComponent) value);
+        } else if (name.equals("workflowStatus")) {
+          value = new ArtifactAssessmentWorkflowStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.workflowStatus = (Enumeration) value; // Enumeration<ArtifactAssessmentWorkflowStatus>
+        } else if (name.equals("disposition")) {
+          value = new ArtifactAssessmentDispositionEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.disposition = (Enumeration) value; // Enumeration<ArtifactAssessmentDisposition>
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2207,7 +2272,7 @@ public class ArtifactAssessment extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.title");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.title");
         }
         else if (name.equals("citeAsReference")) {
           this.citeAs = new Reference();
@@ -2218,16 +2283,16 @@ public class ArtifactAssessment extends DomainResource {
           return this.citeAs;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.date");
         }
         else if (name.equals("copyright")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.copyright");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.copyright");
         }
         else if (name.equals("approvalDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.approvalDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.approvalDate");
         }
         else if (name.equals("lastReviewDate")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.lastReviewDate");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.lastReviewDate");
         }
         else if (name.equals("artifactReference")) {
           this.artifact = new Reference();
@@ -2245,10 +2310,10 @@ public class ArtifactAssessment extends DomainResource {
           return addContent();
         }
         else if (name.equals("workflowStatus")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.workflowStatus");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.workflowStatus");
         }
         else if (name.equals("disposition")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ArtifactAssessment.disposition");
+          throw new FHIRException("Cannot call addChild on a singleton property ArtifactAssessment.disposition");
         }
         else
           return super.addChild(name);

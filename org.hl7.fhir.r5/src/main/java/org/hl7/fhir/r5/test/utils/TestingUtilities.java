@@ -4,25 +4,28 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.fhir.ucum.UcumEssenceService;
+import org.hl7.fhir.r5.Constants;
+import org.hl7.fhir.r5.context.IContextResourceLoader;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
-import org.hl7.fhir.r5.context.TerminologyCache;
 import org.hl7.fhir.r5.model.Parameters;
-import org.hl7.fhir.r5.utils.R5Hacker;
+import org.hl7.fhir.r5.terminologies.utilities.TerminologyCache;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.npm.BasePackageCacheManager.InputStreamWithSrc;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
-import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.IPackageProvider;
 import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.hl7.fhir.utilities.npm.ToolsVersion;
 import org.hl7.fhir.utilities.tests.BaseTestingUtilities;
 import org.hl7.fhir.utilities.tests.TestConfig;
 
+@Slf4j
 public class TestingUtilities extends BaseTestingUtilities {
 
   public static class PackageProvider implements IPackageProvider {
@@ -39,7 +42,7 @@ public class TestingUtilities extends BaseTestingUtilities {
 
   }
 
-  static public Map<String, IWorkerContext> fcontexts;
+  static public Map<String, SimpleWorkerContext> fcontexts;
 
   final static public String DEFAULT_CONTEXT_VERSION = "5.0.0";
 
@@ -47,7 +50,7 @@ public class TestingUtilities extends BaseTestingUtilities {
    *
    * This uses the DEFAULT_CONTEXT_VERSION
    * */
-  public static IWorkerContext getSharedWorkerContext() {
+  public static SimpleWorkerContext getSharedWorkerContext() {
     return getSharedWorkerContext(DEFAULT_CONTEXT_VERSION);
   }
 
@@ -57,7 +60,7 @@ public class TestingUtilities extends BaseTestingUtilities {
    * @param version FHIR Version to get context for
    * @return
    */
-  public static IWorkerContext getSharedWorkerContext(String version) {
+  public static SimpleWorkerContext getSharedWorkerContext(String version) {
     if (!Utilities.existsInList(version, "1.0.2", "3.0.1", "4.0.1", "4.3.0", "5.0.0")) {
       throw new Error("illegal version: "+version);
       
@@ -68,18 +71,18 @@ public class TestingUtilities extends BaseTestingUtilities {
       fcontexts = new HashMap<>();
     }
     if (!fcontexts.containsKey(v)) {
-        IWorkerContext fcontext = getWorkerContext(version);
+      SimpleWorkerContext fcontext = getWorkerContext(version);
         fcontexts.put(v, fcontext);
     }
     return fcontexts.get(v);
   }
 
-  public static IWorkerContext getWorkerContext(String version) {
+  public static SimpleWorkerContext getWorkerContext(String version) {
 
     FilesystemPackageCacheManager pcm;
     try {
-      pcm = new FilesystemPackageCacheManager(org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
-      IWorkerContext fcontext = null;
+      pcm = new FilesystemPackageCacheManager.Builder().build();
+      SimpleWorkerContext fcontext = null;
       if (VersionUtilities.isR5Ver(version)) {
         // for purposes of stability, the R5 core package comes from the test case repository
         fcontext = getWorkerContext(loadR5CorePackage());
@@ -87,16 +90,16 @@ public class TestingUtilities extends BaseTestingUtilities {
         fcontext = getWorkerContext(pcm.loadPackage(VersionUtilities.packageForVersion(version), version));
       }
       fcontext.setUcumService(new UcumEssenceService(TestingUtilities.loadTestResourceStream("ucum", "ucum-essence.xml")));
-      fcontext.setExpansionProfile(new Parameters());
+      fcontext.setExpansionParameters(new Parameters());
       if (!fcontext.hasPackage("hl7.terminology.r5", null)) {
         NpmPackage utg = pcm.loadPackage("hl7.terminology.r5");
-        System.out.println("Loading THO: "+utg.name()+"#"+utg.version());
-        fcontext.loadFromPackage(utg, new TestPackageLoader(Utilities.strings("CodeSystem", "ValueSet")));
+        log.info("Loading THO: "+utg.name()+"#"+utg.version());
+        fcontext.loadFromPackage(utg, new TestPackageLoader(Utilities.stringSet("CodeSystem", "ValueSet")));
       } 
       if (!fcontext.hasPackage("hl7.fhir.uv.extensions", null)) {
-        NpmPackage ext = pcm.loadPackage("hl7.fhir.uv.extensions", "1.0.0");
-        System.out.println("Loading Extensions: "+ext.name()+"#"+ext.version());
-        fcontext.loadFromPackage(ext, new TestPackageLoader(Utilities.strings("CodeSystem", "ValueSet", "StructureDefinition")));
+        NpmPackage ext = pcm.loadPackage("hl7.fhir.uv.extensions", Constants.EXTENSIONS_WORKING_VERSION);
+        log.info("Loading Extensions: "+ext.name()+"#"+ext.version());
+        fcontext.loadFromPackage(ext, new TestPackageLoader(Utilities.stringSet("CodeSystem", "ValueSet", "StructureDefinition")));
       } 
       return fcontext;
     } catch (Exception e) {
@@ -124,7 +127,7 @@ public class TestingUtilities extends BaseTestingUtilities {
     return swc;
   }
 
-  public static SimpleWorkerContext getWorkerContext(NpmPackage npmPackage, IWorkerContext.IContextResourceLoader loader) throws Exception {
+  public static SimpleWorkerContext getWorkerContext(NpmPackage npmPackage, IContextResourceLoader loader) throws Exception {
     SimpleWorkerContext swc = new SimpleWorkerContext.SimpleWorkerContextBuilder().withAllowLoadingDuplicates(true).withUserAgent(TestConstants.USER_AGENT)
         .withTerminologyCachePath(getTerminologyCacheDirectory()).fromPackage(npmPackage, loader, true);
     TerminologyCache.setCacheErrors(true);
@@ -134,16 +137,16 @@ public class TestingUtilities extends BaseTestingUtilities {
   static public String fixedpath;
   static public String contentpath;
 
-  public static String home() {
+  public static String home() throws IOException {
     if (fixedpath != null)
       return fixedpath;
     String s = System.getenv("FHIR_HOME");
     if (!Utilities.noString(s))
       return s;
     s = "C:\\work\\org.hl7.fhir\\build";
-    // FIXME: change this back
+    // #TODO - what should we do with this?
     s = "/Users/jamesagnew/git/fhir";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     throw new Error("FHIR Home directory not configured");
   }
@@ -153,20 +156,20 @@ public class TestingUtilities extends BaseTestingUtilities {
     if (contentpath != null)
       return contentpath;
     String s = "R:\\fhir\\publish";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     return Utilities.path(home(), "publish");
   }
 
   // diretory that contains all the US implementation guides
-  public static String us() {
+  public static String us() throws IOException {
     if (fixedpath != null)
       return fixedpath;
     String s = System.getenv("FHIR_HOME");
     if (!Utilities.noString(s))
       return s;
     s = "C:\\work\\org.hl7.fhir.us";
-    if (new File(s).exists())
+    if (ManagedFileAccess.file(s).exists())
       return s;
     throw new Error("FHIR US directory not configured");
   }
@@ -175,5 +178,7 @@ public class TestingUtilities extends BaseTestingUtilities {
     FilesystemPackageCacheManager.setPackageProvider(new TestingUtilities.PackageProvider());    
   }
 
-
+  public static boolean runningAsSurefire() {
+    return "true".equals(System.getProperty("runningAsSurefire") != null ? System.getProperty("runningAsSurefire").toLowerCase(Locale.ENGLISH) : "");
+  }
 }

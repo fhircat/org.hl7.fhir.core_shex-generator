@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import org.hl7.fhir.convertors.txClient.TerminologyClientFactory;
 
 /*
   Copyright (c) 2011+, HL7, Inc.
@@ -37,24 +40,22 @@ import java.util.UUID;
 
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.context.SimpleWorkerContext.PackageResourceLoader;
 import org.hl7.fhir.r5.formats.JsonParser;
 import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r5.model.Bundle.BundleType;
 import org.hl7.fhir.r5.model.CanonicalResource;
-import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.CodeSystem;
-import org.hl7.fhir.r5.model.ElementDefinition;
-import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
-import org.hl7.fhir.r5.model.UriType;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager.ITerminologyClientFactory;
 
 public class R5ToR5Loader extends BaseLoaderR5 {
 
-  public R5ToR5Loader(List<String> types, ILoaderKnowledgeProviderR5 lkp) {
+  public R5ToR5Loader(Set<String> types, ILoaderKnowledgeProviderR5 lkp) {
     super(types, lkp);
   }
 
@@ -89,6 +90,7 @@ public class R5ToR5Loader extends BaseLoaderR5 {
     if (patchUrls) {
       for (BundleEntryComponent be : b.getEntry()) {
         if (be.hasResource()) {
+          inspectResource(be.getResource());
           doPatchUrls(be.getResource());
         }
       }
@@ -108,12 +110,21 @@ public class R5ToR5Loader extends BaseLoaderR5 {
     if (killPrimitives) {
       throw new FHIRException("Cannot kill primitives when using deferred loading");
     }
+    inspectResource(r5);
     if (patchUrls) {
       doPatchUrls(r5);
     }
+    if (r5 instanceof StructureDefinition) {
+      StructureDefinition sd = (StructureDefinition) r5;
+      if ("http://hl7.org/fhir/StructureDefinition/Base".equals(sd.getUrl())) {
+        sd.getSnapshot().getElementFirstRep().getConstraint().clear();
+        
+      }
+    }
     return r5;
   }
-  
+
+
   @Override
   public List<CodeSystem> getCodeSystems() {
     return new ArrayList<>();
@@ -124,5 +135,20 @@ public class R5ToR5Loader extends BaseLoaderR5 {
     return "5.0";
   }
 
+
+  @Override
+  public ITerminologyClientFactory txFactory() {
+    return new TerminologyClientFactory(versionString());
+  }
+
+  @Override
+  public Set<String> reviewActualTypes(Set<String> types) {
+    return types;
+  }
+
+  @Override
+  public PackageResourceLoader editInfo(PackageResourceLoader pri) {
+    return pri;
+  }
 
 }

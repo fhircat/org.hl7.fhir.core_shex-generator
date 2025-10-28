@@ -206,7 +206,9 @@ public class ContactPoint extends DataType implements ICompositeType {
         throw new FHIRException("Unknown ContactPointSystem code '"+codeString+"'");
         }
     public String toCode(ContactPointSystem code) {
-      if (code == ContactPointSystem.PHONE)
+       if (code == ContactPointSystem.NULL)
+           return null;
+       if (code == ContactPointSystem.PHONE)
         return "phone";
       if (code == ContactPointSystem.FAX)
         return "fax";
@@ -221,7 +223,7 @@ public class ContactPoint extends DataType implements ICompositeType {
       if (code == ContactPointSystem.OTHER)
         return "other";
       return "?";
-      }
+   }
     public String toSystem(ContactPointSystem code) {
       return code.getSystem();
       }
@@ -354,7 +356,9 @@ public class ContactPoint extends DataType implements ICompositeType {
         throw new FHIRException("Unknown ContactPointUse code '"+codeString+"'");
         }
     public String toCode(ContactPointUse code) {
-      if (code == ContactPointUse.HOME)
+       if (code == ContactPointUse.NULL)
+           return null;
+       if (code == ContactPointUse.HOME)
         return "home";
       if (code == ContactPointUse.WORK)
         return "work";
@@ -365,7 +369,7 @@ public class ContactPoint extends DataType implements ICompositeType {
       if (code == ContactPointUse.MOBILE)
         return "mobile";
       return "?";
-      }
+   }
     public String toSystem(ContactPointUse code) {
       return code.getSystem();
       }
@@ -712,6 +716,25 @@ public class ContactPoint extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("system")) {
+          value = new ContactPointSystemEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.system = (Enumeration) value; // Enumeration<ContactPointSystem>
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else if (name.equals("use")) {
+          value = new ContactPointUseEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.use = (Enumeration) value; // Enumeration<ContactPointUse>
+        } else if (name.equals("rank")) {
+          this.rank = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -741,16 +764,16 @@ public class ContactPoint extends DataType implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("system")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ContactPoint.system");
+          throw new FHIRException("Cannot call addChild on a singleton property ContactPoint.system");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ContactPoint.value");
+          throw new FHIRException("Cannot call addChild on a singleton property ContactPoint.value");
         }
         else if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ContactPoint.use");
+          throw new FHIRException("Cannot call addChild on a singleton property ContactPoint.use");
         }
         else if (name.equals("rank")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ContactPoint.rank");
+          throw new FHIRException("Cannot call addChild on a singleton property ContactPoint.rank");
         }
         else if (name.equals("period")) {
           this.period = new Period();

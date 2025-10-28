@@ -368,6 +368,21 @@ The type is the Canonical URL of Resource Definition that is the type this refer
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("reference")) {
+          this.reference = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -395,17 +410,17 @@ The type is the Canonical URL of Resource Definition that is the type this refer
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("reference")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Reference.reference");
+          throw new FHIRException("Cannot call addChild on a singleton property Reference.reference");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Reference.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Reference.type");
         }
         else if (name.equals("identifier")) {
           this.identifier = new Identifier();
           return this.identifier;
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Reference.display");
+          throw new FHIRException("Cannot call addChild on a singleton property Reference.display");
         }
         else
           return super.addChild(name);

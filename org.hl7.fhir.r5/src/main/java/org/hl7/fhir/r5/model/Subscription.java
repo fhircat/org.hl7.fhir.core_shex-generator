@@ -152,14 +152,16 @@ public class Subscription extends DomainResource {
         throw new FHIRException("Unknown SubscriptionPayloadContent code '"+codeString+"'");
         }
     public String toCode(SubscriptionPayloadContent code) {
-      if (code == SubscriptionPayloadContent.EMPTY)
+       if (code == SubscriptionPayloadContent.NULL)
+           return null;
+       if (code == SubscriptionPayloadContent.EMPTY)
         return "empty";
       if (code == SubscriptionPayloadContent.IDONLY)
         return "id-only";
       if (code == SubscriptionPayloadContent.FULLRESOURCE)
         return "full-resource";
       return "?";
-      }
+   }
     public String toSystem(SubscriptionPayloadContent code) {
       return code.getSystem();
       }
@@ -539,6 +541,25 @@ public class Subscription extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("resourceType")) {
+          this.resourceType = null;
+        } else if (name.equals("filterParameter")) {
+          this.filterParameter = null;
+        } else if (name.equals("comparator")) {
+          value = new SearchComparatorEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.comparator = (Enumeration) value; // Enumeration<SearchComparator>
+        } else if (name.equals("modifier")) {
+          value = new SearchModifierCodeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.modifier = (Enumeration) value; // Enumeration<SearchModifierCode>
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -568,19 +589,19 @@ public class Subscription extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("resourceType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.filterBy.resourceType");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.filterBy.resourceType");
         }
         else if (name.equals("filterParameter")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.filterBy.filterParameter");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.filterBy.filterParameter");
         }
         else if (name.equals("comparator")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.filterBy.comparator");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.filterBy.comparator");
         }
         else if (name.equals("modifier")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.filterBy.modifier");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.filterBy.modifier");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.filterBy.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.filterBy.value");
         }
         else
           return super.addChild(name);
@@ -812,6 +833,17 @@ public class Subscription extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("value")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -835,10 +867,10 @@ public class Subscription extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.parameter.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.parameter.name");
         }
         else if (name.equals("value")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.parameter.value");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.parameter.value");
         }
         else
           return super.addChild(name);
@@ -2003,6 +2035,49 @@ public class Subscription extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("status")) {
+          value = new SubscriptionStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<SubscriptionStatusCodes>
+        } else if (name.equals("topic")) {
+          this.topic = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("end")) {
+          this.end = null;
+        } else if (name.equals("managingEntity")) {
+          this.managingEntity = null;
+        } else if (name.equals("reason")) {
+          this.reason = null;
+        } else if (name.equals("filterBy")) {
+          this.getFilterBy().remove((SubscriptionFilterByComponent) value);
+        } else if (name.equals("channelType")) {
+          this.channelType = null;
+        } else if (name.equals("endpoint")) {
+          this.endpoint = null;
+        } else if (name.equals("parameter")) {
+          this.getParameter().remove((SubscriptionParameterComponent) value);
+        } else if (name.equals("heartbeatPeriod")) {
+          this.heartbeatPeriod = null;
+        } else if (name.equals("timeout")) {
+          this.timeout = null;
+        } else if (name.equals("contentType")) {
+          this.contentType = null;
+        } else if (name.equals("content")) {
+          value = new SubscriptionPayloadContentEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.content = (Enumeration) value; // Enumeration<SubscriptionPayloadContent>
+        } else if (name.equals("maxCount")) {
+          this.maxCount = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2059,26 +2134,26 @@ public class Subscription extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.name");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.name");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.status");
         }
         else if (name.equals("topic")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.topic");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.topic");
         }
         else if (name.equals("contact")) {
           return addContact();
         }
         else if (name.equals("end")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.end");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.end");
         }
         else if (name.equals("managingEntity")) {
           this.managingEntity = new Reference();
           return this.managingEntity;
         }
         else if (name.equals("reason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.reason");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.reason");
         }
         else if (name.equals("filterBy")) {
           return addFilterBy();
@@ -2088,25 +2163,25 @@ public class Subscription extends DomainResource {
           return this.channelType;
         }
         else if (name.equals("endpoint")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.endpoint");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.endpoint");
         }
         else if (name.equals("parameter")) {
           return addParameter();
         }
         else if (name.equals("heartbeatPeriod")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.heartbeatPeriod");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.heartbeatPeriod");
         }
         else if (name.equals("timeout")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.timeout");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.timeout");
         }
         else if (name.equals("contentType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.contentType");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.contentType");
         }
         else if (name.equals("content")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.content");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.content");
         }
         else if (name.equals("maxCount")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Subscription.maxCount");
+          throw new FHIRException("Cannot call addChild on a singleton property Subscription.maxCount");
         }
         else
           return super.addChild(name);

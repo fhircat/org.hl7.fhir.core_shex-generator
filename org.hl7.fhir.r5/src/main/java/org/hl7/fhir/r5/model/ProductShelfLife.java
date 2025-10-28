@@ -122,8 +122,8 @@ public class ProductShelfLife extends BackboneType implements ICompositeType {
       return (Duration) this.period;
     }
 
-    public boolean hasPeriodDuration() { 
-      return this != null && this.period instanceof Duration;
+    public boolean hasPeriodDuration() {
+        return this.period instanceof Duration;
     }
 
     /**
@@ -137,8 +137,8 @@ public class ProductShelfLife extends BackboneType implements ICompositeType {
       return (StringType) this.period;
     }
 
-    public boolean hasPeriodStringType() { 
-      return this != null && this.period instanceof StringType;
+    public boolean hasPeriodStringType() {
+        return this.period instanceof StringType;
     }
 
     public boolean hasPeriod() { 
@@ -268,6 +268,19 @@ public class ProductShelfLife extends BackboneType implements ICompositeType {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("period[x]")) {
+          this.period = null;
+        } else if (name.equals("specialPrecautionsForStorage")) {
+          this.getSpecialPrecautionsForStorage().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override

@@ -162,7 +162,9 @@ public class Address extends Type implements ICompositeType {
         throw new FHIRException("Unknown AddressUse code '"+codeString+"'");
         }
     public String toCode(AddressUse code) {
-      if (code == AddressUse.HOME)
+       if (code == AddressUse.NULL)
+           return null;
+       if (code == AddressUse.HOME)
         return "home";
       if (code == AddressUse.WORK)
         return "work";
@@ -171,7 +173,7 @@ public class Address extends Type implements ICompositeType {
       if (code == AddressUse.OLD)
         return "old";
       return "?";
-      }
+   }
     public String toSystem(AddressUse code) {
       return code.getSystem();
       }
@@ -276,14 +278,16 @@ public class Address extends Type implements ICompositeType {
         throw new FHIRException("Unknown AddressType code '"+codeString+"'");
         }
     public String toCode(AddressType code) {
-      if (code == AddressType.POSTAL)
+       if (code == AddressType.NULL)
+           return null;
+       if (code == AddressType.POSTAL)
         return "postal";
       if (code == AddressType.PHYSICAL)
         return "physical";
       if (code == AddressType.BOTH)
         return "both";
       return "?";
-      }
+   }
     public String toSystem(AddressType code) {
       return code.getSystem();
       }
@@ -1005,31 +1009,31 @@ public class Address extends Type implements ICompositeType {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("use")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.use");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.use");
         }
         else if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.type");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.type");
         }
         else if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.text");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.text");
         }
         else if (name.equals("line")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.line");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.line");
         }
         else if (name.equals("city")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.city");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.city");
         }
         else if (name.equals("district")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.district");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.district");
         }
         else if (name.equals("state")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.state");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.state");
         }
         else if (name.equals("postalCode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.postalCode");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.postalCode");
         }
         else if (name.equals("country")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Address.country");
+          throw new FHIRException("Cannot call addChild on a singleton property Address.country");
         }
         else if (name.equals("period")) {
           this.period = new Period();

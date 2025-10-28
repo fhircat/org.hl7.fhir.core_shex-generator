@@ -138,12 +138,14 @@ public class ImmunizationEvaluation extends DomainResource {
         throw new FHIRException("Unknown ImmunizationEvaluationStatusCodes code '"+codeString+"'");
         }
     public String toCode(ImmunizationEvaluationStatusCodes code) {
-      if (code == ImmunizationEvaluationStatusCodes.COMPLETED)
+       if (code == ImmunizationEvaluationStatusCodes.NULL)
+           return null;
+       if (code == ImmunizationEvaluationStatusCodes.COMPLETED)
         return "completed";
       if (code == ImmunizationEvaluationStatusCodes.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(ImmunizationEvaluationStatusCodes code) {
       return code.getSystem();
       }
@@ -922,6 +924,40 @@ public class ImmunizationEvaluation extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new ImmunizationEvaluationStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<ImmunizationEvaluationStatusCodes>
+        } else if (name.equals("patient")) {
+          this.patient = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("authority")) {
+          this.authority = null;
+        } else if (name.equals("targetDisease")) {
+          this.targetDisease = null;
+        } else if (name.equals("immunizationEvent")) {
+          this.immunizationEvent = null;
+        } else if (name.equals("doseStatus")) {
+          this.doseStatus = null;
+        } else if (name.equals("doseStatusReason")) {
+          this.getDoseStatusReason().remove(value);
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("series")) {
+          this.series = null;
+        } else if (name.equals("doseNumber")) {
+          this.doseNumber = null;
+        } else if (name.equals("seriesDoses")) {
+          this.seriesDoses = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -970,14 +1006,14 @@ public class ImmunizationEvaluation extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.status");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.status");
         }
         else if (name.equals("patient")) {
           this.patient = new Reference();
           return this.patient;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.date");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.date");
         }
         else if (name.equals("authority")) {
           this.authority = new Reference();
@@ -999,16 +1035,16 @@ public class ImmunizationEvaluation extends DomainResource {
           return addDoseStatusReason();
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.description");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.description");
         }
         else if (name.equals("series")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.series");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.series");
         }
         else if (name.equals("doseNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.doseNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.doseNumber");
         }
         else if (name.equals("seriesDoses")) {
-          throw new FHIRException("Cannot call addChild on a primitive type ImmunizationEvaluation.seriesDoses");
+          throw new FHIRException("Cannot call addChild on a singleton property ImmunizationEvaluation.seriesDoses");
         }
         else
           return super.addChild(name);

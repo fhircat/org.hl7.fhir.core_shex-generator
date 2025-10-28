@@ -208,7 +208,9 @@ public class MedicationAdministration extends DomainResource {
         throw new FHIRException("Unknown MedicationAdministrationStatusCodes code '"+codeString+"'");
         }
     public String toCode(MedicationAdministrationStatusCodes code) {
-      if (code == MedicationAdministrationStatusCodes.INPROGRESS)
+       if (code == MedicationAdministrationStatusCodes.NULL)
+           return null;
+       if (code == MedicationAdministrationStatusCodes.INPROGRESS)
         return "in-progress";
       if (code == MedicationAdministrationStatusCodes.NOTDONE)
         return "not-done";
@@ -223,7 +225,7 @@ public class MedicationAdministration extends DomainResource {
       if (code == MedicationAdministrationStatusCodes.UNKNOWN)
         return "unknown";
       return "?";
-      }
+   }
     public String toSystem(MedicationAdministrationStatusCodes code) {
       return code.getSystem();
       }
@@ -362,6 +364,17 @@ public class MedicationAdministration extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("function")) {
+          this.function = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -442,7 +455,9 @@ public class MedicationAdministration extends DomainResource {
     @Block()
     public static class MedicationAdministrationDosageComponent extends BackboneElement implements IBaseBackboneElement {
         /**
-         * Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.The dosage instructions should reflect the dosage of the medication that was administered.
+         * Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.
+
+The dosage instructions should reflect the dosage of the medication that was administered.
          */
         @Child(name = "text", type = {StringType.class}, order=1, min=0, max=1, modifier=false, summary=false)
         @Description(shortDefinition="Free text dosage instructions e.g. SIG", formalDefinition="Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.\r\rThe dosage instructions should reflect the dosage of the medication that was administered." )
@@ -496,7 +511,9 @@ public class MedicationAdministration extends DomainResource {
       }
 
         /**
-         * @return {@link #text} (Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.The dosage instructions should reflect the dosage of the medication that was administered.). This is the underlying object with id, value and extensions. The accessor "getText" gives direct access to the value
+         * @return {@link #text} (Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.
+
+The dosage instructions should reflect the dosage of the medication that was administered.). This is the underlying object with id, value and extensions. The accessor "getText" gives direct access to the value
          */
         public StringType getTextElement() { 
           if (this.text == null)
@@ -516,7 +533,9 @@ public class MedicationAdministration extends DomainResource {
         }
 
         /**
-         * @param value {@link #text} (Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.The dosage instructions should reflect the dosage of the medication that was administered.). This is the underlying object with id, value and extensions. The accessor "getText" gives direct access to the value
+         * @param value {@link #text} (Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.
+
+The dosage instructions should reflect the dosage of the medication that was administered.). This is the underlying object with id, value and extensions. The accessor "getText" gives direct access to the value
          */
         public MedicationAdministrationDosageComponent setTextElement(StringType value) { 
           this.text = value;
@@ -524,14 +543,18 @@ public class MedicationAdministration extends DomainResource {
         }
 
         /**
-         * @return Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.The dosage instructions should reflect the dosage of the medication that was administered.
+         * @return Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.
+
+The dosage instructions should reflect the dosage of the medication that was administered.
          */
         public String getText() { 
           return this.text == null ? null : this.text.getValue();
         }
 
         /**
-         * @param value Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.The dosage instructions should reflect the dosage of the medication that was administered.
+         * @param value Free text dosage can be used for cases where the dosage administered is too complex to code. When coded dosage is present, the free text dosage may still be present for display to humans.
+
+The dosage instructions should reflect the dosage of the medication that was administered.
          */
         public MedicationAdministrationDosageComponent setText(String value) { 
           if (Utilities.noString(value))
@@ -658,8 +681,8 @@ public class MedicationAdministration extends DomainResource {
           return (Ratio) this.rate;
         }
 
-        public boolean hasRateRatio() { 
-          return this != null && this.rate instanceof Ratio;
+        public boolean hasRateRatio() {
+            return this.rate instanceof Ratio;
         }
 
         /**
@@ -673,8 +696,8 @@ public class MedicationAdministration extends DomainResource {
           return (Quantity) this.rate;
         }
 
-        public boolean hasRateQuantity() { 
-          return this != null && this.rate instanceof Quantity;
+        public boolean hasRateQuantity() {
+            return this.rate instanceof Quantity;
         }
 
         public boolean hasRate() { 
@@ -777,6 +800,25 @@ public class MedicationAdministration extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("site")) {
+          this.site = null;
+        } else if (name.equals("route")) {
+          this.route = null;
+        } else if (name.equals("method")) {
+          this.method = null;
+        } else if (name.equals("dose")) {
+          this.dose = null;
+        } else if (name.equals("rate[x]")) {
+          this.rate = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -809,7 +851,7 @@ public class MedicationAdministration extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("text")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationAdministration.dosage.text");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationAdministration.dosage.text");
         }
         else if (name.equals("site")) {
           this.site = new CodeableConcept();
@@ -1515,8 +1557,8 @@ public class MedicationAdministration extends DomainResource {
       return (DateTimeType) this.occurence;
     }
 
-    public boolean hasOccurenceDateTimeType() { 
-      return this != null && this.occurence instanceof DateTimeType;
+    public boolean hasOccurenceDateTimeType() {
+        return this.occurence instanceof DateTimeType;
     }
 
     /**
@@ -1530,8 +1572,8 @@ public class MedicationAdministration extends DomainResource {
       return (Period) this.occurence;
     }
 
-    public boolean hasOccurencePeriod() { 
-      return this != null && this.occurence instanceof Period;
+    public boolean hasOccurencePeriod() {
+        return this.occurence instanceof Period;
     }
 
     /**
@@ -1545,8 +1587,8 @@ public class MedicationAdministration extends DomainResource {
       return (Timing) this.occurence;
     }
 
-    public boolean hasOccurenceTiming() { 
-      return this != null && this.occurence instanceof Timing;
+    public boolean hasOccurenceTiming() {
+        return this.occurence instanceof Timing;
     }
 
     public boolean hasOccurence() { 
@@ -2232,6 +2274,56 @@ public class MedicationAdministration extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("basedOn")) {
+          this.getBasedOn().remove(value);
+        } else if (name.equals("partOf")) {
+          this.getPartOf().remove(value);
+        } else if (name.equals("status")) {
+          value = new MedicationAdministrationStatusCodesEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<MedicationAdministrationStatusCodes>
+        } else if (name.equals("statusReason")) {
+          this.getStatusReason().remove(value);
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("medication")) {
+          this.medication = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("encounter")) {
+          this.encounter = null;
+        } else if (name.equals("supportingInformation")) {
+          this.getSupportingInformation().remove(value);
+        } else if (name.equals("occurence[x]")) {
+          this.occurence = null;
+        } else if (name.equals("recorded")) {
+          this.recorded = null;
+        } else if (name.equals("isSubPotent")) {
+          this.isSubPotent = null;
+        } else if (name.equals("subPotentReason")) {
+          this.getSubPotentReason().remove(value);
+        } else if (name.equals("performer")) {
+          this.getPerformer().remove((MedicationAdministrationPerformerComponent) value);
+        } else if (name.equals("reason")) {
+          this.getReason().remove(value);
+        } else if (name.equals("request")) {
+          this.request = null;
+        } else if (name.equals("device")) {
+          this.getDevice().remove(value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("dosage")) {
+          this.dosage = (MedicationAdministrationDosageComponent) value; // MedicationAdministrationDosageComponent
+        } else if (name.equals("eventHistory")) {
+          this.getEventHistory().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2303,7 +2395,7 @@ public class MedicationAdministration extends DomainResource {
           return addPartOf();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationAdministration.status");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationAdministration.status");
         }
         else if (name.equals("statusReason")) {
           return addStatusReason();
@@ -2339,10 +2431,10 @@ public class MedicationAdministration extends DomainResource {
           return this.occurence;
         }
         else if (name.equals("recorded")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationAdministration.recorded");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationAdministration.recorded");
         }
         else if (name.equals("isSubPotent")) {
-          throw new FHIRException("Cannot call addChild on a primitive type MedicationAdministration.isSubPotent");
+          throw new FHIRException("Cannot call addChild on a singleton property MedicationAdministration.isSubPotent");
         }
         else if (name.equals("subPotentReason")) {
           return addSubPotentReason();

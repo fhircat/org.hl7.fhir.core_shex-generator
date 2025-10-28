@@ -180,7 +180,9 @@ public class Invoice extends DomainResource {
         throw new FHIRException("Unknown InvoiceStatus code '"+codeString+"'");
         }
     public String toCode(InvoiceStatus code) {
-      if (code == InvoiceStatus.DRAFT)
+       if (code == InvoiceStatus.NULL)
+           return null;
+       if (code == InvoiceStatus.DRAFT)
         return "draft";
       if (code == InvoiceStatus.ISSUED)
         return "issued";
@@ -191,7 +193,7 @@ public class Invoice extends DomainResource {
       if (code == InvoiceStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(InvoiceStatus code) {
       return code.getSystem();
       }
@@ -327,6 +329,17 @@ public class Invoice extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("role")) {
+          this.role = null;
+        } else if (name.equals("actor")) {
+          this.actor = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -516,8 +529,8 @@ public class Invoice extends DomainResource {
           return (DateType) this.serviced;
         }
 
-        public boolean hasServicedDateType() { 
-          return this != null && this.serviced instanceof DateType;
+        public boolean hasServicedDateType() {
+            return this.serviced instanceof DateType;
         }
 
         /**
@@ -531,8 +544,8 @@ public class Invoice extends DomainResource {
           return (Period) this.serviced;
         }
 
-        public boolean hasServicedPeriod() { 
-          return this != null && this.serviced instanceof Period;
+        public boolean hasServicedPeriod() {
+            return this.serviced instanceof Period;
         }
 
         public boolean hasServiced() { 
@@ -567,8 +580,8 @@ public class Invoice extends DomainResource {
           return (Reference) this.chargeItem;
         }
 
-        public boolean hasChargeItemReference() { 
-          return this != null && this.chargeItem instanceof Reference;
+        public boolean hasChargeItemReference() {
+            return this.chargeItem instanceof Reference;
         }
 
         /**
@@ -582,8 +595,8 @@ public class Invoice extends DomainResource {
           return (CodeableConcept) this.chargeItem;
         }
 
-        public boolean hasChargeItemCodeableConcept() { 
-          return this != null && this.chargeItem instanceof CodeableConcept;
+        public boolean hasChargeItemCodeableConcept() {
+            return this.chargeItem instanceof CodeableConcept;
         }
 
         public boolean hasChargeItem() { 
@@ -726,6 +739,21 @@ public class Invoice extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("sequence")) {
+          this.sequence = null;
+        } else if (name.equals("serviced[x]")) {
+          this.serviced = null;
+        } else if (name.equals("chargeItem[x]")) {
+          this.chargeItem = null;
+        } else if (name.equals("priceComponent")) {
+          this.getPriceComponent().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -755,7 +783,7 @@ public class Invoice extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("sequence")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.lineItem.sequence");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.lineItem.sequence");
         }
         else if (name.equals("servicedDate")) {
           this.serviced = new DateType();
@@ -1310,8 +1338,8 @@ public class Invoice extends DomainResource {
       return (DateType) this.period;
     }
 
-    public boolean hasPeriodDateType() { 
-      return this != null && this.period instanceof DateType;
+    public boolean hasPeriodDateType() {
+        return this.period instanceof DateType;
     }
 
     /**
@@ -1325,8 +1353,8 @@ public class Invoice extends DomainResource {
       return (Period) this.period;
     }
 
-    public boolean hasPeriodPeriod() { 
-      return this != null && this.period instanceof Period;
+    public boolean hasPeriodPeriod() {
+        return this.period instanceof Period;
     }
 
     public boolean hasPeriod() { 
@@ -1884,6 +1912,50 @@ public class Invoice extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new InvoiceStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<InvoiceStatus>
+        } else if (name.equals("cancelledReason")) {
+          this.cancelledReason = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("subject")) {
+          this.subject = null;
+        } else if (name.equals("recipient")) {
+          this.recipient = null;
+        } else if (name.equals("date")) {
+          this.date = null;
+        } else if (name.equals("creation")) {
+          this.creation = null;
+        } else if (name.equals("period[x]")) {
+          this.period = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((InvoiceParticipantComponent) value);
+        } else if (name.equals("issuer")) {
+          this.issuer = null;
+        } else if (name.equals("account")) {
+          this.account = null;
+        } else if (name.equals("lineItem")) {
+          this.getLineItem().remove((InvoiceLineItemComponent) value);
+        } else if (name.equals("totalPriceComponent")) {
+          this.getTotalPriceComponent().remove(value);
+        } else if (name.equals("totalNet")) {
+          this.totalNet = null;
+        } else if (name.equals("totalGross")) {
+          this.totalGross = null;
+        } else if (name.equals("paymentTerms")) {
+          this.paymentTerms = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1943,10 +2015,10 @@ public class Invoice extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.status");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.status");
         }
         else if (name.equals("cancelledReason")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.cancelledReason");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.cancelledReason");
         }
         else if (name.equals("type")) {
           this.type = new CodeableConcept();
@@ -1961,10 +2033,10 @@ public class Invoice extends DomainResource {
           return this.recipient;
         }
         else if (name.equals("date")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.date");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.date");
         }
         else if (name.equals("creation")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.creation");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.creation");
         }
         else if (name.equals("periodDate")) {
           this.period = new DateType();
@@ -2000,7 +2072,7 @@ public class Invoice extends DomainResource {
           return this.totalGross;
         }
         else if (name.equals("paymentTerms")) {
-          throw new FHIRException("Cannot call addChild on a primitive type Invoice.paymentTerms");
+          throw new FHIRException("Cannot call addChild on a singleton property Invoice.paymentTerms");
         }
         else if (name.equals("note")) {
           return addNote();

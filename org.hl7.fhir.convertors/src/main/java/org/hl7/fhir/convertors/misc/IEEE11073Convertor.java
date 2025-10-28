@@ -1,7 +1,5 @@
 package org.hl7.fhir.convertors.misc;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +66,9 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.CSVReader;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 
+@SuppressWarnings("checkstyle:systemout")
 public class IEEE11073Convertor {
 
   public static final String UCUM_PATH = "c:\\work\\org.hl7.fhir\\build\\implementations\\java\\org.hl7.fhir.convertors\\samples\\ucum-essence.xml";
@@ -113,7 +113,7 @@ public class IEEE11073Convertor {
     g.setSource("urn:iso:std:iso:11073:10101");
     g.setTarget("http://loinc.org");
 
-    CSVReader csv = new CSVReader(new FileInputStream(src));
+    CSVReader csv = new CSVReader(ManagedFileAccess.inStream(src));
     csv.readHeaders();
     while (csv.line()) {
       SourceElementComponent e = g.addElement();
@@ -124,13 +124,13 @@ public class IEEE11073Convertor {
       t.setCode(csv.cell("LOINC_NUM"));
       t.setDisplay(csv.cell("LOINC_LONG_COMMON_NAME"));
     }
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(dst, "conceptmap-" + cm.getId() + ".xml")), cm);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(Utilities.path(dst, "conceptmap-" + cm.getId() + ".xml")), cm);
     System.out.println("Done");
     return cm;
   }
 
   public static CodeSystem generateMDC(String src, String dst, UcumService ucum) throws IOException, FHIRException {
-    CSVReader csv = new CSVReader(new FileInputStream(src));
+    CSVReader csv = new CSVReader(ManagedFileAccess.inStream(src));
     csv.readHeaders();
     CodeSystem cs = new CodeSystem();
     Map<String, String> ucumIssues = new HashMap<String, String>();
@@ -206,7 +206,7 @@ public class IEEE11073Convertor {
       }
     }
     csv.close();
-    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(new FileOutputStream(Utilities.path(dst, "codesystem-" + cs.getId() + ".xml")), cs);
+    new XmlParser().setOutputStyle(OutputStyle.PRETTY).compose(ManagedFileAccess.outStream(Utilities.path(dst, "codesystem-" + cs.getId() + ".xml")), cs);
     System.out.println(errorCount + "UCUM errors");
 
     for (String u : sorted(ucumIssues.keySet()))

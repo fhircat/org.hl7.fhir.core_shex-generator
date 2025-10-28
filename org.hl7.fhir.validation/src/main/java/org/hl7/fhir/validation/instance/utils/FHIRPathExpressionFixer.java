@@ -9,10 +9,16 @@ public class FHIRPathExpressionFixer {
     // this is a hack work around for past publication of wrong FHIRPath expressions
 
     boolean r5 = VersionUtilities.isR5Ver(version);
-//    if (r5) {
-//      return expr;
-//    }
+    boolean r4 = VersionUtilities.isR4Ver(version) || VersionUtilities.isR4BVer(version);
 
+    // see https://chat.fhir.org/#narrow/stream/196008-ig-publishing-requirements/topic/Operation.20Definition.20Parameters.20table
+    if (r5 && "opd-3".equals(key)) {
+      return "targetProfile.exists() implies (type = 'Reference' or type = 'canonical' or type.memberOf('http://hl7.org/fhir/ValueSet/all-resource-types'))";
+    }    
+    if (r4 && "opd-3".equals(key)) {
+      return "targetProfile.exists() implies (type = 'Reference' or type = 'canonical' or type.memberOf('http://hl7.org/fhir/ValueSet/resource-types'))";
+    }
+    
     if ("probability is decimal implies (probability as decimal) <= 100".equals(expr)) {
       return "(probability.exists() and (probability is decimal)) implies ((probability as decimal) <= 100)";
     }
@@ -21,6 +27,12 @@ public class FHIRPathExpressionFixer {
     }
     if ("txt-2".equals(key)) {
       return "htmlChecks2()";
+    }
+    if ("que-7".equals(key)) {
+      return "operator = 'exists' implies (answer is boolean)"; // wrong prior to R5
+    }
+    if ("dom-6".equals(key)) {
+      return "(%rootResource != $this) or text.`div`.exists()";
     }
     if ("generated='generated' implies source.empty()".equals(expr)) {
       return "generation='generated' implies source.empty()";
@@ -50,7 +62,15 @@ public class FHIRPathExpressionFixer {
     if (expr.equals("name.matches('[A-Z]([A-Za-z0-9_]){0,254}')")) {
       return ("name.exists() implies name.matches('[A-Z]([A-Za-z0-9_]){0,254}')");
     }
-    
+    // con-3 in R4
+    if (expr.equals("clinicalStatus.exists() or verificationStatus.coding.where(system='http://terminology.hl7.org/CodeSystem/condition-ver-status' and code = 'entered-in-error').exists() or category.select($this='problem-list-item').empty()")) {
+      return "(verificationStatus.coding.where(system='http://terminology.hl7.org/CodeSystem/condition-ver-status' and code = 'entered-in-error').exists() and category.coding.exists(system='http://terminology.hl7.org/CodeSystem/condition-category' and code ='problem-list-item').empty()) implies (clinicalStatus.exists())";
+    }
+
+    // R4
+    if (r4 && "offset.empty() or (when.exists() and ((when in ('C' | 'CM' | 'CD' | 'CV')).not()))".equals(expr)) {
+      return "offset.empty() or (when.exists() and when.select($this in ('C' | 'CM' | 'CD' | 'CV')).allFalse())";
+    }
     // R5 ballot
     if (expr.equals("url.matches('([^|#])*')")) {
       return ("$this.matches('([^|#])*')");

@@ -3,17 +3,14 @@ package org.hl7.fhir.r5.comparison;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.r5.comparison.ProfileComparer.ProfileComparison;
-import org.hl7.fhir.r5.comparison.ResourceComparer.MessageCounts;
+import org.hl7.fhir.r5.comparison.StructureDefinitionComparer.ProfileComparison;
 import org.hl7.fhir.r5.context.IWorkerContext;
-import org.hl7.fhir.r5.model.BackboneElement;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.r5.model.BooleanType;
 import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.CanonicalType;
@@ -24,19 +21,18 @@ import org.hl7.fhir.r5.model.CapabilityStatement.CapabilityStatementRestResource
 import org.hl7.fhir.r5.model.CapabilityStatement.CapabilityStatementRestResourceSearchParamComponent;
 import org.hl7.fhir.r5.model.CapabilityStatement.CapabilityStatementRestSecurityComponent;
 import org.hl7.fhir.r5.model.CapabilityStatement.ResourceInteractionComponent;
-import org.hl7.fhir.r5.model.CapabilityStatement.ResourceVersionPolicy;
 import org.hl7.fhir.r5.model.CodeType;
 import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.model.Coding;
-import org.hl7.fhir.r5.model.DataType;
 import org.hl7.fhir.r5.model.Element;
-import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.Extension;
 import org.hl7.fhir.r5.model.PrimitiveType;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
+
+import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.i18n.RenderingI18nContext;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueType;
@@ -47,6 +43,7 @@ import org.hl7.fhir.utilities.xhtml.HierarchicalTableGenerator.Row;
 import org.hl7.fhir.utilities.xhtml.HierarchicalTableGenerator.TableModel;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
+@MarkedToMoveToAdjunctPackage
 public class CapabilityStatementComparer extends CanonicalResourceComparer {
 
   
@@ -114,7 +111,7 @@ public class CapabilityStatementComparer extends CanonicalResourceComparer {
     cs1.setStatus(left.getStatus());
     cs1.setDate(new Date());
 
-    compareMetadata(left, right, res.getMetadata(), res);
+    compareMetadata(left, right, res.getMetadata(), res, new ArrayList<>(), right);
     comparePrimitives("kind", left.getKindElement(), right.getKindElement(), res.getMetadata(), IssueSeverity.ERROR, res);
     compareCanonicalList("instantiates", left.getInstantiates(), right.getInstantiates(), res.getMetadata(), IssueSeverity.ERROR, res, cs.getInstantiates(), cs1.getInstantiates());
     compareCanonicalList("imports", left.getImports(), right.getImports(), res.getMetadata(), IssueSeverity.ERROR, res, cs.getImports(), cs1.getImports());
@@ -190,20 +187,22 @@ public class CapabilityStatementComparer extends CanonicalResourceComparer {
 
   private void compareRestSecurityService(CapabilityStatementRestSecurityComponent left, CapabilityStatementRestSecurityComponent right, StructuralMatch<Element> combined, CapabilityStatementRestSecurityComponent union, CapabilityStatementRestSecurityComponent intersection, CapabilityStatement csU, CapabilityStatement csI, CapabilityStatementComparison res, String path) {
     List<CodeableConcept> matchR = new ArrayList<>();
-    for (CodeableConcept l : left.getService()) {
-      CodeableConcept r = findInList(right.getService(), l);
-      if (r == null) {
-        union.getService().add(l);
-        combined.getChildren().add(new StructuralMatch<Element>(l, vmI(IssueSeverity.INFORMATION, "Removed this item", path)));
-      } else {
-        matchR.add(r);
-        CodeableConcept cdM = CodeableConcept.merge(l, r);
-        CodeableConcept cdI = CodeableConcept.intersect(l, r);
-        union.getService().add(cdM);
-        intersection.getService().add(cdI);
-        StructuralMatch<Element> sm = new StructuralMatch<Element>(l, r);
-        compare(sm, l, r, path, res);
-        combined.getChildren().add(sm);
+    if (left != null) {
+      for (CodeableConcept l : left.getService()) {
+        CodeableConcept r = findInList(right.getService(), l);
+        if (r == null) {
+          union.getService().add(l);
+          combined.getChildren().add(new StructuralMatch<Element>(l, vmI(IssueSeverity.INFORMATION, "Removed this item", path)));
+        } else {
+          matchR.add(r);
+          CodeableConcept cdM = CodeableConcept.merge(l, r);
+          CodeableConcept cdI = CodeableConcept.intersect(l, r);
+          union.getService().add(cdM);
+          intersection.getService().add(cdI);
+          StructuralMatch<Element> sm = new StructuralMatch<Element>(l, r);
+          compare(sm, l, r, path, res);
+          combined.getChildren().add(sm);
+        }
       }
     }
     if (right != null) {
@@ -264,29 +263,29 @@ public class CapabilityStatementComparer extends CanonicalResourceComparer {
   }
 
   private void compareExpectations(StructuralMatch<Element> combined, Element left, Element right, String path, CapabilityStatementComparison res, Element union, Element intersection) {
-    Extension l = left.getExtensionByUrl(ToolingExtensions.EXT_CAP_STMT_EXPECT);
-    Extension r = right.getExtensionByUrl(ToolingExtensions.EXT_CAP_STMT_EXPECT);
-    if (l != null || r != null) {
-      if (l == null) {
-        union.addExtension(r.copy());
-        combined.getChildren().add(new StructuralMatch<Element>(vmI(IssueSeverity.INFORMATION, "Added this expectation", path), r));        
-      } else if (r == null) {
-        union.addExtension(l.copy());
-        combined.getChildren().add(new StructuralMatch<Element>(l, vmI(IssueSeverity.INFORMATION, "Removed this expectation", path)));              
-      } else {
-        StructuralMatch<Element> sm = new StructuralMatch<Element>(l, r);
+    List<Extension> l = left.getExtensionsByUrl(ExtensionDefinitions.EXT_CAP_STMT_EXPECT);
+    List<Extension> r = right.getExtensionsByUrl(ExtensionDefinitions.EXT_CAP_STMT_EXPECT);
+    if (l.size() == 1 || r.size() == 1) {
+      if (l.size() == 0) {
+        union.addExtension(r.get(0).copy());
+        combined.getChildren().add(new StructuralMatch<Element>(vmI(IssueSeverity.INFORMATION, "Added this expectation", path), r.get(0)));        
+      } else if (r.size() == 0) {
+        union.addExtension(l.get(0).copy());
+        combined.getChildren().add(new StructuralMatch<Element>(l.get(0), vmI(IssueSeverity.INFORMATION, "Removed this expectation", path)));              
+      } else if (l.size() == 1 && r.size() == 1) {
+        StructuralMatch<Element> sm = new StructuralMatch<Element>(l.get(0), r.get(0));
         combined.getChildren().add(sm);
-        String ls = l.getValue().primitiveValue();
-        String rs = r.getValue().primitiveValue();
+        String ls = l.get(0).getValue().primitiveValue();
+        String rs = r.get(0).getValue().primitiveValue();
         if (ls.equals(rs)) {
-          union.addExtension(l.copy());
-          intersection.addExtension(l.copy());
+          union.addExtension(l.get(0).copy());
+          intersection.addExtension(l.get(0).copy());
         } else {
           sm.getMessages().add(new ValidationMessage(Source.ProfileComparer, IssueType.INFORMATIONAL, path+".extension('http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation')", "Changed value for expectation: '"+ls+"' vs '"+rs+"'", IssueSeverity.WARNING));
           String lowest = lower(ls, rs) ? ls : rs;
           String highest = lower(ls, rs) ? rs : ls;
-          union.addExtension(ToolingExtensions.EXT_CAP_STMT_EXPECT, new CodeType(lowest));
-          intersection.addExtension(ToolingExtensions.EXT_CAP_STMT_EXPECT, new CodeType(highest));
+          union.addExtension(ExtensionDefinitions.EXT_CAP_STMT_EXPECT, new CodeType(lowest));
+          intersection.addExtension(ExtensionDefinitions.EXT_CAP_STMT_EXPECT, new CodeType(highest));
         }
       }
     }
@@ -483,7 +482,7 @@ public class CapabilityStatementComparer extends CanonicalResourceComparer {
       if (sdFocus.getUrl().equals(sdOther.getUrl()) && sdFocus.getVersion().equals(sdOther.getVersion())) {
         return true;
       }
-      sdFocus = ctxt.fetchResource(StructureDefinition.class, sdFocus.getBaseDefinition(), sdFocus);
+      sdFocus = ctxt.fetchResource(StructureDefinition.class, sdFocus.getBaseDefinition(), null,  sdFocus);
     }
     return false;
   }
@@ -747,7 +746,7 @@ public class CapabilityStatementComparer extends CanonicalResourceComparer {
   
   // 6 columns: path | left value | left doco | right value | right doco | comments
   public XhtmlNode renderStatements(CapabilityStatementComparison comparison, String id, String prefix) throws FHIRException, IOException {
-    HierarchicalTableGenerator gen = new HierarchicalTableGenerator(Utilities.path("[tmp]", "compare"), false);
+    HierarchicalTableGenerator gen = new HierarchicalTableGenerator(new RenderingI18nContext(), Utilities.path("[tmp]", "compare"), false, "c");
     TableModel model = gen.new TableModel(id, true);
     model.setAlternating(true);
     model.getTitles().add(gen.new Title(null, null, "Type", "The type of item", null, 100));

@@ -222,7 +222,9 @@ public class EvidenceReport extends MetadataResource {
         throw new FHIRException("Unknown ReportRelationshipType code '"+codeString+"'");
         }
     public String toCode(ReportRelationshipType code) {
-      if (code == ReportRelationshipType.REPLACES)
+       if (code == ReportRelationshipType.NULL)
+           return null;
+       if (code == ReportRelationshipType.REPLACES)
         return "replaces";
       if (code == ReportRelationshipType.AMENDS)
         return "amends";
@@ -239,7 +241,7 @@ public class EvidenceReport extends MetadataResource {
       if (code == ReportRelationshipType.TRANSFORMEDWITH)
         return "transformedWith";
       return "?";
-      }
+   }
     public String toSystem(ReportRelationshipType code) {
       return code.getSystem();
       }
@@ -427,6 +429,17 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((EvidenceReportSubjectCharacteristicComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -601,8 +614,8 @@ public class EvidenceReport extends MetadataResource {
           return (Reference) this.value;
         }
 
-        public boolean hasValueReference() { 
-          return this != null && this.value instanceof Reference;
+        public boolean hasValueReference() {
+            return this.value instanceof Reference;
         }
 
         /**
@@ -616,8 +629,8 @@ public class EvidenceReport extends MetadataResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -631,8 +644,8 @@ public class EvidenceReport extends MetadataResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         /**
@@ -646,8 +659,8 @@ public class EvidenceReport extends MetadataResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -661,8 +674,8 @@ public class EvidenceReport extends MetadataResource {
           return (Range) this.value;
         }
 
-        public boolean hasValueRange() { 
-          return this != null && this.value instanceof Range;
+        public boolean hasValueRange() {
+            return this.value instanceof Range;
         }
 
         public boolean hasValue() { 
@@ -821,6 +834,21 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else if (name.equals("exclude")) {
+          this.exclude = null;
+        } else if (name.equals("period")) {
+          this.period = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -873,7 +901,7 @@ public class EvidenceReport extends MetadataResource {
           return this.value;
         }
         else if (name.equals("exclude")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.subject.characteristic.exclude");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.subject.characteristic.exclude");
         }
         else if (name.equals("period")) {
           this.period = new Period();
@@ -1087,6 +1115,18 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          value = new ReportRelationshipTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.code = (Enumeration) value; // Enumeration<ReportRelationshipType>
+        } else if (name.equals("target")) {
+          this.target = (EvidenceReportRelatesToTargetComponent) value; // EvidenceReportRelatesToTargetComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1110,7 +1150,7 @@ public class EvidenceReport extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("code")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.relatesTo.code");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.relatesTo.code");
         }
         else if (name.equals("target")) {
           this.target = new EvidenceReportRelatesToTargetComponent();
@@ -1415,6 +1455,21 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else if (name.equals("resource")) {
+          this.resource = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1442,14 +1497,14 @@ public class EvidenceReport extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.relatesTo.target.url");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.relatesTo.target.url");
         }
         else if (name.equals("identifier")) {
           this.identifier = new Identifier();
           return this.identifier;
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.relatesTo.target.display");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.relatesTo.target.display");
         }
         else if (name.equals("resource")) {
           this.resource = new Reference();
@@ -2222,6 +2277,38 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("title")) {
+          this.title = null;
+        } else if (name.equals("focus")) {
+          this.focus = null;
+        } else if (name.equals("focusReference")) {
+          this.focusReference = null;
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("text")) {
+          this.text = null;
+        } else if (name.equals("mode")) {
+          value = new ListModeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.mode = (Enumeration) value; // Enumeration<ListMode>
+        } else if (name.equals("orderedBy")) {
+          this.orderedBy = null;
+        } else if (name.equals("entryClassifier")) {
+          this.getEntryClassifier().remove(value);
+        } else if (name.equals("entryReference")) {
+          this.getEntryReference().remove(value);
+        } else if (name.equals("entryQuantity")) {
+          this.getEntryQuantity().remove(value);
+        } else if (name.equals("emptyReason")) {
+          this.emptyReason = null;
+        } else if (name.equals("section")) {
+          this.getSection().remove((SectionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2265,7 +2352,7 @@ public class EvidenceReport extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("title")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.section.title");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.section.title");
         }
         else if (name.equals("focus")) {
           this.focus = new CodeableConcept();
@@ -2283,7 +2370,7 @@ public class EvidenceReport extends MetadataResource {
           return this.text;
         }
         else if (name.equals("mode")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.section.mode");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.section.mode");
         }
         else if (name.equals("orderedBy")) {
           this.orderedBy = new CodeableConcept();
@@ -2805,8 +2892,8 @@ public class EvidenceReport extends MetadataResource {
       return (Reference) this.citeAs;
     }
 
-    public boolean hasCiteAsReference() { 
-      return this != null && this.citeAs instanceof Reference;
+    public boolean hasCiteAsReference() {
+        return this.citeAs instanceof Reference;
     }
 
     /**
@@ -2820,8 +2907,8 @@ public class EvidenceReport extends MetadataResource {
       return (MarkdownType) this.citeAs;
     }
 
-    public boolean hasCiteAsMarkdownType() { 
-      return this != null && this.citeAs instanceof MarkdownType;
+    public boolean hasCiteAsMarkdownType() {
+        return this.citeAs instanceof MarkdownType;
     }
 
     public boolean hasCiteAs() { 
@@ -4126,6 +4213,50 @@ public class EvidenceReport extends MetadataResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("url")) {
+          this.url = null;
+        } else if (name.equals("status")) {
+          value = new PublicationStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<PublicationStatus>
+        } else if (name.equals("useContext")) {
+          this.getUseContext().remove(value);
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("relatedIdentifier")) {
+          this.getRelatedIdentifier().remove(value);
+        } else if (name.equals("citeAs[x]")) {
+          this.citeAs = null;
+        } else if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else if (name.equals("relatedArtifact")) {
+          this.getRelatedArtifact().remove(value);
+        } else if (name.equals("subject")) {
+          this.subject = (EvidenceReportSubjectComponent) value; // EvidenceReportSubjectComponent
+        } else if (name.equals("publisher")) {
+          this.publisher = null;
+        } else if (name.equals("contact")) {
+          this.getContact().remove(value);
+        } else if (name.equals("author")) {
+          this.getAuthor().remove(value);
+        } else if (name.equals("editor")) {
+          this.getEditor().remove(value);
+        } else if (name.equals("reviewer")) {
+          this.getReviewer().remove(value);
+        } else if (name.equals("endorser")) {
+          this.getEndorser().remove(value);
+        } else if (name.equals("relatesTo")) {
+          this.getRelatesTo().remove((EvidenceReportRelatesToComponent) value);
+        } else if (name.equals("section")) {
+          this.getSection().remove((SectionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -4182,10 +4313,10 @@ public class EvidenceReport extends MetadataResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("url")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.url");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.url");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.status");
         }
         else if (name.equals("useContext")) {
           return addUseContext();
@@ -4219,7 +4350,7 @@ public class EvidenceReport extends MetadataResource {
           return this.subject;
         }
         else if (name.equals("publisher")) {
-          throw new FHIRException("Cannot call addChild on a primitive type EvidenceReport.publisher");
+          throw new FHIRException("Cannot call addChild on a singleton property EvidenceReport.publisher");
         }
         else if (name.equals("contact")) {
           return addContact();

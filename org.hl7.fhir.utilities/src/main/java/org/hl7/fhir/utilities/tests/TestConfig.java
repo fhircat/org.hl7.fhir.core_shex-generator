@@ -1,9 +1,9 @@
 package org.hl7.fhir.utilities.tests;
 
+import java.nio.file.Paths;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.nio.file.Paths;
 
 public class TestConfig {
 
@@ -15,7 +15,7 @@ public class TestConfig {
   @Getter @Setter
   private boolean rebuildCache = System.getProperty(FHIR_TXCACHE_REBUILD) != null && "TRUE".equalsIgnoreCase(System.getProperty(FHIR_TXCACHE_REBUILD));
 
-  @Getter @Setter
+  @Setter
   private String txCacheDirectory = TestConstants.TX_CACHE;
 
   @Getter @Setter

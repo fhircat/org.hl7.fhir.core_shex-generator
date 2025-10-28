@@ -152,14 +152,16 @@ public class NutritionProduct extends DomainResource {
         throw new FHIRException("Unknown NutritionProductStatus code '"+codeString+"'");
         }
     public String toCode(NutritionProductStatus code) {
-      if (code == NutritionProductStatus.ACTIVE)
+       if (code == NutritionProductStatus.NULL)
+           return null;
+       if (code == NutritionProductStatus.ACTIVE)
         return "active";
       if (code == NutritionProductStatus.INACTIVE)
         return "inactive";
       if (code == NutritionProductStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(NutritionProductStatus code) {
       return code.getSystem();
       }
@@ -317,6 +319,17 @@ public class NutritionProduct extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item")) {
+          this.item = null;
+        } else if (name.equals("amount")) {
+          this.getAmount().remove(value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -560,6 +573,17 @@ public class NutritionProduct extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("item")) {
+          this.item = null;
+        } else if (name.equals("amount")) {
+          this.getAmount().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -717,8 +741,8 @@ public class NutritionProduct extends DomainResource {
           return (CodeableConcept) this.value;
         }
 
-        public boolean hasValueCodeableConcept() { 
-          return this != null && this.value instanceof CodeableConcept;
+        public boolean hasValueCodeableConcept() {
+            return this.value instanceof CodeableConcept;
         }
 
         /**
@@ -732,8 +756,8 @@ public class NutritionProduct extends DomainResource {
           return (StringType) this.value;
         }
 
-        public boolean hasValueStringType() { 
-          return this != null && this.value instanceof StringType;
+        public boolean hasValueStringType() {
+            return this.value instanceof StringType;
         }
 
         /**
@@ -747,8 +771,8 @@ public class NutritionProduct extends DomainResource {
           return (Quantity) this.value;
         }
 
-        public boolean hasValueQuantity() { 
-          return this != null && this.value instanceof Quantity;
+        public boolean hasValueQuantity() {
+            return this.value instanceof Quantity;
         }
 
         /**
@@ -762,8 +786,8 @@ public class NutritionProduct extends DomainResource {
           return (Base64BinaryType) this.value;
         }
 
-        public boolean hasValueBase64BinaryType() { 
-          return this != null && this.value instanceof Base64BinaryType;
+        public boolean hasValueBase64BinaryType() {
+            return this.value instanceof Base64BinaryType;
         }
 
         /**
@@ -777,8 +801,8 @@ public class NutritionProduct extends DomainResource {
           return (Attachment) this.value;
         }
 
-        public boolean hasValueAttachment() { 
-          return this != null && this.value instanceof Attachment;
+        public boolean hasValueAttachment() {
+            return this.value instanceof Attachment;
         }
 
         /**
@@ -792,8 +816,8 @@ public class NutritionProduct extends DomainResource {
           return (BooleanType) this.value;
         }
 
-        public boolean hasValueBooleanType() { 
-          return this != null && this.value instanceof BooleanType;
+        public boolean hasValueBooleanType() {
+            return this.value instanceof BooleanType;
         }
 
         public boolean hasValue() { 
@@ -866,6 +890,17 @@ public class NutritionProduct extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          this.type = null;
+        } else if (name.equals("value[x]")) {
+          this.value = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1414,6 +1449,27 @@ public class NutritionProduct extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("lotNumber")) {
+          this.lotNumber = null;
+        } else if (name.equals("expiry")) {
+          this.expiry = null;
+        } else if (name.equals("useBy")) {
+          this.useBy = null;
+        } else if (name.equals("biologicalSourceEvent")) {
+          this.biologicalSourceEvent = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1454,16 +1510,16 @@ public class NutritionProduct extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionProduct.instance.name");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionProduct.instance.name");
         }
         else if (name.equals("lotNumber")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionProduct.instance.lotNumber");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionProduct.instance.lotNumber");
         }
         else if (name.equals("expiry")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionProduct.instance.expiry");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionProduct.instance.expiry");
         }
         else if (name.equals("useBy")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionProduct.instance.useBy");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionProduct.instance.useBy");
         }
         else if (name.equals("biologicalSourceEvent")) {
           this.biologicalSourceEvent = new Identifier();
@@ -2230,6 +2286,34 @@ public class NutritionProduct extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("code")) {
+          this.code = null;
+        } else if (name.equals("status")) {
+          value = new NutritionProductStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<NutritionProductStatus>
+        } else if (name.equals("category")) {
+          this.getCategory().remove(value);
+        } else if (name.equals("manufacturer")) {
+          this.getManufacturer().remove(value);
+        } else if (name.equals("nutrient")) {
+          this.getNutrient().remove((NutritionProductNutrientComponent) value);
+        } else if (name.equals("ingredient")) {
+          this.getIngredient().remove((NutritionProductIngredientComponent) value);
+        } else if (name.equals("knownAllergen")) {
+          this.getKnownAllergen().remove(value);
+        } else if (name.equals("characteristic")) {
+          this.getCharacteristic().remove((NutritionProductCharacteristicComponent) value);
+        } else if (name.equals("instance")) {
+          this.getInstance().remove((NutritionProductInstanceComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2273,7 +2357,7 @@ public class NutritionProduct extends DomainResource {
           return this.code;
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type NutritionProduct.status");
+          throw new FHIRException("Cannot call addChild on a singleton property NutritionProduct.status");
         }
         else if (name.equals("category")) {
           return addCategory();

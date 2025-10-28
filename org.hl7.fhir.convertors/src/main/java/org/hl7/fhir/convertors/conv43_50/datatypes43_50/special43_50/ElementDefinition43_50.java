@@ -4,7 +4,12 @@ import java.util.stream.Collectors;
 
 import org.hl7.fhir.convertors.VersionConvertorConstants;
 import org.hl7.fhir.convertors.context.ConversionContext43_50;
-import org.hl7.fhir.convertors.conv40_50.datatypes40_50.primitive40_50.Canonical40_50;
+import org.hl7.fhir.convertors.context.ConversionContext43_50;
+import org.hl7.fhir.convertors.conv43_50.datatypes43_50.metadata43_50.UsageContext43_50;
+import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.Boolean43_50;
+import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.Canonical43_50;
+import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.MarkDown43_50;
+import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.String43_50;
 import org.hl7.fhir.convertors.conv43_50.datatypes43_50.BackboneElement43_50;
 import org.hl7.fhir.convertors.conv43_50.datatypes43_50.general43_50.Coding43_50;
 import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.Boolean43_50;
@@ -18,12 +23,21 @@ import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.UnsignedI
 import org.hl7.fhir.convertors.conv43_50.datatypes43_50.primitive43_50.Uri43_50;
 import org.hl7.fhir.convertors.conv43_50.resources43_50.Enumerations43_50;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r4b.model.BooleanType;
+import org.hl7.fhir.r4b.model.CanonicalType;
+import org.hl7.fhir.r4b.model.Extension;
+import org.hl7.fhir.r4b.model.MarkdownType;
+import org.hl7.fhir.r4b.model.StringType;
+import org.hl7.fhir.r5.model.CodeType;
+import org.hl7.fhir.r5.model.ElementDefinition;
+import org.hl7.fhir.r5.model.UsageContext;
+import org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionBindingAdditionalComponent;
 
 public class ElementDefinition43_50 {
   public static org.hl7.fhir.r5.model.ElementDefinition convertElementDefinition(org.hl7.fhir.r4b.model.ElementDefinition src) throws FHIRException {
     if (src == null) return null;
     org.hl7.fhir.r5.model.ElementDefinition tgt = new org.hl7.fhir.r5.model.ElementDefinition();
-    BackboneElement43_50.copyBackboneElement(src, tgt, "http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.mustHaveValue", "http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.valueAlternatives");
+    BackboneElement43_50.copyBackboneElement(src, tgt, VersionConvertorConstants.EXT_MUST_VALUE, VersionConvertorConstants.EXT_VALUE_ALT);
     if (src.hasPath()) tgt.setPathElement(String43_50.convertString(src.getPathElement()));
     tgt.setRepresentation(src.getRepresentation().stream().map(ElementDefinition43_50::convertPropertyRepresentation).collect(Collectors.toList()));
     if (src.hasSliceName()) tgt.setSliceNameElement(String43_50.convertString(src.getSliceNameElement()));
@@ -72,10 +86,10 @@ public class ElementDefinition43_50 {
     for (org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionMappingComponent t : src.getMapping())
       tgt.addMapping(convertElementDefinitionMappingComponent(t));
     
-    if (src.hasExtension("http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.mustHaveValue")) {
-      tgt.setMustHaveValueElement(Boolean43_50.convertBoolean(src.getExtensionByUrl("http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.mustHaveValue").getValueBooleanType()));
+    if (src.hasExtension(VersionConvertorConstants.EXT_MUST_VALUE)) {
+      tgt.setMustHaveValueElement(Boolean43_50.convertBoolean(src.getExtensionByUrl(VersionConvertorConstants.EXT_MUST_VALUE).getValueBooleanType()));
     }
-    for (org.hl7.fhir.r4b.model.Extension ext : src.getExtensionsByUrl("http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.valueAlternatives")) {
+    for (org.hl7.fhir.r4b.model.Extension ext : src.getExtensionsByUrl(VersionConvertorConstants.EXT_VALUE_ALT)) {
       tgt.addValueAlternative(Canonical43_50.convertCanonical(ext.getValueCanonicalType()));
     }
 
@@ -134,10 +148,10 @@ public class ElementDefinition43_50 {
     for (org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionMappingComponent t : src.getMapping())
       tgt.addMapping(convertElementDefinitionMappingComponent(t));
     if (src.hasMustHaveValue()) {
-      tgt.addExtension("http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.mustHaveValue", Boolean43_50.convertBoolean(src.getMustHaveValueElement()));
+      tgt.addExtension(VersionConvertorConstants.EXT_MUST_VALUE, Boolean43_50.convertBoolean(src.getMustHaveValueElement()));
     }
     for (org.hl7.fhir.r5.model.CanonicalType ct : src.getValueAlternatives()) {
-      tgt.addExtension("http://hl7.org/fhir/5.0/StructureDefinition/extension-ElementDefinition.valueAlternatives", Canonical43_50.convertCanonical(ct));      
+      tgt.addExtension(VersionConvertorConstants.EXT_VALUE_ALT, Canonical43_50.convertCanonical(ct));      
     }
 
     return tgt;
@@ -148,29 +162,29 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentationEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case XMLATTR:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.XMLATTR);
-          break;
-        case XMLTEXT:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.XMLTEXT);
-          break;
-        case TYPEATTR:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.TYPEATTR);
-          break;
-        case CDATEXT:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.CDATEXT);
-          break;
-        case XHTML:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.XHTML);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.XMLATTR);
+                    break;
+                case XMLTEXT:
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.XMLTEXT);
+                    break;
+                case TYPEATTR:
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.TYPEATTR);
+                    break;
+                case CDATEXT:
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.CDATEXT);
+                    break;
+                case XHTML:
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.XHTML);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.PropertyRepresentation.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -179,29 +193,29 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentationEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case XMLATTR:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XMLATTR);
-          break;
-        case XMLTEXT:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XMLTEXT);
-          break;
-        case TYPEATTR:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.TYPEATTR);
-          break;
-        case CDATEXT:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.CDATEXT);
-          break;
-        case XHTML:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XHTML);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XMLATTR);
+                    break;
+                case XMLTEXT:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XMLTEXT);
+                    break;
+                case TYPEATTR:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.TYPEATTR);
+                    break;
+                case CDATEXT:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.CDATEXT);
+                    break;
+                case XHTML:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.XHTML);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.PropertyRepresentation.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -234,23 +248,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.SlicingRules> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.SlicingRulesEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.SlicingRules.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case CLOSED:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.SlicingRules.CLOSED);
-          break;
-        case OPEN:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.SlicingRules.OPEN);
-          break;
-        case OPENATEND:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.SlicingRules.OPENATEND);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.SlicingRules.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.SlicingRules.CLOSED);
+                    break;
+                case OPEN:
+                    tgt.setValue(ElementDefinition.SlicingRules.OPEN);
+                    break;
+                case OPENATEND:
+                    tgt.setValue(ElementDefinition.SlicingRules.OPENATEND);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.SlicingRules.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -259,23 +273,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.SlicingRulesEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case CLOSED:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.CLOSED);
-          break;
-        case OPEN:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.OPEN);
-          break;
-        case OPENATEND:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.OPENATEND);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.CLOSED);
+                    break;
+                case OPEN:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.OPEN);
+                    break;
+                case OPENATEND:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.OPENATEND);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.SlicingRules.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -302,29 +316,29 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorTypeEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case VALUE:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.VALUE);
-          break;
-        case EXISTS:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.EXISTS);
-          break;
-        case PATTERN:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.PATTERN);
-          break;
-        case TYPE:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.TYPE);
-          break;
-        case PROFILE:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.PROFILE);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.DiscriminatorType.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.DiscriminatorType.VALUE);
+                    break;
+                case EXISTS:
+                    tgt.setValue(ElementDefinition.DiscriminatorType.EXISTS);
+                    break;
+                case PATTERN:
+                    tgt.setValue(ElementDefinition.DiscriminatorType.PATTERN);
+                    break;
+                case TYPE:
+                    tgt.setValue(ElementDefinition.DiscriminatorType.TYPE);
+                    break;
+                case PROFILE:
+                    tgt.setValue(ElementDefinition.DiscriminatorType.PROFILE);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.DiscriminatorType.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -333,29 +347,29 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorTypeEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case VALUE:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.VALUE);
-          break;
-        case EXISTS:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.EXISTS);
-          break;
-        case PATTERN:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.PATTERN);
-          break;
-        case TYPE:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.TYPE);
-          break;
-        case PROFILE:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.PROFILE);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.VALUE);
+                    break;
+                case EXISTS:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.EXISTS);
+                    break;
+                case PATTERN:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.PATTERN);
+                    break;
+                case TYPE:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.TYPE);
+                    break;
+                case PROFILE:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.PROFILE);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.DiscriminatorType.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -412,23 +426,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.AggregationMode> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.AggregationModeEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.AggregationMode.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case CONTAINED:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.AggregationMode.CONTAINED);
-          break;
-        case REFERENCED:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.AggregationMode.REFERENCED);
-          break;
-        case BUNDLED:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.AggregationMode.BUNDLED);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.AggregationMode.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.AggregationMode.CONTAINED);
+                    break;
+                case REFERENCED:
+                    tgt.setValue(ElementDefinition.AggregationMode.REFERENCED);
+                    break;
+                case BUNDLED:
+                    tgt.setValue(ElementDefinition.AggregationMode.BUNDLED);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.AggregationMode.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -437,23 +451,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.AggregationModeEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case CONTAINED:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.CONTAINED);
-          break;
-        case REFERENCED:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.REFERENCED);
-          break;
-        case BUNDLED:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.BUNDLED);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.CONTAINED);
+                    break;
+                case REFERENCED:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.REFERENCED);
+                    break;
+                case BUNDLED:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.BUNDLED);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.AggregationMode.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -462,23 +476,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRulesEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case EITHER:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules.EITHER);
-          break;
-        case INDEPENDENT:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules.INDEPENDENT);
-          break;
-        case SPECIFIC:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules.SPECIFIC);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ReferenceVersionRules.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.ReferenceVersionRules.EITHER);
+                    break;
+                case INDEPENDENT:
+                    tgt.setValue(ElementDefinition.ReferenceVersionRules.INDEPENDENT);
+                    break;
+                case SPECIFIC:
+                    tgt.setValue(ElementDefinition.ReferenceVersionRules.SPECIFIC);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.ReferenceVersionRules.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -487,23 +501,23 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRulesEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case EITHER:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.EITHER);
-          break;
-        case INDEPENDENT:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.INDEPENDENT);
-          break;
-        case SPECIFIC:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.SPECIFIC);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.EITHER);
+                    break;
+                case INDEPENDENT:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.INDEPENDENT);
+                    break;
+                case SPECIFIC:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.SPECIFIC);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ReferenceVersionRules.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -537,7 +551,7 @@ public class ElementDefinition43_50 {
     if (src.hasHuman()) tgt.setHumanElement(String43_50.convertString(src.getHumanElement()));
     if (src.hasExpression()) tgt.setExpressionElement(String43_50.convertString(src.getExpressionElement()));
     if (src.hasXpath()) {
-      tgt.addExtension(new org.hl7.fhir.r5.model.Extension(org.hl7.fhir.r5.utils.ToolingExtensions.EXT_XPATH_CONSTRAINT, new org.hl7.fhir.r5.model.StringType(src.getXpath())));
+      tgt.addExtension(new org.hl7.fhir.r5.model.Extension(org.hl7.fhir.r5.extensions.ExtensionDefinitions.EXT_XPATH_CONSTRAINT, new org.hl7.fhir.r5.model.StringType(src.getXpath())));
     }
     if (src.hasSource()) tgt.setSourceElement(Canonical43_50.convertCanonical(src.getSourceElement()));
     return tgt;
@@ -546,14 +560,14 @@ public class ElementDefinition43_50 {
   public static org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionConstraintComponent convertElementDefinitionConstraintComponent(org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionConstraintComponent src) throws FHIRException {
     if (src == null) return null;
     org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionConstraintComponent tgt = new org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionConstraintComponent();
-    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt, org.hl7.fhir.r5.utils.ToolingExtensions.EXT_XPATH_CONSTRAINT);
+    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt, org.hl7.fhir.r5.extensions.ExtensionDefinitions.EXT_XPATH_CONSTRAINT);
     if (src.hasKey()) tgt.setKeyElement(Id43_50.convertId(src.getKeyElement()));
     if (src.hasRequirements()) tgt.setRequirementsElement(String43_50.convertString(src.getRequirementsElement()));
     if (src.hasSeverity()) tgt.setSeverityElement(convertConstraintSeverity(src.getSeverityElement()));
     if (src.hasHuman()) tgt.setHumanElement(String43_50.convertString(src.getHumanElement()));
     if (src.hasExpression()) tgt.setExpressionElement(String43_50.convertString(src.getExpressionElement()));
-    if (org.hl7.fhir.r5.utils.ToolingExtensions.hasExtension(src, org.hl7.fhir.r5.utils.ToolingExtensions.EXT_XPATH_CONSTRAINT)) {
-      tgt.setXpath(org.hl7.fhir.r5.utils.ToolingExtensions.readStringExtension(src, org.hl7.fhir.r5.utils.ToolingExtensions.EXT_XPATH_CONSTRAINT));
+    if (org.hl7.fhir.r5.extensions.ExtensionUtilities.hasExtension(src, org.hl7.fhir.r5.extensions.ExtensionDefinitions.EXT_XPATH_CONSTRAINT)) {
+      tgt.setXpath(org.hl7.fhir.r5.extensions.ExtensionUtilities.readStringExtension(src, org.hl7.fhir.r5.extensions.ExtensionDefinitions.EXT_XPATH_CONSTRAINT));
     }
     
     if (src.hasSource()) tgt.setSourceElement(Canonical43_50.convertCanonical(src.getSourceElement()));
@@ -565,20 +579,20 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r5.model.Enumeration<org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity> tgt = new org.hl7.fhir.r5.model.Enumeration<>(new org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverityEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case ERROR:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity.ERROR);
-          break;
-        case WARNING:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity.WARNING);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(ElementDefinition.ConstraintSeverity.ERROR);
+                    break;
+                case WARNING:
+                    tgt.setValue(ElementDefinition.ConstraintSeverity.WARNING);
+                    break;
+                default:
+                    tgt.setValue(ElementDefinition.ConstraintSeverity.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
@@ -587,30 +601,34 @@ public class ElementDefinition43_50 {
     org.hl7.fhir.r4b.model.Enumeration<org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity> tgt = new org.hl7.fhir.r4b.model.Enumeration<>(new org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverityEnumFactory());
     ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
     if (src.getValue() == null) {
-      tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.NULL);
-    } else {
-      switch (src.getValue()) {
+    tgt.setValue(null);
+} else {
+      switch(src.getValue()) {
         case ERROR:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.ERROR);
-          break;
-        case WARNING:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.WARNING);
-          break;
-        default:
-          tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.NULL);
-          break;
-      }
-    }
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.ERROR);
+                    break;
+                case WARNING:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.WARNING);
+                    break;
+                default:
+                    tgt.setValue(org.hl7.fhir.r4b.model.ElementDefinition.ConstraintSeverity.NULL);
+                    break;
+       }
+}
     return tgt;
   }
 
   public static org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionBindingComponent convertElementDefinitionBindingComponent(org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionBindingComponent src) throws FHIRException {
     if (src == null) return null;
     org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionBindingComponent tgt = new org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionBindingComponent();
-    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
+    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt, 
+        VersionConvertorConstants.EXT_ADDITIONAL_BINDING);
     if (src.hasStrength()) tgt.setStrengthElement(Enumerations43_50.convertBindingStrength(src.getStrengthElement()));
     if (src.hasDescription()) tgt.setDescriptionElement(String43_50.convertStringToMarkdown(src.getDescriptionElement()));
     if (src.hasValueSet()) tgt.setValueSetElement(Canonical43_50.convertCanonical(src.getValueSetElement()));
+    for (org.hl7.fhir.r4b.model.Extension ext : src.getExtensionsByUrl(VersionConvertorConstants.EXT_ADDITIONAL_BINDING)) {
+      tgt.addAdditional(convertAdditional(ext));
+    }
     return tgt;
   }
 
@@ -621,9 +639,64 @@ public class ElementDefinition43_50 {
     if (src.hasStrength()) tgt.setStrengthElement(Enumerations43_50.convertBindingStrength(src.getStrengthElement()));
     if (src.hasDescription()) tgt.setDescriptionElement(String43_50.convertString(src.getDescriptionElement()));
     if (src.hasValueSet()) tgt.setValueSetElement(Canonical43_50.convertCanonical(src.getValueSetElement()));
+    for (ElementDefinitionBindingAdditionalComponent ab : src.getAdditional()) {
+      tgt.addExtension(convertAdditional(ab));
+    }
     return tgt;
   }
 
+
+  private static ElementDefinitionBindingAdditionalComponent convertAdditional(Extension src) {
+    if (src == null) return null;
+    ElementDefinitionBindingAdditionalComponent tgt = new ElementDefinitionBindingAdditionalComponent();
+    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt, "valueSet", "purpose", "documentation", "shortDoco", "usage", "any");
+    if (src.hasExtension("purpose")) {
+      tgt.getPurposeElement().setValueAsString(src.getExtensionByUrl("purpose").getValue().primitiveValue());
+    }
+    if (src.hasExtension("valueSet")) {
+      tgt.setValueSetElement(Canonical43_50.convertCanonical((CanonicalType) src.getExtensionByUrl("valueSet").getValue()));
+    }
+    if (src.hasExtension("documentation")) {
+      tgt.setDocumentationElement(MarkDown43_50.convertMarkdown((MarkdownType) src.getExtensionByUrl("documentation").getValue()));
+    }
+    if (src.hasExtension("shortDoco")) {
+      tgt.setShortDocoElement(String43_50.convertString((StringType) src.getExtensionByUrl("shortDoco").getValue()));
+    }
+    for (Extension t : src.getExtensionsByUrl("usage")) {
+      tgt.addUsage(UsageContext43_50.convertUsageContext((org.hl7.fhir.r4b.model.UsageContext) t.getValue()));
+    }
+    if (src.hasExtension("any")) {
+      tgt.setAnyElement(Boolean43_50.convertBoolean((BooleanType) src.getExtensionByUrl("any").getValue()));
+    }
+    return tgt;
+  }
+
+  private static Extension convertAdditional(ElementDefinitionBindingAdditionalComponent src) {
+    if (src == null) return null;
+    Extension tgt = new Extension();
+    ConversionContext43_50.INSTANCE.getVersionConvertor_43_50().copyElement(src, tgt);
+    if (src.hasPurpose()) {
+      tgt.addExtension(new Extension("purpose", new CodeType(src.getPurposeElement().primitiveValue())));
+    }
+    if (src.hasValueSet()) {
+      tgt.addExtension(new Extension("valueSet", Canonical43_50.convertCanonical(src.getValueSetElement())));
+    }
+    if (src.hasDocumentation()) {
+      tgt.addExtension(new Extension("documentation", MarkDown43_50.convertMarkdown(src.getDocumentationElement())));
+    }
+    if (src.hasShortDoco()) {
+      tgt.addExtension(new Extension("shortDoco", String43_50.convertString(src.getShortDocoElement())));
+    }
+    for (UsageContext t : src.getUsage()) {
+      tgt.addExtension(new Extension("usage", UsageContext43_50.convertUsageContext(t)));
+    }
+    if (src.hasAny()) {
+      tgt.addExtension(new Extension("any", Boolean43_50.convertBoolean(src.getAnyElement())));
+    }
+    
+    return tgt;
+  }
+  
   public static org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionMappingComponent convertElementDefinitionMappingComponent(org.hl7.fhir.r4b.model.ElementDefinition.ElementDefinitionMappingComponent src) throws FHIRException {
     if (src == null) return null;
     org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionMappingComponent tgt = new org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionMappingComponent();

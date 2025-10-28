@@ -138,12 +138,14 @@ public class InventoryReport extends DomainResource {
         throw new FHIRException("Unknown InventoryCountType code '"+codeString+"'");
         }
     public String toCode(InventoryCountType code) {
-      if (code == InventoryCountType.SNAPSHOT)
+       if (code == InventoryCountType.NULL)
+           return null;
+       if (code == InventoryCountType.SNAPSHOT)
         return "snapshot";
       if (code == InventoryCountType.DIFFERENCE)
         return "difference";
       return "?";
-      }
+   }
     public String toSystem(InventoryCountType code) {
       return code.getSystem();
       }
@@ -262,7 +264,9 @@ public class InventoryReport extends DomainResource {
         throw new FHIRException("Unknown InventoryReportStatus code '"+codeString+"'");
         }
     public String toCode(InventoryReportStatus code) {
-      if (code == InventoryReportStatus.DRAFT)
+       if (code == InventoryReportStatus.NULL)
+           return null;
+       if (code == InventoryReportStatus.DRAFT)
         return "draft";
       if (code == InventoryReportStatus.REQUESTED)
         return "requested";
@@ -271,7 +275,7 @@ public class InventoryReport extends DomainResource {
       if (code == InventoryReportStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(InventoryReportStatus code) {
       return code.getSystem();
       }
@@ -533,6 +537,21 @@ public class InventoryReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("location")) {
+          this.location = null;
+        } else if (name.equals("itemStatus")) {
+          this.itemStatus = null;
+        } else if (name.equals("countingDateTime")) {
+          this.countingDateTime = null;
+        } else if (name.equals("item")) {
+          this.getItem().remove((InventoryReportInventoryListingItemComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -568,7 +587,7 @@ public class InventoryReport extends DomainResource {
           return this.itemStatus;
         }
         else if (name.equals("countingDateTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryReport.inventoryListing.countingDateTime");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryReport.inventoryListing.countingDateTime");
         }
         else if (name.equals("item")) {
           return addItem();
@@ -798,6 +817,19 @@ public class InventoryReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("category")) {
+          this.category = null;
+        } else if (name.equals("quantity")) {
+          this.quantity = null;
+        } else if (name.equals("item")) {
+          this.item = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1486,6 +1518,35 @@ public class InventoryReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.getIdentifier().remove(value);
+        } else if (name.equals("status")) {
+          value = new InventoryReportStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<InventoryReportStatus>
+        } else if (name.equals("countType")) {
+          value = new InventoryCountTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.countType = (Enumeration) value; // Enumeration<InventoryCountType>
+        } else if (name.equals("operationType")) {
+          this.operationType = null;
+        } else if (name.equals("operationTypeReason")) {
+          this.operationTypeReason = null;
+        } else if (name.equals("reportedDateTime")) {
+          this.reportedDateTime = null;
+        } else if (name.equals("reporter")) {
+          this.reporter = null;
+        } else if (name.equals("reportingPeriod")) {
+          this.reportingPeriod = null;
+        } else if (name.equals("inventoryListing")) {
+          this.getInventoryListing().remove((InventoryReportInventoryListingComponent) value);
+        } else if (name.equals("note")) {
+          this.getNote().remove(value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1528,10 +1589,10 @@ public class InventoryReport extends DomainResource {
           return addIdentifier();
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryReport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryReport.status");
         }
         else if (name.equals("countType")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryReport.countType");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryReport.countType");
         }
         else if (name.equals("operationType")) {
           this.operationType = new CodeableConcept();
@@ -1542,7 +1603,7 @@ public class InventoryReport extends DomainResource {
           return this.operationTypeReason;
         }
         else if (name.equals("reportedDateTime")) {
-          throw new FHIRException("Cannot call addChild on a primitive type InventoryReport.reportedDateTime");
+          throw new FHIRException("Cannot call addChild on a singleton property InventoryReport.reportedDateTime");
         }
         else if (name.equals("reporter")) {
           this.reporter = new Reference();

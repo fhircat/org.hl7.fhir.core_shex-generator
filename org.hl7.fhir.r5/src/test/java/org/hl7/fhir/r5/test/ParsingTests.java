@@ -14,11 +14,9 @@ import org.hl7.fhir.r5.formats.XmlParser;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.test.utils.CompareUtilities;
 import org.hl7.fhir.r5.test.utils.TestingUtilities;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.hl7.fhir.utilities.npm.ToolsVersion;
-import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +33,7 @@ public class ParsingTests {
   }
 
   public static Stream<Arguments> data() throws ParserConfigurationException, IOException, FHIRFormatError, SAXException {
-    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager(org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
+    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager.Builder().build();
 //    npm = pcm.loadPackage("hl7.fhir.r5.examples", "5.0.0");
     npm = NpmPackage.fromPackage(TestingUtilities.loadTestResourceStream("r5", "packages", "hl7.fhir.r5.examples.tgz"));
     List<Arguments> objects = new ArrayList<>();
@@ -53,14 +51,14 @@ public class ParsingTests {
   @MethodSource("data")
   public void test(String name) throws Exception {
 //    System.out.println(name);
-    byte[] b = TextFile.streamToBytes(npm.load("package", name));
+    byte[] b = FileUtilities.streamToBytes(npm.load("package", name));
     String src = new String(b);
     Resource r = new JsonParser().parse(b);
     b = new XmlParser().composeBytes(r);
     r = new XmlParser().parse(b);
     b = new JsonParser().setOutputStyle(OutputStyle.PRETTY).composeBytes(r);
     String output = new String(b);
-    String msg = CompareUtilities.checkJsonSrcIsSame(src, output);
+    String msg = new CompareUtilities().checkJsonSrcIsSame(name, src, output);
     Assertions.assertTrue(msg == null, msg);
   }
 

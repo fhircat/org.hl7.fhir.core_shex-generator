@@ -138,8 +138,8 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
       return (UrlType) this.address;
     }
 
-    public boolean hasAddressUrlType() { 
-      return this != null && this.address instanceof UrlType;
+    public boolean hasAddressUrlType() {
+        return this.address instanceof UrlType;
     }
 
     /**
@@ -153,8 +153,8 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
       return (StringType) this.address;
     }
 
-    public boolean hasAddressStringType() { 
-      return this != null && this.address instanceof StringType;
+    public boolean hasAddressStringType() {
+        return this.address instanceof StringType;
     }
 
     /**
@@ -168,8 +168,8 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
       return (ContactPoint) this.address;
     }
 
-    public boolean hasAddressContactPoint() { 
-      return this != null && this.address instanceof ContactPoint;
+    public boolean hasAddressContactPoint() {
+        return this.address instanceof ContactPoint;
     }
 
     /**
@@ -183,8 +183,8 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
       return (ExtendedContactDetail) this.address;
     }
 
-    public boolean hasAddressExtendedContactDetail() { 
-      return this != null && this.address instanceof ExtendedContactDetail;
+    public boolean hasAddressExtendedContactDetail() {
+        return this.address instanceof ExtendedContactDetail;
     }
 
     public boolean hasAddress() { 
@@ -436,6 +436,23 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("channelType")) {
+          this.channelType = null;
+        } else if (name.equals("address[x]")) {
+          this.address = null;
+        } else if (name.equals("additionalInfo")) {
+          this.getAdditionalInfo().remove(value);
+        } else if (name.equals("maxParticipants")) {
+          this.maxParticipants = null;
+        } else if (name.equals("sessionKey")) {
+          this.sessionKey = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -486,13 +503,13 @@ public class VirtualServiceDetail extends DataType implements ICompositeType {
           return this.address;
         }
         else if (name.equals("additionalInfo")) {
-          throw new FHIRException("Cannot call addChild on a primitive type VirtualServiceDetail.additionalInfo");
+          throw new FHIRException("Cannot call addChild on a singleton property VirtualServiceDetail.additionalInfo");
         }
         else if (name.equals("maxParticipants")) {
-          throw new FHIRException("Cannot call addChild on a primitive type VirtualServiceDetail.maxParticipants");
+          throw new FHIRException("Cannot call addChild on a singleton property VirtualServiceDetail.maxParticipants");
         }
         else if (name.equals("sessionKey")) {
-          throw new FHIRException("Cannot call addChild on a primitive type VirtualServiceDetail.sessionKey");
+          throw new FHIRException("Cannot call addChild on a singleton property VirtualServiceDetail.sessionKey");
         }
         else
           return super.addChild(name);

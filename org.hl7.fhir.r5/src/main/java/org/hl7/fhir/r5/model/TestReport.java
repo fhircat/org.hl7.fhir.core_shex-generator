@@ -181,7 +181,9 @@ public class TestReport extends DomainResource {
         throw new FHIRException("Unknown TestReportActionResult code '"+codeString+"'");
         }
     public String toCode(TestReportActionResult code) {
-      if (code == TestReportActionResult.PASS)
+       if (code == TestReportActionResult.NULL)
+           return null;
+       if (code == TestReportActionResult.PASS)
         return "pass";
       if (code == TestReportActionResult.SKIP)
         return "skip";
@@ -192,7 +194,7 @@ public class TestReport extends DomainResource {
       if (code == TestReportActionResult.ERROR)
         return "error";
       return "?";
-      }
+   }
     public String toSystem(TestReportActionResult code) {
       return code.getSystem();
       }
@@ -297,14 +299,16 @@ public class TestReport extends DomainResource {
         throw new FHIRException("Unknown TestReportParticipantType code '"+codeString+"'");
         }
     public String toCode(TestReportParticipantType code) {
-      if (code == TestReportParticipantType.TESTENGINE)
+       if (code == TestReportParticipantType.NULL)
+           return null;
+       if (code == TestReportParticipantType.TESTENGINE)
         return "test-engine";
       if (code == TestReportParticipantType.CLIENT)
         return "client";
       if (code == TestReportParticipantType.SERVER)
         return "server";
       return "?";
-      }
+   }
     public String toSystem(TestReportParticipantType code) {
       return code.getSystem();
       }
@@ -409,14 +413,16 @@ public class TestReport extends DomainResource {
         throw new FHIRException("Unknown TestReportResult code '"+codeString+"'");
         }
     public String toCode(TestReportResult code) {
-      if (code == TestReportResult.PASS)
+       if (code == TestReportResult.NULL)
+           return null;
+       if (code == TestReportResult.PASS)
         return "pass";
       if (code == TestReportResult.FAIL)
         return "fail";
       if (code == TestReportResult.PENDING)
         return "pending";
       return "?";
-      }
+   }
     public String toSystem(TestReportResult code) {
       return code.getSystem();
       }
@@ -549,7 +555,9 @@ public class TestReport extends DomainResource {
         throw new FHIRException("Unknown TestReportStatus code '"+codeString+"'");
         }
     public String toCode(TestReportStatus code) {
-      if (code == TestReportStatus.COMPLETED)
+       if (code == TestReportStatus.NULL)
+           return null;
+       if (code == TestReportStatus.COMPLETED)
         return "completed";
       if (code == TestReportStatus.INPROGRESS)
         return "in-progress";
@@ -560,7 +568,7 @@ public class TestReport extends DomainResource {
       if (code == TestReportStatus.ENTEREDINERROR)
         return "entered-in-error";
       return "?";
-      }
+   }
     public String toSystem(TestReportStatus code) {
       return code.getSystem();
       }
@@ -808,6 +816,20 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("type")) {
+          value = new TestReportParticipantTypeEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.type = (Enumeration) value; // Enumeration<TestReportParticipantType>
+        } else if (name.equals("uri")) {
+          this.uri = null;
+        } else if (name.equals("display")) {
+          this.display = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -833,13 +855,13 @@ public class TestReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("type")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.participant.type");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.participant.type");
         }
         else if (name.equals("uri")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.participant.uri");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.participant.uri");
         }
         else if (name.equals("display")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.participant.display");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.participant.display");
         }
         else
           return super.addChild(name);
@@ -1011,6 +1033,15 @@ public class TestReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("action")) {
+          this.getAction().remove((SetupActionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1208,6 +1239,17 @@ public class TestReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("operation")) {
+          this.operation = (SetupActionOperationComponent) value; // SetupActionOperationComponent
+        } else if (name.equals("assert")) {
+          this.assert_ = (SetupActionAssertComponent) value; // SetupActionAssertComponent
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -1532,6 +1574,20 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("result")) {
+          value = new TestReportActionResultEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.result = (Enumeration) value; // Enumeration<TestReportActionResult>
+        } else if (name.equals("message")) {
+          this.message = null;
+        } else if (name.equals("detail")) {
+          this.detail = null;
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1557,13 +1613,13 @@ public class TestReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("result")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.operation.result");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.operation.result");
         }
         else if (name.equals("message")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.operation.message");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.operation.message");
         }
         else if (name.equals("detail")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.operation.detail");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.operation.detail");
         }
         else
           return super.addChild(name);
@@ -1929,6 +1985,22 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("result")) {
+          value = new TestReportActionResultEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.result = (Enumeration) value; // Enumeration<TestReportActionResult>
+        } else if (name.equals("message")) {
+          this.message = null;
+        } else if (name.equals("detail")) {
+          this.detail = null;
+        } else if (name.equals("requirement")) {
+          this.getRequirement().remove((SetupActionAssertRequirementComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -1956,13 +2028,13 @@ public class TestReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("result")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.assert.result");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.assert.result");
         }
         else if (name.equals("message")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.assert.message");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.assert.message");
         }
         else if (name.equals("detail")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.setup.action.assert.detail");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.setup.action.assert.detail");
         }
         else if (name.equals("requirement")) {
           return addRequirement();
@@ -2059,8 +2131,8 @@ public class TestReport extends DomainResource {
           return (UriType) this.link;
         }
 
-        public boolean hasLinkUriType() { 
-          return this != null && this.link instanceof UriType;
+        public boolean hasLinkUriType() {
+            return this.link instanceof UriType;
         }
 
         /**
@@ -2074,8 +2146,8 @@ public class TestReport extends DomainResource {
           return (CanonicalType) this.link;
         }
 
-        public boolean hasLinkCanonicalType() { 
-          return this != null && this.link instanceof CanonicalType;
+        public boolean hasLinkCanonicalType() {
+            return this.link instanceof CanonicalType;
         }
 
         public boolean hasLink() { 
@@ -2136,6 +2208,15 @@ public class TestReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("link[x]")) {
+          this.link = null;
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2463,6 +2544,19 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("description")) {
+          this.description = null;
+        } else if (name.equals("action")) {
+          this.getAction().remove((TestActionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -2488,10 +2582,10 @@ public class TestReport extends DomainResource {
       @Override
       public Base addChild(String name) throws FHIRException {
         if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.test.name");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.test.name");
         }
         else if (name.equals("description")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.test.description");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.test.description");
         }
         else if (name.equals("action")) {
           return addAction();
@@ -2672,6 +2766,17 @@ public class TestReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("operation")) {
+          this.operation = (SetupActionOperationComponent) value; // SetupActionOperationComponent
+        } else if (name.equals("assert")) {
+          this.assert_ = (SetupActionAssertComponent) value; // SetupActionAssertComponent
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -2873,6 +2978,15 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("action")) {
+          this.getAction().remove((TeardownActionComponent) value);
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3037,6 +3151,15 @@ public class TestReport extends DomainResource {
         } else
           return super.setProperty(name, value);
         return value;
+      }
+
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("operation")) {
+          this.operation = (SetupActionOperationComponent) value; // SetupActionOperationComponent
+        } else
+          super.removeChild(name, value);
+        
       }
 
       @Override
@@ -3876,6 +3999,39 @@ public class TestReport extends DomainResource {
         return value;
       }
 
+  @Override
+  public void removeChild(String name, Base value) throws FHIRException {
+        if (name.equals("identifier")) {
+          this.identifier = null;
+        } else if (name.equals("name")) {
+          this.name = null;
+        } else if (name.equals("status")) {
+          value = new TestReportStatusEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.status = (Enumeration) value; // Enumeration<TestReportStatus>
+        } else if (name.equals("testScript")) {
+          this.testScript = null;
+        } else if (name.equals("result")) {
+          value = new TestReportResultEnumFactory().fromType(TypeConvertor.castToCode(value));
+          this.result = (Enumeration) value; // Enumeration<TestReportResult>
+        } else if (name.equals("score")) {
+          this.score = null;
+        } else if (name.equals("tester")) {
+          this.tester = null;
+        } else if (name.equals("issued")) {
+          this.issued = null;
+        } else if (name.equals("participant")) {
+          this.getParticipant().remove((TestReportParticipantComponent) value);
+        } else if (name.equals("setup")) {
+          this.setup = (TestReportSetupComponent) value; // TestReportSetupComponent
+        } else if (name.equals("test")) {
+          this.getTest().remove((TestReportTestComponent) value);
+        } else if (name.equals("teardown")) {
+          this.teardown = (TestReportTeardownComponent) value; // TestReportTeardownComponent
+        } else
+          super.removeChild(name, value);
+        
+      }
+
       @Override
       public Base makeProperty(int hash, String name) throws FHIRException {
         switch (hash) {
@@ -3923,25 +4079,25 @@ public class TestReport extends DomainResource {
           return this.identifier;
         }
         else if (name.equals("name")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.name");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.name");
         }
         else if (name.equals("status")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.status");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.status");
         }
         else if (name.equals("testScript")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.testScript");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.testScript");
         }
         else if (name.equals("result")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.result");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.result");
         }
         else if (name.equals("score")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.score");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.score");
         }
         else if (name.equals("tester")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.tester");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.tester");
         }
         else if (name.equals("issued")) {
-          throw new FHIRException("Cannot call addChild on a primitive type TestReport.issued");
+          throw new FHIRException("Cannot call addChild on a singleton property TestReport.issued");
         }
         else if (name.equals("participant")) {
           return addParticipant();

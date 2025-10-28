@@ -5,12 +5,14 @@
 	<parent>
 		<groupId>ca.uhn.hapi.fhir</groupId>
 		<artifactId>org.hl7.fhir.core</artifactId>
-		<version>6.0.17-SNAPSHOT</version>
+		<version>6.7.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
     <artifactId>org.hl7.fhir.dstu2</artifactId>
     <packaging>bundle</packaging>
+
+    <name>HL7 Core Artifact - DSTU2</name>
 
     <properties>
         <checkstyle_config_location>${project.parent.basedir}</checkstyle_config_location>
@@ -28,23 +30,23 @@
             <artifactId>org.hl7.fhir.utilities</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- UCUM -->
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
-            <version>1.0.3</version>
             <optional>true</optional>
         </dependency>
 
         <!-- XML Parsers -->
         <dependency>
-            <groupId>xpp3</groupId>
+            <groupId>org.ogce</groupId>
             <artifactId>xpp3</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -87,6 +89,24 @@
         </dependency>
 
         <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <optional>true</optional>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <optional>true</optional>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

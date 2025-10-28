@@ -1,5 +1,7 @@
 package org.hl7.fhir.convertors.conv40_50.resources40_50;
 
+import java.util.Arrays;
+
 import org.hl7.fhir.convertors.advisors.impl.BaseAdvisor_40_50;
 import org.hl7.fhir.convertors.context.ConversionContext40_50;
 import org.hl7.fhir.convertors.conv40_50.datatypes40_50.primitive40_50.Code40_50;
@@ -10,8 +12,6 @@ import org.hl7.fhir.convertors.conv40_50.datatypes40_50.special40_50.Meta40_50;
 import org.hl7.fhir.convertors.conv40_50.datatypes40_50.special40_50.Narrative40_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.Basic;
-
-import java.util.Arrays;
 
 public class Resource40_50 {
 
@@ -280,6 +280,8 @@ public class Resource40_50 {
       return VerificationResult40_50.convertVerificationResult((org.hl7.fhir.r4.model.VerificationResult) src);
     if (src instanceof org.hl7.fhir.r4.model.VisionPrescription)
       return VisionPrescription40_50.convertVisionPrescription((org.hl7.fhir.r4.model.VisionPrescription) src);
+    if (src instanceof org.hl7.fhir.r4.model.Subscription)
+      return Subscription40_50.convertSubscription((org.hl7.fhir.r4.model.Subscription) src);
     if (advisor.failFastOnNullOrUnknownEntry()) {
       throw new FHIRException("The resource " + src.fhirType()+" cannot be converted from R4 to R5");
     } else {
@@ -528,6 +530,8 @@ public class Resource40_50 {
       return VerificationResult40_50.convertVerificationResult((org.hl7.fhir.r5.model.VerificationResult) src);
     if (src instanceof org.hl7.fhir.r5.model.VisionPrescription)
       return VisionPrescription40_50.convertVisionPrescription((org.hl7.fhir.r5.model.VisionPrescription) src);
+    if (src instanceof org.hl7.fhir.r5.model.Subscription)
+      return Subscription40_50.convertSubscription((org.hl7.fhir.r5.model.Subscription) src);
     if (advisor.failFastOnNullOrUnknownEntry()) {
       throw new FHIRException("The resource " + src.fhirType()+" cannot be converted from R5 to R4");
     } else {

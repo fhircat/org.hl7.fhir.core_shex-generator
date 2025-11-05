@@ -34,11 +34,15 @@ package org.hl7.fhir.r5.conformance;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.context.ContextUtilities;
+import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.TurtleParser;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
@@ -60,6 +64,207 @@ public class ShExGenerator {
         String substring2 = StringUtils.substringBetween(o2, "fhirvs:", " ");
         return (substring1 == null ? "" : substring1)
           .compareTo(substring2 == null ? "" : substring2);
+    }
+  }
+
+  enum FhirType {
+    RESOURCE,
+    BACKBONE_ELEMENT,
+    DATATYPE,
+    VALUESET
+  }
+
+  public static class FhirDefinition {
+    private final String id;
+    private final FhirType type;
+    private final LinkedHashSet<FhirDefinition> dependsOn = new LinkedHashSet<FhirDefinition>();
+    private final LinkedHashSet<FhirDefinition> dependedOnBy = new LinkedHashSet<>();
+
+    public FhirDefinition(String id, FhirType type) {
+      this.id = id;
+      this.type = type;
+    }
+
+    /**
+     * Returns the transitive closure of dependencies for the given FhirDefinition.
+     * That is, all FhirDefinitions that are directly or indirectly depended on by `item`.
+     */
+    public LinkedHashMap<FhirDefinition, List<Deque<FhirDefinition>>> getTransitiveDependencies() {
+      LinkedHashMap<FhirDefinition, List<Deque<FhirDefinition>>> visited = new LinkedHashMap<>();
+      ArrayDeque<FhirDefinition> stack = new ArrayDeque<>();
+
+      stack.push(this);
+
+      while (!stack.isEmpty()) {
+        FhirDefinition current = stack.pop();
+
+        for (FhirDefinition dep : current.getDependsOn()) {
+          if (!visited.containsKey(dep)) {
+            visited.put(dep, new ArrayList<>(Collections.singletonList(stack.clone())));
+            stack.push(dep);
+          } else {
+            visited.get(dep).add(stack.clone());
+          }
+        }
+      }
+
+      return visited;
+    }
+
+    public String getId() { return id; }
+    public FhirType getType() { return type; }
+    public LinkedHashSet<FhirDefinition> getDependsOn() { return dependsOn; }
+    public LinkedHashSet<FhirDefinition> getDependedOnBy() { return dependedOnBy; }
+  }
+
+  class FhirDependencyGraph {
+    private final Map<String, FhirDefinition> definitions = new HashMap<>();
+    private final ContextUtilities contextUtilities;
+
+    FhirDependencyGraph(ContextUtilities contextUtilities) {
+      this.contextUtilities = contextUtilities;
+    }
+
+    public FhirDefinition getOrCreate(String id, FhirType type) {
+      return definitions.computeIfAbsent(id, k -> new FhirDefinition(id, type));
+    }
+
+    public void addDependency(FhirDefinition from, FhirDefinition to) {
+      from.getDependsOn().add(to);
+      to.getDependedOnBy().add(from);
+    }
+
+    public Collection<FhirDefinition> getAllDefinitions() {
+      return definitions.values();
+    }
+
+    public DefinitionWalker getWalker(ContextUtilities contextUtilities) {
+      return new DefinitionWalker(this, contextUtilities);
+    }
+
+    public class DefinitionWalker {
+      FhirDependencyGraph depGraph;
+      ContextUtilities contextUtilities;
+
+      DefinitionWalker(FhirDependencyGraph depGraph, ContextUtilities contextUtilities) {
+        this.depGraph = depGraph;
+        this.contextUtilities = contextUtilities;
+      }
+
+      public void walkDefinition(StructureDefinition sd) {
+        String id = sd.getName();
+        FhirType type = classifyFhirType(sd);
+        FhirDefinition def = depGraph.getOrCreate(id, type);
+
+        // Prefer snapshot (complete definition)
+        List<ElementDefinition> elements = sd.hasSnapshot()
+          ? sd.getSnapshot().getElement()
+          : sd.getDifferential().getElement();
+
+        // First, handle cross-definition dependencies
+        for (ElementDefinition el : elements) {
+          for (ElementDefinition.TypeRefComponent t : el.getType()) {
+            String typeCode = t.getCode();
+            if (typeCode == null || typeCode.isEmpty() || typeCode.equals(id)) continue;
+
+            FhirType depType = inferDependencyType(t);
+            FhirDefinition dep = depGraph.getOrCreate(typeCode, depType);
+            depGraph.addDependency(def, dep);
+
+            // Add datatype profiles
+            for (var profile : t.getProfile()) {
+              depGraph.addDependency(def, depGraph.getOrCreate(profile.getValue(), FhirType.DATATYPE));
+            }
+          }
+
+          // Add ValueSet bindings
+          if (el.hasBinding() && el.getBinding().hasValueSet()) {
+            String vsUrl = el.getBinding().getValueSet();
+            depGraph.addDependency(def, depGraph.getOrCreate(vsUrl, FhirType.VALUESET));
+          }
+        }
+
+        // Then detect internal (intra-resource) dependencies
+        detectInternalDependencies(elements, def, depGraph);
+      }
+
+      /**
+       * Detects internal element-level dependencies within the same StructureDefinition.
+       */
+      private void detectInternalDependencies(List<ElementDefinition> elements, FhirDefinition def, FhirDependencyGraph graph) {
+        Map<String, ElementDefinition> pathMap = elements.stream()
+          .collect(Collectors.toMap(ElementDefinition::getPath, e -> e, (a, b) -> a));
+
+        for (ElementDefinition el : elements) {
+          String path = el.getPath();
+
+          // Example: Observation.component.referenceRange → Observation.referenceRange
+          if (path.contains(".component.")) {
+            String tail = path.substring(path.lastIndexOf('.') + 1); // e.g. "referenceRange"
+
+            // Try to find sibling path at the top level: Observation.referenceRange
+            String topLevelPath = def.getId() + "." + tail;
+            if (pathMap.containsKey(topLevelPath)) {
+              // Found intra-resource dependency
+              FhirDefinition subDep = graph.getOrCreate(topLevelPath, FhirType.BACKBONE_ELEMENT);
+              graph.addDependency(def, subDep);
+            }
+          }
+        }
+      }
+
+      private FhirType classifyFhirType(StructureDefinition sd) {
+        String kind = sd.getKind().toCode(); // "resource", "complex-type", "primitive-type"
+        String type = sd.getType();
+
+        return switch (kind) {
+          case "resource" -> FhirType.RESOURCE;
+          case "complex-type" -> type.equals("BackboneElement") ? FhirType.BACKBONE_ELEMENT : FhirType.DATATYPE;
+          case "primitive-type" -> FhirType.DATATYPE;
+          default -> FhirType.VALUESET;
+        };
+      }
+
+      private FhirType inferDependencyType(ElementDefinition.TypeRefComponent t) {
+        StructureDefinition sd = null; // = contextUtilities.fetchStructureByName(typeCode);
+
+        // 1. try by Identifier
+        for (CanonicalType prof : t.getProfile()) {
+          String url = prof.getValue();
+          if (url != null && !url.isEmpty()) {
+            List<StructureDefinition> sdz = contextUtilities.fetchByIdentifier(StructureDefinition.class, url);
+            if (sdz.size() == 1) {
+              sd = sdz.get(0);
+            }
+          }
+        }
+
+        // 2. Fallback: try by type code name
+        String typeCode = t.getCode();
+        if (sd == null && typeCode != null && !typeCode.isEmpty()) {
+          // findType returns a StructureDefinition whose "type" matches the name
+          List<StructureDefinition> sdList = contextUtilities.fetchByIdentifier(StructureDefinition.class, typeCode);
+          if (sdList.size() == 1) {
+            sd = sdList.get(0);
+          } else {
+            String shortName = typeCode.substring(typeCode.lastIndexOf('.') + 1);
+            sd = contextUtilities.findType(shortName);
+            if (sd == null) {
+              shortName = Character.toLowerCase(shortName.charAt(0)) + shortName.substring(1);
+              sd = contextUtilities.findType(shortName);
+            }
+          }
+        }
+
+        if (sd == null)
+          throw new FHIRException("Unable to find FHIR structure definition for type " + typeCode);
+        return classifyFhirType(sd);
+      /*
+      if (typeCode.equals("BackboneElement")) return FhirType.BACKBONE_ELEMENT;
+      if (Character.isUpperCase(typeCode.charAt(0))) return FhirType.RESOURCE;
+      return FhirType.DATATYPE;
+       */
+      }
     }
   }
 
@@ -265,13 +470,13 @@ public class ShExGenerator {
 
   /**
    * innerTypes -- inner complex types.  Currently flattened in ShEx (doesn't have to be, btw)
-   * emittedInnerTypes -- set of inner types that have been generated
+   *
    * datatypes, emittedDatatypes -- types used in the definition, types that have been generated
    * references -- Reference types (Patient, Specimen, etc)
    * uniq_structures -- set of structures on the to be generated list...
    * doDataTypes -- whether or not to emit the data types.
    */
-  private LinkedHashSet<Pair<StructureDefinition, ElementDefinition>> innerTypes, emittedInnerTypes;
+  private LinkedHashSet<Pair<StructureDefinition, ElementDefinition>> innerTypes;
   private List<String> innerTypeNames;
 
   private List<String> oneOrMoreTypes;
@@ -309,7 +514,6 @@ public class ShExGenerator {
     oneOrMoreTypes = new ArrayList<String>();
     constraintsList = new ArrayList<String>();
     unMappedFunctions = new ArrayList<String>();
-    emittedInnerTypes = new LinkedHashSet<Pair<StructureDefinition, ElementDefinition>>();
     datatypes = new LinkedHashSet<String>();
     emittedDatatypes = new LinkedHashSet<String>();
     references = new LinkedHashSet<String>();
@@ -323,6 +527,49 @@ public class ShExGenerator {
     fpe = new FHIRPathEngine(context);
   }
 
+  public String walkStructures(SimpleWorkerContext workerContext) {
+    List<StructureDefinition> list = new ArrayList<>();
+    ContextUtilities contextUtilities = new ContextUtilities(workerContext);
+
+    FhirDependencyGraph depGraph = new FhirDependencyGraph(contextUtilities);
+    FhirDependencyGraph.DefinitionWalker walker = depGraph.getWalker(contextUtilities);
+
+    for (StructureDefinition sd : contextUtilities.allStructures()) {
+      if (sd.getKind() == StructureDefinition.StructureDefinitionKind.LOGICAL)
+        // Skip logical models
+        continue;
+      // Include <Base> which has no derivation
+      if (sd.getDerivation() == null || sd.getDerivation() == StructureDefinition.TypeDerivationRule.SPECIALIZATION) {
+        walker.walkDefinition(sd);
+        list.add(sd);
+      }
+    }
+
+//    StructureDefinition addressType = contextUtilities.findType("Address");
+//    StructureDefinition addressStructureByName = contextUtilities.fetchStructureByName("Address");
+    FhirDefinition checkMyDeps = depGraph.getOrCreate("Observation", FhirType.RESOURCE);
+    LinkedHashMap<FhirDefinition, List<Deque<FhirDefinition>>> transitiveDeps = checkMyDeps.getTransitiveDependencies();
+    System.out.println("Transitive dependencies of " + checkMyDeps.getType() + " " + checkMyDeps.getId() + ":");
+
+    for (FhirDefinition dep : transitiveDeps.keySet()) {
+      List<Deque<FhirDefinition>> stacks = transitiveDeps.get(dep);
+      String via;
+      if (stacks.size() > 4) {
+        via = stacks.size() + " elements";
+      } else {
+        via = stacks.stream().map(s -> "\n   : " + summarizeStack(s)).collect(Collectors.joining());
+      }
+      System.out.println(" - " + dep.getId() + " (" + dep.getType() + ") via " + via);
+    }
+
+    String shexString = generate(HTMLLinkPolicy.NONE, list);
+    return shexString;
+  }
+
+  private String summarizeStack(Deque<FhirDefinition> s) {
+    return s.stream().map(FhirDefinition::getId).collect(Collectors.joining(" -> "));
+  }
+
   public String generate(HTMLLinkPolicy links, StructureDefinition structure) {
     List<StructureDefinition> list = new ArrayList<StructureDefinition>();
     list.add(structure);
@@ -331,7 +578,6 @@ public class ShExGenerator {
     oneOrMoreTypes.clear();
     constraintsList.clear();
     unMappedFunctions.clear();
-    emittedInnerTypes.clear();
     datatypes.clear();
     emittedDatatypes.clear();
     references.clear();
@@ -477,90 +723,89 @@ public class ShExGenerator {
         shapeDefinitions.append("<" + sd.getName() + "> CLOSED {\n}");
       }
     }
-      shapeDefinitions.append(emitInnerTypes());
+    shapeDefinitions.append(emitInnerTypes());
 
-      // If data types are to be put in the same file
-      if (doDatatypes) {
-        shapeDefinitions.append("\n#---------------------- Data Types -------------------\n");
-        while (emittedDatatypes.size() < datatypes.size() ||
-          emittedInnerTypes.size() < innerTypes.size()) {
-          shapeDefinitions.append(emitDataTypes());
-          // As process data types, it may introduce some more inner types, so we repeat the call here.
-          shapeDefinitions.append(emitInnerTypes());
-        }
+    // If data types are to be put in the same file
+    if (doDatatypes) {
+      shapeDefinitions.append("\n#---------------------- Data Types -------------------\n");
+      while (emittedDatatypes.size() < datatypes.size()) {
+        shapeDefinitions.append(emitDataTypes());
+        // As process data types, it may introduce some more inner types, so we repeat the call here.
+        shapeDefinitions.append(emitInnerTypes());
       }
+    }
 
-      if (oneOrMoreTypes.size() > 0) {
-        shapeDefinitions.append("\n#---------------------- Cardinality Types (OneOrMore) -------------------\n");
-        oneOrMoreTypes.forEach((String oomType) -> {
-          shapeDefinitions.append(getOneOrMoreType(oomType));
-        });
-      }
-
-      if (references.size() > 0) {
-        shapeDefinitions.append("\n#---------------------- Reference Types -------------------\n");
-        for (String r : references) {
-          var rClassName = TurtleParser.getClassName(r);
-          shapeDefinitions.append("\n").append(tmplt(TYPED_REFERENCE_TEMPLATE).add("refType", rClassName).render()).append("\n");
-          if (!"Resource".equals(rClassName) && !known_resources.contains(rClassName))
-            shapeDefinitions.append("\n").append(tmplt(TARGET_REFERENCE_TEMPLATE).add("refType", rClassName).render()).append("\n");
-        }
-      }
-
-      if (completeModel && known_resources.size() > 0) {
-        shapeDefinitions.append("\n").append(tmplt(COMPLETE_RESOURCE_TEMPLATE)
-          .add("resources", StringUtils.join(known_resources, "> OR\n\t@<")).render());
-        shapeDefinitions.append("\n").append(tmplt(SYNTHETIC_RESTRICTION_TEMPLATE)
-          .add("restriction", "SimpleQuantity").add("base", "Quantity").render());
-        List<String> all_entries = new ArrayList<String>();
-        for (String kr : known_resources)
-          all_entries.add(tmplt(ALL_ENTRY_TEMPLATE).add("id", TurtleParser.getClassName(kr)).render());
-        shapeDefinitions.append("\n").append(tmplt(ALL_TEMPLATE)
-          .add("all_entries", StringUtils.join(all_entries, " OR\n\t")).render());
-      }
-
-      if (required_value_sets.size() > 0) {
-        shapeDefinitions.append("\n#---------------------- Value Sets ------------------------\n");
-        List<String> sortedVS = new ArrayList<String>();
-        for (ValueSet vs : required_value_sets)
-          sortedVS.add(genValueSet(vs));
-
-        Collections.sort(sortedVS, new Comparator<String>() {
-          @Override
-          public int compare(String o1, String o2) {
-            if ((o1 == null)||(o2 == null))
-              return 0;
-
-            try {
-              String s1 = (o1.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o1, "fhirvs:", " ") : o1;
-              String s2 = (o2.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o2, "fhirvs:", " ") : o2;
-              //debug("Comparing " + s1 + " and  " + s2);
-              if ((s1 == null)||(s2 == null))
-                return 0;
-
-              return s1.compareTo(s2);
-            }
-            catch(Exception e){
-              debug("SORT COMPARISON FAILED BETWEEN \n\t\t" + o1 + "\n\t\t and \n\t\t" + o2);
-              debug(e.getMessage());
-              return 0;
-            }
-          }
+    if (oneOrMoreTypes.size() > 0) {
+      shapeDefinitions.append("\n#---------------------- Cardinality Types (OneOrMore) -------------------\n");
+      oneOrMoreTypes.forEach((String oomType) -> {
+        shapeDefinitions.append(getOneOrMoreType(oomType));
       });
+    }
 
-        for (String svs : sortedVS) {
-            shapeDefinitions.append("\n").append(/*"#value_set_begins\n" +*/ svs /*+ "#value_set_ends"*/);
-        }
+    if (references.size() > 0) {
+      shapeDefinitions.append("\n#---------------------- Reference Types -------------------\n");
+      for (String r : references) {
+        var rClassName = TurtleParser.getClassName(r);
+        shapeDefinitions.append("\n").append(tmplt(TYPED_REFERENCE_TEMPLATE).add("refType", rClassName).render()).append("\n");
+        if (!"Resource".equals(rClassName) && !known_resources.contains(rClassName))
+          shapeDefinitions.append("\n").append(tmplt(TARGET_REFERENCE_TEMPLATE).add("refType", rClassName).render()).append("\n");
       }
+    }
 
-      if ((unMappedFunctions != null) && (!unMappedFunctions.isEmpty())) {
-        log.debug("------------------------- Unmapped Functions ---------------------");
-        for (String um : unMappedFunctions) {
-          log.debug(um);
+    if (completeModel && known_resources.size() > 0) {
+      shapeDefinitions.append("\n").append(tmplt(COMPLETE_RESOURCE_TEMPLATE)
+        .add("resources", StringUtils.join(known_resources, "> OR\n\t@<")).render());
+      shapeDefinitions.append("\n").append(tmplt(SYNTHETIC_RESTRICTION_TEMPLATE)
+        .add("restriction", "SimpleQuantity").add("base", "Quantity").render());
+      List<String> all_entries = new ArrayList<String>();
+      for (String kr : known_resources)
+        all_entries.add(tmplt(ALL_ENTRY_TEMPLATE).add("id", TurtleParser.getClassName(kr)).render());
+      shapeDefinitions.append("\n").append(tmplt(ALL_TEMPLATE)
+        .add("all_entries", StringUtils.join(all_entries, " OR\n\t")).render());
+    }
+
+    if (required_value_sets.size() > 0) {
+      shapeDefinitions.append("\n#---------------------- Value Sets ------------------------\n");
+      List<String> sortedVS = new ArrayList<String>();
+      for (ValueSet vs : required_value_sets)
+        sortedVS.add(genValueSet(vs));
+
+      Collections.sort(sortedVS, new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+          if ((o1 == null)||(o2 == null))
+            return 0;
+
+          try {
+            String s1 = (o1.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o1, "fhirvs:", " ") : o1;
+            String s2 = (o2.indexOf("fhirvs:") != -1) ? StringUtils.substringBetween(o2, "fhirvs:", " ") : o2;
+            //debug("Comparing " + s1 + " and  " + s2);
+            if ((s1 == null)||(s2 == null))
+              return 0;
+
+            return s1.compareTo(s2);
+          }
+          catch(Exception e){
+            debug("SORT COMPARISON FAILED BETWEEN \n\t\t" + o1 + "\n\t\t and \n\t\t" + o2);
+            debug(e.getMessage());
+            return 0;
+          }
         }
-      }
+    });
 
-      allStructures.append(shapeDefinitions + "\n");
+      for (String svs : sortedVS) {
+          shapeDefinitions.append("\n").append(/*"#value_set_begins\n" +*/ svs /*+ "#value_set_ends"*/);
+      }
+    }
+
+    if ((unMappedFunctions != null) && (!unMappedFunctions.isEmpty())) {
+      log.debug("------------------------- Unmapped Functions ---------------------");
+      for (String um : unMappedFunctions) {
+        log.debug(um);
+      }
+    }
+
+    allStructures.append(shapeDefinitions + "\n");
 
     StringBuffer allImports = new StringBuffer("");
     if (!imports.isEmpty()) {
@@ -1290,16 +1535,8 @@ public class ShExGenerator {
    */
   private String emitInnerTypes() {
     StringBuilder itDefs = new StringBuilder();
-    while(emittedInnerTypes.size() < innerTypes.size()) {
-      for (Pair<StructureDefinition, ElementDefinition> it : new LinkedHashSet<Pair<StructureDefinition, ElementDefinition>>(innerTypes)) {
-        if ((!emittedInnerTypes.contains(it))
-          // && (it.getRight().hasBase() && it.getRight().getBase().getPath().startsWith(it.getLeft().getName()))
-        ){
-          itDefs.append("\n").append(genInnerTypeDef(it.getLeft(), it.getRight()));
-          emittedInnerTypes.add(it);
-        }
-      }
-    }
+    for (Pair<StructureDefinition, ElementDefinition> it : innerTypes)
+        itDefs.append("\n").append(genInnerTypeDef(it.getLeft(), it.getRight()));
     return itDefs.toString();
   }
 
@@ -1308,10 +1545,6 @@ public class ShExGenerator {
    * @return
    */
   private boolean  isInInnerTypes(ElementDefinition ed) {
-
-    if (this.innerTypes.isEmpty())
-      return false;
-
     for (Iterator<Pair<StructureDefinition, ElementDefinition>> itr = this.innerTypes.iterator(); itr.hasNext(); )
       if (itr.next().getRight() == ed)
         return true;

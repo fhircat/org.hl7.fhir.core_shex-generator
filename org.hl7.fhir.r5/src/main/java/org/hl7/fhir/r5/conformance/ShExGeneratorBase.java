@@ -1435,6 +1435,7 @@ public abstract class ShExGeneratorBase {
     defn = simpleElement(sd, ed, typ);
 
     String refChoices = "";
+    boolean targetProfileTypeIsCodeableReference = false;
 
     if (id.endsWith("[x]")) {
       //defn = " (" + genChoiceTypes(sd, ed, shortId) + ")";
@@ -1465,14 +1466,16 @@ public abstract class ShExGeneratorBase {
 
 
       List<String> refValues = new ArrayList<String>();
-      if (ed.hasType() && (ed.getType().get(0).getWorkingCode().equals("Reference"))) {
-        if (ed.getType().get(0).hasTargetProfile()) {
-
-          ed.getType().get(0).getTargetProfile().forEach((CanonicalType tps) -> {
-            String shapeName = getCanonicalShapeName(tps.getValue());
-            refValues.add(getClassName(shapeName));
-          });
-        }
+      String targetTypeCode = ed.hasType() ? ed.getType().get(0).getWorkingCode() : "";
+      targetProfileTypeIsCodeableReference = "CodeableReference".equals(targetTypeCode);
+      boolean targetProfileTypeHonored = "Reference".equals(targetTypeCode)
+        || "canonical".equals(targetTypeCode)
+        || targetProfileTypeIsCodeableReference;
+      if (targetProfileTypeHonored && ed.getType().get(0).hasTargetProfile()) {
+        ed.getType().get(0).getTargetProfile().forEach((CanonicalType tps) -> {
+          String shapeName = getCanonicalShapeName(tps.getValue());
+          refValues.add(getClassName(shapeName));
+        });
       }
 
       if (!refValues.isEmpty()) {
@@ -1498,8 +1501,12 @@ public abstract class ShExGeneratorBase {
         oneOrMoreTypes.add(defnToStore);
     } else {
       if (!refChoices.isEmpty()) {
-        defn += " AND {"+ getLinkPredicate() + " \n\t\t\t@<" +
-          refChoices.replace("_OR_", "> OR \n\t\t\t@<") + "> ? }";
+        String targetList = refChoices.replace("_OR_", "> OR \n\t\t\t@<");
+        if (targetProfileTypeIsCodeableReference) {
+          defn += " AND { fhir:reference { " + getLinkPredicate() + " \n\t\t\t@<" + targetList + "> ? } }";
+        } else {
+          defn += " AND {"+ getLinkPredicate() + " \n\t\t\t@<" + targetList + "> ? }";
+        }
       }
     }
 
@@ -1822,10 +1829,15 @@ public abstract class ShExGeneratorBase {
       //ONE_OR_MORE_CHOICES is a literal string constant; safe
       String[] choicesParts = oneOrMoreType.split(ONE_OR_MORE_CHOICES);
       origType = choicesParts[0];
-      restriction = "AND {" + getLinkPredicate() + " \n\t\t\t@<";
 
       String choices = choicesParts[1];
-      restriction += choices.replace("_OR_", "> OR \n\t\t\t@<") + "> }";
+      String choiceList = "@<" + choices.replace("_OR_", "> OR \n\t\t\t@<") + ">";
+      String stripped = origType.replace(ONE_OR_MORE_PREFIX, "");
+      if ("CodeableReference".equals(stripped)) {
+        restriction = "AND { fhir:reference { " + getLinkPredicate() + " \n\t\t\t" + choiceList + " } }";
+      } else {
+        restriction = "AND {" + getLinkPredicate() + " \n\t\t\t" + choiceList + " }";
+      }
     }
 
     origType = origType.replace(ONE_OR_MORE_PREFIX, "");

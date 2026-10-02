@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("checkstyle:systemout")
 public class ToolsHelper {
 
@@ -179,7 +180,7 @@ public class ToolsHelper {
   }
 
   private byte[] loadFromUrl(String src) throws IOException {
-    URL url = new URL(src);
+    URL url = URI.create(src).toURL();
     byte[] str = IOUtils.toByteArray(url.openStream());
     return str;
   }

@@ -11,14 +11,14 @@ import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.DataType;
 import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 /** 
  * This class is used to walk through the resources when rendering, whether
  * the resource is a native resource or loaded by the element model
  */
-@MarkedToMoveToAdjunctPackage
+
 public abstract class ResourceWrapper {
 
   public enum ElementKind {
@@ -192,6 +192,11 @@ public abstract class ResourceWrapper {
     return child == null ? null : child.primitiveValue();
   }
 
+  public String primitiveValueMNMulti(String... names) {
+    ResourceWrapper child = childMNMulti(names);
+    return child == null ? null : child.primitiveValue();
+  }
+
   public String firstPrimitiveValue(String name) {
     ResourceWrapper child = firstChild(name);
     return child == null ? null : child.primitiveValue();
@@ -302,6 +307,26 @@ public abstract class ResourceWrapper {
       }
     }
     return res;
+  }
+
+  /**
+   * For when an item has been renamed - find by any of the names
+   *
+   * just return the first match
+   * @param names
+   * @return
+   */
+  public ResourceWrapper childMNMulti(String... names) {
+    loadChildren();
+
+    for (ResourceWrapper e : children) {
+      for (String name : names) {
+        if (name.equals(e.name()) || (name+"[x]").equals(e.name())) {
+          return e;
+        }
+      }
+    }
+    return null;
   }
 
   public boolean has(String name) {

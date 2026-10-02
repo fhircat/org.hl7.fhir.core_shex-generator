@@ -33,10 +33,10 @@ import java.util.List;
 import org.hl7.fhir.r5.elementmodel.TurtleParser;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 import org.hl7.fhir.utilities.VersionUtilities;
 
-@MarkedToMoveToAdjunctPackage
+
 public class ShExGenerator extends ShExGeneratorBase {
 
   public static class ShExComparator extends BaseShExComparator {
@@ -161,14 +161,5 @@ public class ShExGenerator extends ShExGeneratorBase {
       }
     }
     return generator;
-  }
-
-  private void debug(String message) {
-    if (this.debugMode)
-      System.out.println(message);
-  }
-
-  private void printBuildMessage(String message){
-    // System.out.println("ShExGenerator: " + message);
   }
 }

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.hl7.fhir.utilities.IniFile;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.junit.jupiter.api.*;
@@ -349,9 +349,6 @@ public class FilesystemPackageManagerTests {
     Assertions.assertTrue(pcm.listPackages().isEmpty());
 
     NpmPackage npmPackage = pcm.addPackageToCache("example.fhir.uv.myig", "1.2.3", this.getClass().getResourceAsStream("/npm/dummy-package-no-index.tgz"), "https://packages.fhir.org/example.fhir.uv.myig/1.2.3");
-    /*FIXME this is not correct. If this is switched to assertThat(...).isTrue, the assert works correctly, but proves
-      that isIndexed is in fact broken.
-    */
     Assertions.assertTrue(npmPackage.isIndexed());
   }
 
@@ -404,7 +401,7 @@ public class FilesystemPackageManagerTests {
     }
     }
 
-    private @NonNull String getRunnableName() {
+    private @Nonnull String getRunnableName() {
       return "Test " + originatingTest + " Thread #" + index + " " + getOperationName();
     }
 

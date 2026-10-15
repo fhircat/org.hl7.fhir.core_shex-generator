@@ -31,32 +31,58 @@ package org.hl7.fhir.r5.elementmodel;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.r5.extensions.ExtensionUtilities;
-import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 import org.hl7.fhir.utilities.Utilities;
-import org.hl7.fhir.utilities.turtle.Turtle;
 import org.hl7.fhir.utilities.turtle.Turtle.Complex;
+import org.hl7.fhir.utilities.turtle.Turtle.Section;
 import org.hl7.fhir.utilities.turtle.Turtle.Subject;
 
 
-@MarkedToMoveToAdjunctPackage
+
 public class TurtleParserR6 extends TurtleParserBase {
+
+  private final Map<String, TurtleConceptIri> conceptIriCache = new HashMap<>();
+  private boolean deriveConceptIriFromNamingSystem;
 
   public TurtleParserR6(IWorkerContext context) {
     super(context);
   }
 
+  public boolean isDeriveConceptIriFromNamingSystem() {
+    return deriveConceptIriFromNamingSystem;
+  }
+
+  public TurtleParserR6 setDeriveConceptIriFromNamingSystem(boolean deriveConceptIriFromNamingSystem) {
+    if (this.deriveConceptIriFromNamingSystem != deriveConceptIriFromNamingSystem) {
+      conceptIriCache.clear();
+    }
+    this.deriveConceptIriFromNamingSystem = deriveConceptIriFromNamingSystem;
+    return this;
+  }
+
   protected String getReferenceURI(String ref) {
-    if (ref != null && (ref.startsWith("http://") || ref.startsWith("https://") || ref.startsWith("urn:") || ref.startsWith("#")))
+    if (ref == null)
+      return null;
+    if (ref.startsWith("http://") || ref.startsWith("https://") || ref.startsWith("urn:") || ref.startsWith("#"))
       return "<" + ref + ">";
-    else if (base != null && ref != null && ref.contains("/"))
+    // Any other absolute URI (mailto:, tel:, mllp:, ftp:, ...) is already a valid IRI; wrap it as
+    // such. Prepending "fhir:" would build a malformed prefixed name (the scheme colon/@ are not
+    // legal in a PN_LOCAL), which breaks Turtle parsing — e.g. "fhir:mailto:a@b.com".
+    if (ref.matches("^[a-zA-Z][a-zA-Z0-9+.-]*:.*"))
+      return "<" + ref + ">";
+    if (base != null && ref.contains("/"))
       return "<" + Utilities.appendForwardSlash(base) + ref + ">";
-    else if (ref != null) {
-        return "fhir:" + ref;
-    } else return null;
+    // Any remaining value is a relative / conditional reference (e.g. "Patient",
+    // "Patient?identifier=123"). Emit it as a relative IRI; "fhir:" + ref would build a malformed
+    // prefixed name whenever the value contains characters not legal in a local name (?, =, &, @).
+    return "<" + ref + ">";
   }
 
   @Override
@@ -75,6 +101,27 @@ public class TurtleParserR6 extends TurtleParserBase {
   protected void decoratePrimitiveValue(Complex t, Element element) {
     if (Utilities.existsInList(element.getType(), "canonical", "oid", "uri", "url", "uuid")) {
       linkURI(t, element.primitiveValue(), element.getType());
+    }
+  }
+
+  @Override
+  protected void decorateCoding(Complex t, Element coding, Section section) throws FHIRException {
+    // Do nothing in R6
+  }
+
+  private boolean isDefinitionalResource(String resourceType) {
+    return resourceType.endsWith("Definition");
+  }
+
+  @Override
+  protected void decorateCodeableConcept(Complex t, Element codeableConcept, Section section) throws FHIRException {
+    if (isDefinitionalResource(resourceType)) {
+      // Don't assert `rdf:type` for CodeableConcepts that used in definitional ways (describing a class of codes) instead of as instance data
+      // Example: ElementDefinition.pattern (CodeableConcept) defines a class of values that all target Elements must have
+      return;
+    }
+    for (Element coding : codeableConcept.getChildrenByName("coding")) {
+      decorateCodeableConceptFromNamingSystem(t, coding);
     }
   }
 
@@ -109,5 +156,35 @@ public class TurtleParserR6 extends TurtleParserBase {
     if (refURI != null) {
       t.linkedPredicate(getReferencePredicate(), refURI, linkResolver == null ? null : linkResolver.resolveType(type), null);
     }
+  }
+
+  private void decorateCodeableConceptFromNamingSystem(Complex codeableConcept, Element coding) {
+    String system = coding.getChildValue("system");
+    String code = coding.getChildValue("code");
+    if (system == null || code == null) {
+      return;
+    }
+
+    TurtleConceptIri conceptIri = getConceptIri(system);
+    if (conceptIri == null) {
+      return;
+    }
+    String iri = conceptIri.render(code);
+    if (iri == null) {
+      return;
+    }
+    if (conceptIri.prefix != null) {
+      codeableConcept.prefix(conceptIri.prefix, conceptIri.iriStem);
+    }
+    codeableConcept.linkedPredicate("a", iri, null, null);
+  }
+
+  private TurtleConceptIri getConceptIri(String system) {
+    if (conceptIriCache.containsKey(system)) {
+      return conceptIriCache.get(system);
+    }
+    TurtleConceptIri resolved = TurtleConceptIri.resolve(context, system, deriveConceptIriFromNamingSystem);
+    conceptIriCache.put(system, resolved);
+    return resolved;
   }
 }

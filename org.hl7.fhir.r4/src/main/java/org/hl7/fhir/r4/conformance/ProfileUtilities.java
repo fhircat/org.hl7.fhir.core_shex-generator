@@ -103,7 +103,7 @@ import org.hl7.fhir.r4.utils.formats.CSVWriter;
 import org.hl7.fhir.r4.utils.formats.XLSXWriter;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
+
 import org.hl7.fhir.utilities.TerminologyServiceOptions;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
@@ -141,7 +141,7 @@ import org.hl7.fhir.utilities.xml.SchematronWriter.Section;
  * @author Grahame
  *
  */
-@MarkedToMoveToAdjunctPackage
+
 @Slf4j
 public class ProfileUtilities extends TranslatingUtilities {
 
@@ -251,7 +251,7 @@ public class ProfileUtilities extends TranslatingUtilities {
   private boolean useTableForFixedValues = true;
   @Setter
   @Getter
-  @Deprecated
+  @Deprecated(forRemoval = true)
   private boolean debug;
 
   // note that ProfileUtilities are used re-entrantly internally, so nothing with
@@ -2784,7 +2784,7 @@ public class ProfileUtilities extends TranslatingUtilities {
 
   private Piece checkForNoChange(Element src1, Element src2, Piece piece) {
     if (src1.hasUserData(DERIVATION_EQUALS) && src2.hasUserData(DERIVATION_EQUALS)) {
-      piece.addStyle("opacity: 0.5");
+      piece.addStyle("opacity: "+HierarchicalTableGenerator.STANDARD_OPACITY);
     }
     return piece;
   }

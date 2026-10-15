@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -779,6 +780,8 @@ public class Utilities {
   }
 
 
+  /** Escapes special characters in a Java string: \n \r " and \
+   */
   public static String escapeJava(String doco) {
     if (doco == null)
       return "";
@@ -892,6 +895,32 @@ public class Utilities {
     }
   }
 
+  // fixed-arity overloads for the common cases. The varargs form below allocates a char[]
+  // on every call, which matters in per-character loops such as the JSON lexer's whitespace skip.
+  public static boolean charInSet(char value, char c1) {
+    return value == c1;
+  }
+
+  public static boolean charInSet(char value, char c1, char c2) {
+    return value == c1 || value == c2;
+  }
+
+  public static boolean charInSet(char value, char c1, char c2, char c3) {
+    return value == c1 || value == c2 || value == c3;
+  }
+
+  public static boolean charInSet(char value, char c1, char c2, char c3, char c4) {
+    return value == c1 || value == c2 || value == c3 || value == c4;
+  }
+
+  public static boolean charInSet(char value, char c1, char c2, char c3, char c4, char c5) {
+    return value == c1 || value == c2 || value == c3 || value == c4 || value == c5;
+  }
+
+  public static boolean charInSet(char value, char c1, char c2, char c3, char c4, char c5, char c6) {
+    return value == c1 || value == c2 || value == c3 || value == c4 || value == c5 || value == c6;
+  }
+
   public static boolean charInSet(char value, char... array) {
     for (int i : array)
       if (value == i)
@@ -997,7 +1026,30 @@ public class Utilities {
     return b.toString();
   }
 
-
+  /** escape a string based on FHIRPaths encoding rules */
+  public static String escapeFhirPathString(String s) {
+    if (s == null) {
+      return "";
+    }
+    StringBuilder b = new StringBuilder(s.length());
+    for (char c : s.toCharArray()) {
+      switch (c) {
+        case '\\': b.append("\\\\"); break;
+        case '\'': b.append("\\'"); break;
+        case '\r': b.append("\\r"); break;
+        case '\n': b.append("\\n"); break;
+        case '\t': b.append("\\t"); break;
+        case ' ': b.append(" "); break;
+        default:
+          if ((c == '\r' || c == '\n') || isWhitespace(c) || c < 32) { 
+            b.append("\\u");
+            b.append(Utilities.padLeft(Integer.toHexString(c), '0', 4));
+          } else
+            b.append(c);
+      }
+    }
+    return b.toString();
+  }
   public static String escapeJson(String value) {
     return escapeJson(value, true);
   }
@@ -1006,8 +1058,24 @@ public class Utilities {
     if (value == null)
       return "";
 
-    StringBuilder b = new StringBuilder();
-    for (char c : value.toCharArray()) {
+    // Almost every string written to JSON needs no escaping at all, and this is called for every one of
+    // them. Scan first: when nothing has to change, hand back the original rather than copying it into a
+    // char[] and rebuilding it a character at a time
+    int first = -1;
+    for (int i = 0; i < value.length(); i++) {
+      if (needsJsonEscape(value.charAt(i), escapeUnicodeWhitespace)) {
+        first = i;
+        break;
+      }
+    }
+    if (first == -1) {
+      return value;
+    }
+
+    StringBuilder b = new StringBuilder(value.length() + 16);
+    b.append(value, 0, first);
+    for (int i = first; i < value.length(); i++) {
+      char c = value.charAt(i);
       if (c == '\r')
         b.append("\\r");
       else if (c == '\n')
@@ -1021,13 +1089,27 @@ public class Utilities {
       else if (c == ' ')
         b.append(" ");
       else if ((c == '\r' || c == '\n') || (isWhitespace(c) && escapeUnicodeWhitespace)) { 
-        b.append("\\u"+Utilities.padLeft(Integer.toHexString(c), '0', 4));
+        b.append("\\u" + Utilities.padLeft(Integer.toHexString(c), '0', 4));
       } else if (((int) c) < 32)
         b.append("\\u" + Utilities.padLeft(Integer.toHexString(c), '0', 4));
       else
         b.append(c);
     }
     return b.toString();
+  }
+
+  /**
+   * whether escapeJson would write this character as anything other than itself - the exact complement of
+   * the branches above, so that the scan and the rewrite can never disagree
+   */
+  private static boolean needsJsonEscape(char c, boolean escapeUnicodeWhitespace) {
+    if (c == '\r' || c == '\n' || c == '\t' || c == '"' || c == '\\') {
+      return true;
+    }
+    if (c == ' ') {
+      return false;
+    }
+    return (isWhitespace(c) && escapeUnicodeWhitespace) || ((int) c) < 32;
   }
 
   public static String humanize(String code) {
@@ -1796,6 +1878,79 @@ public class Utilities {
     return s.substring(start, end+1);    
   }
 
+  /**
+   * Decode FHIR base64Binary content.
+   *
+   * FHIR says that base64Binary content does not include whitespace, but that readers should ignore it
+   * (per RFC 4648), and before R5 line-wrapped content was common. So whitespace is always skipped.
+   *
+   * What happens to other characters that are not valid base64 depends on stripInvalid:
+   * <ul>
+   *   <li>false: this is as strict as {@link Base64#getDecoder()}: illegal characters, bad padding and
+   *     content after the padding all throw an IllegalArgumentException with the JDK's message</li>
+   *   <li>true: every character that is not in the base64 alphabet (A-Z, a-z, 0-9, '+', '/') or the
+   *     padding character '=' is skipped, like whitespace. Padding is still checked: bad padding and
+   *     content after the padding still throw, as does content that is the wrong length once the
+   *     invalid characters are gone</li>
+   * </ul>
+   * (Don't use the MIME decoder or commons-codec as a substitute for stripInvalid = true: they skip illegal
+   * characters, but are also lax about padding and trailing content, so they will "decode" any string at all.)
+   *
+   * This costs no more than Base64.getDecoder().decode(String), which copies the string into a byte[]
+   * before decoding anyway; this just makes that copy itself and leaves the skipped characters out. When
+   * there is nothing to skip, it is exactly that call. Note that when characters are skipped, the offset
+   * in a 'incorrect ending byte at n' message is into the content without them.
+   *
+   * @param value the base64 content
+   * @param stripInvalid true to skip all characters that are not valid base64, not just whitespace
+   * @return the decoded bytes
+   * @throws IllegalArgumentException if the content is not valid base64 (after skipping)
+   */
+  public static byte[] decodeBase64(String value, boolean stripInvalid) {
+    int len = value.length();
+    int skip = 0;
+    for (int i = 0; i < len; i++) {
+      if (isSkippedInBase64(value.charAt(i), stripInvalid)) {
+        skip++;
+      }
+    }
+    if (skip == 0) {
+      return Base64.getDecoder().decode(value);
+    }
+    byte[] src = new byte[len - skip];
+    int n = 0;
+    for (int i = 0; i < len; i++) {
+      char ch = value.charAt(i);
+      if (!isSkippedInBase64(ch, stripInvalid)) {
+        // a non-ASCII character is never valid base64. Map it to a character that isn't either, rather
+        // than letting the cast truncate it into one that is (U+0141 would become 'A'). (When stripInvalid
+        // is true, non-ASCII characters have already been skipped)
+        src[n++] = ch < 0x80 ? (byte) ch : (byte) '?';
+      }
+    }
+    return Base64.getDecoder().decode(src);
+  }
+
+  /**
+   * Whether a character is left out of base64 content before it is decoded: always the ASCII whitespace
+   * (space, tab, LF, VT, FF, CR - the same characters that {@link #isWhitespace(int)} accepts below 0x80),
+   * and, if stripInvalid, anything else that isn't in the base64 alphabet or '='.
+   */
+  private static boolean isSkippedInBase64(char ch, boolean stripInvalid) {
+    return stripInvalid ? !isBase64Char(ch) : isBase64Whitespace(ch);
+  }
+
+  private static boolean isBase64Whitespace(char ch) {
+    return ch == ' ' || (ch >= 0x09 && ch <= 0x0D);
+  }
+
+  /**
+   * The base64 alphabet (RFC 4648 table 1, not the URL safe one) plus the padding character
+   */
+  private static boolean isBase64Char(char ch) {
+    return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || ch == '+' || ch == '/' || ch == '=';
+  }
+
   // from https://en.wikipedia.org/wiki/Whitespace_character#Unicode  
   public static boolean isWhitespace(int ch) {
     // Hot path: escapeJson calls this for nearly every character of every string
@@ -1917,7 +2072,7 @@ public class Utilities {
 
 
   public static boolean isTxFhirOrgServer(String s) {
-    return Utilities.startsWithInList(s.replace("https://", "http://"), FhirSettings.getTxFhirProduction(), FhirSettings.getTxFhirDevelopment(), FhirSettings.getTxFhirLocal());
+    return Utilities.startsWithInList(s.replace("http://", "https://"), FhirSettings.getTxFhirProduction(), FhirSettings.getTxFhirDevelopment(), FhirSettings.getTxFhirLocal());
   }
 
   public static String[] splitLines(String txt) {
@@ -2038,26 +2193,6 @@ public class Utilities {
       }
     }
     return false;
-  }
-
-  /**
-   *
-   * Don't use me.
-   *
-   * @deprecated this was transiently used internally, is no longer, and should not be in use.
-   */
-  @Deprecated(since="2026-04-10")
-  public static String extractByRegex(String input, String regex) {
-    @SuppressWarnings("checkstyle:patternUsage")
-    //caller-provided; no internal callers in this project
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(input);
-
-    StringBuilder result = new StringBuilder();
-    while (matcher.find()) {
-      result.append(matcher.group(1)); 
-    }
-    return result.length() == 0 ? null : result.toString(); 
   }
 
   public static String getDirectoryForURL(String url) {

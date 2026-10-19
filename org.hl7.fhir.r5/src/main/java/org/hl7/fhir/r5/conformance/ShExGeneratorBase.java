@@ -178,6 +178,10 @@ public abstract class ShExGeneratorBase {
     //"where"
   );
 
+  // A referenced (not included) resource is a node carrying only its rdf:type; Empty* shapes mirror the resource hierarchy.
+  private static final String EMPTY_PREFIX = "Empty";
+  private static final String EMPTY_RESOURCE_TEMPLATE = "$abstract$<$id$>$extends$ CLOSED { a [fhir:$type$]? }\n";
+
   private static final String ONE_OR_MORE_PREFIX = "OneOrMore_";
   private static final String ONE_OR_MORE_CHOICES = "_One-Or-More-Choices_";
   private static final String ONE_OR_MORE_TEMPLATE =
@@ -293,6 +297,8 @@ public abstract class ShExGeneratorBase {
 
   private List<String> constraintsList;
 
+  private List<String> emptyResourceShapes;
+
   private List<String> unMappedFunctions;
 
   private LinkedHashSet<String> datatypes, emittedDatatypes;
@@ -323,6 +329,7 @@ public abstract class ShExGeneratorBase {
     oneOrMoreTypes = new ArrayList<String>();
     oneOrMoreRestrictions = new HashMap<String, String[]>();
     constraintsList = new ArrayList<String>();
+    emptyResourceShapes = new ArrayList<String>();
     unMappedFunctions = new ArrayList<String>();
     emittedInnerTypes = new LinkedHashSet<Pair<StructureDefinition, ElementDefinition>>();
     datatypes = new LinkedHashSet<String>();
@@ -489,6 +496,7 @@ public abstract class ShExGeneratorBase {
 
     Collections.sort(structures, new SortById());
     StringBuilder shapeDefinitions = new StringBuilder();
+    emptyResourceShapes.clear();
 
     // For unknown reasons, the list of structures carries duplicates.
     // We remove them.  Also, it is possible for the same sd to have multiple hashes...
@@ -570,6 +578,11 @@ public abstract class ShExGeneratorBase {
           if (!"Resource".equals(rClassName) && !known_resources.contains(rClassName))
             shapeDefinitions.append("\n").append(tmplt(TARGET_REFERENCE_TEMPLATE).add("refType", rClassName).render()).append("\n");
         }
+      }
+
+      if (!emptyResourceShapes.isEmpty()) {
+        shapeDefinitions.append("\n#---------------------- Referenced Resource Stubs -------------------\n");
+        emptyResourceShapes.forEach(shapeDefinitions::append);
       }
 
       if (completeModel && known_resources.size() > 0) {
@@ -871,8 +884,24 @@ public abstract class ShExGeneratorBase {
 
     shape_defn.add("constraints", constraintStr);
 
-
+    if (sd.getKind() == StructureDefinition.StructureDefinitionKind.RESOURCE
+      && sd.getDerivation() != StructureDefinition.TypeDerivationRule.CONSTRAINT)
+      emptyResourceShapes.add(genEmptyResourceShape(sd));
     return shape_defn.render();
+  }
+
+  private String genEmptyResourceShape(StructureDefinition sd) {
+    String className = getClassName(sd.getName());
+    String bd = getBaseTypeName(sd);
+    StructureDefinition base = bd == null ? null : context.fetchTypeDefinition(bd);
+    String ext = (base != null && base.getKind() == StructureDefinition.StructureDefinitionKind.RESOURCE)
+      ? " EXTENDS @<" + EMPTY_PREFIX + getClassName(bd) + ">" : "";
+    return tmplt(EMPTY_RESOURCE_TEMPLATE)
+      .add("abstract", sd.getAbstract() ? "ABSTRACT " : "")
+      .add("id", EMPTY_PREFIX + className)
+      .add("extends", ext)
+      .add("type", className)
+      .render();
   }
 
   /**
@@ -1630,6 +1659,10 @@ public abstract class ShExGeneratorBase {
             tag = tag.substring(ONE_OR_MORE_PREFIX.length());
           }
 
+          // Empty<X> is declared alongside <X>
+          if (tag.startsWith(EMPTY_PREFIX))
+            tag = tag.substring(EMPTY_PREFIX.length());
+
           if ((tag.indexOf("_") != -1)||(tag.indexOf("_OR_") != -1))
             continue;
 
@@ -1793,27 +1826,16 @@ public abstract class ShExGeneratorBase {
   }
 
   /**
-   * @param c
-   * @return
-   */
-  /**
-   * Relax each reference link target so it is satisfied either by the full referenced
-   * resource (when it is present/contained) OR by just being an IRI link. FHIR RDF carries a
-   * reference to a resource not inlined in the graph only as a link IRI — sometimes a type-only
-   * stub ({@code <x> a fhir:Encounter}), sometimes a bare IRI with no triples, and for Any/Resource
-   * targets the stub's rdf:type is the CONCRETE type ({@code a fhir:Procedure}), not fhir:Resource.
-   * A type-only relaxation ({@code a [fhir:T]}) therefore rejects Any-references and stubless
-   * external links, so the link target falls back to {@code IRI} (any IRI node), which subsumes all
-   * of these while still deep-validating the full resource when it is present.
-   *
-   * @param targets a target expression such as {@code @<Encounter>} or {@code @<A> OR @<B>}
+   * A link target is either the full resource, or a node with nothing but an rdf:type of the target
+   * (or, via EXTENDS, a concrete subtype of it), e.g. {@code @<Encounter>} becomes
+   * {@code (@<Encounter> OR @<EmptyEncounter>)}.
    */
   protected static String relaxRefTargets(String targets) {
     java.util.regex.Matcher m = java.util.regex.Pattern.compile("@<([^>]+)>").matcher(targets);
     StringBuffer sb = new StringBuffer();
     while (m.find()) {
       String name = m.group(1);
-      m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement("(@<" + name + "> OR CLOSED {a [fhir:" + name + "]?})"));
+      m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement("(@<" + name + "> OR @<" + EMPTY_PREFIX + name + ">)"));
     }
     m.appendTail(sb);
     return sb.toString();

@@ -62,6 +62,9 @@ public class XhtmlParser {
   public static final String XHTML_NS = "http://www.w3.org/1999/xhtml";
   private static final char END_OF_CHARS = (char) -1;
   private static final boolean DEBUG = false;
+  // maximum XHTML element nesting depth; well above any legitimate FHIR narrative, but low
+  // enough to fail cleanly with a FHIRFormatError rather than a StackOverflowError.
+  private static final int MAX_XHTML_DEPTH = 500;
 
   public class NamespaceNormalizationMap {
 
@@ -478,6 +481,35 @@ public class XhtmlParser {
     return " at line "+Integer.toString(line)+" column "+Integer.toString(col);
   }
 
+  /**
+   * The name of the user data that carries a recovery note on the element it happened in.
+   * The value is the same String that appears in {@link #getRecoveryNotes()}.
+   * <p>
+   * User data deliberately, not an attribute: XhtmlComposer writes attributes back out, and callers
+   * such as the IG publisher's HTMLInspector re-save the pages they parse, so an attribute here
+   * would be published into the output HTML.
+   */
+  public static final String RECOVERY_NOTE = "xhtml.recovery-note";
+
+  private List<String> recoveryNotes = new ArrayList<>();
+
+  /**
+   * What the parser had to fix up to keep going, when it is not in well formed mode.
+   * <p>
+   * Empty for content that parsed cleanly, so a caller can keep the lenient parse - and everything
+   * it can then check - while still reporting that the source was not valid, and where.
+   */
+  public List<String> getRecoveryNotes() {
+    return recoveryNotes;
+  }
+
+  private void noteRecovery(XhtmlNode node, String err) {
+    recoveryNotes.add(err);
+    if (node != null && !node.hasUserData(RECOVERY_NOTE)) {
+      node.setUserData(RECOVERY_NOTE, err);
+    }
+  }
+
   private Reader rdr;
   private String cache = "";
   private XhtmlNode unwindPoint;
@@ -628,9 +660,15 @@ public class XhtmlParser {
             return;
           else
           {
+            String err = "Found \"</"+n.getName()+">\" expecting \"</"+node.getName()+">\""+descLoc();
             if (mustBeWellFormed) {
-              throw new FHIRFormatError("Malformed XHTML: Found \"</"+n.getName()+">\" expecting \"</"+node.getName()+">\""+descLoc());
+              throw new FHIRFormatError("Malformed XHTML: "+err);
             }
+            // Not well formed, but we are parsing leniently, so recover below. Record what we had
+            // to do, on the element it happened in and in a list for the caller: the content is
+            // still wrong, and a caller that keeps the tree (rather than failing the parse) has no
+            // other way to know. See getRecoveryNotes().
+            noteRecovery(node, err);
             for (int i = parents.size() - 1; i >= 0; i--)
             {
               if (parents.get(i).getName().equals(n.getName()))
@@ -674,14 +712,20 @@ public class XhtmlParser {
   }
 
 
-  private void parseScriptInner(XhtmlNode node) throws FHIRFormatError, IOException {
+  /**
+   * The content of <script> and <style> is raw text, not markup: read everything up to the matching close
+   * tag as text. (Otherwise a css comment or a data: url in a stylesheet that mentions an element - e.g.
+   * "inside a filter <th>" - gets parsed as an element, and the page is reported as not well formed.)
+   */
+  private void parseRawTextNode(XhtmlNode node) throws FHIRFormatError, IOException {
+    String end = "</"+node.getName()+">";
     StringBuilder s = new StringBuilder();
-    while (peekChar() != END_OF_CHARS && !s.toString().endsWith("</script>")) {
+    while (peekChar() != END_OF_CHARS && !endsWith(s, end)) {
       s.append(readChar());
     }      
     String ss = s.toString();
-    if (ss.length() >= 9) {
-      ss = ss.substring(0, ss.length()-9);
+    if (endsWith(s, end)) {
+      ss = ss.substring(0, ss.length()-end.length());
     }
     String t = isTrimWhitespace() ? ss.trim() : ss;
     if (t.length() > 0) {
@@ -690,8 +734,27 @@ public class XhtmlParser {
     }
   }
 
+  private static boolean endsWith(StringBuilder b, String end) {
+    int n = b.length() - end.length();
+    if (n < 0) {
+      return false;
+    }
+    for (int i = 0; i < end.length(); i++) {
+      if (Character.toLowerCase(b.charAt(n+i)) != Character.toLowerCase(end.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private void parseElement(XhtmlNode parent, List<XhtmlNode> parents, NamespaceNormalizationMap namespaceMap) throws IOException, FHIRFormatError
   {
+    // guard against unbounded recursion (parseElement <-> parseElementInner) on deeply nested
+    // narratives, which would otherwise cause a StackOverflowError. parents grows by one per
+    // nesting level, so it is a faithful proxy for the current depth.
+    if (parents.size() > MAX_XHTML_DEPTH) {
+      throw new FHIRFormatError("XHTML nesting depth exceeds maximum of "+MAX_XHTML_DEPTH+descLoc());
+    }
     markLocation();
     ElementName name = new ElementName(readName());
     XhtmlNode node = parent.addTag(name.getName());
@@ -707,8 +770,8 @@ public class XhtmlParser {
         throw new FHIRFormatError("unexpected non-end of element "+name+" "+descLoc());
       readChar();
       node.setEmptyExpanded(false);
-    } else if ("script".equals(name.getName())) {
-      parseScriptInner(node);
+    } else if ("script".equalsIgnoreCase(name.getName()) || "style".equalsIgnoreCase(name.getName())) {
+      parseRawTextNode(node);
     } else {
       node.setEmptyExpanded(true);
       parseElementInner(node, newParents, namespaceMap);
@@ -995,7 +1058,7 @@ public class XhtmlParser {
   private String readUntil(char ch) throws IOException
   {
     StringBuilder s = new StringBuilder();
-    while (peekChar() != 0 && peekChar() != ch)
+    while (peekChar() != END_OF_CHARS && peekChar() != ch)
       s.append(readChar());
     readChar();
     return s.toString();
@@ -1005,7 +1068,7 @@ public class XhtmlParser {
   private String readUntil(String sc) throws IOException
   {
     StringBuilder s = new StringBuilder();
-    while (peekChar() != 0 && sc.indexOf(peekChar()) == -1)
+    while (peekChar() != END_OF_CHARS && sc.indexOf(peekChar()) == -1)
       s.append(readChar());
     readChar();
     return s.toString();

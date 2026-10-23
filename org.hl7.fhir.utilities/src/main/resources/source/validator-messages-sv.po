@@ -1,10 +1,6 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: orghl7fhircore\n"
-"X-Crowdin-Project-ID: 792848\n"
-"X-Crowdin-Language: sv\n"
-"X-Crowdin-File: validator-messages.po\n"
 "Project-Id-Version: orghl7fhircore\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Swedish\n"
@@ -84,6 +80,11 @@ msgstr "Försök att använda en snapshot på profil ''{0}'' som {1} innan den h
 #: BINDING_ADDITIONAL_D
 msgid "{0} specified in an additional binding"
 msgstr "{0} angiven i en ytterligare bindning"
+
+# BINDING_ADDITIONAL_IN_SCOPE
+#: BINDING_ADDITIONAL_IN_SCOPE
+msgid "The additional binding to {0} applies to this element, because {1}"
+msgstr ""
 
 # BINDING_ADDITIONAL_UC
 #: BINDING_ADDITIONAL_UC
@@ -468,6 +469,11 @@ msgstr "Signaturformatet ''{0}'' kontrolleras inte (kända format: application/j
 msgid "There is no value for sigFormat. In the absence of a stated signature format, the signature cannot be interpreted reliably (or validated)"
 msgstr "Det finns inget värde för sigFormat. I avsaknad av ett angivet signaturformat kan signaturen inte tolkas tillförlitligt (eller valideras)"
 
+# BUNDLE_SIGNATURE_NO_WHEN
+#: BUNDLE_SIGNATURE_NO_WHEN
+msgid "There is no stated time in the signature"
+msgstr ""
+
 # BUNDLE_SIGNATURE_PAYLOAD_BASE64_DIFF
 #: BUNDLE_SIGNATURE_PAYLOAD_BASE64_DIFF
 msgid "The signed bytes are identical, but the base64 representations differ"
@@ -583,6 +589,16 @@ msgstr "Den faktiska signaturen är inte giltig base64: {0}"
 #: BUNDLE_SIGNATURE_SIG_OK
 msgid "The signature verified OK"
 msgstr "Signaturen verifierades OK"
+
+# BUNDLE_SIGNATURE_SIG_TIME_INVALID
+#: BUNDLE_SIGNATURE_SIG_TIME_INVALID
+msgid "The time in the signature ''{0}'' is not a valid instant, so it cannot be compared with Signature.when"
+msgstr ""
+
+# BUNDLE_SIGNATURE_WHEN_INVALID
+#: BUNDLE_SIGNATURE_WHEN_INVALID
+msgid "Signature.when ''{0}'' is not a valid instant, so it cannot be compared with the time in the signature"
+msgstr ""
 
 # BUNDLE_SIGNATURE_WHO_MISMATCH
 #: BUNDLE_SIGNATURE_WHO_MISMATCH
@@ -737,6 +753,26 @@ msgstr "[(type = ''document'') implies (meta.lastUpdated.hasValue())]"
 msgid "Expected {0} but found {1} event elements"
 msgstr "Förväntade {0} men hittade {1} händelseelement"
 
+# CACHE_ID_CLEARED
+#: CACHE_ID_CLEARED
+msgid "The cache ''{0}'' was dropped {1} ago, when this server cleared all of its caches"
+msgstr ""
+
+# CACHE_ID_CLOSED
+#: CACHE_ID_CLOSED
+msgid "The cache ''{0}'' was closed {1} ago by the client, using $cache-control?mode=end (it had been open for {2}). It did not expire and it was not idle: something in the client released this cache while this request was still using it"
+msgstr ""
+
+# CACHE_ID_EXPIRED
+#: CACHE_ID_EXPIRED
+msgid "The cache ''{0}'' expired: it went {1} without being used, and this server closes caches that have been idle for more than {2} (this one was dropped {3} ago). Every request that uses a cache resets its idle clock, so a client that keeps using a cache will not see this"
+msgstr ""
+
+# CACHE_ID_UNKNOWN
+#: CACHE_ID_UNKNOWN
+msgid "The cache ''{0}'' was never issued by this server, and this server has no record of it ever existing. Caches are created with $cache-control?mode=start, and a cache-id is only valid on the server instance and endpoint that issued it - either it was issued somewhere else, or this server has restarted since it was issued"
+msgstr ""
+
 # CANONICAL_MULTIPLE_VERSIONS_KNOWN
 #: CANONICAL_MULTIPLE_VERSIONS_KNOWN
 msgid "The version {2} for the {0} {1} is not known. These versions are known: {3}"
@@ -866,6 +902,11 @@ msgstr "Koden ''{1}'' är inte deklarerad i basens CodeSystem {0} så är inte g
 #: CODESYSTEM_CS_SUPP_NO_SUPP
 msgid "The code system is marked as a supplement, but it does not define what code system it supplements"
 msgstr "Kodsystemet är markerat som ett tillägg, men det definierar inte vilket kodsystem det kompletterar"
+
+# CODESYSTEM_CS_SUPP_TOO_MANY_CODES
+#: CODESYSTEM_CS_SUPP_TOO_MANY_CODES
+msgid "The supplement has too many concepts to validate ({0}, more than the limit of {1}), so they have not been checked against the base CodeSystem"
+msgstr ""
 
 # CODESYSTEM_CS_UNK_EXPANSION
 #: CODESYSTEM_CS_UNK_EXPANSION
@@ -1047,6 +1088,11 @@ msgstr "Operationen ''{1}'' tog för lång tid att bearbeta (>{0}sek) (vid {2})"
 msgid "The code ''{0}'' differs from the correct code ''{1}'' by case. Although the code system ''{2}'' is case insensitive, implementers are strongly encouraged to use the correct case anyway"
 msgstr "Koden ''{0}'' skiljer sig från den korrekta koden ''{1}'' i versaler/gemener. Även om kodsystemet ''{2}'' är skiftlägesoberoende uppmuntras implementörer starkt att använda rätt versaler/gemener ändå"
 
+# CONCEPTMAP_GROUP_SOURCE_CODE_CANT_CHECK
+#: CONCEPTMAP_GROUP_SOURCE_CODE_CANT_CHECK
+msgid "The source code ''{0}'' in the code system {1} cannot be checked due to special rules around the code system"
+msgstr ""
+
 # CONCEPTMAP_GROUP_SOURCE_CODE_INVALID
 #: CONCEPTMAP_GROUP_SOURCE_CODE_INVALID
 msgid "The source code ''{0}'' is not valid in the code system {1}"
@@ -1081,6 +1127,11 @@ msgstr "Käll-kodsystem {0} stöds endast på terminologiservern, så källkoder
 #: CONCEPTMAP_GROUP_SOURCE_UNKNOWN
 msgid "The Source Code System {0} is not fully defined and populated, and no sourceScope is specified, so the source code checking will not be performed"
 msgstr "Käll-kodsystem {0} är inte fullständigt definierat och populerat, och ingen sourceScope är angiven, så kontrollen av källkoder kommer inte att utföras"
+
+# CONCEPTMAP_GROUP_TARGET_CODE_CANT_CHECK
+#: CONCEPTMAP_GROUP_TARGET_CODE_CANT_CHECK
+msgid "The target code ''{0}'' in the code system {1} cannot be checked due to special rules around the code system"
+msgstr ""
 
 # CONCEPTMAP_GROUP_TARGET_CODE_INVALID
 #: CONCEPTMAP_GROUP_TARGET_CODE_INVALID
@@ -1199,8 +1250,8 @@ msgstr "Referens måste vara till en ValueSet, men hittade en {0} istället"
 
 # CONCEPTMAP_VS_TOO_MANY_CODES
 #: CONCEPTMAP_VS_TOO_MANY_CODES
-msgid "The concept map has too many codes to validate ({0})"
-msgstr "Begreppskartan har för många koder att validera ({0})"
+msgid "The concept map has too many codes to validate ({0}, more than the limit of {1})"
+msgstr "!!Begreppskartan har för många koder att validera ({0})"
 
 # CONCEPT_DEPRECATED_IN_VALUESET
 #: CONCEPT_DEPRECATED_IN_VALUESET
@@ -1374,6 +1425,13 @@ msgstr "Diskriminator ({0}) är baserad på elementets existens, men skiva {1} s
 msgid "Discriminator ({0}) is based on type, but slice {1} in {2} has no types"
 msgstr "Diskriminator ({0}) är baserad på typ, men skiva {1} i {2} har inga typer"
 
+# Display_Name_Not_Fixed_use_Supplement
+#: Display_Name_Not_Fixed_use_Supplement
+msgid "The display name ''{4}'' is not a known display name for {1}#{2}. Known display is {3} (for the language(s) ''{5}''). Use a supplement to define displays for user assigned codes"
+msgid_plural "The display name ''{4}'' is not a known display name for {1}#{2}. Known displays are {3} (for the language(s) ''{5}''). Use a supplement to define displays for user assigned codes"
+msgstr[0] ""
+msgstr[1] ""
+
 # Display_Name_WS_for__should_be_one_of__instead_of
 #: Display_Name_WS_for__should_be_one_of__instead_of
 msgid "Wrong whitespace in Display Name ''{4}'' for {1}#{2}. Valid display is {3} (for the language(s) ''{5}'')"
@@ -1405,8 +1463,8 @@ msgstr "Fel i begränsning ''{0}'': {1}"
 
 # ED_INVARIANT_DIFF_NO_SOURCE
 #: ED_INVARIANT_DIFF_NO_SOURCE
-msgid "The invariant {0} defined in the differential must have no source, or the source must be the same as the profile ({1} vs {2})"
-msgstr "Invarianten {0} definierad i differentialen får inte ha någon källa, eller källan måste vara densamma som profilen ({1} mot {2})"
+msgid "The invariant {0} defined in the differential must have no source, or the source must be this profile, or a profile that this profile imposes ({1} vs {2})"
+msgstr "!!Invarianten {0} definierad i differentialen får inte ha någon källa, eller källan måste vara densamma som profilen ({1} mot {2})"
 
 # ED_INVARIANT_EXPRESSION_CONFLICT
 #: ED_INVARIANT_EXPRESSION_CONFLICT
@@ -1417,6 +1475,21 @@ msgstr "Begränsningen ''{0}'' har ett uttryck ''{1}'', som skiljer sig från de
 #: ED_INVARIANT_EXPRESSION_ERROR
 msgid "Error in constraint ''{0}'' with expression ''{1}'': {2}"
 msgstr "Fel i begränsning ''{0}'' med uttryck ''{1}'': {2}"
+
+# ED_INVARIANT_IMPOSE_DIFFERENT
+#: ED_INVARIANT_IMPOSE_DIFFERENT
+msgid "The invariant {0} has the source ''{1}'', which this profile imposes, but the invariant {0} in that profile has a different expression (''{2}'' vs ''{3}'')"
+msgstr ""
+
+# ED_INVARIANT_IMPOSE_NOT_DEFINED
+#: ED_INVARIANT_IMPOSE_NOT_DEFINED
+msgid "The invariant {0} has the source ''{1}'', which this profile imposes, but that profile does not define an invariant with the key ''{0}''"
+msgstr ""
+
+# ED_INVARIANT_IMPOSE_NOT_FOUND
+#: ED_INVARIANT_IMPOSE_NOT_FOUND
+msgid "The invariant {0} has the source ''{1}'', which this profile imposes, but that profile could not be found, so the invariant could not be checked"
+msgstr ""
 
 # ED_INVARIANT_KEY_ALREADY_USED
 #: ED_INVARIANT_KEY_ALREADY_USED
@@ -1858,17 +1931,17 @@ msgstr "Kan inte lösa diskriminator ''{0}'' på ''{2}'' som hittas i definition
 # FHIRPATH_DISCRIMINATOR_MULTIPLE_PROFILES
 #: FHIRPATH_DISCRIMINATOR_MULTIPLE_PROFILES
 msgctxt "FHIRPATH_DISCRIMINATOR_MULTIPLE_PROFILES"
-msgid "-- no content: do not translate #4 --"
+msgid "-- no content: do not translate #173 --"
 msgid_plural "Error in discriminator at {1}: no children, {0} type profiles"
-msgstr[0] "-- no content: do not translate #4 --"
+msgstr[0] "!!-- no content: do not translate #4 --"
 msgstr[1] "Fel i diskriminator vid {1}: inga barn, {0} typprofiler"
 
 # FHIRPATH_DISCRIMINATOR_MULTIPLE_TYPES
 #: FHIRPATH_DISCRIMINATOR_MULTIPLE_TYPES
 msgctxt "FHIRPATH_DISCRIMINATOR_MULTIPLE_TYPES"
-msgid "-- no content: do not translate #5 --"
+msgid "-- no content: do not translate #174 --"
 msgid_plural "Error in discriminator at {1}: no children, {0} types"
-msgstr[0] "-- no content: do not translate #5 --"
+msgstr[0] "!!-- no content: do not translate #5 --"
 msgstr[1] "Fel i diskriminator vid {1}: inga barn, {0} typer"
 
 # FHIRPATH_DISCRIMINATOR_NAME_ALREADY_SLICED
@@ -1889,9 +1962,9 @@ msgstr "Ogiltig användning av ofType() i diskriminator - Typ har ingen kod på 
 # FHIRPATH_DISCRIMINATOR_RESOLVE_MULTIPLE_TYPES
 #: FHIRPATH_DISCRIMINATOR_RESOLVE_MULTIPLE_TYPES
 msgctxt "FHIRPATH_DISCRIMINATOR_RESOLVE_MULTIPLE_TYPES"
-msgid "-- no content: do not translate #6 --"
+msgid "-- no content: do not translate #175 --"
 msgid_plural "Invalid use of resolve() in discriminator - {0} possible types on {1} (can only be one)"
-msgstr[0] "-- no content: do not translate #6 --"
+msgstr[0] "!!-- no content: do not translate #6 --"
 msgstr[1] "Ogiltig användning av resolve() i diskriminator - {0} möjliga typer på {1} (kan endast vara en)"
 
 # FHIRPATH_DISCRIMINATOR_RESOLVE_NOT_REFERENCE
@@ -1912,9 +1985,9 @@ msgstr "Ogiltig användning av ofType() i diskriminator - ingen typ på element 
 # FHIRPATH_FOCUS
 #: FHIRPATH_FOCUS
 msgctxt "FHIRPATH_FOCUS"
-msgid "-- no content: do not translate #7 --"
+msgid "-- no content: do not translate #176 --"
 msgid_plural "Error evaluating FHIRPath expression: focus for {1} can only have one value, but has {0} values"
-msgstr[0] "-- no content: do not translate #7 --"
+msgstr[0] "!!-- no content: do not translate #7 --"
 msgstr[1] "Fel vid utvärdering av FHIRPath-uttryck: fokus för {1} kan endast ha ett värde, men har {0} värden"
 
 # FHIRPATH_HO_HOST_SERVICES
@@ -1930,9 +2003,9 @@ msgstr "Typen {0} är inte giltig"
 # FHIRPATH_LEFT_VALUE
 #: FHIRPATH_LEFT_VALUE
 msgctxt "FHIRPATH_LEFT_VALUE"
-msgid "-- no content: do not translate #8 --"
+msgid "-- no content: do not translate #177 --"
 msgid_plural "Error evaluating FHIRPath expression: left operand to {1} can only have 1 value, but has {0} values ({2})"
-msgstr[0] "-- no content: do not translate #8 --"
+msgstr[0] "!!-- no content: do not translate #8 --"
 msgstr[1] "Fel vid utvärdering av FHIRPath-uttryck: vänster operand till {1} kan endast ha 1 värde, men har {0} värden ({2})"
 
 # FHIRPATH_LEFT_VALUE_WRONG_TYPE
@@ -2003,9 +2076,9 @@ msgstr "Fel vid utvärdering av FHIRPath-uttryck: Funktionen {0} kan endast anv�
 # FHIRPATH_PARAMETER_CARD
 #: FHIRPATH_PARAMETER_CARD
 msgctxt "FHIRPATH_PARAMETER_CARD"
-msgid "-- no content: do not translate #9 --"
+msgid "-- no content: do not translate #178 --"
 msgid_plural "Error evaluating FHIRPath expression: parameter {1} can only have one value, but has {0} values"
-msgstr[0] "-- no content: do not translate #9 --"
+msgstr[0] "!!-- no content: do not translate #9 --"
 msgstr[1] "Fel vid utvärdering av FHIRPath-uttryck: parameter {1} kan endast ha ett värde, men har {0} värden"
 
 # FHIRPATH_PARAM_WRONG
@@ -2036,17 +2109,17 @@ msgstr "Problem med användning av resolve() - profilen {0} på {1} kunde inte l
 # FHIRPATH_RESOLVE_DISCRIMINATOR_NO_TARGET
 #: FHIRPATH_RESOLVE_DISCRIMINATOR_NO_TARGET
 msgctxt "FHIRPATH_RESOLVE_DISCRIMINATOR_NO_TARGET"
-msgid "-- no content: do not translate #10 --"
+msgid "-- no content: do not translate #179 --"
 msgid_plural "Invalid use of resolve() in discriminator - {0} possible target type profiles on {1} (can only be one)"
-msgstr[0] "-- no content: do not translate #10 --"
+msgstr[0] "!!-- no content: do not translate #10 --"
 msgstr[1] "Ogiltig användning av resolve() i diskriminator - {0} möjliga måltypsprofiler på {1} (kan endast vara en)"
 
 # FHIRPATH_RIGHT_VALUE
 #: FHIRPATH_RIGHT_VALUE
 msgctxt "FHIRPATH_RIGHT_VALUE"
-msgid "-- no content: do not translate #11 --"
+msgid "-- no content: do not translate #180 --"
 msgid_plural "Error evaluating FHIRPath expression: right operand to {1} can only have 1 value, but has {0} values"
-msgstr[0] "-- no content: do not translate #11 --"
+msgstr[0] "!!-- no content: do not translate #11 --"
 msgstr[1] "Fel vid utvärdering av FHIRPath-uttryck: höger operand till {1} kan endast ha 1 värde, men har {0} värden"
 
 # FHIRPATH_RIGHT_VALUE_WRONG_TYPE
@@ -2104,10 +2177,15 @@ msgstr "Fel vid utvärdering av FHIRPath-uttryck: Typen ''{0}'' är okänd eller
 msgid "Error evaluating FHIRPath expression: The parameter type {2} is not legal for {0} parameter {1}. expecting {3}"
 msgstr "Fel vid utvärdering av FHIRPath-uttryck: Parametertypen {2} är inte tillåten för {0} parameter {1}. förväntar {3}"
 
+# FHIR_RESOURCE_ID_CANT_BE_EXTENDED
+#: FHIR_RESOURCE_ID_CANT_BE_EXTENDED
+msgid "Extensions are not allowed on Resource.id (''{0}'')"
+msgstr ""
+
 # FILTER_NOT_UNDERSTOOD
 #: FILTER_NOT_UNDERSTOOD
-msgid "The filter \"{0} {1} {2}\" from the value set {3} was not understood in the context of {4}"
-msgstr "Filtret \"{0} {1} {2}\" från värdemängden {3} förstods inte i kontexten av {4}"
+msgid "The filter \"{0} {1} {2}\" is not understood or supported"
+msgstr "!!Filtret \"{0} {1} {2}\" från värdemängden {3} förstods inte i kontexten av {4}"
 
 # Fixed_Type_Checks_DT_Address_Line
 #: Fixed_Type_Checks_DT_Address_Line
@@ -2274,6 +2352,11 @@ msgstr "Egenskapen ''{0}'' är ogiltig"
 msgid "The concept ''{1}'' has a status of {0} and its use should be reviewed"
 msgstr "Begreppet ''{1}'' har status {0} och dess användning bör granskas"
 
+# INACTIVE_CONCEPT_FOUND_ADD
+#: INACTIVE_CONCEPT_FOUND_ADD
+msgid "The concept ''{1}'' has a status of {0} and {2} and its use should be reviewed"
+msgstr ""
+
 # INACTIVE_DISPLAY_FOUND
 #: INACTIVE_DISPLAY_FOUND
 msgid "''{1}'' is no longer considered a correct display for code ''{2}'' (status = {4}). The correct display is ''{3}''"
@@ -2285,6 +2368,16 @@ msgstr[1] "''{1}'' anses inte längre vara en korrekt visning för koden ''{2}''
 #: INVALID_DISPLAY_NAME
 msgid "Invalid displayLanguage: ''{0}''"
 msgstr "Ogiltigt displayLanguage: ''{0}''"
+
+# INVALID_ECL
+#: INVALID_ECL
+msgid "Invalid ECL expression: ''{0}'': ({1})"
+msgstr ""
+
+# INVALID_REGEX
+#: INVALID_REGEX
+msgid "The regex ''{0}'' is not valid: {1}"
+msgstr ""
 
 # INV_FAILED
 #: INV_FAILED
@@ -2356,6 +2449,11 @@ msgstr "Ett kommatecken saknas i JSON"
 msgid "Comments are not allowed in JSON"
 msgstr "Kommentarer är inte tillåtna i JSON"
 
+# JSON_PROPERTY_INVALID_ARRAY
+#: JSON_PROPERTY_INVALID_ARRAY
+msgid "The JSON array for ''{0}'' is invalid at index {1} - must have at least one valid value"
+msgstr ""
+
 # JSON_PROPERTY_NO_QUOTES
 #: JSON_PROPERTY_NO_QUOTES
 msgid "The JSON property ''{0}'' has no quotes around the name of the property"
@@ -2365,6 +2463,36 @@ msgstr "JSON-egenskapen ''{0}'' har inga citattecken runt egenskapens namn"
 #: JSON_PROPERTY_VALUE_NO_QUOTES
 msgid "The JSON property ''{0}'' has no quotes around the value of the property ''{1}''"
 msgstr "JSON-egenskapen ''{0}'' har inga citattecken runt egenskapens värde ''{1}''"
+
+# LIQUID_BAD_DATE_FORMAT
+#: LIQUID_BAD_DATE_FORMAT
+msgid "The date format ''{0}'' is not a valid format for the ''date'' Liquid filter"
+msgstr ""
+
+# LIQUID_FILTER_NOT_SUPPORTED
+#: LIQUID_FILTER_NOT_SUPPORTED
+msgid "The specified liquid filter ''{0}'' is not supported in FHIR Liquid"
+msgstr ""
+
+# LIQUID_INCLUDE_NOT_RESOLVED
+#: LIQUID_INCLUDE_NOT_RESOLVED
+msgid "The Liquid include ''{0}'' could not be resolved"
+msgstr ""
+
+# LIQUID_INCLUDE_NOT_SUPPORTED
+#: LIQUID_INCLUDE_NOT_SUPPORTED
+msgid "Liquid include statements are not supported in this context (no include resolver provided)"
+msgstr ""
+
+# LIQUID_NO_SOURCE_TO_PARSE
+#: LIQUID_NO_SOURCE_TO_PARSE
+msgid "No source provided to the Liquid parser"
+msgstr ""
+
+# LIQUID_STATEMENT_ERROR
+#: LIQUID_STATEMENT_ERROR
+msgid "Error processing statement ''{0}'' - {1}"
+msgstr ""
 
 # LIQUID_SYNTAX_COLON
 #: LIQUID_SYNTAX_COLON
@@ -2406,6 +2534,11 @@ msgstr "Undantag vid utvärdering av {0}: oväntat innehåll vid {1}"
 msgid "Script {0}: Found unterminated string parsing cycle"
 msgstr "Skript {0}: Hittade oavslutad sträng vid analys av cykel"
 
+# LIQUID_UNABLE_TO_PARSE_DATETIME
+#: LIQUID_UNABLE_TO_PARSE_DATETIME
+msgid "The input to the 'date' Liquid filter must be a valid date - found ''{0}''"
+msgstr ""
+
 # LIQUID_UNKNOWN_FILTER
 #: LIQUID_UNKNOWN_FILTER
 msgid "Unknown Liquid filter ''{0}''"
@@ -2425,11 +2558,6 @@ msgstr "Skript {0}: Hittade slut på skriptet vid sökning efter {1}"
 #: LIQUID_UNKNOWN_SYNTAX
 msgid "Unexpected syntax parsing liquid statement"
 msgstr "Oväntad syntax vid analys av liquid-uttalande"
-
-# LIQUID_VARIABLE_ALREADY_ASSIGNED
-#: LIQUID_VARIABLE_ALREADY_ASSIGNED
-msgid "Liquid Exception: The variable ''{0}'' already has an assigned value"
-msgstr "Liquid-undantag: Variabeln ''{0}'' har redan ett tilldelat värde"
 
 # LIQUID_VARIABLE_ILLEGAL
 #: LIQUID_VARIABLE_ILLEGAL
@@ -2478,8 +2606,8 @@ msgstr "linkId ''{0}'' länkar denna grupp till en mätgrupp som har en annan ko
 
 # MEASURE_MR_GRP_DUPL_CODE
 #: MEASURE_MR_GRP_DUPL_CODE
-msgid "The code for this group is duplicated with another group"
-msgstr "Koden för denna grupp är duplicerad med en annan grupp"
+msgid "The linkId or code for this group is duplicated with another group"
+msgstr "!!Koden för denna grupp är duplicerad med en annan grupp"
 
 # MEASURE_MR_GRP_MISSING_BY_CODE
 #: MEASURE_MR_GRP_MISSING_BY_CODE
@@ -2553,8 +2681,8 @@ msgstr "Subjektreferens {0} kunde inte lösas, och den uppenbara typen är {1} s
 
 # MEASURE_MR_GRP_POP_DUPL_CODE
 #: MEASURE_MR_GRP_POP_DUPL_CODE
-msgid "The code for this group population is duplicated with another group"
-msgstr "Koden för denna grupppopulation är duplicerad med en annan grupp"
+msgid "The linkId or code for this group population is duplicated with another population"
+msgstr "!!Koden för denna grupppopulation är duplicerad med en annan grupp"
 
 # MEASURE_MR_GRP_POP_MISSING_BY_CODE
 #: MEASURE_MR_GRP_POP_MISSING_BY_CODE
@@ -2653,8 +2781,8 @@ msgstr "Detta värde är fast av mätningen till ''{0}''"
 
 # MEASURE_MR_SCORE_PROHIBITED_MS
 #: MEASURE_MR_SCORE_PROHIBITED_MS
-msgid "No measureScore when the scoring of the message is ''cohort''"
-msgstr "Ingen measureScore när poängsättningen av meddelandet är ''cohort''"
+msgid "No measureScore when the scoring of the measure is ''cohort''"
+msgstr "!!Ingen measureScore när poängsättningen av meddelandet är ''cohort''"
 
 # MEASURE_MR_SCORE_PROHIBITED_RT
 #: MEASURE_MR_SCORE_PROHIBITED_RT
@@ -2680,6 +2808,11 @@ msgstr "En enhet bör vara närvarande när poängsättningstypen är {0}"
 #: MEASURE_MR_SCORE_VALUE_INVALID_01
 msgid "The value is invalid - it must be between 0 and 1"
 msgstr "Värdet är ogiltigt - det måste vara mellan 0 och 1"
+
+# MEASURE_MR_SCORE_VALUE_INVALID_02
+#: MEASURE_MR_SCORE_VALUE_INVALID_02
+msgid "The value is invalid - it must be greater than or equal to 0"
+msgstr ""
 
 # MEASURE_MR_SCORE_VALUE_REQUIRED
 #: MEASURE_MR_SCORE_VALUE_REQUIRED
@@ -2713,8 +2846,8 @@ msgstr "Funktionen {1} finns inte i biblioteket {0}"
 
 # MEASURE_M_CRITERIA_CQL_NO_ELM
 #: MEASURE_M_CRITERIA_CQL_NO_ELM
-msgid "Error in {0}: No compiled version of CQL found"
-msgstr "Fel i {0}: Ingen kompilerad version av CQL hittades"
+msgid "Warning in {0}: No compiled version of CQL found"
+msgstr "!!Fel i {0}: Ingen kompilerad version av CQL hittades"
 
 # MEASURE_M_CRITERIA_CQL_NO_LIB
 #: MEASURE_M_CRITERIA_CQL_NO_LIB
@@ -2879,9 +3012,9 @@ msgstr "Referens till återkallad {2} {0} från {1}"
 # MULTIPLE_LOGICAL_MODELS
 #: MULTIPLE_LOGICAL_MODELS
 msgctxt "MULTIPLE_LOGICAL_MODELS"
-msgid "-- no content: do not translate #12 --"
+msgid "-- no content: do not translate #181 --"
 msgid_plural "{0} Logical Models found in supplied profiles, so unable to parse logical model (can only be one, found {1})"
-msgstr[0] "-- no content: do not translate #12 --"
+msgstr[0] "!!-- no content: do not translate #12 --"
 msgstr[1] "{0} logiska modeller hittades i tillhandahållna profiler, så kan inte tolka logisk modell (kan endast vara en, hittade {1})"
 
 # Measure_MR_M_None
@@ -2957,8 +3090,8 @@ msgstr "Fel visningsnamn ''{0}'' för {1}#{2}. Inga giltiga visningsnamn hittade
 
 # NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK
 #: NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK
-msgid "There are no valid display names found for the code {1}#{2} for language(s) ''{3}''. The display is ''{4}'' which is the default language display"
-msgstr "Inga giltiga visningsnamn hittades för koden {1}#{2} för språk ''{3}''. Visningen är ''{4}'' vilket är standardspråksvisningen"
+msgid "There are no valid display names found for the code {1}#{2} for language(s) ''{3}''. The display is ''{4}'' which is a valid display for the default language"
+msgstr "!!Inga giltiga visningsnamn hittades för koden {1}#{2} för språk ''{3}''. Visningen är ''{4}'' vilket är standardspråksvisningen"
 
 # Named_items_are_out_of_order_in_the_slice
 #: Named_items_are_out_of_order_in_the_slice
@@ -3151,6 +3284,37 @@ msgstr "Objekt måste ha något innehåll"
 #: PACKAGE_VERSION_MISMATCH
 msgid "FHIR Version mismatch in package {0}: version is {2} but must be {1} (path: {3})"
 msgstr "FHIR-versionskonflikt i paket {0}: version är {2} men måste vara {1} (sökväg: {3})"
+
+# PARAMETERS_STD_NO_RESOURCE
+#: PARAMETERS_STD_NO_RESOURCE
+msgid "The parameter ''{0}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter must have a resource, but this parameter instead has a value of type {1}. Check that this is correct"
+msgstr ""
+
+# PARAMETERS_STD_NO_VALUE
+#: PARAMETERS_STD_NO_VALUE
+msgid "The parameter ''{0}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter must have a value, but this parameter does not. Check that this is correct"
+msgstr ""
+
+# PARAMETERS_STD_RES_WRONG_TYPE
+#: PARAMETERS_STD_RES_WRONG_TYPE
+msgid "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter has the resource type or {3}, but this parameter instead has a resource of type {2}. Check that this is correct"
+msgid_plural "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter has the resource types {3}, but this parameter instead has a resource of type {2}. Check that this is correct"
+msgstr[0] ""
+msgstr[1] ""
+
+# PARAMETERS_STD_RES_WRONG_TYPE_MIXED
+#: PARAMETERS_STD_RES_WRONG_TYPE_MIXED
+msgid "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, then the type or resource type should be {3}, but found {2}. Check that this is correct"
+msgid_plural "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, then the type or resource type should be one of {3}, but found {2}. Check that this is correct"
+msgstr[0] ""
+msgstr[1] ""
+
+# PARAMETERS_STD_WRONG_TYPE
+#: PARAMETERS_STD_WRONG_TYPE
+msgid "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter has a type of {3}, but this parameter instead has a value of type {2}. Check that this is correct"
+msgid_plural "The parameter ''{1}'' has the same name as a parameter for at least one operation in the core specification. In the base specification, the parameter has the types {3}, but this parameter instead has a value of type {2}. Check that this is correct"
+msgstr[0] ""
+msgstr[1] ""
 
 # PATTERN_CHECK_STRING
 #: PATTERN_CHECK_STRING
@@ -3674,6 +3838,11 @@ msgstr "Kan inte validera datumsvarsalternativ eftersom ingen alternativlista ti
 msgid "Items not of type DISPLAY should not have items - linkId {0}"
 msgstr "Objekt som inte är av typen DISPLAY bör inte ha underobjekt - linkId {0}"
 
+# Questionnaire_QR_Item_EnableWhen_Uncheckable
+#: Questionnaire_QR_Item_EnableWhen_Uncheckable
+msgid "The enableWhen expression for the item {0} could not be evaluated ({1}), so the item is treated as enabled, and its answers have not been checked against it"
+msgstr ""
+
 # Questionnaire_QR_Item_Group
 #: Questionnaire_QR_Item_Group
 msgid "Items of type {0} should not have answers"
@@ -3782,9 +3951,9 @@ msgstr "Endast ett svarsobjekt med detta linkId tillåts"
 # Questionnaire_QR_Item_OnlyOneI
 #: Questionnaire_QR_Item_OnlyOneI
 msgctxt "Questionnaire_QR_Item_OnlyOneI"
-msgid "-- no content: do not translate #13 --"
+msgid "-- no content: do not translate #182 --"
 msgid_plural "Only one response item with the linkId {1} allowed - found {0} items"
-msgstr[0] "-- no content: do not translate #13 --"
+msgstr[0] "!!-- no content: do not translate #13 --"
 msgstr[1] "Endast ett svarsobjekt med linkId {1} tillåts - hittade {0} objekt"
 
 # Questionnaire_QR_Item_Order
@@ -3796,6 +3965,11 @@ msgstr "Strukturellt fel: objekt är i fel ordning"
 #: Questionnaire_QR_Item_StringNoOptions
 msgid "Cannot validate string answer option because no option list is provided"
 msgstr "Kan inte validera strängsvarsalternativ eftersom ingen alternativlista tillhandahålls"
+
+# Questionnaire_QR_Item_StringNotAllowed
+#: Questionnaire_QR_Item_StringNotAllowed
+msgid "The answer to the item {0} is a string, but answerConstraint is ''{1}'', so the answer has to be one of the options the questionnaire specifies"
+msgstr ""
 
 # Questionnaire_QR_Item_Text
 #: Questionnaire_QR_Item_Text
@@ -3813,6 +3987,16 @@ msgid "Answer value must be of the type {1} not {2}"
 msgid_plural "Answer value must be one of the {0} types {1} not {2}"
 msgstr[0] "Svarsvärdet måste vara av typen {1} inte {2}"
 msgstr[1] "Svarsvärdet måste vara en av de {0} typerna {1} inte {2}"
+
+# Questionnaire_QR_LaunchContext_NotLoaded
+#: Questionnaire_QR_LaunchContext_NotLoaded
+msgid "The launch context ''{0}'' could not be loaded from ''{1}'': {2}. Expressions that use it cannot be evaluated"
+msgstr ""
+
+# Questionnaire_QR_LaunchContext_WrongType
+#: Questionnaire_QR_LaunchContext_WrongType
+msgid "The launch context ''{0}'' loaded from ''{1}'' is a {2}, but the questionnaire declares it as a {3}, so it has not been used"
+msgstr ""
 
 # Questionnaire_QR_Q_None
 #: Questionnaire_QR_Q_None
@@ -3859,6 +4043,11 @@ msgstr "Referensen ''{0}'' är inte en giltig referens"
 msgid "The query part of the conditional reference is not a valid query string ({0})"
 msgstr "Frågedelen av den villkorliga referensen är inte en giltig frågesträng ({0})"
 
+# REFERENCE_REF_QUERY_NOT_TRANSACTION
+#: REFERENCE_REF_QUERY_NOT_TRANSACTION
+msgid "The reference ''{0}'' is a conditional reference, and conditional references are only valid inside a transaction Bundle"
+msgstr ""
+
 # REFERENCE_REF_REL_UNSOLVEABLE
 #: REFERENCE_REF_REL_UNSOLVEABLE
 msgid "The URL ''{0}'' cannot be resolved unless the fullURL is a RESTFul base URL, or a baseURL has been provided and the Bundle is a batch or transaction"
@@ -3878,6 +4067,11 @@ msgstr "Typen ''{2}'' är inte ett giltigt mål för elementet {0} (måste vara 
 #: REFERENCE_RESOLUTION_FAILED
 msgid "Fetching ''{0}'' failed. System details: {1}: {2}"
 msgstr "Hämtning av ''{0}'' misslyckades. Systemdetaljer: {1}: {2}"
+
+# REGEX_MATCH_TIMED_OUT
+#: REGEX_MATCH_TIMED_OUT
+msgid "The regex ''{0}'' could not be executed"
+msgstr ""
 
 # REQUEST_TOO_COSTLY_TIME
 #: REQUEST_TOO_COSTLY_TIME
@@ -4248,8 +4442,8 @@ msgstr ", eftersom värdet måste matcha det fasta värdet som definieras i ''{0
 
 # SD_EXTENSION_COMPLIES_WITH_ERROR
 #: SD_EXTENSION_COMPLIES_WITH_ERROR
-msgid "This profile does not comply with claimed profile ''{0}''"
-msgstr "Denna profil följer inte den hävdade profilen ''{0}''"
+msgid "This profile does not comply with claimed profile ''{0}'' because: {1}"
+msgstr "!!Denna profil följer inte den hävdade profilen ''{0}''"
 
 # SD_EXTENSION_COMPLIES_WITH_UNKNOWN
 #: SD_EXTENSION_COMPLIES_WITH_UNKNOWN
@@ -4258,8 +4452,8 @@ msgstr "Profilen ''{0}'' kan inte hittas, så validatorn kan inte kontrollera at
 
 # SD_EXTENSION_COMPLIES_WITH_WARNING
 #: SD_EXTENSION_COMPLIES_WITH_WARNING
-msgid "The validator cannot confirm that this profile complies with the claimed profile ''{0}''"
-msgstr "Validatorn kan inte bekräfta att denna profil följer den hävdade profilen ''{0}''"
+msgid "The validator cannot confirm that this profile complies with the claimed profile ''{0}'' because: {1}"
+msgstr "!!Validatorn kan inte bekräfta att denna profil följer den hävdade profilen ''{0}''"
 
 # SD_EXTENSION_URL_MISMATCH
 #: SD_EXTENSION_URL_MISMATCH
@@ -4435,6 +4629,11 @@ msgstr "Elementet {0} är förbjudet på elementet {1} i kontexten av en {2}"
 #: SD_TABLE_REQUIRED
 msgid "The element {0} is required on the element {1} in the context of a {2}"
 msgstr "Elementet {0} krävs på elementet {1} i kontexten av en {2}"
+
+# SD_TYPE_ADDITIONAL_UNCHECKABLE
+#: SD_TYPE_ADDITIONAL_UNCHECKABLE
+msgid "Unable to read the list of approved additional resources from {0}, so unable to check whether unknown resource types are approved additional resources - some of the type errors reported may be incorrect"
+msgstr ""
 
 # SD_TYPE_MISSING
 #: SD_TYPE_MISSING
@@ -4856,6 +5055,51 @@ msgstr "Snapshotten för profilen ''{0}'' är tom. Detta beror vanligtvis på et
 msgid "The concept ''{1}'' is valid but is {0}"
 msgstr "Begreppet ''{1}'' är giltigt men är {0}"
 
+# SUBSUMPTION_CS_HIERARCHY_MEANING
+#: SUBSUMPTION_CS_HIERARCHY_MEANING
+msgid "The CodeSystem ''{0}'' has hierarchyMeaning = {1}, so its hierarchy does not describe subsumption, and subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_CS_NOT_COMPLETE
+#: SUBSUMPTION_CS_NOT_COMPLETE
+msgid "The CodeSystem ''{0}'' has content = {1}, so subsumption cannot be tested (subsumption can only be tested against a code system with content = complete)"
+msgstr ""
+
+# SUBSUMPTION_CS_NOT_FOUND
+#: SUBSUMPTION_CS_NOT_FOUND
+msgid "A definition for the CodeSystem ''{0}'' could not be found, so subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_CS_NOT_FOUND_VERSION
+#: SUBSUMPTION_CS_NOT_FOUND_VERSION
+msgid "A definition for the CodeSystem ''{0}'' version ''{1}'' could not be found, so subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_NO_CODE
+#: SUBSUMPTION_NO_CODE
+msgid "No code is provided for {0}, so subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_NO_CODING
+#: SUBSUMPTION_NO_CODING
+msgid "No value is provided for {0}, so subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_NO_SYSTEM
+#: SUBSUMPTION_NO_SYSTEM
+msgid "No code system is provided for {0}, so subsumption cannot be tested"
+msgstr ""
+
+# SUBSUMPTION_SYSTEM_MISMATCH
+#: SUBSUMPTION_SYSTEM_MISMATCH
+msgid "Subsumption can only be tested between two codes in the same code system, but the code systems are ''{0}'' and ''{1}''"
+msgstr ""
+
+# SUBSUMPTION_VERSION_MISMATCH
+#: SUBSUMPTION_VERSION_MISMATCH
+msgid "Subsumption can only be tested between two codes in the same version of ''{0}'', but the versions are ''{1}'' and ''{2}''"
+msgstr ""
+
 # SYSTEM_VERSION_MULTIPLE_DEFAULT
 #: SYSTEM_VERSION_MULTIPLE_DEFAULT
 msgid "Multiple default versions found for system {0}: ''{1}'', ''{2}'');"
@@ -4928,13 +5172,18 @@ msgstr "System-URL:en ''{0}'' börjar felaktigt med https: inte http:"
 
 # TERMINOLOGY_TX_SYSTEM_NOT_USABLE
 #: TERMINOLOGY_TX_SYSTEM_NOT_USABLE
-msgid "The definition for the Code System with URI ''{0}'' doesn''t provide any codes so the code cannot be validated"
-msgstr "Definitionen för kodsystemet med URI ''{0}'' tillhandahåller inga koder så koden kan inte valideras"
+msgid "The definition for the Code System with URI ''{0}'' from ''{1}'' doesn''t provide any codes so the code cannot be validated"
+msgstr "!!Definitionen för kodsystemet med URI ''{0}'' tillhandahåller inga koder så koden kan inte valideras"
 
 # TERMINOLOGY_TX_SYSTEM_NO_CODE
 #: TERMINOLOGY_TX_SYSTEM_NO_CODE
 msgid "A code with no system has no defined meaning, and it cannot be validated. A system should be provided"
 msgstr "En kod utan system har ingen definierad betydelse och kan inte valideras. Ett system bör anges"
+
+# TERMINOLOGY_TX_SYSTEM_OTHER_RESOURCE
+#: TERMINOLOGY_TX_SYSTEM_OTHER_RESOURCE
+msgid "The Coding references a {1}, not a code system (''{0}'')"
+msgstr ""
 
 # TERMINOLOGY_TX_SYSTEM_UNSUPPORTED
 #: TERMINOLOGY_TX_SYSTEM_UNSUPPORTED
@@ -4991,25 +5240,20 @@ msgstr "textLink-väljaren ''{0}'' är ogiltig: {1}"
 msgid "No valid coding was found for the value set ''{0}''"
 msgstr "Ingen giltig coding hittades för värdemängden ''{0}''"
 
-# TX_SERVER_NOT_READY
-#: TX_SERVER_NOT_READY
-msgid "The full data set is only {0}% loaded ({1} of {2}) for searching - repeat this query in a few minutes (max ~15min);"
-msgstr "Hela datamängden är endast {0}% inläst ({1} av {2}) för sökning - upprepa denna fråga om några minuter (max ~15min);"
+# TX_SERVER_BATCH_RESPONSE_MISMATCH
+#: TX_SERVER_BATCH_RESPONSE_MISMATCH
+msgid "The terminology server {0} returned a batch validation result for ''{2}'' at position {1}, but the code at that position was ''{3}'', so the results cannot be matched to the codes"
+msgstr ""
+
+# TX_SERVER_BATCH_RESPONSE_SIZE
+#: TX_SERVER_BATCH_RESPONSE_SIZE
+msgid "The terminology server {0} returned {1} results for a batch validation request that contained {2} codes, so the results cannot be matched to the codes"
+msgstr ""
 
 # TX_SERVER_NO_BATCH_RESPONSE
 #: TX_SERVER_NO_BATCH_RESPONSE
 msgid "The server return null from a batch validation request"
 msgstr "Servern returnerade null från en batch-valideringsbegäran"
-
-# TYPE_CHECKS_FIXED_CC
-#: TYPE_CHECKS_FIXED_CC
-msgid "The fixed value [system {0}, code {1}, and display ''{2}''] defined in the profile {3} not found. Issues: {4}"
-msgstr "Det fasta värdet [system {0}, kod {1}, och visning ''{2}''] definierat i profilen {3} hittades inte. Problem: {4}"
-
-# TYPE_CHECKS_FIXED_CC_US
-#: TYPE_CHECKS_FIXED_CC_US
-msgid "The fixed value [system {0}, code {1}, display ''{2}'' and userSelected {5}] defined in the profile {3} not found. Issues: {4}"
-msgstr "Det fasta värdet [system {0}, kod {1}, visning ''{2}'' och userSelected {5}] definierat i profilen {3} hittades inte. Problem: {4}"
 
 # TYPE_CHECKS_PATTERN_CC
 #: TYPE_CHECKS_PATTERN_CC
@@ -5036,6 +5280,11 @@ msgstr "Kanoniska URL:er i innehållna resurser måste vara absoluta URL:er om d
 msgid "The base64 content in the {0} element is not valid base64: {1}"
 msgstr "base64-innehållet i elementet {0} är inte giltigt base64: {1}"
 
+# TYPE_SPECIFIC_CHECKS_DT_ATT_FETCH_ERROR
+#: TYPE_SPECIFIC_CHECKS_DT_ATT_FETCH_ERROR
+msgid "Error fetching the content: {0}"
+msgstr ""
+
 # TYPE_SPECIFIC_CHECKS_DT_ATT_HASH_MISMATCH
 #: TYPE_SPECIFIC_CHECKS_DT_ATT_HASH_MISMATCH
 msgid "The hash of the data did not match the data (stated: ''{0}'', actual: ''{1}'')"
@@ -5048,8 +5297,8 @@ msgstr "Bilagor har data och/eller url, eller bör annars ha antingen contentTyp
 
 # TYPE_SPECIFIC_CHECKS_DT_ATT_NO_FETCHER
 #: TYPE_SPECIFIC_CHECKS_DT_ATT_NO_FETCHER
-msgid "Attachment size cannot be checked because the validator has not been set up to access the network (url = {0})"
-msgstr "Bilagestorlek kan inte kontrolleras eftersom validatorn inte har konfigurerats för att komma åt nätverket (url = {0})"
+msgid "Attachment content cannot be checked because the validator has not been set up to access the network (url = {0})"
+msgstr "!!Bilagestorlek kan inte kontrolleras eftersom validatorn inte har konfigurerats för att komma åt nätverket (url = {0})"
 
 # TYPE_SPECIFIC_CHECKS_DT_ATT_SIZE_CORRECT
 #: TYPE_SPECIFIC_CHECKS_DT_ATT_SIZE_CORRECT
@@ -5068,18 +5317,23 @@ msgstr "Bilagestorleken är {0} byte vilket överskrider den angivna gränsen p�
 
 # TYPE_SPECIFIC_CHECKS_DT_ATT_UNKNOWN_URL_SCHEME
 #: TYPE_SPECIFIC_CHECKS_DT_ATT_UNKNOWN_URL_SCHEME
-msgid "Attachment size cannot be checked because the validator doesn''t understand how to access {0}"
-msgstr "Bilagestorlek kan inte kontrolleras eftersom validatorn inte förstår hur man kommer åt {0}"
+msgid "Attachment content cannot be checked because the validator doesn''t understand how to access {0}"
+msgstr "!!Bilagestorlek kan inte kontrolleras eftersom validatorn inte förstår hur man kommer åt {0}"
 
 # TYPE_SPECIFIC_CHECKS_DT_ATT_URL_ERROR
 #: TYPE_SPECIFIC_CHECKS_DT_ATT_URL_ERROR
-msgid "Attachment size cannot be checked because there was an error accesssing {0}: {1}"
-msgstr "Bilagestorlek kan inte kontrolleras eftersom det uppstod ett fel vid åtkomst av {0}: {1}"
+msgid "Attachment content cannot be checked because there was an error accesssing {0}: {1}"
+msgstr "!!Bilagestorlek kan inte kontrolleras eftersom det uppstod ett fel vid åtkomst av {0}: {1}"
+
+# TYPE_SPECIFIC_CHECKS_DT_ATT_URL_NOT_A_LINK
+#: TYPE_SPECIFIC_CHECKS_DT_ATT_URL_NOT_A_LINK
+msgid "Attachment content was not checked: {0} is not a directly accessible link"
+msgstr ""
 
 # TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_ERROR
 #: TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_ERROR
-msgid "Base64 encoded values are not allowed to contain any whitespace (per RFC 4648). Note that non-validating readers are encouraged to accept whitespace anyway"
-msgstr "Base64-kodade värden får inte innehålla blanksteg (enligt RFC 4648). Observera att icke-validerande läsare uppmuntras att acceptera blanksteg ändå"
+msgid "Base64 encoded content does not include any whitespace or line feeds (per the FHIR specification and RFC 4648). Readers should ignore whitespace, but it should not be present"
+msgstr "!!Base64-kodade värden får inte innehålla blanksteg (enligt RFC 4648). Observera att icke-validerande läsare uppmuntras att acceptera blanksteg ändå"
 
 # TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_WARNING
 #: TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_WARNING
@@ -5116,6 +5370,16 @@ msgstr "Kanonisk URL ''{0}'' refererar till en resurs som har fel typ. Hittade {
 msgid "Found {0} decimal places which exceeds the stated limit of {1} digits"
 msgstr "Hittade {0} decimaler vilket överskrider den angivna gränsen på {1} siffror"
 
+# TYPE_SPECIFIC_CHECKS_DT_DT_GT
+#: TYPE_SPECIFIC_CHECKS_DT_DT_GT
+msgid "date/time value is greater than permitted maximum value of {0}"
+msgstr ""
+
+# TYPE_SPECIFIC_CHECKS_DT_DT_LT
+#: TYPE_SPECIFIC_CHECKS_DT_DT_LT
+msgid "date/time value is less than permitted minimum value of {0}"
+msgstr ""
+
 # TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_VALUE
 #: TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_VALUE
 msgid "if identifier.system is ''urn:ietf:rfc:3986'', then the identifier.value must be a full URI (e.g. start with a scheme), not ''{0}''"
@@ -5150,6 +5414,21 @@ msgstr "Undantag vid utvärdering av regex ''{0}'' på typ {1}: {2}"
 #: TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_TYPE_ALT
 msgid "Neither the element value ''{0}'' or the formatted value ''{1}'' meet {2} regex ''{3}''"
 msgstr "Varken elementvärdet ''{0}'' eller det formaterade värdet ''{1}'' uppfyller {2}-regex ''{3}''"
+
+# TYPE_SPECIFIC_CHECKS_DT_QTY_COMP
+#: TYPE_SPECIFIC_CHECKS_DT_QTY_COMP
+msgid "Comparators are not supported for min/maxValue when restricting date/time values with a Duration (''{0}'')"
+msgstr ""
+
+# TYPE_SPECIFIC_CHECKS_DT_QTY_GT_MAX
+#: TYPE_SPECIFIC_CHECKS_DT_QTY_GT_MAX
+msgid "The date/time value ''{0}'' is not legal: maxValue is {1} after now (which is {2})"
+msgstr ""
+
+# TYPE_SPECIFIC_CHECKS_DT_QTY_GT_MIN
+#: TYPE_SPECIFIC_CHECKS_DT_QTY_GT_MIN
+msgid "The date/time value ''{0}'' is not legal: minValue is {1} before now (which is {2})"
+msgstr ""
 
 # TYPE_SPECIFIC_CHECKS_DT_QTY_MAX_CODE_MISMATCH
 #: TYPE_SPECIFIC_CHECKS_DT_QTY_MAX_CODE_MISMATCH
@@ -5291,6 +5570,11 @@ msgstr "UCUM-koder som innehåller mänskligt läsbara annoteringar som {0} kan 
 msgid "UCUM Codes that contain human readable annotations like {0} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit SHOULD contain the annotation"
 msgstr "UCUM-koder som innehåller mänskligt läsbara annoteringar som {0} kan vara missvisande (t.ex. ignoreras de vid jämförelse av enheter). Bästa praxis är att inte vara beroende av annoteringar i UCUM-koden, så denna användning bör kontrolleras, och Quantity.unit BÖR innehålla annoteringen"
 
+# TYPE_SPECIFIC_CHECKS_DT_QTY_VALUE
+#: TYPE_SPECIFIC_CHECKS_DT_QTY_VALUE
+msgid "The quantity value ''{0}'' is not supported for min/maxValue when restricting date/time values with a Duration"
+msgstr ""
+
 # TYPE_SPECIFIC_CHECKS_DT_SID_INCORRECT
 #: TYPE_SPECIFIC_CHECKS_DT_SID_INCORRECT
 msgid "The URL {0} is not a correct URL to use (in spite of being in the standard, and/or accepted in the past)"
@@ -5410,6 +5694,11 @@ msgstr "Ingen kod angiven, och en kod bör anges från värdemängden {0}"
 #: Terminology_TX_Code_ValueSet_MISSING
 msgid "No code provided, and a code is required from the value set"
 msgstr "Ingen kod angiven, och en kod krävs från värdemängden"
+
+# Terminology_TX_Code_ValueSet_XVER_SOURCE
+#: Terminology_TX_Code_ValueSet_XVER_SOURCE
+msgid "Though a code is required, no code has been provided; instead, an alternative code ''{0}'' is provided in the cross-version extension ''{1}''. Many systems will not support this extension, or may not understand or support the alternative code"
+msgstr ""
 
 # Terminology_TX_Coding_Count
 #: Terminology_TX_Coding_Count
@@ -5828,8 +6117,13 @@ msgstr "värdet bör inte bestå enbart av blanksteg ''{0}''"
 
 # Type_Specific_Checks_DT_Time_Valid
 #: Type_Specific_Checks_DT_Time_Valid
-msgid "Not a valid time ({0})"
-msgstr "Inte en giltig tid ({0})"
+msgid "The time ''{0}'' is not a valid time"
+msgstr "!!Inte en giltig tid ({0})"
+
+# Type_Specific_Checks_DT_Time_Valid_Cause
+#: Type_Specific_Checks_DT_Time_Valid_Cause
+msgid "The time ''{0}'' is not a valid time: {1}"
+msgstr ""
 
 # Type_Specific_Checks_DT_URI_OID
 #: Type_Specific_Checks_DT_URI_OID
@@ -5938,6 +6232,11 @@ msgstr[1] "Detta innehåll inkluderar tecknen {1} (hex-värden). Dessa tecken ä
 msgid "A definition for CodeSystem ''{0}'' could not be found, so the code cannot be validated"
 msgstr "En definition för CodeSystem ''{0}'' kunde inte hittas, så koden kan inte valideras"
 
+# UNKNOWN_CODESYSTEM_CODING_NOT_CHECKED
+#: UNKNOWN_CODESYSTEM_CODING_NOT_CHECKED
+msgid "A definition for the code system ''{0}'' could not be found, so this coding was not checked. The CodeableConcept is still valid: another coding is in the value set"
+msgstr ""
+
 # UNKNOWN_CODESYSTEM_EXP
 #: UNKNOWN_CODESYSTEM_EXP
 msgid "A definition for CodeSystem ''{0}'' could not be found, so the value set cannot be expanded"
@@ -5963,6 +6262,11 @@ msgstr "En definition för CodeSystem ''{0}'' version ''{1}'' kunde inte hittas,
 msgid "A definition for CodeSystem ''{0}'' version ''{1}'' could not be found, so the code cannot be validated. No versions of this code system are known"
 msgstr "En definition för CodeSystem ''{0}'' version ''{1}'' kunde inte hittas, så koden kan inte valideras. Inga versioner av detta kodsystem är kända"
 
+# UNKNOWN_CODESYSTEM_VERSION_UNK
+#: UNKNOWN_CODESYSTEM_VERSION_UNK
+msgid "A definition for CodeSystem ''{0}'' version ''{1}'' could not be found, so the code cannot be validated"
+msgstr ""
+
 # UNKNOWN_CODE_IN_FRAGMENT
 #: UNKNOWN_CODE_IN_FRAGMENT
 msgid "Unknown Code ''{0}'' in the CodeSystem ''{1}'' version ''{2}'' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment"
@@ -5982,6 +6286,11 @@ msgstr "Ogiltig JSON-typ {0} för elementet {1}; giltiga typer = {2}"
 #: UNRECOGNISED_PROPERTY_TYPE_WRONG
 msgid "Invalid type {2} for the element {1}; valid types = {3}, JSON type = {0}"
 msgstr "Ogiltig typ {2} för elementet {1}; giltiga typer = {3}, JSON-typ = {0}"
+
+# UNSUPPORTED_ECL
+#: UNSUPPORTED_ECL
+msgid "The ECL expression is not supported: ''{0}'': ({1})"
+msgstr ""
 
 # UNSUPPORTED_IDENTIFIER_PATTERN_NO_PROPERTY_NOT_SUPPORTED_FOR_DISCRIMINATOR_FOR_SLICE
 #: UNSUPPORTED_IDENTIFIER_PATTERN_NO_PROPERTY_NOT_SUPPORTED_FOR_DISCRIMINATOR_FOR_SLICE
@@ -6363,10 +6672,20 @@ msgstr "Den utsedda arbetsgruppen ''{0}'' är okänd"
 msgid "The nominated WG ''{0}'' means that the contact url should be ''{1}'' but it was not found"
 msgstr "Den utsedda arbetsgruppen ''{0}'' innebär att kontakt-URL:en bör vara ''{1}'' men den hittades inte"
 
+# VALIDATION_MAX_MESSAGES_EXCEEDED
+#: VALIDATION_MAX_MESSAGES_EXCEEDED
+msgid "Validation process produced more than maximum of {0} messages, set by {1}. Returned validation messages may be incomplete or inaccurate."
+msgstr ""
+
 # VALIDATION_NO_EXPERIMENTAL_CONTENT
 #: VALIDATION_NO_EXPERIMENTAL_CONTENT
 msgid "Experimental content is not allowed in this context"
 msgstr "Experimentellt innehåll är inte tillåtet i denna kontext"
+
+# VALIDATION_TIMEOUT_EXCEEDED
+#: VALIDATION_TIMEOUT_EXCEEDED
+msgid "Validation process exceeded maximum allowed time of {0}ms, set by {1}. Returned validation messages may be incomplete or inaccurate."
+msgstr ""
 
 # VALIDATION_VAL_GLOBAL_PROFILE_UNKNOWN
 #: VALIDATION_VAL_GLOBAL_PROFILE_UNKNOWN
@@ -6635,6 +6954,50 @@ msgstr "Exempelsystem ''{0}'' angivet, vilket är otillåtet. Begrepp och filter
 msgid "Example System ''{0}'' specified, so Concepts and Filters can''t be checked"
 msgstr "Exempelsystem ''{0}'' angivet, så begrepp och filter kan inte kontrolleras"
 
+# VALUESET_EXPANSION_EXTRA
+#: VALUESET_EXPANSION_EXTRA
+msgid "The expansion provided has an extra code {1} that is not in the expansion using default expansion parameters"
+msgid_plural "The expansion provided is has {0} extra codes ({1}) that are not in the expansion using default expansion parameters"
+msgstr[0] ""
+msgstr[1] ""
+
+# VALUESET_EXPANSION_MISSING
+#: VALUESET_EXPANSION_MISSING
+msgid "The expansion provided is missing the code {1} that is in the expansion using default expansion parameters"
+msgid_plural "The expansion provided is missing {0} codes ({1}) that are in the expansion using default expansion parameters"
+msgstr[0] ""
+msgstr[1] ""
+
+# VALUESET_EXPANSION_NO_IDENTIFIER
+#: VALUESET_EXPANSION_NO_IDENTIFIER
+msgid "This expansion has no identifier. Identifiers are recommended to help with audit and traceability"
+msgstr ""
+
+# VALUESET_EXPANSION_PARAMETER_COUNT_WRONG
+#: VALUESET_EXPANSION_PARAMETER_COUNT_WRONG
+msgid "The expansion offset ({2}) + the count of items ({1}) is greater than the stated total ({0})"
+msgstr ""
+
+# VALUESET_EXPANSION_PARAMETER_NOT_FOUND
+#: VALUESET_EXPANSION_PARAMETER_NOT_FOUND
+msgid "This expansion has no parameters; in the absence of the parameters that controlled the expansion, systems may not be able to determine whether it is safe to use this expansion"
+msgstr ""
+
+# VALUESET_EXPANSION_PARAMETER_SYSTEM_MULTIPLE
+#: VALUESET_EXPANSION_PARAMETER_SYSTEM_MULTIPLE
+msgid "The expansion uses system ''{0}'' without a version, but then provides multiple ''used-codesystem'' parameters so the version cannot be determined"
+msgstr ""
+
+# VALUESET_EXPANSION_PARAMETER_SYSTEM_NEEDED
+#: VALUESET_EXPANSION_PARAMETER_SYSTEM_NEEDED
+msgid "Because the expansion uses system ''{0}'' without a version, it should list the system using the expansion parameter ''used-codesystem''"
+msgstr ""
+
+# VALUESET_EXPANSION_PROPERTY_NO_DEFN
+#: VALUESET_EXPANSION_PROPERTY_NO_DEFN
+msgid "Found a (sub)property ''{0}'' but it has no definition in ValueSet.expansion.property"
+msgstr ""
+
 # VALUESET_IMPORT_UNION_INTERSECTION
 #: VALUESET_IMPORT_UNION_INTERSECTION
 msgid "This value set has a single include with multiple imported value sets. Per issue https://jira.hl7.org/browse/FHIR-25179, there has been confusion in the past whether these value sets are unioned or intersectioned. If this value set is contained in a package published prior to March 31 2022, it will be treated as a union, otherwise it will be treated as an intersection. If want a union, split the value set imports across multiple includes"
@@ -6732,13 +7095,8 @@ msgstr "Systemet ''{0}'' är faktiskt en värdemängd, som själv refererar till
 
 # VALUESET_INC_CS_NO_SUPPORT
 #: VALUESET_INC_CS_NO_SUPPORT
-msgid "The concepts in the value set include have not been validated because the code system is not known, and no terminology service supports it"
-msgstr "Begreppen i värdemängdens include har inte validerats eftersom kodsystemet inte är känt, och ingen terminologitjänst stöder det"
-
-# VALUESET_INC_NOT_VALIDATING
-#: VALUESET_INC_NOT_VALIDATING
-msgid "The concepts in the value set include have not been validated because the validator is configured not to check them"
-msgstr "Begreppen i värdemängdens include har inte validerats eftersom validatorn är konfigurerad att inte kontrollera dem"
+msgid "The concepts in the value set include have not been validated because the code system ''{1}'' is not known, and no terminology service supports it"
+msgstr "!!Begreppen i värdemängdens include har inte validerats eftersom kodsystemet inte är känt, och ingen terminologitjänst stöder det"
 
 # VALUESET_INC_NO_BATCH_ON_SERVER
 #: VALUESET_INC_NO_BATCH_ON_SERVER
@@ -6752,8 +7110,8 @@ msgstr "Begreppen i värdemängdens include har inte validerats eftersom det int
 
 # VALUESET_INC_TOO_MANY_CODES
 #: VALUESET_INC_TOO_MANY_CODES
-msgid "The value set include has too many concepts to validate ({0}), so each individual code has not been checked"
-msgstr "Värdemängdens include har för många begrepp att validera ({0}), så varje enskild kod har inte kontrollerats"
+msgid "The value set include has too many concepts to validate ({0}, more than the limit of {1}), so each individual code has not been checked"
+msgstr "!!Värdemängdens include har för många begrepp att validera ({0}), så varje enskild kod har inte kontrollerats"
 
 # VALUESET_NO_SYSTEM_WARNING
 #: VALUESET_NO_SYSTEM_WARNING
@@ -6846,13 +7204,13 @@ msgstr[1] "Obligatoriska tillägg hittades inte: {1}"
 
 # VALUESET_TOO_COSTLY
 #: VALUESET_TOO_COSTLY
-msgid "The value set ''{0}'' expansion has too many codes to display ({1})"
-msgstr "Värdemängden ''{0}'' expansion har för många koder att visa ({1})"
+msgid "The value set ''{0}'' expansion has too many codes to produce ({1})"
+msgstr "!!Värdemängden ''{0}'' expansion har för många koder att visa ({1})"
 
 # VALUESET_TOO_COSTLY_COUNT
 #: VALUESET_TOO_COSTLY_COUNT
-msgid "The value set ''{0}'' expansion has {2} codes, which is too many to display ({1})"
-msgstr "Värdemängden ''{0}'' expansion har {2} koder, vilket är för många att visa ({1})"
+msgid "The value set ''{0}'' expansion has {2} codes, which is too many to produce ({1})"
+msgstr "!!Värdemängden ''{0}'' expansion har {2} koder, vilket är för många att visa ({1})"
 
 # VALUESET_TOO_COSTLY_TIME
 #: VALUESET_TOO_COSTLY_TIME
@@ -6934,6 +7292,11 @@ msgstr "Kolumn från sökvägen ''{0}'' är en komplex typ (''{1}''){2}. Detta s
 msgid "Duplicate Column Name ''{0}''"
 msgstr "Duplicerat kolumnnamn ''{0}''"
 
+# VIEWDEFINITION_ITERATION_CONFLICT
+#: VIEWDEFINITION_ITERATION_CONFLICT
+msgid "Only one of forEach, forEachOrNull, or repeat may be specified on a select"
+msgstr ""
+
 # VIEWDEFINITION_NAME_INVALID
 #: VIEWDEFINITION_NAME_INVALID
 msgid "The {0} name ''{1}'' is not valid"
@@ -6978,6 +7341,16 @@ msgstr "Sökvägsuttrycket ''{0}'' returnerar inte ett värde av typen ''{1}'' -
 #: VIEWDEFINITION_UNABLE_TO_TYPE
 msgid "Unable to determine a type (found ''{0}''){1}"
 msgstr "Kan inte avgöra en typ (hittade ''{0}''){1}"
+
+# VIEWDEFINITION_UNION_MISMATCH
+#: VIEWDEFINITION_UNION_MISMATCH
+msgid "unionAll column definitions do not match: {0}"
+msgstr ""
+
+# VIEWDEFINITION_UNION_SINGLE
+#: VIEWDEFINITION_UNION_SINGLE
+msgid "unionAll should have more than one item"
+msgstr ""
 
 # VIEWDEFINITION_UNKNOWN_RESOURCE
 #: VIEWDEFINITION_UNKNOWN_RESOURCE
@@ -7202,6 +7575,11 @@ msgstr "Fel namnrymd - förväntade ''{0}''"
 #: Wrong_type_for_resource
 msgid "Wrong type for resource"
 msgstr "Fel typ för resurs"
+
+# Wrong_type_for_resource_expected
+#: Wrong_type_for_resource_expected
+msgid "Wrong type for resource. Expected {0} but found {1}"
+msgstr ""
 
 # XHTML_CONTROL_LANGS_NONE
 #: XHTML_CONTROL_LANGS_NONE
@@ -7499,13 +7877,4 @@ msgstr "XML-attributet {0} har ett ogiltigt tecken"
 #: xml_encoding_invalid
 msgid "The XML encoding is invalid (must be UTF-8, not ''{0}'')"
 msgstr "XML-kodningen är ogiltig (måste vara UTF-8, inte ''{0}'')"
-
-
-
-
-
-
-
-
-
 
